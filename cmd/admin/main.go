@@ -22,7 +22,7 @@ var Error = errs.Class("ultimatedivision cli error")
 
 // Config contains configurable values for 888 project.
 type Config struct {
-	Database    string `json:"database"`
+	Database string `json:"database"`
 }
 
 // commands.
@@ -93,7 +93,6 @@ func cmdSetup(cmd *cobra.Command, args []string) (err error) {
 
 	return nil
 }
-
 
 // readConfig reads config from default config dir.
 func readConfig() (config Config, err error) {
