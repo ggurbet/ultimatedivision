@@ -24,6 +24,8 @@ type DB interface {
 	Get(ctx context.Context, id uuid.UUID) (User, error)
 	// GetByEmail returns user by email from the data base.
 	GetByEmail(ctx context.Context, email string) (User, error)
+	// Create creates a user and writes to the database.
+	Create(ctx context.Context, user User) error
 }
 
 // Status defines the list of possible user statuses.

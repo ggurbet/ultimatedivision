@@ -44,15 +44,16 @@ func New(databaseURL string) (ultimatedivision.DB, error) {
 func (db *database) CreateSchema(ctx context.Context) (err error) {
 	createTableQuery :=
 		`CREATE TABLE IF NOT EXISTS users (
-            id         BYTEA     PRIMARY KEY 	NOT NULL,
-            email      VARCHAR                  NOT NULL,
-            password   BYTEA                    NOT NULL,
-            nick_name  VARCHAR                  NOT NULL,
-            first_name VARCHAR                  NOT NULL,
-            last_name  VARCHAR                  NOT NULL,
-            last_login TIMESTAMP WITH TIME ZONE NOT NULL,
-            status     INTEGER                  NOT NULL,
-            created_at TIMESTAMP WITH TIME ZONE NOT NULL
+            id               BYTEA PRIMARY KEY        NOT NULL,
+            email            VARCHAR                  NOT NULL,
+            normalized_email VARCHAR                  NOT NULL,
+            password_hash    BYTEA                    NOT NULL,
+            nick_name        VARCHAR                  NOT NULL,
+            first_name       VARCHAR                  NOT NULL,
+            last_name        VARCHAR                  NOT NULL,
+            last_login       TIMESTAMP WITH TIME ZONE NOT NULL,
+            status           INTEGER                  NOT NULL,
+            created_at       TIMESTAMP WITH TIME ZONE NOT NULL
 		);
 		`
 
