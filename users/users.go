@@ -34,7 +34,7 @@ type Status int
 const (
 	// StatusActive indicates that user can login to the account.
 	StatusActive Status = 0
-	// StatusActive indicates that user cannot login to the account.
+	// StatusSuspended indicates that user cannot login to the account.
 	StatusSuspended Status = 1
 )
 

@@ -40,7 +40,7 @@ type Peer struct {
 	}
 }
 
-// NewPeer is a constructor for ultimatedivision Peer.
+// New is a constructor for ultimatedivision Peer.
 func New(logger logger.Logger, config Config, db DB, ctx context.Context) (*Peer, error) {
 	peer := &Peer{
 		Log:      logger,

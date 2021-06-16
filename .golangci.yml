@@ -79,7 +79,7 @@ linters-settings:
     disabled-checks:
       - ifElseChain
   goimports:
-    local: "cfps"
+    local: "ultimatedivision"
   golint:
     min-confidence: 0.8
   gocyclo:

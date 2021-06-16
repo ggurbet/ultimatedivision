@@ -21,14 +21,14 @@ type Database struct {
 	URL  string
 }
 
-// tempMasterDB is a cfps.DB-implementing type that cleans up after itself when closed.
+// tempMasterDB is a ultimatedivision.DB-implementing type that cleans up after itself when closed.
 type tempMasterDB struct {
 	ultimatedivision.DB
 	tempDB *tempdb.TempDatabase
 }
 
 // DefaultTestConn default test conn string that is expected to work with postgres server.
-const DefaultTestConn = "postgres://postgres:123456@localhost/cfpsdb_test?sslmode=disable"
+const DefaultTestConn = "postgres://postgres:123456@localhost/ultimatedivisiondb_test?sslmode=disable"
 
 // Run method will establish connection with db, create tables in random schema, run tests.
 func Run(t *testing.T, test func(ctx context.Context, t *testing.T, db ultimatedivision.DB)) {
@@ -59,7 +59,7 @@ func Run(t *testing.T, test func(ctx context.Context, t *testing.T, db ultimated
 	})
 }
 
-// CreateMasterDB creates a new cfps database for testing.
+// CreateMasterDB creates a new ultimatedivision.DB for testing.
 func CreateMasterDB(ctx context.Context, name string, category string, index int, dbInfo Database) (db ultimatedivision.DB, err error) {
 	if dbInfo.URL == "" {
 		return nil, fmt.Errorf("database %s connection string not provided", dbInfo.Name)
@@ -96,7 +96,7 @@ func SchemaName(testname, category string, index int, schemaSuffix string) strin
 	return strings.ToLower(testname + "/" + schemaSuffix + "/" + category + indexStr)
 }
 
-// CreateMasterDBOnTopOf creates a new cfps database on top of an already existing
+// CreateMasterDBOnTopOf creates a new ultimatedivision.DB on top of an already existing
 // temporary database.
 func CreateMasterDBOnTopOf(tempDB *tempdb.TempDatabase) (db ultimatedivision.DB, err error) {
 	masterDB, err := database.New(tempDB.ConnStr)
