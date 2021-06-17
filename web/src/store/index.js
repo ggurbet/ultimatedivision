@@ -1,13 +1,11 @@
 import { createStore, combineReducers } from 'redux';
 
-import { roadmapReducer } from './reducers/roadmap';
-import { capabilitiesReducer } from './reducers/capabilities';
 import { cardReducer } from './reducers/footballerCard';
+import { filterFieldTitlesReducer } from './reducers/filterFieldTitles';
 
 const reducer = combineReducers({
-    roadmap: roadmapReducer,
-    capabilities: capabilitiesReducer,
-    footballerCard: cardReducer
+    footballerCard: cardReducer,
+    filterFieldTitles: filterFieldTitlesReducer
 });
 
 export const store = createStore(reducer);
