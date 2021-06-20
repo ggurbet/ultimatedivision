@@ -46,7 +46,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
 		`CREATE TABLE IF NOT EXISTS users (
             id               BYTEA PRIMARY KEY        NOT NULL,
             email            VARCHAR                  NOT NULL,
-            normalized_email VARCHAR                  NOT NULL,
+            email_normalized VARCHAR                  NOT NULL,
             password_hash    BYTEA                    NOT NULL,
             nick_name        VARCHAR                  NOT NULL,
             first_name       VARCHAR                  NOT NULL,

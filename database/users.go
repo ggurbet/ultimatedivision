@@ -26,13 +26,12 @@ type usersDB struct {
 
 // List returns all users from the data base.
 func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
-	rows, err := usersDB.conn.QueryContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, last_login, status, creaed_at FROM users")
+	rows, err := usersDB.conn.QueryContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, last_login, status, created_at FROM users")
 	if err != nil {
 		return nil, ErrUsers.Wrap(err)
 	}
-
 	defer func() {
-		err = errs.Combine(err, rows.Close())
+		err = errs.Combine(err, ErrUsers.Wrap(rows.Close()))
 	}()
 
 	var data []users.User
@@ -46,7 +45,7 @@ func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
 		data = append(data, user)
 	}
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, ErrUsers.Wrap(err)
 	}
 
 	return data, nil
@@ -56,18 +55,15 @@ func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
 func (usersDB *usersDB) Get(ctx context.Context, id uuid.UUID) (users.User, error) {
 	var user users.User
 
-	row, err := usersDB.conn.QueryContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, last_login, status, creaed_at FROM users WHERE id=$1", id)
-	if err != nil {
-		return user, ErrUsers.Wrap(err)
-	}
+	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, last_login, status, created_at FROM users WHERE id=$1", id)
 
-	err = row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.LastLogin, &user.Status, &user.CreatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.LastLogin, &user.Status, &user.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return user, users.ErrNoUser.Wrap(err)
 		}
 
-		return user, err
+		return user, ErrUsers.Wrap(err)
 	}
 
 	return user, nil
@@ -78,18 +74,15 @@ func (usersDB *usersDB) GetByEmail(ctx context.Context, email string) (users.Use
 	var user users.User
 	emailNormalized := normalizeEmail(email)
 
-	row, err := usersDB.conn.QueryContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, last_login, status, creaed_at FROM users WHERE email_normalized=$1", emailNormalized)
-	if err != nil {
-		return user, ErrUsers.Wrap(err)
-	}
+	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, last_login, status, created_at FROM users WHERE email_normalized=$1", emailNormalized)
 
-	err = row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.LastLogin, &user.Status, &user.CreatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.LastLogin, &user.Status, &user.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return user, users.ErrNoUser.Wrap(err)
 		}
 
-		return user, err
+		return user, ErrUsers.Wrap(err)
 	}
 
 	return user, nil

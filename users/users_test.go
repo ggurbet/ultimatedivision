@@ -6,13 +6,87 @@ package users_test
 import (
 	"context"
 	"testing"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"ultimatedivision"
 	"ultimatedivision/database/dbtesting"
+	"ultimatedivision/users"
 )
 
 func TestUsers(t *testing.T) {
-	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
+	user1 := users.User{
+		ID:           uuid.New(),
+		Email:        "tarkovskynik@gmail.com",
+		PasswordHash: []byte{0},
+		NickName:     "Nik",
+		FirstName:    "Nikita",
+		LastName:     "Tarkovskyi",
+		LastLogin:    time.Now(),
+		Status:       0,
+		CreatedAt:    time.Now(),
+	}
 
+	user2 := users.User{
+		ID:           uuid.New(),
+		Email:        "3560876@gmail.com",
+		PasswordHash: []byte{1},
+		NickName:     "qwerty",
+		FirstName:    "Stas",
+		LastName:     "Isakov",
+		LastLogin:    time.Now(),
+		Status:       1,
+		CreatedAt:    time.Now(),
+	}
+
+	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
+		repository := db.Users()
+		id := uuid.New()
+		t.Run("get sql no rows", func(t *testing.T) {
+			_, err := repository.Get(ctx, id)
+			require.Error(t, err)
+			assert.Equal(t, true, users.ErrNoUser.Has(err))
+		})
+
+		t.Run("get", func(t *testing.T) {
+			err := repository.Create(ctx, user1)
+			require.NoError(t, err)
+
+			userFromDB, err := repository.Get(ctx, user1.ID)
+			require.NoError(t, err)
+			compareUsers(t, user1, userFromDB)
+		})
+
+		t.Run("getByEmail", func(t *testing.T) {
+			userFromDB, err := repository.GetByEmail(ctx, user1.Email)
+			require.NoError(t, err)
+			compareUsers(t, user1, userFromDB)
+		})
+
+		t.Run("list", func(t *testing.T) {
+			err := repository.Create(ctx, user2)
+			require.NoError(t, err)
+
+			allUsers, err := repository.List(ctx)
+			assert.NoError(t, err)
+			assert.Equal(t, len(allUsers), 2)
+			compareUsers(t, user1, allUsers[0])
+			compareUsers(t, user2, allUsers[1])
+		})
 	})
+}
+
+func compareUsers(t *testing.T, user1, user2 users.User) {
+	assert.Equal(t, user1.ID, user2.ID)
+	assert.Equal(t, user1.Email, user2.Email)
+	assert.Equal(t, user1.PasswordHash, user2.PasswordHash)
+	assert.Equal(t, user1.NickName, user2.NickName)
+	assert.Equal(t, user1.FirstName, user2.FirstName)
+	assert.Equal(t, user1.LastName, user2.LastName)
+	assert.Equal(t, user1.Status, user2.Status)
+	assert.Equal(t, true, user1.CreatedAt.Equal(user2.CreatedAt))
+	assert.Equal(t, true, user1.LastLogin.Equal(user2.LastLogin))
 }
