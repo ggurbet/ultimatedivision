@@ -11,6 +11,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision"
+	"ultimatedivision/admin/admins"
 	"ultimatedivision/cards"
 	"ultimatedivision/users"
 )
@@ -113,7 +114,12 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
 			sweeping          INTEGER                        NOT NULL,
 			throwing          INTEGER                        NOT NULL
 		);
-		`
+        CREATE TABLE IF NOT EXISTS admins (
+            id            BYTEA     PRIMARY KEY    NOT NULL,
+            email         VARCHAR                  NOT NULL,
+            password_hash BYTEA                    NOT NULL,
+            created_at    TIMESTAMP WITH TIME ZONE NOT NULL
+        );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)
 	if err != nil {
@@ -128,6 +134,10 @@ func (db *database) Close() error {
 	return Error.Wrap(db.conn.Close())
 }
 
+// adminRepository provided access to accounts db.
+func (db *database) Admins() admins.DB {
+	return &adminsDB{conn: db.conn}
+}
 // usersDB provided access to accounts db.
 func (db *database) Users() users.DB {
 	return &usersDB{conn: db.conn}

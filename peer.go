@@ -6,6 +6,7 @@ package ultimatedivision
 import (
 	"context"
 
+	"ultimatedivision/admin/admins"
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/users"
@@ -15,6 +16,8 @@ import (
 //
 // architecture: Master Database.
 type DB interface {
+	//Admins provides access to admins db.
+	Admins() admins.DB
 	// Users provides access to users db.
 	Users() users.DB
 
@@ -38,6 +41,11 @@ type Peer struct {
 	Log      logger.Logger
 	Database DB
 
+	// exposes admins relates logic.
+	Admins struct {
+		Service *admins.Service
+	}
+
 	// exposes users related logic.
 	Users struct {
 		Service *users.Service
@@ -59,6 +67,12 @@ func New(logger logger.Logger, config Config, db DB, ctx context.Context) (*Peer
 	{ // users setup
 		peer.Users.Service = users.NewService(
 			peer.Database.Users(),
+		)
+	}
+
+	{ // admins setup
+		peer.Admins.Service = admins.NewService(
+			peer.Database.Admins(),
 		)
 	}
 
