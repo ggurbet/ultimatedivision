@@ -134,16 +134,17 @@ func (db *database) Close() error {
 	return Error.Wrap(db.conn.Close())
 }
 
-// adminRepository provided access to accounts db.
+// Admins provided access to accounts db.
 func (db *database) Admins() admins.DB {
 	return &adminsDB{conn: db.conn}
 }
-// usersDB provided access to accounts db.
+
+// Users provided access to accounts db.
 func (db *database) Users() users.DB {
 	return &usersDB{conn: db.conn}
 }
 
-// cardsDB provided access to accounts db.
+// Cards provided access to accounts db.
 func (db *database) Cards() cards.DB {
 	return &cardsDB{conn: db.conn}
 }

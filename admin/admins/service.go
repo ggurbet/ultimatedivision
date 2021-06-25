@@ -24,16 +24,16 @@ func NewService(admins DB) *Service {
 }
 
 // List returns all admins from DB.
-func(service *Service) List(ctx context.Context) ([]Admin,error){
+func (service *Service) List(ctx context.Context) ([]Admin, error) {
 	return service.admins.List(ctx)
 }
 
 // Get returns admin from DB.
-func(service *Service) Get(ctx context.Context,id uuid.UUID) (Admin,error){
-	return service.admins.Get(ctx,id)
+func (service *Service) Get(ctx context.Context, id uuid.UUID) (Admin, error) {
+	return service.admins.Get(ctx, id)
 }
 
 // Create insert admin to DB.
-func(service *Service) Create(ctx context.Context,admin Admin) error{
-	return service.admins.Create(ctx,admin)
+func (service *Service) Create(ctx context.Context, admin Admin) error {
+	return service.admins.Create(ctx, admin)
 }

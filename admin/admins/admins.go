@@ -21,9 +21,9 @@ type DB interface {
 	// List returns all admins from database.
 	List(ctx context.Context) ([]Admin, error)
 	// Get return admin by id from database.
-	Get(ctx context.Context,id uuid.UUID) (Admin, error)
+	Get(ctx context.Context, id uuid.UUID) (Admin, error)
 	// Create creates an admin and write it to database.
-	Create(ctx context.Context,admin Admin) error
+	Create(ctx context.Context, admin Admin) error
 }
 
 // Admin describes admin entity.

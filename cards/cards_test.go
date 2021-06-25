@@ -21,7 +21,7 @@ import (
 func TestCards(t *testing.T) {
 
 	card1 := cards.Card{
-		Id:               uuid.New(),
+		ID:               uuid.New(),
 		PlayerName:       "Dmytro",
 		Quality:          "bronze",
 		PictureType:      "test1",
@@ -32,7 +32,7 @@ func TestCards(t *testing.T) {
 		HairColor:        1,
 		Accessories:      []cards.Accessories{1, 4, 5},
 		DominantFoot:     "left",
-		UserId:           uuid.New(),
+		UserID:           uuid.New(),
 		Positioning:      1,
 		Composure:        2,
 		Aggression:       3,
@@ -79,7 +79,7 @@ func TestCards(t *testing.T) {
 	}
 
 	card2 := cards.Card{
-		Id:               uuid.New(),
+		ID:               uuid.New(),
 		PlayerName:       "Vova",
 		Quality:          "silver",
 		PictureType:      "test2",
@@ -90,7 +90,7 @@ func TestCards(t *testing.T) {
 		HairColor:        2,
 		Accessories:      []cards.Accessories{2, 4, 5},
 		DominantFoot:     "right",
-		UserId:           uuid.New(),
+		UserID:           uuid.New(),
 		Positioning:      100,
 		Composure:        99,
 		Aggression:       98,
@@ -174,12 +174,12 @@ func TestCards(t *testing.T) {
 			err := repositoryUsers.Create(ctx, user1)
 			require.NoError(t, err)
 
-			card1.UserId = user1.ID
+			card1.UserID = user1.ID
 
 			err = repositoryCards.Create(ctx, card1)
 			require.NoError(t, err)
 
-			cardFromDB, err := repositoryCards.Get(ctx, card1.Id)
+			cardFromDB, err := repositoryCards.Get(ctx, card1.ID)
 			require.NoError(t, err)
 			compareCards(t, card1, cardFromDB)
 		})
@@ -188,7 +188,7 @@ func TestCards(t *testing.T) {
 			err := repositoryUsers.Create(ctx, user2)
 			require.NoError(t, err)
 
-			card2.UserId = user2.ID
+			card2.UserID = user2.ID
 			err = repositoryCards.Create(ctx, card2)
 			require.NoError(t, err)
 
@@ -202,7 +202,7 @@ func TestCards(t *testing.T) {
 }
 
 func compareCards(t *testing.T, card1, card2 cards.Card) {
-	assert.Equal(t, card1.Id, card2.Id)
+	assert.Equal(t, card1.ID, card2.ID)
 	assert.Equal(t, card1.PlayerName, card2.PlayerName)
 	assert.Equal(t, card1.Quality, card2.Quality)
 	assert.Equal(t, card1.Height, card2.Height)
@@ -212,7 +212,7 @@ func compareCards(t *testing.T, card1, card2 cards.Card) {
 	assert.Equal(t, card1.HairColor, card2.HairColor)
 	assert.Equal(t, card1.Accessories, card2.Accessories)
 	assert.Equal(t, card1.DominantFoot, card2.DominantFoot)
-	assert.Equal(t, card1.UserId, card2.UserId)
+	assert.Equal(t, card1.UserID, card2.UserID)
 	assert.Equal(t, card1.Positioning, card2.Positioning)
 	assert.Equal(t, card1.Composure, card2.Composure)
 	assert.Equal(t, card1.Aggression, card2.Aggression)

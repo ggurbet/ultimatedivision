@@ -6,6 +6,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -16,7 +17,7 @@ import (
 	"ultimatedivision/cards"
 )
 
-// ensures that cardsDB implements cards.DB
+// ensures that cardsDB implements cards.DB.
 var _ cards.DB = (*cardsDB)(nil)
 
 // ErrCard indicates that there was an error in the database.
@@ -47,8 +48,8 @@ func (cardsDB *cardsDB) Create(ctx context.Context, card cards.Card) error {
 			$29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50, $51, $52, $53, $54, $55)
 		`
 	_, err := cardsDB.conn.ExecContext(ctx, query,
-		card.Id, card.PlayerName, card.Quality, card.PictureType, card.Height, card.Weight, card.SkinColor, card.HairStyle, card.HairColor,
-		pq.Array(card.Accessories), card.DominantFoot, card.UserId, card.Positioning, card.Composure, card.Aggression, card.Vision, card.Awareness,
+		card.ID, card.PlayerName, card.Quality, card.PictureType, card.Height, card.Weight, card.SkinColor, card.HairStyle, card.HairColor,
+		pq.Array(card.Accessories), card.DominantFoot, card.UserID, card.Positioning, card.Composure, card.Aggression, card.Vision, card.Awareness,
 		card.Crosses, card.Acceleration, card.RunningSpeed, card.ReactionSpeed, card.Agility, card.Stamina, card.Strength, card.Jumping, card.Balance,
 		card.Dribbling, card.BallControl, card.WeakFoot, card.SkillMoves, card.Finesse, card.Curve, card.Volleys, card.ShortPassing, card.LongPassing,
 		card.ForwardPass, card.FinishingAbility, card.ShotPower, card.Accuracy, card.Distance, card.Penalty, card.FreeKicks, card.Corners,
@@ -71,8 +72,8 @@ func (cardsDB *cardsDB) Get(ctx context.Context, id uuid.UUID) (cards.Card, erro
 	var accessoriesArray pq.Int64Array
 	query := "SELECT " + allFields + " FROM cards WHERE id=$1"
 	err := cardsDB.conn.QueryRowContext(ctx, query, id).Scan(
-		&card.Id, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle, &card.HairColor,
-		&accessoriesArray, &card.DominantFoot, &card.UserId, &card.Positioning, &card.Composure, &card.Aggression, &card.Vision, &card.Awareness,
+		&card.ID, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle, &card.HairColor,
+		&accessoriesArray, &card.DominantFoot, &card.UserID, &card.Positioning, &card.Composure, &card.Aggression, &card.Vision, &card.Awareness,
 		&card.Crosses, &card.Acceleration, &card.RunningSpeed, &card.ReactionSpeed, &card.Agility, &card.Stamina, &card.Strength, &card.Jumping,
 		&card.Balance, &card.Dribbling, &card.BallControl, &card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys,
 		&card.ShortPassing, &card.LongPassing, &card.ForwardPass, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance,
@@ -85,7 +86,7 @@ func (cardsDB *cardsDB) Get(ctx context.Context, id uuid.UUID) (cards.Card, erro
 	}
 
 	switch {
-	case err == sql.ErrNoRows:
+	case errors.Is(err, sql.ErrNoRows):
 		return card, cards.ErrNoCard.Wrap(err)
 	case err != nil:
 		return card, ErrCard.Wrap(err)
@@ -111,8 +112,8 @@ func (cardsDB *cardsDB) List(ctx context.Context) ([]cards.Card, error) {
 		card := cards.Card{}
 		var accessoriesArray pq.Int64Array
 		if err = rows.Scan(
-			&card.Id, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle, &card.HairColor,
-			&accessoriesArray, &card.DominantFoot, &card.UserId, &card.Positioning, &card.Composure, &card.Aggression, &card.Vision, &card.Awareness,
+			&card.ID, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle, &card.HairColor,
+			&accessoriesArray, &card.DominantFoot, &card.UserID, &card.Positioning, &card.Composure, &card.Aggression, &card.Vision, &card.Awareness,
 			&card.Crosses, &card.Acceleration, &card.RunningSpeed, &card.ReactionSpeed, &card.Agility, &card.Stamina, &card.Strength, &card.Jumping,
 			&card.Balance, &card.Dribbling, &card.BallControl, &card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys,
 			&card.ShortPassing, &card.LongPassing, &card.ForwardPass, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance,

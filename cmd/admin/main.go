@@ -4,25 +4,29 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
-	"ultimatedivision/cmd"
 
 	"github.com/spf13/cobra"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision"
+	"ultimatedivision/cmd"
+	"ultimatedivision/database"
 	"ultimatedivision/internal/logger/zaplog"
 )
 
 // Error is a default error type for ultimatedivision cli.
 var Error = errs.Class("ultimatedivision cli error")
 
-// Config contains configurable values for 888 project.
+// Config contains configurable values for ultimatedivision project.
 type Config struct {
-	Database string `json:"database"`
+	Database                string `json:"database"`
+	ultimatedivision.Config `json:"config"`
 }
 
 // commands.
@@ -40,13 +44,21 @@ var (
 		RunE:        cmdSetup,
 		Annotations: map[string]string{"type": "setup"},
 	}
+	runCmd = &cobra.Command{
+		Use:         "run",
+		Short:       "runs the program",
+		RunE:        cmdRun,
+		Annotations: map[string]string{"type": "run"},
+	}
 	setupCfg Config
+	runCfg   Config
 
 	defaultConfigDir = cmd.ApplicationDir("ultimatedivision")
 )
 
 func init() {
 	rootCmd.AddCommand(setupCmd)
+	rootCmd.AddCommand(runCmd)
 }
 
 func main() {
@@ -92,6 +104,44 @@ func cmdSetup(cmd *cobra.Command, args []string) (err error) {
 	}
 
 	return nil
+}
+
+func cmdRun(cmd *cobra.Command, args []string) (err error) {
+	ctx := context.Background()
+	log := zaplog.NewLog()
+
+	runCfg, err = readConfig()
+	if err != nil {
+		log.Error("Could not read config from default place", Error.Wrap(err))
+		return Error.Wrap(err)
+	}
+
+	db, err := database.New(runCfg.Database)
+	if err != nil {
+		log.Error("Error starting master database on ultimatedivision bank service", Error.Wrap(err))
+		return Error.Wrap(err)
+	}
+
+	defer func() {
+		err = errs.Combine(err, db.Close())
+	}()
+
+	err = db.CreateSchema(ctx)
+	if err != nil {
+		log.Error("Error creating schema", Error.Wrap(err))
+		return Error.Wrap(err)
+	}
+
+	peer, err := ultimatedivision.New(log, runCfg.Config, db)
+	if err != nil {
+		log.Error("Error starting ultimatedivision bank service", Error.Wrap(err))
+		return Error.Wrap(err)
+	}
+
+	runError := peer.Run(ctx)
+	closeError := peer.Close()
+
+	return Error.Wrap(errs.Combine(runError, closeError))
 }
 
 // readConfig reads config from default config dir.

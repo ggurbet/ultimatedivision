@@ -17,14 +17,17 @@ var ErrNoCard = errs.Class("card does not exist")
 //
 // architecture: DB
 type DB interface {
+	// Create add card in the data base.
 	Create(ctx context.Context, card Card) error
+	// Get returns card by id from the data base.
 	Get(ctx context.Context, id uuid.UUID) (Card, error)
+	// List returns all cards from the data base.
 	List(ctx context.Context) ([]Card, error)
 }
 
 // Card describes card entity.
 type Card struct {
-	Id               uuid.UUID     `json:"id"`
+	ID               uuid.UUID     `json:"id"`
 	PlayerName       string        `json:"playerName"`
 	Quality          Quality       `json:"quality"`
 	PictureType      PictureType   `json:"pictureType"`
@@ -35,7 +38,7 @@ type Card struct {
 	HairColor        HairColor     `json:"hairColor"`
 	Accessories      []Accessories `json:"accessories"`
 	DominantFoot     DominantFoot  `json:"dominantFoot"`
-	UserId           uuid.UUID     `json:"userId"`
+	UserID           uuid.UUID     `json:"userId"`
 	Positioning      int           `json:"positioning"`
 	Composure        int           `json:"composure"`
 	Aggression       int           `json:"aggression"`
@@ -85,10 +88,15 @@ type Card struct {
 type Quality string
 
 const (
-	QualityWood    Quality = "wood"
-	QualityBronze  Quality = "bronze"
-	QualitySilver  Quality = "silver"
-	QualityGold    Quality = "gold"
+	// QualityWood indicates that card quality is wood.
+	QualityWood Quality = "wood"
+	// QualityBronze indicates that card quality is bronze.
+	QualityBronze Quality = "bronze"
+	// QualitySilver indicates that card quality is silver.
+	QualitySilver Quality = "silver"
+	// QualityGold indicates that card quality is gold.
+	QualityGold Quality = "gold"
+	// QualityDiamond indicates that card quality is diamond.
 	QualityDiamond Quality = "diamond"
 )
 
@@ -111,6 +119,8 @@ type Accessories int
 type DominantFoot string
 
 const (
-	Left  DominantFoot = "left"
-	Right DominantFoot = "right"
+	// DominantFootLeft indicates that dominant foot of the footballer is left.
+	DominantFootLeft DominantFoot = "left"
+	// DominantFootRight indicates that dominant foot of the footballer is right.
+	DominantFootRight DominantFoot = "right"
 )
