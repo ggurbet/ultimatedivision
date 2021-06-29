@@ -1,3 +1,7 @@
+/*
+Copyright (C) 2021 Creditor Corp. Group.
+See LICENSE for copying information.
+ */
 import rectangle
     from '../../img/MarketPlacePage/marketPlaceFilterField/rectangle.png';
 import search
