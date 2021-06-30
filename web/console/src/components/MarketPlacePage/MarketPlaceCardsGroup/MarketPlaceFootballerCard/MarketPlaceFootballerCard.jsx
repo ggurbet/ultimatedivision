@@ -10,8 +10,10 @@ import { NavLink } from 'react-router-dom';
 import './MarketPlaceFootballerCard.scss';
 
 export const MarketPlaceFootballerCard = ({ card }) => {
-    const [mainCardProperties, setMainCardProperties] = useState([]);
-
+    let [mainCardProperties, setMainCardProperties] = useState([]);
+    useEffect(() => {
+        getCardStatsProperties();
+    }, []);
     /**
     * get only card's stats properties
     */
@@ -29,10 +31,6 @@ export const MarketPlaceFootballerCard = ({ card }) => {
         });
         setMainCardProperties(statsProperties);
     };
-
-    useEffect(() => {
-        getCardStatsProperties();
-    }, []);
 
     return (
         <div className="marketplace-playerCard">
@@ -72,6 +70,9 @@ export const MarketPlaceFootballerCard = ({ card }) => {
                 <span className="marketplace-playerCard__price__current">
                     {card.mainInfo.price}
                 </span>
+                <img className="marketplace-playerCard__price__status"
+                    src={card.mainInfo.priceStatus}
+                    alt="Price status" />
             </div>
         </div>
     );

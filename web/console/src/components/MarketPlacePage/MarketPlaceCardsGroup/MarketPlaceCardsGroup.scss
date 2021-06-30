@@ -6,9 +6,21 @@ See LICENSE for copying information.
 @import '../../../index.scss';
 
 .marketplace-cards {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 70%;
-    margin: auto;
+    position: relative;
+    &__wrapper {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 80%;
+        margin: auto;
+    }
+    &::before {
+        position: absolute;
+        content: '';
+        width: 90vw;
+        right: 0;
+        top: -2px;
+        height: 2px;
+        background: $marketPlaceBorderColor;
+    }
 }

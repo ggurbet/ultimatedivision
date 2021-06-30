@@ -13,12 +13,14 @@ import { MarketPlaceFootballerCard }
 export const MarketPlaceCardsGroup = ({ cards }) => {
     return (
         <div className="marketplace-cards">
-            {cards.map((card, index) =>
-                <MarketPlaceFootballerCard
-                    card={card}
-                    key={index}
-                />
-            )}
+            <div className="marketplace-cards__wrapper">
+                {cards.map((card, index) =>
+                    <MarketPlaceFootballerCard
+                        card={card}
+                        key={index}
+                    />
+                )}
+            </div>
         </div>
     );
 };
@@ -26,4 +28,3 @@ export const MarketPlaceCardsGroup = ({ cards }) => {
 MarketPlaceCardsGroup.propTypes = {
     cards: PropTypes.array.isRequired
 };
-
