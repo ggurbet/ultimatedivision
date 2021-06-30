@@ -19,7 +19,7 @@ import './FootballerCard.scss';
 
 export const FootballerCard = () => {
     const cardData = useSelector(
-        state => state.footballerCardOveralInfo[0]
+        state => state.footballerCard[0].overalInfo[0]
     );
 
     return (

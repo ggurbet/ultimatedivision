@@ -22,45 +22,15 @@ import purchased
 import star from '../../img/FootballerCardPage/star.png';
 import checked from '../../img/FootballerCardPage/checked.png';
 
-class CardStats {
-    constructor(fields) {
-        this.fields = fields;
-        this.average = fields
-            .map(item => item.value)
-            .reduce((prev, current) => prev + current) / fields.length;
-    }
-    get color() {
-        const STATISTIC_UPPER_BOUND = 90;
-        const STATISTIC_LOWER_BOUND = 50;
+import { CardStats } from '../../types/fotballerCard';
+import { CardStatsField } from '../../types/fotballerCard';
+import { CardInfoField } from '../../types/fotballerCard';
+import { CardPrice } from "../../types/fotballerCard";
+import { CardPriceField } from '../../types/fotballerCard';
+import { CardPriceId } from '../../types/fotballerCard';
+import { CardPricePRP } from '../../types/fotballerCard';
+import { Diagram } from '../../types/fotballerCard';
 
-        const STATISTIC_UPPER_BOUND_COLOR = '#3CCF5D';
-        const STATISTIC_LOWER_BOUND_COLOR = '#E8EC16';
-        const STATISTIC_MEDIUM_BOUND_COLOR = '#FF4200';
-
-        switch (true) {
-            case (this.average >= STATISTIC_UPPER_BOUND):
-                return STATISTIC_UPPER_BOUND_COLOR;
-            case (this.average >= STATISTIC_LOWER_BOUND):
-                return STATISTIC_LOWER_BOUND_COLOR;
-            default:
-                return STATISTIC_MEDIUM_BOUND_COLOR;
-        }
-    }
-}
-class CardStatsField {
-    constructor(key, value) {
-        this.label = key;
-        this.value = value
-    }
-}
-
-class CardInfoField {
-    constructor(key, value, icon) {
-        this.label = key;
-        this.value = value
-        this.icon = icon
-    }
-}
 class Card {
     mainInfo = {
         price: 1000000,
@@ -92,23 +62,23 @@ class Card {
     overalInfo = [
         new CardInfoField('name', 'Albert Ronalculus'),
         new CardInfoField('nation', 'Portugal 🇵🇹'),
-        new CardInfoField('skills', 5, star),
-        new CardInfoField('weak foot', 5, star),
-        new CardInfoField('intl. rep', 5, star),
+        new CardInfoField('skills', '5', star),
+        new CardInfoField('weak foot', '5', star),
+        new CardInfoField('intl. rep', '5', star),
         new CardInfoField('foot', 'right'),
-        new CardInfoField('height', 187),
-        new CardInfoField('nation', 87),
+        new CardInfoField('height', '187'),
+        new CardInfoField('nation', '87'),
         new CardInfoField('revision', 'rare'),
         new CardInfoField('def. wr', 'low'),
         new CardInfoField('arr. wr', 'high'),
         new CardInfoField('added on', '2020-09-10'),
         new CardInfoField('origin', 'na'),
         new CardInfoField('r. Face', 'low'),
-        new CardInfoField('b. type', true, checked),
+        new CardInfoField('b. type', '', checked),
         new CardInfoField('age', '36 years old')
     ]
-    stats = {
-        tactics: new CardStats([
+    stats = [
+        new CardStats('tactics', [
             new CardStatsField('positioning', 100),
             new CardStatsField('composure', 95,),
             new CardStatsField('aggression', 98),
@@ -116,7 +86,7 @@ class Card {
             new CardStatsField('awareness', 99),
             new CardStatsField('crosses', 98),
         ]),
-        physique: new CardStats([
+        new CardStats('physique', [
             new CardStatsField('acceleration', 26),
             new CardStatsField('running speed', 25),
             new CardStatsField('reaction speed', 45),
@@ -126,7 +96,7 @@ class Card {
             new CardStatsField('jumping', 28),
             new CardStatsField('balance', 42),
         ]),
-        technique: new CardStats([
+        new CardStats('technique', [
             new CardStatsField('dribbing', 26),
             new CardStatsField('ball fontrol', 26),
             new CardStatsField('weak foot', 26),
@@ -138,7 +108,7 @@ class Card {
             new CardStatsField('long passing', 26),
             new CardStatsField('forward pass', 26),
         ]),
-        offence: new CardStats([
+        new CardStats('offence', [
             new CardStatsField('finishing ability', 42),
             new CardStatsField('shot power', 42),
             new CardStatsField('accuracy', 42),
@@ -148,23 +118,38 @@ class Card {
             new CardStatsField('corners', 42),
             new CardStatsField('heading accuracy', 42),
         ]),
-        defence: new CardStats([
+        new CardStats('defence', [
             new CardStatsField('offside trap', 74),
             new CardStatsField('tackles', 74),
             new CardStatsField('ball focus', 74),
             new CardStatsField('interceptions', 74),
             new CardStatsField('vigilance', 74),
         ]),
-        goalkeeping: new CardStats([
+        new CardStats('goalkeeping', [
             new CardStatsField('diving', 84),
             new CardStatsField('handling', 84),
             new CardStatsField('sweeping', 84),
             new CardStatsField('throwing', 84),
-        ]),
-    }
+        ])
+    ]
+    price = new CardPrice(
+        new CardPriceId('id', 1),
+        new CardPriceField('price', '11,400,00'),
+        new CardPricePRP('prp', 75),
+        new CardPriceField('updated', 16),
+        new CardPriceField('pr', '1,142,000 - 15,000,000'),
+    )
+    diagram = [
+        new Diagram('1', 'physical', 100, 800, 688),
+        new Diagram('2', 'mental', 100, 800, 688),
+        new Diagram('3', 'skill', 100, 800, 688),
+        new Diagram('4', 'chem. style', 100, 800, 688),
+        new Diagram('5', 'base stats', 100, 800, 688),
+        new Diagram('6', 'in game stats', 100, 800, 688),
+    ]
 }
 
-function cardlist(count) {
+function cardlist(count: number) {
     let quantity = count;
     const list = [];
     while (quantity > 0) {
@@ -173,7 +158,7 @@ function cardlist(count) {
     }
     return list;
 }
-/* eslint-disable */
-export const cardReducer = (cardState = cardlist(24), action) => {
+
+export const cardReducer = (cardState = cardlist(24)) => {
     return cardState;
 };

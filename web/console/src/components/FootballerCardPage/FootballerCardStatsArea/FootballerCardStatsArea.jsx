@@ -14,11 +14,10 @@ export const FootballerCardStatsArea = () => {
 
     return (
         <div className="footballer-card-stats">
-            {Object.keys(stats).map(key => (
+            {stats.map((item, index) => (
                 <FootballerCardStats
-                    key={key}
-                    title={key}
-                    props={stats[key]}
+                    key={index}
+                    props={item}
                 />
             ))}
         </div>

@@ -13,6 +13,10 @@
     &__item-value {
         margin-top: 8px;
         font-size: 14px;
+        margin-right: 5px;
         color: $footballerCardTextColor;
+    }
+    &__item-icon {
+        margin-left: 5px;
     }
 }

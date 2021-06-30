@@ -20,6 +20,7 @@ export const FootballerCardInformation = () => {
                         <>
                             {item.value}
                             <img
+                                className="footballer-card-information__item-icon"
                                 src={item.icon}
                                 alt={(item.value) ? null : 'info icon'}
                             />

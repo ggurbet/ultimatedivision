@@ -7,14 +7,13 @@ import React from 'react';
 import './FootballerCardStats.scss';
 
 /* eslint-disable */
-export const FootballerCardStats = ({ props, title }) => {
-    const fields = props.fields;
+export const FootballerCardStats = ({ props }) => {
 
     return (
         <div className="footballer-card-stats-item">
             <div className="footballer-card-stats-item__heading">
                 <span className="footballer-card-stats-item__heading-name">
-                    {title}
+                    {props.title}
                 </span>
                 <span
                     className="footballer-card-stats-item__heading-value"
@@ -29,7 +28,7 @@ export const FootballerCardStats = ({ props, title }) => {
                     style={{ background: props.color, width: `${props.average}%` }}
                 ></div>
             </div>
-            {fields.map((item, index )=> (
+            {props.fields.map((item, index )=> (
                 <div
                     key={index}
                     className="footballer-card-stats-item__row"
