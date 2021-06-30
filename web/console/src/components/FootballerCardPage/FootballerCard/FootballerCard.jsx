@@ -12,6 +12,8 @@ import { FootballerCardPrice } from
     '../FootballerCardPrice/FootballerCardPrice';
 import { FootballerCardStatsArea } from
     '../FootballerCardStatsArea/FootballerCardStatsArea';
+import { FootballerCardInformation } from
+    '../FootballerCardInformation/FootballerCardInformation';
 
 import './FootballerCard.scss';
 
@@ -32,6 +34,7 @@ export const FootballerCard = () => {
                 <div className="footballer-card__stats-area">
                     <FootballerCardPrice />
                     <FootballerCardStatsArea />
+                    <FootballerCardInformation />
                 </div>
             </div>
         </div>

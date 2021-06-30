@@ -11,6 +11,9 @@ import gold from '../../img/MarketPlacePage/marketPlaceCardsGroup/gold2.png';
 import silver from '../../img/MarketPlacePage/marketPlaceCardsGroup/silver2.png';
 import wood from '../../img/MarketPlacePage/marketPlaceCardsGroup/wood2.png';
 
+import star from '../../img/FootballerCardPage/star.png';
+import checked from '../../img/FootballerCardPage/checked.png';
+
 class CardStats {
     constructor(fields) {
         this.fields = fields;
@@ -42,6 +45,14 @@ class CardStatsField {
         this.value = value
     }
 }
+
+class CardInfoField {
+    constructor(key, value, icon) {
+        this.label = key;
+        this.value = value
+        this.icon = icon
+    }
+}
 class Card {
     mainInfo = {
         price: 1000000,
@@ -59,24 +70,24 @@ class Card {
         facePicture: player,
         pricePicture: price
     };
-    overalInfo = {
-        'name': 'Albert Ronalculus',
-        'nation': 'Portugal 🇵🇹',
-        'skills': '5',
-        'weak foot': '4',
-        'intl. Rep': '5',
-        'foot': 'Right',
-        'height': '187',
-        'nation?': '83',
-        'revision': 'Rare',
-        'def. WR': 'Low',
-        'att. WR': 'High',
-        'added on': '2020-09-10',
-        'origin': 'NA',
-        'r.Face': 'Low',
-        'b.Type': true,
-        'age': '36 years old',
-    };
+    overalInfo = [
+        new CardInfoField('name', 'Albert Ronalculus'),
+        new CardInfoField('nation', 'Portugal 🇵🇹'),
+        new CardInfoField('skills', 5, star),
+        new CardInfoField('weak foot', 5, star),
+        new CardInfoField('intl. rep', 5, star),
+        new CardInfoField('foot', 'right'),
+        new CardInfoField('height', 187),
+        new CardInfoField('nation', 87),
+        new CardInfoField('revision', 'rare'),
+        new CardInfoField('def. wr', 'low'),
+        new CardInfoField('arr. wr', 'high'),
+        new CardInfoField('added on', '2020-09-10'),
+        new CardInfoField('origin', 'na'),
+        new CardInfoField('r. Face', 'low'),
+        new CardInfoField('b. type', true, checked),
+        new CardInfoField('age', '36 years old')
+    ]
     stats = {
         tactics: new CardStats([
             new CardStatsField('positioning', 100),

@@ -1,14 +1,23 @@
+// Copyright (C) 2021 Creditor Corp. Group.
+// See LICENSE for copying information.
+
 @import '../../../index.scss';
 
 .footballer-card-price {
     min-width: 700px;
     margin: 0 auto;
     border-radius: 15px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding: 24px;
-    background: #33335A;
+    padding: 1px;
+    background: linear-gradient(0deg, rgb(40, 40, 70), rgb(89, 89, 148));
+
+    &__wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 24px;
+        background: #33335A;
+        border-radius: 15px;
+    }
     &__diagram {
         width: 160px;
         height: 160px;
@@ -31,6 +40,8 @@
         position: relative;
     }
     &__price {
+        display: flex;
+        align-items: center;
         font-size: 64px;
         font-weight: lighter;
         margin-bottom: 30px;

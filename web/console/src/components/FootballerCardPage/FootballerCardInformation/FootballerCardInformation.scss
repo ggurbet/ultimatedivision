@@ -1,0 +1,18 @@
+@import '../../../index.scss';
+
+.footballer-card-information {
+    margin: 0 auto;
+    grid-template-columns: repeat(4, 1fr);
+    display: grid;
+    column-gap: 105px;
+    row-gap: 40px;
+    padding-top:40px;
+    &__item-title {
+        font-size: 16px;
+    }
+    &__item-value {
+        margin-top: 8px;
+        font-size: 14px;
+        color: $footballerCardTextColor;
+    }
+}
