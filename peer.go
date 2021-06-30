@@ -39,7 +39,7 @@ type DB interface {
 
 // Config is the global configuration for ultimatedivision.
 type Config struct {
-	Admin adminserver.Config
+	Admin adminserver.Config `json:"admin"`
 }
 
 // Peer is the representation of a ultimatedivision.

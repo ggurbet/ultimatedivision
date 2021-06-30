@@ -33,10 +33,11 @@ type Admins struct {
 }
 
 // NewAdmins is a constructor for admins controller.
-func NewAdmins(log logger.Logger, admins *admins.Service) *Admins {
+func NewAdmins(log logger.Logger, admins *admins.Service, templates AdminTemplates) *Admins {
 	managersController := &Admins{
-		log:    log,
-		admins: admins,
+		log:       log,
+		admins:    admins,
+		templates: templates,
 	}
 
 	return managersController

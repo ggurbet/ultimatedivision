@@ -10,12 +10,13 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"runtime"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision"
-	"ultimatedivision/cmd"
 	"ultimatedivision/database"
 	"ultimatedivision/internal/logger/zaplog"
 )
@@ -53,7 +54,7 @@ var (
 	setupCfg Config
 	runCfg   Config
 
-	defaultConfigDir = cmd.ApplicationDir("ultimatedivision")
+	defaultConfigDir = ApplicationDir("ultimatedivision")
 )
 
 func init() {
@@ -86,7 +87,6 @@ func cmdSetup(cmd *cobra.Command, args []string) (err error) {
 		log.Error("could not create config file", Error.Wrap(err))
 		return Error.Wrap(err)
 	}
-
 	defer func() {
 		err = errs.Combine(err, configFile.Close())
 	}()
@@ -121,15 +121,14 @@ func cmdRun(cmd *cobra.Command, args []string) (err error) {
 		log.Error("Error starting master database on ultimatedivision bank service", Error.Wrap(err))
 		return Error.Wrap(err)
 	}
-
 	defer func() {
 		err = errs.Combine(err, db.Close())
 	}()
 
+	// TODO: remove for production.
 	err = db.CreateSchema(ctx)
 	if err != nil {
 		log.Error("Error creating schema", Error.Wrap(err))
-		return Error.Wrap(err)
 	}
 
 	peer, err := ultimatedivision.New(log, runCfg.Config, db)
@@ -152,4 +151,44 @@ func readConfig() (config Config, err error) {
 	}
 
 	return config, json.Unmarshal(configBytes, &config)
+}
+
+// ApplicationDir returns best base directory for specific OS.
+func ApplicationDir(subdir ...string) string {
+	for i := range subdir {
+		if runtime.GOOS == "windows" || runtime.GOOS == "darwin" {
+			subdir[i] = strings.Title(subdir[i])
+		} else {
+			subdir[i] = strings.ToLower(subdir[i])
+		}
+	}
+
+	var appdir string
+
+	home := os.Getenv("HOME")
+	//
+	switch runtime.GOOS {
+	case "windows":
+		// Windows standards: https://msdn.microsoft.com/en-us/library/windows/apps/hh465094.aspx?f=255&MSPPError=-2147217396
+		for _, env := range []string{"AppData", "AppDataLocal", "UserProfile", "Home"} {
+			val := os.Getenv(env)
+			if val != "" {
+				appdir = val
+				break
+			}
+		}
+	case "darwin":
+		// Mac standards: https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/MacOSXDirectories/MacOSXDirectories.html
+		appdir = filepath.Join(home, "Library", "Application Support")
+	case "linux":
+		fallthrough
+	default:
+		// Linux standards: https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+		appdir = os.Getenv("XDG_DATA_HOME")
+		if appdir == "" && home != "" {
+			appdir = filepath.Join(home, ".local", "share")
+		}
+	}
+
+	return filepath.Join(append([]string{appdir}, subdir...)...)
 }

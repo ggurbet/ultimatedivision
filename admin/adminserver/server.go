@@ -27,7 +27,7 @@ var (
 
 // Config contains configuration for admin web server.
 type Config struct {
-	Address   string `help:"server address of the frontend app" devDefault:"127.0.0.1:0" releaseDefault:":10100"`
+	Address   string `help:"server address of the frontend app" devDefault:"127.0.0.1:0" releaseDefault:"127.0.0.1:0"`
 	StaticDir string `help:"path to static resources" default:""`
 }
 
@@ -41,7 +41,9 @@ type Server struct {
 	listener net.Listener
 	server   http.Server
 
-	adminTemplates controllers.AdminTemplates
+	templates struct {
+		admin controllers.AdminTemplates
+	}
 }
 
 // NewServer is a constructor for admin web server.
@@ -52,11 +54,20 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, admins *
 		listener: listener,
 	}
 
+	err := server.initializeTemplates()
+	if err != nil {
+		return nil, Error.Wrap(err)
+	}
+
 	router := mux.NewRouter()
 	adminsRouter := router.PathPrefix("/admins").Subrouter().StrictSlash(true)
 	// managersRouter.Use(server.withAuth) // TODO: implement cookie auth and auth service.
-	adminsController := controllers.NewAdmins(log, admins)
+	adminsController := controllers.NewAdmins(log, admins, server.templates.admin)
 	adminsRouter.HandleFunc("", adminsController.List).Methods(http.MethodGet)
+
+	server.server = http.Server{
+		Handler: router,
+	}
 
 	return server, nil
 }
@@ -89,7 +100,7 @@ func (server *Server) Close() error {
 
 // initializeTemplates initializes and caches templates for managers controller.
 func (server *Server) initializeTemplates() (err error) {
-	server.adminTemplates.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "list.html"))
+	server.templates.admin.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "list.html"))
 	if err != nil {
 		return err
 	}
