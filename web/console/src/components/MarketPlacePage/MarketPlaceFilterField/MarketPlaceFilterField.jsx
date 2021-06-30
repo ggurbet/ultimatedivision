@@ -25,9 +25,11 @@ export const MarketPlaceFilterField = () => {
                             <li key={filterFieldTitles.indexOf(item)}
                                 className="marketplace-filter__list__item">
                                 {item.title}
-                                <img src={item.src}
+                                <img
+                                    src={item.src}
                                     alt="Filter icon"
-                                    className="marketplace-filter__list__item__picture" />
+                                    className="marketplace-filter__list__item__picture"
+                                />
                             </li>
                         );
                     })}

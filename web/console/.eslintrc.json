@@ -1,0 +1,108 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "indent": [
+            "warn",
+            4
+        ],
+        "linebreak-style": [
+            "warn",
+            "unix"
+        ],
+        "quotes": [
+            "warn",
+            "single",
+            "avoid-escape"
+        ],
+        "jsx-quotes": [
+            "warn",
+            "prefer-double"
+        ],
+        "no-multiple-empty-lines": [
+            2,
+            {
+                "max": 1,
+                "maxEOF": 1
+            }
+        ],
+        "max-len": [
+            "warn", {
+                "code": 80,
+                "comments": 80,
+                "ignoreUrls": true,
+                "ignoreRegExpLiterals": true
+            }
+        ],
+        "semi": [
+            "warn",
+            "always"
+        ],
+        "no-console": [
+            "warn"
+        ],
+        "no-empty":[
+            "warn"
+        ],
+        "no-multi-spaces": [
+            "warn"
+        ],
+        "no-var": [
+            "warn"
+        ],
+        "prefer-const": [
+            "warn"
+        ],
+        "curly": [
+            "warn",
+            "all"
+        ],
+        "no-shadow": [
+            "error",
+            {
+                "builtinGlobals": true,
+                "hoist": "all",
+                "allow": []
+            }
+        ],
+        "no-param-reassign": "error",
+        "operator-linebreak": [
+            "warn",
+            "before"
+        ],
+        "padding-line-between-statements": [
+            "warn",
+            { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*"},
+            { "blankLine": "always", "prev": "*", "next": ["return", "block-like", "multiline-expression"]},
+            { "blankLine": "always", "prev": "*", "next": ["const", "let", "var"]},
+            { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]}
+        ],
+        "brace-style": [
+            "warn",
+            "1tbs"
+        ],
+        "object-curly-newline": ["warn", {
+            "ObjectExpression": {
+                "consistent": true,
+                "minProperties": 2
+            }
+        }],
+        "import/prefer-default-export": 0
+    }
+}

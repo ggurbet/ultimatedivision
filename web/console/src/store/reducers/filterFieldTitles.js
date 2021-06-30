@@ -80,7 +80,7 @@ const filterFieldTitles = [
         src: rectangle
     }
 ];
-
+/* eslint-disable */
 export const filterFieldTitlesReducer = (filterFieldTitlesState = filterFieldTitles, action) => {
     return filterFieldTitlesState;
 };

@@ -1,0 +1,52 @@
+@import '../../../index.scss';
+
+.footballer-card-price {
+    min-width: 700px;
+    margin: 0 auto;
+    border-radius: 15px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    background: #33335A;
+    &__diagram {
+        width: 160px;
+        height: 160px;
+        display: flex;
+        position: relative;
+        margin: 0;
+        padding: 1px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+    }
+    &__diagram-value {
+        font-size: 24px;
+        position: absolute;
+        text-align: center;
+    }
+    &__info-area {
+        margin-left: 40px;
+        width: 500px;
+        position: relative;
+    }
+    &__price {
+        font-size: 64px;
+        font-weight: lighter;
+        margin-bottom: 30px;
+        &::after {
+            @extend %pseudoelementsInFootballerCard;
+            top: 65%;
+        }
+    }
+    &__additional-info {
+        font-size: 24px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    &__value {
+        color: $footballerCardTextColor;
+    }
+
+}

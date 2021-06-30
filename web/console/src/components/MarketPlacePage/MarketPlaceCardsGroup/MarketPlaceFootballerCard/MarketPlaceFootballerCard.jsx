@@ -10,20 +10,22 @@ import { NavLink } from 'react-router-dom';
 import './MarketPlaceFootballerCard.scss';
 
 export const MarketPlaceFootballerCard = ({ card }) => {
-    let [mainCardProperties, setMainCardProperties] = useState([]);
+    const [mainCardProperties, setMainCardProperties] = useState([]);
+
     /**
     * get only card's stats properties
     */
-    let getCardStatsProperties = () => {
-        let statsProperties = [];
-        Object.keys(card).forEach(field => {
+    const getCardStatsProperties = () => {
+        const statsProperties = [];
+
+        Object.keys(card.stats).forEach(field => {
             /* only stats data has property 'fields' */
-            if (card[field].hasOwnProperty('fields')) {
-                statsProperties.push({
-                    field,
-                    abbreviated: field.slice(0, 3)
-                });
-            }
+            // eslint-disable-next-line no-prototype-builtins
+
+            statsProperties.push({
+                field,
+                abbreviated: field.slice(0, 3)
+            });
         });
         setMainCardProperties(statsProperties);
     };
@@ -56,7 +58,7 @@ export const MarketPlaceFootballerCard = ({ card }) => {
                                     /**
                                     * get only average value of player's game property
                                     */
-                                    `${card[property.field].average} ${property.abbreviated}`
+                                    `${card.stats[property.field].average} ${property.abbreviated}`
                                 }
                             </li>
                         );

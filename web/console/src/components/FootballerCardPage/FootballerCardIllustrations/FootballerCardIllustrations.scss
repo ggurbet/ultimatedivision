@@ -1,0 +1,23 @@
+@import '../../../index.scss';
+
+.footballer-card-illustrations {
+    width: 300px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    &::after {
+        @extend %pseudoelementsInFootballerCard;
+        top: 48%;
+    }
+    &::before {
+        @extend %pseudoelementsInFootballerCard;
+        top: 20%;
+    }
+    &__logo {
+        width: 80%;
+        position: relative;
+        bottom: 120px;
+        margin: 0 auto;
+    }
+
+}
