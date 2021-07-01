@@ -4,18 +4,16 @@
 import React from 'react';
 import './FootballerCardIllustrationsDiagram.scss';
 import { Doughnut } from 'react-chartjs-2';
-/*eslint-disable*/
-export const FootballerCardIllustrationsDiagram = ({
-    name,
-    min,
-    max,
-    value,
-}) => {
+import { Diagram } from '../../../types/fotballerCard';
 
+export const FootballerCardIllustrationsDiagram: React.FC<{props: Diagram}> = ({ props }) => {
+    const { name, min, max, value } = props
     const percent = (Math.round((value - min) / max * 100))
+
     return (
         <div className="footballer-card-illustrations-diagram">
             <Doughnut
+                type={Doughnut}
                 data={{
                     datasets: [{
                         data: [percent, (100 - percent)],

@@ -7,14 +7,13 @@ import React from 'react';
 import './FootballerCardPrice.scss';
 import { Doughnut } from 'react-chartjs-2';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 import currency from '../../../img/FootballerCardPage/currency.png';
 
-/* eslint-disable */
-export const FootballerCardPrice = () => {
-
-    const priceData = useSelector(state => state.footballerCard[0]);
-    const prpValue = priceData.price.prp.value;
+export const FootballerCardPrice: React.FC = () => {
+    const priceData = useSelector((state: RootState) => state.footballerCard[0].price);
+    const prpValue: number = priceData.prp.value;
 
     return (
         <div className="footballer-card-price">
@@ -22,11 +21,12 @@ export const FootballerCardPrice = () => {
                 <div className="footballer-card-price__diagram">
                     <p className="footballer-card-price__diagram-value">{`PRP: ${prpValue}%`}</p>
                     <Doughnut
+                        type={Doughnut}
                         data={{
                             datasets: [{
                                 data: [prpValue, (100 - prpValue)],
                                 backgroundColor: [
-                                    `${priceData.price.color}`,
+                                    `${priceData.color}`,
                                     '#5E5EAA'
                                 ],
                                 borderColor: [
@@ -43,7 +43,7 @@ export const FootballerCardPrice = () => {
                 <div className="footballer-card-price__info-area">
                     <h2 className="footballer-card-price__price">
                         <>
-                            {priceData.price.price.value}
+                            {priceData.price.value}
                             <img
                                 className="footballer-card-price__price-currency"
                                 src={currency}
@@ -56,14 +56,14 @@ export const FootballerCardPrice = () => {
                             Price updated: <span
                                 className="footballer-card-price__value"
                             >
-                                {priceData.price.updated.value} mins ago
+                                {priceData.updated.value} mins ago
                             </span>
                         </div>
                         <div>
                             PR: <span
                                 className="footballer-card-price__value"
                             >
-                                {priceData.price.pr.value}
+                                {priceData.pr.value}
                             </span>
                         </div>
                     </div>

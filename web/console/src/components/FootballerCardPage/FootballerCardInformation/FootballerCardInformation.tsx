@@ -3,11 +3,11 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 import './FootballerCardInformation.scss';
 
-export const FootballerCardInformation = () => {
-
-    const overalInfo = useSelector(state => state.footballerCard[0].overalInfo);
+export const FootballerCardInformation: React.FC = () => {
+    const overalInfo = useSelector((state: RootState )=> state.footballerCard[0].overalInfo);
 
     return (
         <div className="footballer-card-information">
@@ -22,7 +22,7 @@ export const FootballerCardInformation = () => {
                             <img
                                 className="footballer-card-information__item-icon"
                                 src={item.icon}
-                                alt={(item.value) ? null : 'info icon'}
+                                alt={(item.value) ? undefined : 'info icon'}
                             />
                         </>
                     </div>

@@ -3,26 +3,25 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 import './FootballerCardIllustrationsRadar.scss';
 
 import { Radar } from 'react-chartjs-2';
 
-export const FootballerCardIllustrationsRadar = () => {
-
-    const stats = useSelector(state => (
-        state.footballerCard[0].stats
-            .map(item => item.average)));
+export const FootballerCardIllustrationsRadar: React.FC = () => {
+    const stats = useSelector((state: RootState) => state.footballerCard[0].stats);
 
     return (
         <div className="footballer-card-illustrations-radar">
             <Radar
+                type={Radar}
                 data={{
-                    labels: ['TAC', 'PHY','TEC', 'OFF', 'DEF', 'GK'],
+                    labels: ['TAC', 'PHY', 'TEC', 'OFF', 'DEF', 'GK'],
                     datasets: [{
                         backgroundColor: '#66FF8866',
-                        data: stats
-                }],
+                        data: stats.map(item => item.average),
+                    }],
                 }}
             options={{
                 animations: {
@@ -62,11 +61,10 @@ export const FootballerCardIllustrationsRadar = () => {
                             color: '#515180'
                         }
                     },
-
                 }
             }
             }
             />
         </div>
-    );
-};
+    )
+}

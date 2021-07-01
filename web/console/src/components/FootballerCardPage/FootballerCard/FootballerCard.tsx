@@ -5,6 +5,7 @@ See LICENSE for copying information.
 
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 import { FootballerCardIllustrations } from
     '../FootballerCardIllustrations/FootballerCardIllustrations';
@@ -17,17 +18,15 @@ import { FootballerCardInformation } from
 
 import './FootballerCard.scss';
 
-export const FootballerCard = () => {
-    const cardData = useSelector(
-        state => state.footballerCard[0].overalInfo[0]
-    );
+export const FootballerCard: React.FC = () => {
+    const cardData = useSelector((state: RootState) => state.footballerCard[0].overalInfo[0].value);
 
     return (
         <div className="footballer-card">
             <div className="footballer-card__wrapper">
                 <div className="footballer-card__name-wrapper">
                     <h1 className="footballer-card__name">
-                        {cardData.value}
+                        {cardData}
                     </h1>
                 </div>
                 <FootballerCardIllustrations />

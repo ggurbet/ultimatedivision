@@ -5,12 +5,14 @@ See LICENSE for copying information.
 
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 import './FootballerCardStatsArea.scss';
 import { FootballerCardStats }
     from '../FootballerCardStats/FootballerCardStats';
 
-export const FootballerCardStatsArea = () => {
-    const stats = useSelector(state => state.footballerCard[0].stats);
+
+export const FootballerCardStatsArea: React.FC = () => {
+    const stats = useSelector((state: RootState )=> state.footballerCard[0].stats);
 
     return (
         <div className="footballer-card-stats">

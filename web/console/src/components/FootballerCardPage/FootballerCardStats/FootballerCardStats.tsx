@@ -4,15 +4,19 @@ See LICENSE for copying information.
 */
 
 import React from 'react';
+import { CardStats } from '../../../types/fotballerCard';
 import './FootballerCardStats.scss';
 
-/* eslint-disable */
-export const FootballerCardStats = ({ props }) => {
+export const FootballerCardStats: React.FC<{ props: CardStats }> = ({ props }) => {
+    const fields = props.fields;
 
     return (
         <div className="footballer-card-stats-item">
-            <div className="footballer-card-stats-item__heading">
-                <span className="footballer-card-stats-item__heading-name">
+            <div
+                className="footballer-card-stats-item__heading"
+            >
+                <span className="footballer-card-stats-item__heading-name"
+                >
                     {props.title}
                 </span>
                 <span
@@ -28,7 +32,7 @@ export const FootballerCardStats = ({ props }) => {
                     style={{ background: props.color, width: `${props.average}%` }}
                 ></div>
             </div>
-            {props.fields.map((item, index )=> (
+            {fields.map((item, index) => (
                 <div
                     key={index}
                     className="footballer-card-stats-item__row"
