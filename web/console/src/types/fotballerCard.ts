@@ -12,6 +12,9 @@ export class CardStats {
         public fields: CardStatsField[] = []
     ) {
     }
+    get abbr (): string {
+        return this.title.slice(0, 3);
+    }
     get color(): string {
         const STATISTIC_UPPER_BOUND = 90;
         const STATISTIC_LOWER_BOUND = 50;

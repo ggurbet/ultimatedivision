@@ -31,7 +31,7 @@ import { CardPriceId } from '../../types/fotballerCard';
 import { CardPricePRP } from '../../types/fotballerCard';
 import { Diagram } from '../../types/fotballerCard';
 
-class Card {
+export class Card {
     mainInfo = {
         price: 1000000,
         get backgroundType() {

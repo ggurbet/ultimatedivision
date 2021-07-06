@@ -10,6 +10,8 @@ import { FootballFieldPlayingArea }
     from '../FotballFieldPlayingArea/FootballFieldPlayingArea';
 import { FootballFieldInformation }
     from '../FootballFieldInformation/FootballFieldInformation';
+import { FootballFieldCardSelection }
+    from '../FootballFieldCardSelection/FootballFieldCardSelection';
 
 export const FootballField = () => {
     return (
@@ -19,6 +21,7 @@ export const FootballField = () => {
                 <FootballFieldPlayingArea />
                 <FootballFieldInformation />
             </div>
+            <FootballFieldCardSelection />
         </div>
     )
 }

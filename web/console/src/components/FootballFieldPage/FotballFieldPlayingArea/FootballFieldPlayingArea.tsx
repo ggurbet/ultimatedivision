@@ -32,7 +32,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
     }
 
     return (
-        <div className="football-field-playing-area">
+        <div className="football-field-playing-area" id="playingArea">
             {formationSelection()}
         </div>
     )

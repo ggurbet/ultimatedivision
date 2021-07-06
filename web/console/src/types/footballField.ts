@@ -8,58 +8,59 @@ export class FootballField {
         formation: '4-4-2',
         captain: '',
         tactics: '',
+        chosedCard: null
     };
     public cardsList = [
         {
             id: 0,
-            props: ''
+            cardData: null
         },
         {
             id: 1,
-            props: ''
+            cardData: null
         },
         {
             id: 2,
-            props: ''
+            cardData: null
         },
         {
             id: 3,
-            props: ''
+            cardData: null
         },
         {
             id: 4,
-            props: ''
+            cardData: null
         },
         {
             id: 5,
-            props: ''
+            cardData: null
         },
         {
             id: 6,
-            props: ''
+            cardData: null
         },
         {
             id: 7,
-            props: ''
+            cardData: null
         },
         {
             id: 8,
-            props: ''
+            cardData: null
         },
         {
             id: 9,
-            props: ''
+            cardData: null
         },
         {
             id: 10,
-            props: ''
+            cardData: null
         },
     ]
 }
 
 export class FootballFieldInformationLine {
     constructor(
-        public id: string ='',
+        public id: string = '',
         public title: string = '',
         public options: string[] = [],
     ) { }

@@ -1,0 +1,11 @@
+.card-selection {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 40px 80px;
+    &__card {
+        margin: 15px;
+        position: relative;
+        width: 100px;
+        height: 162px;
+    }
+}

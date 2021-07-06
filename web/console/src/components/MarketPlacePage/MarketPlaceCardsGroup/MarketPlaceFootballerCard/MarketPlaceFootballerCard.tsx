@@ -4,15 +4,17 @@ See LICENSE for copying information.
  */
 
 import React from 'react';
-import { PropTypes } from 'prop-types';
 import { NavLink } from 'react-router-dom';
-
 import './MarketPlaceFootballerCard.scss';
+import { Card }
+    from '../../../../store/reducers/footballerCard';
 
-export const MarketPlaceFootballerCard = ({ card }) => {
+export const MarketPlaceFootballerCard: React.FC<{ card: Card, place?: string }> = ({ card, place }) => {
 
     return (
-        <div className="marketplace-playerCard">
+        <div
+            className="marketplace-playerCard"
+        >
             <img className="marketplace-playerCard__background-type"
                 src={card.mainInfo.backgroundType}
                 alt="Player background type" />
@@ -21,7 +23,7 @@ export const MarketPlaceFootballerCard = ({ card }) => {
                 alt="Player face" />
             <NavLink to="/marketplace/card">
                 <span className="marketplace-playerCard__name">
-                    {card.overalInfo.name}
+                    {card.overalInfo[0].value}
                 </span>
             </NavLink>
             <ul className="marketplace-playerCard__list">
@@ -35,7 +37,7 @@ export const MarketPlaceFootballerCard = ({ card }) => {
                                     /**
                                     * get only average value of player's game property
                                     */
-                                    `${property.average} ${property.title.slice(0,3)}`
+                                    `${property.average} ${property.abbr}`
                                 }
                             </li>
                         );
@@ -57,6 +59,3 @@ export const MarketPlaceFootballerCard = ({ card }) => {
     );
 };
 
-MarketPlaceFootballerCard.propTypes = {
-    card: PropTypes.object.isRequired
-};

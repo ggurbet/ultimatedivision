@@ -8,14 +8,6 @@
         position: absolute;
         width: 110px;
         height: 162px;
-        background-image: url('../../../../../img/FootballFieldPage/emtyCard.png');
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
-        cursor: pointer;
-        &:hover {
-            background-image: url('../../../../../img/FootballFieldPage/emtyCardHover.png');
-        }
         &:nth-child(1) {
             @include footballFieldCardPosition(85%, 50%)
         }
@@ -48,6 +40,19 @@
         }
         &:nth-child(11) {
             @include footballFieldCardPosition(34%, 80%)
+        }
+    }
+    &__link {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-image: url('../../../../../img/FootballFieldPage/emtyCard.png');
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        &:hover {
+            background-image: url('../../../../../img/FootballFieldPage/emtyCardHover.png');
         }
     }
 }
