@@ -19,14 +19,14 @@ import { FootballerCardInformation } from
 import './FootballerCard.scss';
 
 export const FootballerCard: React.FC = () => {
-    const cardData = useSelector((state: RootState) => state.footballerCard[0].overalInfo[0].value);
+    const cardName = useSelector((state: RootState) => state.cardReducer[0].overalInfo[0].value);
 
     return (
         <div className="footballer-card">
             <div className="footballer-card__wrapper">
                 <div className="footballer-card__name-wrapper">
                     <h1 className="footballer-card__name">
-                        {cardData}
+                        {cardName}
                     </h1>
                 </div>
                 <FootballerCardIllustrations />

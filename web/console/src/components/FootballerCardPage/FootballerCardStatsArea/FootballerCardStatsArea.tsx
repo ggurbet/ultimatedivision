@@ -12,7 +12,7 @@ import { FootballerCardStats }
 
 
 export const FootballerCardStatsArea: React.FC = () => {
-    const stats = useSelector((state: RootState )=> state.footballerCard[0].stats);
+    const stats = useSelector((state: RootState )=> state.cardReducer[0].stats);
 
     return (
         <div className="footballer-card-stats">

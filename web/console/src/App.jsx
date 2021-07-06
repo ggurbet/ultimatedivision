@@ -7,6 +7,9 @@ import { MarketPlace }
 import { FootballerCard }
     from './components/FootballerCardPage/FootballerCard/FootballerCard';
 
+import { FootballField }
+    from './components/FootballFieldPage/FootballField/FootballField';
+
 import './App.scss';
 
 export function App() {
@@ -18,6 +21,9 @@ export function App() {
                 </Route>
                 <Route exact path="/ud/marketplace/card">
                     <FootballerCard/>
+                </Route>
+                <Route exact path="/ud/footballField">
+                    <FootballField />
                 </Route>
             </Switch>
         </>

@@ -8,7 +8,6 @@ import { CardStats } from '../../../types/fotballerCard';
 import './FootballerCardStats.scss';
 
 export const FootballerCardStats: React.FC<{ props: CardStats }> = ({ props }) => {
-    const fields = props.fields;
 
     return (
         <div className="footballer-card-stats-item">
@@ -32,7 +31,7 @@ export const FootballerCardStats: React.FC<{ props: CardStats }> = ({ props }) =
                     style={{ background: props.color, width: `${props.average}%` }}
                 ></div>
             </div>
-            {fields.map((item, index) => (
+            {props.fields.map((item, index) => (
                 <div
                     key={index}
                     className="footballer-card-stats-item__row"

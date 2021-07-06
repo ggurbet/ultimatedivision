@@ -10,7 +10,7 @@ import './FootballerCardIllustrationsRadar.scss';
 import { Radar } from 'react-chartjs-2';
 
 export const FootballerCardIllustrationsRadar: React.FC = () => {
-    const stats = useSelector((state: RootState) => state.footballerCard[0].stats);
+    const stats = useSelector((state: RootState) => state.cardReducer[0].stats);
 
     return (
         <div className="footballer-card-illustrations-radar">

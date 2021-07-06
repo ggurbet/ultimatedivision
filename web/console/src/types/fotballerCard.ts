@@ -104,3 +104,11 @@ export class Diagram {
         public value: number,
     ) { }
 }
+
+export class FotballFieldInformationLine {
+    constructor(
+        public id: string ='',
+        public title: string = '',
+        public options: string[] = []
+    ) { }
+}

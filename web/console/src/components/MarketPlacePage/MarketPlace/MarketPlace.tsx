@@ -17,8 +17,8 @@ import { UltimateDivisionPaginator }
 
 import './MarketPlace.scss';
 
-export const MarketPlace: React.FC = () => {
-    const cards = useSelector((state: RootState) => state.footballerCard);
+export const MarketPlace = () => {
+    const cards = useSelector((state: RootState) => state.cardReducer);
 
     return (
         <section className="marketplace">

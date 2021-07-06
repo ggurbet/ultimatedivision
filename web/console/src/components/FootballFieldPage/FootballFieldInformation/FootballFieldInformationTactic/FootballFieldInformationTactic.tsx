@@ -1,0 +1,60 @@
+/*
+Copyright (C) 2021 Creditor Corp. Group.
+See LICENSE for copying information.
+ */
+
+import React from 'react';
+import './FootballFieldInformationTactic.scss';
+
+import { FotballFieldInformationLine } from '../../../../types/fotballerCard';
+
+import triangle from '../../../../img/FootballFieldPage/triangle.png'
+import { useState } from 'react';
+import { ListStyle } from '../../../../utils/footballField';
+import { TriangleStyle } from '../../../../utils/footballField';
+import { handleTactics } from '../../../../store/reducers/footballField';
+import { useDispatch } from 'react-redux';
+
+export const FootballFieldInformationTactic: React.FC<{ props: FotballFieldInformationLine }> = ({ props }) => {
+    const [optionVisibility, changeVisibility] = useState(true);
+
+    const LIST_HEIGHT = new ListStyle(optionVisibility);
+    const TRIANGLE_ROTATE = new TriangleStyle(optionVisibility);
+
+    const dispatch = useDispatch();
+
+    return (
+        <div className="football-field-information-option">
+            <div
+                className="football-field-information-option__heading"
+                onClick={() => changeVisibility(prev => !prev)}
+            >
+                <h4 className="football-field-information-option__title">
+                    {props.title}
+                </h4>
+                <img
+                    className="football-field-information-option__image"
+                    src={triangle}
+                    style={{ transform: TRIANGLE_ROTATE.style }}
+                    alt="triangle img"
+                    id={`triangle-${props.id}`}
+                />
+            </div>
+            <ul
+                style={{ height: LIST_HEIGHT.style }}
+                className="football-field-information-option__list"
+                id={props.id}
+            >
+                {props.options.map((item, index) => (
+                    <li
+                        key={index}
+                        className="football-field-information-option__item"
+                        onClick={() => dispatch(handleTactics)}
+                    >
+                        {item}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    )
+}

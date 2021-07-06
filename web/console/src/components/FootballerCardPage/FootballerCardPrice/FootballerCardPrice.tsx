@@ -12,7 +12,7 @@ import { RootState } from '../../../store';
 import currency from '../../../img/FootballerCardPage/currency.png';
 
 export const FootballerCardPrice: React.FC = () => {
-    const priceData = useSelector((state: RootState) => state.footballerCard[0].price);
+    const priceData = useSelector((state: RootState) => state.cardReducer[0].price);
     const prpValue: number = priceData.prp.value;
 
     return (
@@ -67,10 +67,8 @@ export const FootballerCardPrice: React.FC = () => {
                             </span>
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </div>
     );
 };
