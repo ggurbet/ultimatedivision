@@ -7,7 +7,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 
-import { MarketPlaceNavbar } from '../MarketPlaceNavbar/MarketPlaceNavbar';
 import { MarketPlaceFilterField }
     from '../MarketPlaceFilterField/MarketPlaceFilterField';
 import { MarketPlaceCardsGroup }
@@ -22,7 +21,6 @@ export const MarketPlace = () => {
 
     return (
         <section className="marketplace">
-            <MarketPlaceNavbar />
             <MarketPlaceFilterField />
             <MarketPlaceCardsGroup
                 cards={cards} />

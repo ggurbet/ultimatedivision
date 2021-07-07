@@ -3,12 +3,25 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
+
+import diamond from '../img/MarketPlacePage/marketPlaceCardsGroup/diamond2.png';
+import gold from '../img/MarketPlacePage/marketPlaceCardsGroup/gold2.png';
+import silver from '../img/MarketPlacePage/marketPlaceCardsGroup/silver2.png';
+import wood from '../img/MarketPlacePage/marketPlaceCardsGroup/wood2.png';
+
+import currentBid
+    from '../img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/bid.png';
+import minimumPrice
+    from '../img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/minimum.png';
+import purchased
+    from '../img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/purchased.png';
 export class CardStats {
     public average: number = this.fields
         .map(item => item.value)
         .reduce((prev, current) => prev + current) / this.fields.length;
     constructor(
         public title: string = '',
+        public abbreviated: string = '',
         public fields: CardStatsField[] = []
     ) {
     }
@@ -32,6 +45,37 @@ export class CardStats {
                 return STATISTIC_LOWER_BOUND_COLOR;
         }
     }
+}
+
+export class CardMainInfo {
+    constructor(
+        public lastName: string,
+        public price: number,
+        public playerFace: string,
+        public priceIcon: string,
+    ) { }
+    get backgroundType() {
+        /*
+        * bakgroundtype picture that depend on quality
+        */
+        const qualities = [
+            diamond, gold, silver, wood
+        ];
+        let background = qualities[Math.floor(Math.random()
+            * qualities.length)];
+        return background;
+    };
+    get priceStatus() {
+        /*
+        * get image with price status depend on price status
+        */
+        const statuses = [
+            currentBid, minimumPrice, purchased
+        ];
+        let status = statuses[Math.floor(Math.random()
+            * statuses.length)];
+        return status;
+    };
 }
 
 export class CardStatsField {

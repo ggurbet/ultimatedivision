@@ -13,7 +13,7 @@ import { FootballFieldInformation }
 import { FootballFieldCardSelection }
     from '../FootballFieldCardSelection/FootballFieldCardSelection';
 
-export const FootballField = () => {
+export const FootballField: React.FC = () => {
     return (
         <div className="football-field">
             <h1 className="football-field__title">Football Field</h1>

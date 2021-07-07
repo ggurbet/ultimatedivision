@@ -13,14 +13,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { handleCard }
     from '../../../../store/reducers/footballField';
 
-export const PlayingAreaFootballerCard: React.FC<{ card: Card, place?:string }> = ({ card, place }) => {
+export const PlayingAreaFootballerCard: React.FC<{ card: Card, place?: string }> = ({ card, place }) => {
 
     const dispatch = useDispatch();
     const chosenCard = useSelector((state: RootState) => state.fieldReducer.options.chosedCard);
 
     return (
         <div
-            onClick={place? () => {} : () => dispatch(handleCard(card, chosenCard))}
+            onClick={place ? () => { } : () => dispatch(handleCard(card, chosenCard))}
             className="football-field-card"
             data-background={card.mainInfo.backgroundType}
         >
@@ -30,10 +30,10 @@ export const PlayingAreaFootballerCard: React.FC<{ card: Card, place?:string }> 
                 alt='background img'
             />
             <img className="football-field-card__face-picture"
-                src={card.mainInfo.facePicture}
+                src={card.mainInfo.playerFace}
                 alt="Player face" />
             <span className="football-field-card__name">
-                {card.overalInfo[0].value}
+                {card.mainInfo.lastName}
             </span>
             <ul className="football-field-card__list">
                 {card.stats.map(
@@ -46,7 +46,7 @@ export const PlayingAreaFootballerCard: React.FC<{ card: Card, place?:string }> 
                                     /**
                                     * get only average value of player's game property
                                     */
-                                    `${property.average} ${property.abbr}`
+                                    `${property.abbreviated} ${property.average} `
                                 }
                             </li>
                         );

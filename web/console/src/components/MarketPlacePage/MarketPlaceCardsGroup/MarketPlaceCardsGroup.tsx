@@ -8,10 +8,9 @@ import React from 'react';
 import './MarketPlaceCardsGroup.scss';
 import { MarketPlaceFootballerCard }
     from './MarketPlaceFootballerCard/MarketPlaceFootballerCard';
-import { Card }
-    from '../../../store/reducers/footballerCard';
+import { Card } from '../../../store/reducers/footballerCard';
 
-export const MarketPlaceCardsGroup: React.FC<{ cards:Card[]}> = ({ cards }) => {
+export const MarketPlaceCardsGroup: React.FC<{ cards: Card[] }> = ({ cards }) => {
     return (
         <div className="marketplace-cards">
             <div className="marketplace-cards__wrapper">
@@ -25,4 +24,3 @@ export const MarketPlaceCardsGroup: React.FC<{ cards:Card[]}> = ({ cards }) => {
         </div>
     );
 };
-
