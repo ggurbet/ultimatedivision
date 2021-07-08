@@ -18,6 +18,7 @@
         "prop-types": "^15.7.2",
         "react": "^17.0.2",
         "react-chartjs-2": "^3.0.3",
+        "react-dnd-html5-backend": "^14.0.0",
         "react-dom": "^17.0.2",
         "react-parallax": "^3.3.0",
         "react-redux": "^7.2.4",
