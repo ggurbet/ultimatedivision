@@ -68,6 +68,8 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, admins *
 	// managersRouter.Use(server.withAuth) // TODO: implement cookie auth and auth service.
 	adminsController := controllers.NewAdmins(log, admins, server.templates.admin)
 	adminsRouter.HandleFunc("", adminsController.List).Methods(http.MethodGet)
+	adminsRouter.HandleFunc("/create", adminsController.Create).Methods(http.MethodGet, http.MethodPost)
+	adminsRouter.HandleFunc("/update/{id}", adminsController.Update).Methods(http.MethodGet, http.MethodPost)
 
 	userRouter := router.PathPrefix("/users").Subrouter().StrictSlash(true)
 	// userRouter.Use(server.withAuth) // TODO: implement cookie auth and auth service.
