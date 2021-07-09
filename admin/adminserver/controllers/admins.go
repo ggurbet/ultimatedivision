@@ -163,6 +163,6 @@ func (controller *Admins) Update(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		Redirect(w, r, "", http.MethodGet)
+		Redirect(w, r, "/admins", http.MethodGet)
 	}
 }

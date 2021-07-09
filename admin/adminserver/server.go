@@ -136,6 +136,14 @@ func (server *Server) initializeTemplates() (err error) {
 	if err != nil {
 		return Error.Wrap(err)
 	}
+	server.templates.admin.Create, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "create.html"))
+	if err != nil {
+		return Error.Wrap(err)
+	}
+	server.templates.admin.Update, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "update.html"))
+	if err != nil {
+		return Error.Wrap(err)
+	}
 	server.templates.card.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "cards", "list.html"))
 	if err != nil {
 		return Error.Wrap(err)
