@@ -117,7 +117,7 @@ func (controller *Users) Create(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "could not create user", http.StatusInternalServerError)
 			return
 		}
-		Redirect(w, r, "/users/list", http.MethodGet)
+		Redirect(w, r, "/users", http.MethodGet)
 	}
 }
 
@@ -180,7 +180,7 @@ func (controller *Users) Update(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "could not update users status", http.StatusInternalServerError)
 			return
 		}
-		Redirect(w, r, "/users/list", http.MethodGet)
+		Redirect(w, r, "/users", http.MethodGet)
 	}
 }
 
@@ -206,5 +206,5 @@ func (controller *Users) Delete(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "could not delete user", http.StatusInternalServerError)
 		return
 	}
-	Redirect(w, r, "/users/list", http.MethodGet)
+	Redirect(w, r, "/users", http.MethodGet)
 }
