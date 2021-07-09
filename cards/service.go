@@ -24,7 +24,9 @@ func NewService(cards DB) *Service {
 }
 
 // Create add card in DB.
-func (service *Service) Create(ctx context.Context, card Card) error {
+func (service *Service) Create(ctx context.Context, userID uuid.UUID) error {
+	var card Card
+	// TODO:logic generate card
 	return service.cards.Create(ctx, card)
 }
 
