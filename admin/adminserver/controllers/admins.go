@@ -50,7 +50,7 @@ func (controller *Admins) List(w http.ResponseWriter, r *http.Request) {
 	admins, err := controller.admins.List(ctx)
 	if err != nil {
 		controller.log.Error("could not get admins list", ErrAdmins.Wrap(err))
-		http.Error(w, "could not get admins list", http.StatusInternalServerError) // status code should depends on error type.
+		http.Error(w, "could not get admins list", http.StatusInternalServerError)
 		return
 	}
 

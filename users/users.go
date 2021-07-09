@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // ErrNoUser indicated that user does not exist.
@@ -26,6 +27,10 @@ type DB interface {
 	GetByEmail(ctx context.Context, email string) (User, error)
 	// Create creates a user and writes to the database.
 	Create(ctx context.Context, user User) error
+	// Update updates a status in the database.
+	Update(ctx context.Context, status int, id uuid.UUID) error
+	// Delete deletes a user in the database.
+	Delete(ctx context.Context, id uuid.UUID) error
 }
 
 // Status defines the list of possible user statuses.
@@ -49,4 +54,14 @@ type User struct {
 	LastLogin    time.Time `json:"lastLogin"`
 	Status       Status    `json:"status"`
 	CreatedAt    time.Time `json:"createdAt"`
+}
+
+// EncodePass encode the password and generate "hash" to store from users password
+func (user *User) EncodePass() error {
+	hash, err := bcrypt.GenerateFromPassword(user.PasswordHash, bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	user.PasswordHash = hash
+	return nil
 }

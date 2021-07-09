@@ -112,3 +112,23 @@ func (usersDB *usersDB) Create(ctx context.Context, user users.User) error {
 
 	return nil
 }
+
+// Delete deletes a user in the database.
+func (usersDB *usersDB) Delete(ctx context.Context, id uuid.UUID) error {
+	_, err := usersDB.conn.QueryContext(ctx, "DELETE FROM users WHERE id=$1", id)
+	if err != nil {
+		return ErrUsers.Wrap(err)
+	}
+
+	return nil
+}
+
+// Update updates a status in the database.
+func (usersDB *usersDB) Update(ctx context.Context, status int, id uuid.UUID) error {
+	_, err := usersDB.conn.QueryContext(ctx, "UPDATE users SET status=$1 WHERE id=$2", status, id)
+	if err != nil {
+		return ErrUsers.Wrap(err)
+	}
+
+	return nil
+}

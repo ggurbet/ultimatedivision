@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal | Create User</title>
+</head>
+<body>
+<form action="/users/create" method="post">
+    <table>
+        <tr>
+            <td>
+                Email:
+            </td>
+            <td>
+                <input type="email" name="email">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Password:
+            </td>
+            <td>
+                <input type="text" name="password">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                NickName:
+            </td>
+            <td>
+                <input type="text" name="nickName">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                FirstName:
+            </td>
+            <td>
+                <input type="text" name="firstName">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                LastName:
+            </td>
+            <td>
+                <input type="text" name="lastName">
+            </td>
+        </tr>
+    </table>
+    <input type="submit" value="Create">
+</form>
+</body>
+</html>

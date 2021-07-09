@@ -212,7 +212,6 @@ func (cardsDB *cardsDB) List(ctx context.Context) ([]cards.Card, error) {
 	data := []cards.Card{}
 	for rows.Next() {
 		card := cards.Card{}
-
 		if err = rows.Scan(
 			&card.ID, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle,
 			&card.HairColor, &card.DominantFoot, &card.UserID, &card.Tactics, &card.Positioning, &card.Composure, &card.Aggression,

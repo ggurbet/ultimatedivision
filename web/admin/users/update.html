@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal | Update Status</title>
+</head>
+<body>
+<form action="/users/update/status/{{.ID}}" method="post">
+    <table>
+        <tr>
+            <td>
+                New Status :
+            </td>
+            <td>
+                <input type="number" name="status">
+            </td>
+    </table>
+    <input type="submit" value="Update">
+</form>
+</body>
+</html>
