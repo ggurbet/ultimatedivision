@@ -32,14 +32,23 @@ func TestAdmin(t *testing.T) {
 		CreatedAt:    time.Now(),
 	}
 
+	updatedAdmin := admins.Admin{
+		ID:           admin1.ID,
+		Email:        admin1.Email,
+		PasswordHash: []byte{3},
+		CreatedAt:    admin1.CreatedAt,
+	}
+
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repository := db.Admins()
 		id := uuid.New()
+
 		t.Run("Get sql no rows", func(t *testing.T) {
 			_, err := repository.Get(ctx, id)
 			require.Error(t, err)
 			assert.Equal(t, true, admins.ErrNoAdmin.Has(err))
 		})
+
 		t.Run("Get", func(t *testing.T) {
 			err := repository.Create(ctx, admin1)
 			require.NoError(t, err)
@@ -57,6 +66,16 @@ func TestAdmin(t *testing.T) {
 			require.NoError(t, err)
 			compareAdmins(t, allAdmins[0], admin1)
 			compareAdmins(t, allAdmins[1], admin2)
+		})
+
+		t.Run("Update", func(t *testing.T) {
+			err := repository.Update(ctx, updatedAdmin)
+			require.NoError(t, err)
+
+			adminFromDB, err := repository.Get(ctx, admin1.ID)
+			require.NoError(t, err)
+
+			compareAdmins(t, adminFromDB, updatedAdmin)
 		})
 	})
 }

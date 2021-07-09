@@ -75,3 +75,11 @@ func (adminsDB *adminsDB) Create(ctx context.Context, admin admins.Admin) error 
 		VALUES($1,$2,$3,$4)`, admin.ID, admin.Email, admin.PasswordHash, admin.CreatedAt)
 	return ErrAdmins.Wrap(err)
 }
+
+// Update updates admin in DB.
+func (adminsDB *adminsDB) Update(ctx context.Context, admin admins.Admin) error {
+	_, err := adminsDB.conn.QueryContext(ctx,
+		"UPDATE admins SET password_hash = $1 WHERE id = $2",
+		admin.PasswordHash, admin.ID)
+	return ErrAdmins.Wrap(err)
+}

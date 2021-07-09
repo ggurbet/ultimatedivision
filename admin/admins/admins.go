@@ -24,6 +24,8 @@ type DB interface {
 	Get(ctx context.Context, id uuid.UUID) (Admin, error)
 	// Create creates an admin and write it to database.
 	Create(ctx context.Context, admin Admin) error
+	// Update updates an admins password.
+	Update(ctx context.Context, admin Admin) error
 }
 
 // Admin describes admin entity.

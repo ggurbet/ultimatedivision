@@ -2,36 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Portal | Managers</title>
+  <title>Admin Portal | Admins</title>
 </head>
 <body>
+<nav>
+  <div>
+    <ul>
+      <li><a href="/admins/create">Add admin</a></li>
+    </ul>
+  </div>
+</nav>
 <table style="width:100%">
   <thead>
   <tr>
+    <th>ID</th>
     <th>Email</th>
-    <th>First name</th>
-    <th>Last name</th>
-    <th>Created at</th>
-    <td>Actions</td>
+    <th>Created At</th>
+    <th>Operation</th>
   </tr>
   </thead>
   {{range .}}
   <tr>
     <td>
+      {{.ID}}
+    </td>
+    <td>
       {{.Email}}
-    </td>
-    <td>
-      {{.FirstName}}
-    </td>
-    <td>
-      {{.LastName}}
     </td>
     <td>
       {{.CreatedAt}}
     </td>
     <td>
-      <a href="/managers/{{.ID}}/delete">Delete</a>
-      <a href="/managers/{{.ID}}/update">Update</a>
+      <a href="/admins/update/{{.ID}}">Update</a>
     </td>
   </tr>
   {{end}}
