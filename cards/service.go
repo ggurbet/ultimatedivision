@@ -37,3 +37,8 @@ func (service *Service) Get(ctx context.Context, cardID uuid.UUID) (Card, error)
 func (service *Service) List(ctx context.Context) ([]Card, error) {
 	return service.cards.List(ctx)
 }
+
+// Delete destroy card in DB.
+func (service *Service) Delete(ctx context.Context, cardID uuid.UUID) error {
+	return service.cards.Delete(ctx, cardID)
+}

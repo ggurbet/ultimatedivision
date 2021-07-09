@@ -23,65 +23,73 @@ type DB interface {
 	Get(ctx context.Context, id uuid.UUID) (Card, error)
 	// List returns all cards from the data base.
 	List(ctx context.Context) ([]Card, error)
+	// Delete deletes card record in the data base.
+	Delete(ctx context.Context, id uuid.UUID) error
 }
 
 // Card describes card entity.
 type Card struct {
-	ID               uuid.UUID     `json:"id"`
-	PlayerName       string        `json:"playerName"`
-	Quality          Quality       `json:"quality"`
-	PictureType      PictureType   `json:"pictureType"`
-	Height           float32       `json:"height"`
-	Weight           float32       `json:"weight"`
-	SkinColor        SkinColor     `json:"skinColor"`
-	HairStyle        HairStyle     `json:"hairStyle"`
-	HairColor        HairColor     `json:"hairColor"`
-	Accessories      []Accessories `json:"accessories"`
-	DominantFoot     DominantFoot  `json:"dominantFoot"`
-	UserID           uuid.UUID     `json:"userId"`
-	Positioning      int           `json:"positioning"`
-	Composure        int           `json:"composure"`
-	Aggression       int           `json:"aggression"`
-	Vision           int           `json:"vision"`
-	Awareness        int           `json:"awareness"`
-	Crosses          int           `json:"crosses"`
-	Acceleration     int           `json:"acceleration"`
-	RunningSpeed     int           `json:"runningSpeed"`
-	ReactionSpeed    int           `json:"reactionSpeed"`
-	Agility          int           `json:"agility"`
-	Stamina          int           `json:"stamina"`
-	Strength         int           `json:"strength"`
-	Jumping          int           `json:"jumping"`
-	Balance          int           `json:"balance"`
-	Dribbling        int           `json:"dribbling"`
-	BallControl      int           `json:"ballControl"`
-	WeakFoot         int           `json:"weakFoot"`
-	SkillMoves       int           `json:"skillMoves"`
-	Finesse          int           `json:"finesse"`
-	Curve            int           `json:"curve"`
-	Volleys          int           `json:"volleys"`
-	ShortPassing     int           `json:"shortPassing"`
-	LongPassing      int           `json:"longPassing"`
-	ForwardPass      int           `json:"forwardPass"`
-	FinishingAbility int           `json:"finishingAbility"`
-	ShotPower        int           `json:"shotPower"`
-	Accuracy         int           `json:"accuracy"`
-	Distance         int           `json:"distance"`
-	Penalty          int           `json:"penalty"`
-	FreeKicks        int           `json:"freeKicks"`
-	Corners          int           `json:"corners"`
-	HeadingAccuracy  int           `json:"headingAccuracy"`
-	OffsideTrap      int           `json:"offsideTrap"`
-	Sliding          int           `json:"sliding"`
-	Tackles          int           `json:"tackles"`
-	BallFocus        int           `json:"ballFocus"`
-	Interceptions    int           `json:"interceptions"`
-	Vigilance        int           `json:"vigilance"`
-	Reflexes         int           `json:"reflexes"`
-	Diving           int           `json:"diving"`
-	Handling         int           `json:"handling"`
-	Sweeping         int           `json:"sweeping"`
-	Throwing         int           `json:"throwing"`
+	ID               uuid.UUID    `json:"id"`
+	PlayerName       string       `json:"playerName"`
+	Quality          Quality      `json:"quality"`
+	PictureType      int          `json:"pictureType"`
+	Height           float32      `json:"height"`
+	Weight           float32      `json:"weight"`
+	SkinColor        int          `json:"skinColor"`
+	HairStyle        int          `json:"hairStyle"`
+	HairColor        int          `json:"hairColor"`
+	Accessories      []int        `json:"accessories"`
+	DominantFoot     DominantFoot `json:"dominantFoot"`
+	UserID           uuid.UUID    `json:"userId"`
+	Tactics          int          `json:"tactics"`
+	Positioning      int          `json:"positioning"`
+	Composure        int          `json:"composure"`
+	Aggression       int          `json:"aggression"`
+	Vision           int          `json:"vision"`
+	Awareness        int          `json:"awareness"`
+	Crosses          int          `json:"crosses"`
+	Physique         int          `json:"physique"`
+	Acceleration     int          `json:"acceleration"`
+	RunningSpeed     int          `json:"runningSpeed"`
+	ReactionSpeed    int          `json:"reactionSpeed"`
+	Agility          int          `json:"agility"`
+	Stamina          int          `json:"stamina"`
+	Strength         int          `json:"strength"`
+	Jumping          int          `json:"jumping"`
+	Balance          int          `json:"balance"`
+	Technique        int          `json:"technique"`
+	Dribbling        int          `json:"dribbling"`
+	BallControl      int          `json:"ballControl"`
+	WeakFoot         int          `json:"weakFoot"`
+	SkillMoves       int          `json:"skillMoves"`
+	Finesse          int          `json:"finesse"`
+	Curve            int          `json:"curve"`
+	Volleys          int          `json:"volleys"`
+	ShortPassing     int          `json:"shortPassing"`
+	LongPassing      int          `json:"longPassing"`
+	ForwardPass      int          `json:"forwardPass"`
+	Offense          int          `json:"offense"`
+	FinishingAbility int          `json:"finishingAbility"`
+	ShotPower        int          `json:"shotPower"`
+	Accuracy         int          `json:"accuracy"`
+	Distance         int          `json:"distance"`
+	Penalty          int          `json:"penalty"`
+	FreeKicks        int          `json:"freeKicks"`
+	Corners          int          `json:"corners"`
+	HeadingAccuracy  int          `json:"headingAccuracy"`
+	Defence          int          `json:"defence"`
+	OffsideTrap      int          `json:"offsideTrap"`
+	Sliding          int          `json:"sliding"`
+	Tackles          int          `json:"tackles"`
+	BallFocus        int          `json:"ballFocus"`
+	Interceptions    int          `json:"interceptions"`
+	Vigilance        int          `json:"vigilance"`
+	Goalkeeping      int          `json:"goalkeeping"`
+	Reflexes         int          `json:"reflexes"`
+	Diving           int          `json:"diving"`
+	Handling         int          `json:"handling"`
+	Sweeping         int          `json:"sweeping"`
+	Throwing         int          `json:"throwing"`
 }
 
 // Quality defines the list of possible card qualities.
@@ -101,19 +109,34 @@ const (
 )
 
 // PictureType defines the list of possible card picture types.
-type PictureType string
+var PictureType = map[int]string{
+	1: "https://drive.google.com/file/d/1ESKPpiCoMUkOEpaa40VBFl4O1bPrDntS/view?usp=sharing",
+	2: "https://drive.google.com/file/d/1baFCTjDVzIy5ucdcz-jMCb2FPSKyIRU2/view?usp=sharing",
+}
 
 // SkinColor defines the list of possible card skin colors.
-type SkinColor int
+var SkinColor = map[int]string{
+	1: "https://drive.google.com/file/d/1ESKPpiCoMUkOEpaa40VBFl4O1bPrDntS/view?usp=sharing",
+	2: "https://drive.google.com/file/d/1baFCTjDVzIy5ucdcz-jMCb2FPSKyIRU2/view?usp=sharing",
+}
 
 // HairStyle defines the list of possible card hairstyles.
-type HairStyle int
+var HairStyle = map[int]string{
+	1: "https://drive.google.com/file/d/1ESKPpiCoMUkOEpaa40VBFl4O1bPrDntS/view?usp=sharing",
+	2: "https://drive.google.com/file/d/1baFCTjDVzIy5ucdcz-jMCb2FPSKyIRU2/view?usp=sharing",
+}
 
 // HairColor defines the list of possible card hair colors.
-type HairColor int
+var HairColor = map[int]string{
+	1: "https://drive.google.com/file/d/1ESKPpiCoMUkOEpaa40VBFl4O1bPrDntS/view?usp=sharing",
+	2: "https://drive.google.com/file/d/1baFCTjDVzIy5ucdcz-jMCb2FPSKyIRU2/view?usp=sharing",
+}
 
-// Accessories defines the list of possible card accessories.
-type Accessories int
+// Accessory defines the list of possible card accessories.
+var Accessory = map[int]string{
+	1: "https://drive.google.com/file/d/1ESKPpiCoMUkOEpaa40VBFl4O1bPrDntS/view?usp=sharing",
+	2: "https://drive.google.com/file/d/1baFCTjDVzIy5ucdcz-jMCb2FPSKyIRU2/view?usp=sharing",
+}
 
 // DominantFoot defines the list of possible card dominant foots.
 type DominantFoot string
