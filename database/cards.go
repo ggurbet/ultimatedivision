@@ -54,8 +54,8 @@ func (cardsDB *cardsDB) Create(ctx context.Context, card cards.Card) error {
 			$26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49,
 			$50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $60)
 		`
-
 	_, err = cardsDB.conn.ExecContext(ctx, query,
+		card.ID, card.PlayerName, card.Quality, card.PictureType, card.Height, card.Weight, card.SkinColor, card.HairStyle, card.HairColor,
 		card.DominantFoot, card.UserID, card.Tactics, card.Positioning, card.Composure, card.Aggression, card.Vision, card.Awareness,
 		card.Crosses, card.Physique, card.Acceleration, card.RunningSpeed, card.ReactionSpeed, card.Agility, card.Stamina, card.Strength,
 		card.Jumping, card.Balance, card.Technique, card.Dribbling, card.BallControl, card.WeakFoot, card.SkillMoves, card.Finesse,

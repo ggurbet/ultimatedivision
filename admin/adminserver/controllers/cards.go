@@ -83,7 +83,7 @@ func (controller *Cards) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Redirect(w, r, "", "GET")
+	Redirect(w, r, "/cards", "GET")
 }
 
 // Delete is an endpoint that will destroy record card to database.
