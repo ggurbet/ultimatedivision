@@ -21,7 +21,7 @@ type Token struct {
 	Signature []byte
 }
 
-// String returns base64URLEncoded data joined with .
+// String returns base64URLEncoded data joined with.
 func (t *Token) String() string {
 	payload := base64.URLEncoding.EncodeToString(t.Payload)
 	signature := base64.URLEncoding.EncodeToString(t.Signature)
@@ -29,7 +29,7 @@ func (t *Token) String() string {
 	return strings.Join([]string{payload, signature}, ".")
 }
 
-// FromBase64URLString creates Token instance from base64URLEncoded string representation
+// FromBase64URLString creates Token instance from base64URLEncoded string representation.
 func FromBase64URLString(token string) (Token, error) {
 	i := strings.Index(token, ".")
 	if i < 0 {

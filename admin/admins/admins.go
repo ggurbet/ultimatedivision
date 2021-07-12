@@ -22,6 +22,8 @@ type DB interface {
 	List(ctx context.Context) ([]Admin, error)
 	// Get return admin by id from database.
 	Get(ctx context.Context, id uuid.UUID) (Admin, error)
+	// GetByEmail is a method for querying admin from the database by email.
+	GetByEmail(ctx context.Context, email string) (Admin, error)
 	// Create creates an admin and write it to database.
 	Create(ctx context.Context, admin Admin) error
 	// Update updates an admins password.

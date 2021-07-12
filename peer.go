@@ -7,6 +7,8 @@ import (
 	"context"
 	"errors"
 	"net"
+	"ultimatedivision/admin/adminauth"
+	"ultimatedivision/internal/auth"
 
 	"github.com/zeebo/errs"
 	"golang.org/x/sync/errgroup"
@@ -39,7 +41,12 @@ type DB interface {
 
 // Config is the global configuration for ultimatedivision.
 type Config struct {
-	Admin adminserver.Config `json:"admin"`
+	Admins struct {
+		Server adminserver.Config `json:"server"`
+		Auth   struct {
+			TokenAuthSecret string `json:"tokenAuthSecret"`
+		} `json:"auth"`
+	}
 }
 
 // Peer is the representation of a ultimatedivision.
@@ -51,6 +58,7 @@ type Peer struct {
 	// exposes admins relates logic.
 	Admins struct {
 		Service *admins.Service
+		Auth    *adminauth.Service
 	}
 
 	// exposes users related logic.
@@ -87,6 +95,12 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		peer.Admins.Service = admins.NewService(
 			peer.Database.Admins(),
 		)
+		peer.Admins.Auth = adminauth.NewService(
+			peer.Database.Admins(),
+			auth.TokenSigner{
+				Secret: []byte(config.Admins.Auth.TokenAuthSecret),
+			},
+		)
 	}
 
 	{ // cards setup
@@ -96,15 +110,16 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 	}
 
 	{ // admin setup
-		peer.Admin.Listener, err = net.Listen("tcp", config.Admin.Address)
+		peer.Admin.Listener, err = net.Listen("tcp", config.Admins.Server.Address)
 		if err != nil {
 			return nil, err
 		}
 
 		peer.Admin.Endpoint, err = adminserver.NewServer(
-			config.Admin,
+			config.Admins.Server,
 			logger,
 			peer.Admin.Listener,
+			peer.Admins.Auth,
 			peer.Admins.Service,
 			peer.Users.Service,
 			peer.Cards.Service,
@@ -120,6 +135,11 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 // Run runs ultimatedivision.Peer until it's either closed or it errors.
 func (peer *Peer) Run(ctx context.Context) error {
 	group, ctx := errgroup.WithContext(ctx)
+
+	err := peer.Admins.Service.Create(ctx, "qwe@ukr.net", []byte("qweqwe"))
+	if err != nil {
+		peer.Log.Error("admin", err)
+	}
 
 	// start ultimatedivision servers as a separate goroutines.
 	group.Go(func() error {

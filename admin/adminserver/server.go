@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"path/filepath"
+	"ultimatedivision/admin/adminauth"
 
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
@@ -18,6 +19,7 @@ import (
 	"ultimatedivision/admin/admins"
 	"ultimatedivision/admin/adminserver/controllers"
 	"ultimatedivision/cards"
+	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/users"
 )
@@ -29,8 +31,13 @@ var (
 
 // Config contains configuration for admin web server.
 type Config struct {
-	Address   string `help:"server address of the frontend app" devDefault:"127.0.0.1:0" releaseDefault:"127.0.0.1:0"`
-	StaticDir string `help:"path to static resources" default:""`
+	Address   string `json:"address"`
+	StaticDir string `json:"staticDir"`
+
+	Auth struct {
+		CookieName string `json:"cookieName"`
+		Path       string `json:"path"`
+	} `json:"auth"`
 }
 
 // Server represents admin web server.
@@ -43,19 +50,28 @@ type Server struct {
 	listener net.Listener
 	server   http.Server
 
+	authService *adminauth.Service
+	cookieAuth  *auth.CookieAuth
+
 	templates struct {
 		admin controllers.AdminTemplates
 		user  controllers.UserTemplates
 		card  controllers.CardTemplates
+		auth  controllers.AuthTemplates
 	}
 }
 
 // NewServer is a constructor for admin web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, admins *admins.Service, users *users.Service, cards *cards.Service) (*Server, error) {
+func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service) (*Server, error) {
 	server := &Server{
-		log:      log,
-		config:   config,
-		listener: listener,
+		log:    log,
+		config: config,
+		cookieAuth: auth.NewCookieAuth(auth.CookieSettings{
+			Name: config.Auth.CookieName,
+			Path: config.Auth.Path,
+		}),
+		authService: authService,
+		listener:    listener,
 	}
 
 	err := server.initializeTemplates()
@@ -64,6 +80,10 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, admins *
 	}
 
 	router := mux.NewRouter()
+	authController := controllers.NewAuth(server.log, server.authService, server.cookieAuth, server.templates.auth)
+	router.HandleFunc("/login", authController.Login).Methods(http.MethodPost, http.MethodGet)
+	router.HandleFunc("/logout", authController.Logout).Methods(http.MethodPost)
+
 	adminsRouter := router.PathPrefix("/admins").Subrouter().StrictSlash(true)
 	// managersRouter.Use(server.withAuth) // TODO: implement cookie auth and auth service.
 	adminsController := controllers.NewAdmins(log, admins, server.templates.admin)
@@ -151,5 +171,37 @@ func (server *Server) initializeTemplates() (err error) {
 		return err
 	}
 
+	server.templates.auth.Login, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "auth", "login.html"))
+	if err != nil {
+		return err
+	}
+
 	return nil
+}
+
+// withAuth performs initial authorization before every request.
+func (server *Server) withAuth(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var ctx context.Context
+
+		ctxWithAuth := func(ctx context.Context) context.Context {
+			token, err := server.cookieAuth.GetToken(r)
+			if err != nil {
+				controllers.Redirect(w, r, "/login/", "GET")
+			}
+
+			ctx = auth.SetToken(ctx, []byte(token))
+
+			claims, err := server.authService.Authorize(ctx)
+			if err != nil {
+				controllers.Redirect(w, r, "/login/", "GET")
+			}
+
+			return auth.SetClaims(ctx, claims)
+		}
+
+		ctx = ctxWithAuth(r.Context())
+
+		handler.ServeHTTP(w, r.Clone(ctx))
+	})
 }

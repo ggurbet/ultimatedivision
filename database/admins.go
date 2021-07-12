@@ -68,6 +68,24 @@ func (adminsDB *adminsDB) Get(ctx context.Context, id uuid.UUID) (admins.Admin, 
 	return admin, nil
 }
 
+// GetByEmail is a method for querying admin from the database by email.
+func (adminsDB *adminsDB) GetByEmail(ctx context.Context, email string) (admins.Admin, error) {
+	query := `SELECT * FROM admins WHERE email = $1;`
+
+	var admin admins.Admin
+
+	row := adminsDB.conn.QueryRowContext(ctx, query, email)
+	if err := row.Scan(&admin.ID, &admin.Email, &admin.PasswordHash, &admin.CreatedAt); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return admin, admins.ErrNoAdmin.Wrap(err)
+		}
+
+		return admins.Admin{}, Error.Wrap(err)
+	}
+
+	return admin, nil
+}
+
 // Create inserts admin to DB.
 func (adminsDB *adminsDB) Create(ctx context.Context, admin admins.Admin) error {
 	_, err := adminsDB.conn.QueryContext(ctx,
