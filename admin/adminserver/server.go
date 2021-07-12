@@ -122,31 +122,33 @@ func (server *Server) Close() error {
 func (server *Server) initializeTemplates() (err error) {
 	server.templates.user.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "users", "list.html"))
 	if err != nil {
-		return Error.Wrap(err)
+		return err
 	}
 	server.templates.user.Create, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "users", "create.html"))
 	if err != nil {
-		return Error.Wrap(err)
+		return err
 	}
 	server.templates.user.Update, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "users", "update.html"))
 	if err != nil {
-		return Error.Wrap(err)
+		return err
 	}
+
 	server.templates.admin.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "list.html"))
 	if err != nil {
-		return Error.Wrap(err)
+		return err
 	}
 	server.templates.admin.Create, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "create.html"))
 	if err != nil {
-		return Error.Wrap(err)
+		return err
 	}
 	server.templates.admin.Update, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "update.html"))
 	if err != nil {
-		return Error.Wrap(err)
+		return err
 	}
+
 	server.templates.card.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "cards", "list.html"))
 	if err != nil {
-		return Error.Wrap(err)
+		return err
 	}
 
 	return nil

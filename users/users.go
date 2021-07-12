@@ -56,7 +56,7 @@ type User struct {
 	CreatedAt    time.Time `json:"createdAt"`
 }
 
-// EncodePass encode the password and generate "hash" to store from users password
+// EncodePass encode the password and generate "hash" to store from users password.
 func (user *User) EncodePass() error {
 	hash, err := bcrypt.GenerateFromPassword(user.PasswordHash, bcrypt.DefaultCost)
 	if err != nil {
