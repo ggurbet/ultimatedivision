@@ -136,11 +136,6 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 func (peer *Peer) Run(ctx context.Context) error {
 	group, ctx := errgroup.WithContext(ctx)
 
-	err := peer.Admins.Service.Create(ctx, "qwe@ukr.net", []byte("qweqwe"))
-	if err != nil {
-		peer.Log.Error("admin", err)
-	}
-
 	// start ultimatedivision servers as a separate goroutines.
 	group.Go(func() error {
 		return ignoreCancel(peer.Admin.Endpoint.Run(ctx))
