@@ -10,6 +10,7 @@ import next
 import previous
     from '../../img/UltimateDivisionPaginator/previous.png';
 
+//TODO: delete redundant UltimateDivision prefix in next PR
 export const UltimateDivisionPaginator: React.FC<{ itemCount: number }> = ({ itemCount }) => {
     let [currentPage, setCurrentPage] = useState<number>(1);
     /**

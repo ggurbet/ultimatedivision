@@ -22,7 +22,7 @@ import stars
 import parametres
     from '../../../img/MarketPlacePage/marketPlaceFilterField/parametres.png';
 
-export const MarketPlaceFilterField: React.FC = () => {
+export const MarketPlaceFilterField: React.FC<{ title: string }> = ({ title }) => {
     const filterFieldTitles: { title: string, src: string }[] = [
         {
             title: 'Search',
@@ -90,7 +90,7 @@ export const MarketPlaceFilterField: React.FC = () => {
     return (
         <section className="marketplace-filter">
             <h1 className="marketplace-filter__title">
-                MARKETPLACE
+                {title}
             </h1>
             <div className="marketplace-filter__wrapper">
                 <ul className="marketplace-filter__list">

@@ -6,16 +6,15 @@ See LICENSE for copying information.
 import React from 'react';
 
 import './MarketPlaceCardsGroup.scss';
-import { MarketPlaceFootballerCard }
-    from './MarketPlaceFootballerCard/MarketPlaceFootballerCard';
+
 import { Card } from '../../../store/reducers/footballerCard';
 
-export const MarketPlaceCardsGroup: React.FC<{ cards: Card[] }> = ({ cards }) => {
+export const MarketPlaceCardsGroup: React.FC<{ cards: Card[], Component: React.FC<{ card: Card, key: number }> }> = ({ cards, Component }) => {
     return (
         <div className="marketplace-cards">
             <div className="marketplace-cards__wrapper">
                 {cards.map((card, index) => (
-                    <MarketPlaceFootballerCard
+                    <Component
                         card={card}
                         key={index}
                     />

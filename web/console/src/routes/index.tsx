@@ -28,6 +28,12 @@ export class RouteConfig {
         FootballField,
         true,
     );
+    //TODO: Route with SubRoutes
+    public static MyCards: ComponentRoutes = new ComponentRoutes(
+        "/ud/marketplace/club",
+        MarketPlace,
+        true
+    )
     public static Default: ComponentRoutes = new ComponentRoutes(
         "/ud/",
         MarketPlace,
@@ -37,6 +43,7 @@ export class RouteConfig {
         RouteConfig.MarketPlace,
         RouteConfig.FootballerCard,
         RouteConfig.FootballField,
+        RouteConfig.MyCards,
         RouteConfig.Default
     ]
 };

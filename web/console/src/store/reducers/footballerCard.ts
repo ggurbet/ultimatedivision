@@ -6,6 +6,8 @@ See LICENSE for copying information.
 import playerFace from '../../img/MarketPlacePage/marketPlaceCardsGroup/player.png';
 import priceIcon
     from '../../img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/price.png';
+import priceGoldIcon from '../../img/MarketPlacePage/MyCard/goldPrice.png';
+import confirmIcon from '../../img/MarketPlacePage/MyCard/ok.png';
 
 import star from '../../img/FootballerCardPage/star.png';
 import checked from '../../img/FootballerCardPage/checked.png';
@@ -24,7 +26,9 @@ export class Card {
         'Ronalculus',
         1000000,
         playerFace,
-        priceIcon
+        priceIcon,
+        priceGoldIcon,
+        confirmIcon
     )
     overalInfo = [
         new CardInfoField('name', 'Albert Ronalculus'),

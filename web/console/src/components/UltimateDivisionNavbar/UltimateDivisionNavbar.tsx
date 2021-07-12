@@ -12,6 +12,7 @@ import ultimate from '../../img/MarketPlacePage/MarketPlaceNavbar/ultimate.png';
 
 import { RouteConfig } from '../../routes';
 
+//TODO: delete redundant UltimateDivision prefix in next PR
 export const UltimateDivisionNavbar: React.FC = () => {
     return (
         <div className="ultimatedivision-navbar">
@@ -37,7 +38,7 @@ export const UltimateDivisionNavbar: React.FC = () => {
                 </li>
                 <li className="ultimatedivision-navbar__item">
                     <NavLink
-                        to={RouteConfig.MarketPlace.path}
+                        to={RouteConfig.MyCards.path}
                         className="ultimatedivision-navbar__item__active"
                     >
                         CLUB

@@ -13,17 +13,34 @@ import { MarketPlaceCardsGroup }
     from '../MarketPlaceCardsGroup/MarketPlaceCardsGroup';
 import { UltimateDivisionPaginator }
     from '../../UltimateDivisionPaginator/UltimateDivisionPaginator';
+import { MarketPlaceFootballerCard }
+    from '../MarketPlaceCardsGroup/MarketPlaceFootballerCard/MarketPlaceFootballerCard';
 
 import './MarketPlace.scss';
+import { MyCard } from '../MyCard/MyCard';
+import { RouteConfig } from '../../../routes';
 
-export const MarketPlace = () => {
+
+export const MarketPlace = ({ ...children }) => {
     const cards = useSelector((state: RootState) => state.cardReducer);
+
+    //TODO: Route with SubRoutes
+    let Component = MarketPlaceFootballerCard;
+    let title = "MARKETPLACE";
+    if (children.path === RouteConfig.MyCards.path) {
+        Component = MyCard;
+        title = "MY CARDS";
+    };
 
     return (
         <section className="marketplace">
-            <MarketPlaceFilterField />
+            <MarketPlaceFilterField
+                title={title}
+            />
             <MarketPlaceCardsGroup
-                cards={cards} />
+                cards={cards}
+                Component={Component}
+            />
             <UltimateDivisionPaginator
                 itemCount={cards.length} />
         </section>
