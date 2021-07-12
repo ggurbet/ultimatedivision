@@ -78,22 +78,16 @@ func TestUsers(t *testing.T) {
 		})
 
 		t.Run("update", func(t *testing.T) {
-			err := repository.Create(ctx, user1)
-			require.NoError(t, err)
-
-			err = repository.Update(ctx, int(users.StatusSuspended), user1.ID)
+			err := repository.Update(ctx, int(users.StatusSuspended), user1.ID)
 			require.NoError(t, err)
 
 			userFromDB, err := repository.Get(ctx, user1.ID)
 			require.NoError(t, err)
-			compareUsers(t, user1, userFromDB)
+			assert.Equal(t, users.StatusSuspended, userFromDB.Status)
 		})
 
 		t.Run("delete", func(t *testing.T) {
-			err := repository.Create(ctx, user1)
-			require.NoError(t, err)
-
-			err = repository.Delete(ctx, user1.ID)
+			err := repository.Delete(ctx, user1.ID)
 			require.NoError(t, err)
 		})
 	})
