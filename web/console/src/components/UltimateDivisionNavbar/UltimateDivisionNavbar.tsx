@@ -17,7 +17,7 @@ export const UltimateDivisionNavbar: React.FC = () => {
         <div className="ultimatedivision-navbar">
             <img className="ultimatedivision-navbar__logo"
                 src={ultimate}
-                alt={ultimate} />
+                alt="UltimateDivision logo" />
             <ul className="ultimatedivision-navbar__list">
                 <li className="ultimatedivision-navbar__item">
                     <NavLink
