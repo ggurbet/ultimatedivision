@@ -11,6 +11,18 @@ See LICENSE for copying information.
     top: 0;
     left: -5%;
     cursor: pointer;
+    &__wrapper {
+        content: attr(data-content);
+        left: -2%;
+        top: -3%;
+        width: 105%;
+        height: 107%;
+        position: absolute;
+        background: linear-gradient(to right, #fff 20px, rgba(0, 0, 0, 0) 0,rgba(0, 0, 0, 0) 95px, rgba(0, 0, 0, 0) 0, #fff 20px) top/115px 2px repeat-x, /* top */
+            linear-gradient(#fff 30px, rgba(0, 0, 0, 0) 0,rgba(0, 0, 0, 0) 170px, rgba(0, 0, 0, 0) 0, #fff 20px) right/2px 200px repeat-y, /* right */
+            linear-gradient(to right, #fff 20px, rgba(0, 0, 0, 0) 0,rgba(0, 0, 0, 0) 95px, rgba(0, 0, 0, 0) 0, #fff 20px) bottom/115px 2px repeat-x, /* bottom */
+            linear-gradient(#fff 30px, rgba(0, 0, 0, 0) 0,rgba(0, 0, 0, 0) 170px, rgba(0, 0, 0, 0) 0, #fff 20px) left/2px 200px repeat-y; /* left */
+    }
     &__background-type {
         position: absolute;
         top: 0;

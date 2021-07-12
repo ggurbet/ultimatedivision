@@ -53,6 +53,7 @@ export class CardMainInfo {
         public price: number,
         public playerFace: string,
         public priceIcon: string,
+        public bgType: number,
         public priceGoldIcon: string,
         public confirmIcon: string,
     ) { }
@@ -63,8 +64,7 @@ export class CardMainInfo {
         const qualities = [
             diamond, gold, silver, wood
         ];
-        let background = qualities[Math.floor(Math.random()
-            * qualities.length)];
+        let background = qualities[this.bgType];
         return background;
     };
     get priceStatus() {
@@ -72,10 +72,9 @@ export class CardMainInfo {
         * get image with price status depend on price status
         */
         const statuses = [
-            currentBid, minimumPrice, purchased
+            currentBid, minimumPrice, purchased, currentBid
         ];
-        let status = statuses[Math.floor(Math.random()
-            * statuses.length)];
+        let status = statuses[this.bgType];
         return status;
     };
 }

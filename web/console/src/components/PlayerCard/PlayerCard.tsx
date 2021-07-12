@@ -18,11 +18,13 @@ export const PlayerCard: React.FC<{ card: Card, parentClassName: string }> = ({
                 className={parentClassName + "__background-type"}
                 src={card.mainInfo.backgroundType}
                 alt='background img'
-            />
+                draggable={false}
+                />
             <img
                 className={parentClassName + "__face-picture"}
                 src={card.mainInfo.playerFace}
                 alt="Player face"
+                draggable={false}
             />
             <NavLink to={RouteConfig.FootballerCard.path} >
                 <span className={parentClassName + "__name"}>

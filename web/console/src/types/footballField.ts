@@ -8,7 +8,9 @@ export class FootballField {
         formation: '4-4-2',
         captain: '',
         tactics: '',
-        chosedCard: null
+        chosedCard: 0,
+        dragStart: -1,
+        dragTarget: -1,
     };
     public cardsList = [
         {

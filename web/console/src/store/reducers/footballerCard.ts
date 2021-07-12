@@ -22,13 +22,15 @@ import { CardPricePRP } from '../../types/fotballerCard';
 import { Diagram } from '../../types/fotballerCard';
 
 export class Card {
+    constructor(private bgType: number ) { }
     mainInfo = new CardMainInfo(
         'Ronalculus',
         1000000,
         playerFace,
         priceIcon,
+        this.bgType,
         priceGoldIcon,
-        confirmIcon
+        confirmIcon,
     )
     overalInfo = [
         new CardInfoField('name', 'Albert Ronalculus'),
@@ -120,16 +122,16 @@ export class Card {
     ]
 }
 
-function cardlist(count: number) {
-    let quantity = count;
-    const list = [];
-    while (quantity > 0) {
-        list.push(new Card());
-        quantity--;
+function cardList (count: number) {
+    let list: Card[] = [];
+    while (count > 0) {
+        list.push(new Card(0), new Card(1), new Card(2), new Card(3));
+        count--;
     }
     return list;
+
 }
 
-export const cardReducer = (cardState = cardlist(100)) => {
+export const cardReducer = (cardState = cardList(100)) => {
     return cardState;
 };
