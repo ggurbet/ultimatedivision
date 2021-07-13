@@ -7,15 +7,16 @@ import (
 	"context"
 	"errors"
 	"net"
-	"ultimatedivision/admin/adminauth"
-	"ultimatedivision/internal/auth"
 
 	"github.com/zeebo/errs"
 	"golang.org/x/sync/errgroup"
 
+	"ultimatedivision/admin/adminauth"
 	"ultimatedivision/admin/admins"
 	"ultimatedivision/admin/adminserver"
 	"ultimatedivision/cards"
+	"ultimatedivision/console/consoleserver"
+	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/users"
 )
@@ -24,7 +25,7 @@ import (
 //
 // architecture: Master Database.
 type DB interface {
-	//Admins provides access to admins db.
+	// Admins provides access to admins db.
 	Admins() admins.DB
 	// Users provides access to users db.
 	Users() users.DB
@@ -46,6 +47,10 @@ type Config struct {
 		Auth   struct {
 			TokenAuthSecret string `json:"tokenAuthSecret"`
 		} `json:"auth"`
+	}
+
+	Consoles struct {
+		Server consoleserver.Config `json:"server"`
 	}
 }
 
@@ -75,6 +80,12 @@ type Peer struct {
 	Admin struct {
 		Listener net.Listener
 		Endpoint *adminserver.Server
+	}
+
+	// Console web server server with web UI.
+	Console struct {
+		Listener net.Listener
+		Endpoint *consoleserver.Server
 	}
 }
 
@@ -129,6 +140,22 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		}
 	}
 
+	{ // console setup
+		peer.Console.Listener, err = net.Listen("tcp", config.Consoles.Server.Address)
+		if err != nil {
+			return nil, err
+		}
+
+		peer.Console.Endpoint, err = consoleserver.NewServer(
+			config.Consoles.Server,
+			logger,
+			peer.Console.Listener,
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return peer, nil
 }
 
@@ -140,9 +167,9 @@ func (peer *Peer) Run(ctx context.Context) error {
 	group.Go(func() error {
 		return ignoreCancel(peer.Admin.Endpoint.Run(ctx))
 	})
-	// group.Go(func() error {
-	//     return ignoreCancel(peer.Console.Endpoint.Run(ctx))
-	// })
+	group.Go(func() error {
+		return ignoreCancel(peer.Console.Endpoint.Run(ctx))
+	})
 
 	return group.Wait()
 }
@@ -152,7 +179,7 @@ func (peer *Peer) Close() error {
 	var errlist errs.Group
 
 	errlist.Add(peer.Admin.Endpoint.Close())
-	// errlist.Add(peer.Console.Endpoint.Close())
+	errlist.Add(peer.Console.Endpoint.Close())
 
 	return errlist.Err()
 }
