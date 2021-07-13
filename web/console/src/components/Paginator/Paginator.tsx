@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-import { UltimateDivsionPaginatorBlockPages }
-    from './UltimateDivisionPaginatorBlockPages/UltimateDivisionPaginatorBlockPages';
+import { PaginatorBlockPages }
+    from './PaginatorBlockPages/PaginatorBlockPages';
 
-import './UltimateDivisionPaginator.scss';
+import './Paginator.scss';
 
 import next
     from '../../img/UltimateDivisionPaginator/next.png';
 import previous
     from '../../img/UltimateDivisionPaginator/previous.png';
 
-//TODO: delete redundant UltimateDivision prefix in next PR
-export const UltimateDivisionPaginator: React.FC<{ itemCount: number }> = ({ itemCount }) => {
+export const Paginator: React.FC<{ itemCount: number }> = ({ itemCount }) => {
     let [currentPage, setCurrentPage] = useState<number>(1);
     /**
     * split the page into 3 blocks that can be needed
@@ -134,18 +133,24 @@ export const UltimateDivisionPaginator: React.FC<{ itemCount: number }> = ({ ite
                         Previous page
                     </p>
                 </a>
-                <UltimateDivsionPaginatorBlockPages blockPages={firstBlockPages}
-                    onPageChange={onPageChange} />
+                <PaginatorBlockPages
+                    blockPages={firstBlockPages}
+                    onPageChange={onPageChange}
+                />
                 {isFirstDotsShown
                     && <span className="ultimatedivision-paginator__pages__dots">
                         ...</span>}
-                <UltimateDivsionPaginatorBlockPages blockPages={middleBlockPages}
-                    onPageChange={onPageChange} />
+                <PaginatorBlockPages
+                    blockPages={middleBlockPages}
+                    onPageChange={onPageChange}
+                />
                 {isSecondDotsShown
                     && <span className="ultimatedivision-paginator__pages__dots">
                         ...</span>}
-                <UltimateDivsionPaginatorBlockPages blockPages={lastBlockPages}
-                    onPageChange={onPageChange} />
+                <PaginatorBlockPages
+                    blockPages={lastBlockPages}
+                    onPageChange={onPageChange}
+                />
                 <a className="ultimatedivision-paginator__next"
                     onClick={() => onPageChange('next page')}>
                     <p className="ultimatedivision-paginator__next__title">

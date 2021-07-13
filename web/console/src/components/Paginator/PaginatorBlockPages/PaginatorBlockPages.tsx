@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const UltimateDivsionPaginatorBlockPages: React.FC<{
+export const PaginatorBlockPages: React.FC<{
     blockPages: number[],
     onPageChange: (type: string, pageNumber?: number) => void
 }> = ({ blockPages, onPageChange }) => {

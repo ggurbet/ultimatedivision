@@ -11,8 +11,8 @@ import { MarketPlaceFilterField }
     from '../MarketPlaceFilterField/MarketPlaceFilterField';
 import { MarketPlaceCardsGroup }
     from '../MarketPlaceCardsGroup/MarketPlaceCardsGroup';
-import { UltimateDivisionPaginator }
-    from '../../UltimateDivisionPaginator/UltimateDivisionPaginator';
+import { Paginator }
+    from '../../Paginator/Paginator';
 import { MarketPlaceFootballerCard }
     from '../MarketPlaceCardsGroup/MarketPlaceFootballerCard/MarketPlaceFootballerCard';
 
@@ -41,7 +41,7 @@ export const MarketPlace = ({ ...children }) => {
                 cards={cards}
                 Component={Component}
             />
-            <UltimateDivisionPaginator
+            <Paginator
                 itemCount={cards.length} />
         </section>
     );
