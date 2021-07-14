@@ -19,5 +19,5 @@ export const FootballFieldPlayingArea: React.FC = () => {
         <div className="football-field-playing-area" id="playingArea">
             <PlayingFormation props={cardData} formation={formation} />
         </div>
-    )
-}
+    );
+};

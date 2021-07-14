@@ -10,7 +10,9 @@ import './FootballerCardIllustrationsRadar.scss';
 import { Radar } from 'react-chartjs-2';
 
 export const FootballerCardIllustrationsRadar: React.FC = () => {
-    const stats = useSelector((state: RootState) => state.cardReducer[0].stats);
+    const FIRST_CARD_INDEX = 0;
+    const stats = useSelector((state: RootState) =>
+        state.cardReducer[FIRST_CARD_INDEX].stats);
 
     return (
         <div className="footballer-card-illustrations-radar">
@@ -23,48 +25,48 @@ export const FootballerCardIllustrationsRadar: React.FC = () => {
                         data: stats.map(item => item.average),
                     }],
                 }}
-            options={{
-                animations: {
-                    tension: {
-                        duration: 1000,
-                        easing: 'linear',
-                        from: 0,
-                        to: 0,
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
+                options={{
+                    animations: {
+                        tension: {
+                            duration: 1000,
+                            easing: 'linear',
+                            from: 0,
+                            to: 0,
+                        },
                     },
-                    interaction: {
-                        display: false
-                    }
-                },
-                scale: {
-                    ticks: {
-                        maxTicksLimit: 2,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        interaction: {
+                            display: false,
+                        },
                     },
-                },
-                scales: {
-                    r: {
+                    scale: {
                         ticks: {
-                            display: false
+                            maxTicksLimit: 2,
                         },
-                        pointLabels: {
-                            color: '#afafaf'
+                    },
+                    scales: {
+                        r: {
+                            ticks: {
+                                display: false,
+                            },
+                            pointLabels: {
+                                color: '#afafaf',
+                            },
+                            angleLines: {
+                                type: 'dashed',
+                                color: '#515180',
+                            },
+                            grid: {
+                                color: '#515180',
+                            },
                         },
-                        angleLines: {
-                            type: 'dashed',
-                            color: '#515180'
-                        },
-                        grid: {
-                            color: '#515180'
-                        }
                     },
                 }
-            }
-            }
+                }
             />
         </div>
-    )
-}
+    );
+};

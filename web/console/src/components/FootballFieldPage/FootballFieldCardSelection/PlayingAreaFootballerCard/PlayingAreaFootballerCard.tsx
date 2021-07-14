@@ -3,30 +3,30 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import React from 'react';
-import './PlayingAreaFootballerCard.scss';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { PlayerCard } from '../../../PlayerCard/PlayerCard';
 
 import { Card }
     from '../../../../store/reducers/footballerCard';
 import { RootState } from '../../../../store';
-import { useDispatch, useSelector } from 'react-redux';
 import { addCard, removeCard }
     from '../../../../store/reducers/footballField';
-import { useState } from 'react';
 import { FootballCardStyle }
     from '../../../../utils/footballField';
 
-export const PlayingAreaFootballerCard: React.FC<{ card: Card, index?: number, place?: string }> = ({ card, index, place }) => {
+import './PlayingAreaFootballerCard.scss';
+
+export const PlayingAreaFootballerCard: React.FC<{ card: Card; index?: number; place?: string }> = ({ card, index, place }) => {
     const dispatch = useDispatch();
     const chosenCard = useSelector((state: RootState) => state.fieldReducer.options.chosedCard);
     const [visibility, changeVisibility] = useState(false);
     const style = new FootballCardStyle(visibility).style;
-
+    /** remove player card implementation */
     function handleDeletion(e: any) {
-        e.preventDefault()
-        dispatch(removeCard(index))
+        e.preventDefault();
+        dispatch(removeCard(index));
     }
 
     return (
@@ -40,7 +40,7 @@ export const PlayingAreaFootballerCard: React.FC<{ card: Card, index?: number, p
             ></div>
             <PlayerCard
                 card={card}
-                parentClassName={"football-field-card"}
+                parentClassName="football-field-card"
             />
             <div
                 style={{ display: style }}
@@ -51,4 +51,3 @@ export const PlayingAreaFootballerCard: React.FC<{ card: Card, index?: number, p
         </div >
     );
 };
-

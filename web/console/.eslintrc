@@ -14,13 +14,16 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "require-jsdoc": [2, {
-            "require": {
-                "FunctionDeclaration": true,
-                "MethodDefinition": true,
-                "ClassDeclaration": true
+        "require-jsdoc": [
+            2,
+            {
+                "require": {
+                    "FunctionDeclaration": true,
+                    "MethodDefinition": true,
+                    "ClassDeclaration": true
+                }
             }
-        }],
+        ],
         "@typescript-eslint/array-type": [
             "warn",
             {
@@ -104,7 +107,11 @@
             }
         ],
         "prefer-const": "warn",
-        "quotes": [2, "single", "avoid-escape"],
+        "quotes": [
+            2,
+            "single",
+            "avoid-escape"
+        ],
         "semi": "warn",
         "space-in-parens": [
             "warn",
@@ -127,7 +134,10 @@
         ],
         "no-constant-condition": "error",
         "no-await-in-loop": "error",
-        "no-extra-parens": ["error", "all"],
+        "no-extra-parens": [
+            "error",
+            "all"
+        ],
         "no-loss-of-precision": "error",
         "no-promise-executor-return": "error",
         "no-template-curly-in-string": "error",
@@ -140,7 +150,9 @@
         "consistent-return": "error",
         "default-case": "error",
         "default-case-last": "error",
-        "default-param-last": ["error"],
+        "default-param-last": [
+            "error"
+        ],
         "curly": "error",
         "dot-notation": "error",
         "eqeqeq": "error",
@@ -150,7 +162,7 @@
         "no-caller": "error",
         "no-constructor-return": "error",
         "no-else-return": "error",
-        "no-empty-function": "error",
+        "no-empty-function": "warn",
         "no-eval": "error",
         "no-extend-native": "error",
         "no-extra-bind": "error",

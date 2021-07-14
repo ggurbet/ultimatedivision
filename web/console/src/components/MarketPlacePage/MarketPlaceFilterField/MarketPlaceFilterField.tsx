@@ -23,68 +23,68 @@ import parametres
     from '../../../img/MarketPlacePage/marketPlaceFilterField/parametres.png';
 
 export const MarketPlaceFilterField: React.FC<{ title: string }> = ({ title }) => {
-    const filterFieldTitles: { title: string, src: string }[] = [
+    const filterFieldTitles: Array<{ title: string; src: string }> = [
         {
             title: 'Search',
-            src: search
+            src: search,
         },
         {
             title: 'Version',
-            src: rectangle
+            src: rectangle,
         },
         {
             title: 'Positions',
-            src: rectangle
+            src: rectangle,
         },
         {
             title: 'Nations',
-            src: rectangle
+            src: rectangle,
         },
         {
             title: 'Leagues',
-            src: rectangle
+            src: rectangle,
         },
         {
             title: 'WRF',
-            src: rectangle
+            src: rectangle,
         },
         {
             title: 'Stats',
-            src: rectangle
+            src: rectangle,
         },
         {
             title: '',
-            src: star
+            src: star,
         },
         {
             title: 'PS',
-            src: fut
+            src: fut,
         },
         {
             title: 'T&S',
-            src: rectangle
+            src: rectangle,
         },
         {
             title: '',
-            src: eye
+            src: eye,
         },
         {
             title: '',
-            src: stars
+            src: stars,
         },
         {
             title: 'RPP',
-            src: rectangle
+            src: rectangle,
         },
         {
             title: '',
-            src: parametres
+            src: parametres,
         }
         ,
         {
             title: 'Misc',
-            src: rectangle
-        }
+            src: rectangle,
+        },
     ];
 
     return (
@@ -94,19 +94,17 @@ export const MarketPlaceFilterField: React.FC<{ title: string }> = ({ title }) =
             </h1>
             <div className="marketplace-filter__wrapper">
                 <ul className="marketplace-filter__list">
-                    {filterFieldTitles.map((item, index) => {
-                        return (
-                            <li key={index}
-                                className="marketplace-filter__list__item">
-                                {item.title}
-                                <img
-                                    src={item.src}
-                                    alt="Filter icon"
-                                    className="marketplace-filter__list__item__picture"
-                                />
-                            </li>
-                        );
-                    })}
+                    {filterFieldTitles.map((item, index) =>
+                        <li key={index}
+                            className="marketplace-filter__list__item">
+                            {item.title}
+                            <img
+                                src={item.src}
+                                alt="Filter icon"
+                                className="marketplace-filter__list__item__picture"
+                            />
+                        </li>
+                    )}
                 </ul>
             </div>
         </section>

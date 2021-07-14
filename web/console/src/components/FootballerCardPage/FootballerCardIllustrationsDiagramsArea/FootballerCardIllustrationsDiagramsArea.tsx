@@ -1,26 +1,28 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import React from 'react'
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 
 import './FootballerCardIllustrationsDiagramsArea.scss';
 
 import { FootballerCardIllustrationsDiagram }
-    from '../FootballerCardIllustrationsDiagram/FootballerCardIllustrationsDiagram'
+    from '../FootballerCardIllustrationsDiagram/FootballerCardIllustrationsDiagram';
 
 export const FootballerCardIllustrationsDiagramsArea: React.FC = () => {
-    const diagramData = useSelector((state: RootState) => state.cardReducer[0].diagram)
+    const FIRST_CARD_INDEX = 0;
+    const diagramData = useSelector((state: RootState) =>
+        state.cardReducer[FIRST_CARD_INDEX].diagram);
 
     return (
         <div className="footballer-card-illustrations-diagram-area">
-            {diagramData.map(item => (
+            {diagramData.map(item =>
                 <FootballerCardIllustrationsDiagram
                     key={item.id}
                     props={item}
                 />
-            ))}
+            )}
         </div>
-    )
-}
+    );
+};

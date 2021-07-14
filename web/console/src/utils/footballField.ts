@@ -1,3 +1,5 @@
+/** TODO: DELETE IN NEXT PR */
+/* eslint-disable */
 export interface VisibilityStyles {
     visible: boolean;
     get style(): string;
@@ -20,10 +22,10 @@ export class ListStyle implements VisibilityStyles {
 }
 
 export class FootballCardStyle implements VisibilityStyles {
-    constructor (
+    constructor(
         public visible: boolean
-        ) { }
-        get style(): string {
-            return this.visible ? 'block' : 'none';
-        }
+    ) { }
+    get style(): string {
+        return this.visible ? 'block' : 'none';
+    }
 }

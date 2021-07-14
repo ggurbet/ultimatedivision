@@ -7,11 +7,14 @@ import { RootState } from '../../../store';
 import './FootballerCardInformation.scss';
 
 export const FootballerCardInformation: React.FC = () => {
-    const overalInfo = useSelector((state: RootState )=> state.cardReducer[0].overalInfo);
+    const FIRST_CARD_INDEX = 0;
+
+    const overalInfo = useSelector((state: RootState) =>
+        state.cardReducer[FIRST_CARD_INDEX].overalInfo);
 
     return (
         <div className="footballer-card-information">
-            {overalInfo.map((item, index) => (
+            {overalInfo.map((item, index) =>
                 <div className="footballer-card-information__item"
                     key={index}
                 >
@@ -27,7 +30,7 @@ export const FootballerCardInformation: React.FC = () => {
                         </>
                     </div>
                 </div>
-            ))}
+            )}
         </div>
     );
 };

@@ -6,9 +6,11 @@ import './FootballerCardIllustrationsDiagram.scss';
 import { Doughnut } from 'react-chartjs-2';
 import { Diagram } from '../../../types/fotballerCard';
 
-export const FootballerCardIllustrationsDiagram: React.FC<{props: Diagram}> = ({ props }) => {
-    const { name, min, max, value } = props
-    const statsValue = (Math.round((value - min) / max * 100))
+export const FootballerCardIllustrationsDiagram: React.FC<{ props: Diagram }> = ({ props }) => {
+    const { name, min, max, value } = props;
+    const FULL_VALUE_STATISTIC_SCALE = 100;
+    /** percent value of player stat */
+    const statsValue = Math.round((value - min) / max * FULL_VALUE_STATISTIC_SCALE);
 
     return (
         <div className="footballer-card-illustrations-diagram">
@@ -16,10 +18,10 @@ export const FootballerCardIllustrationsDiagram: React.FC<{props: Diagram}> = ({
                 type={Doughnut}
                 data={{
                     datasets: [{
-                        data: [statsValue, (100 - statsValue)],
+                        data: [statsValue, FULL_VALUE_STATISTIC_SCALE - statsValue],
                         backgroundColor: ['#3CCF5D', '#5E5EAA'],
                         borderColor: [
-                            'transparent'
+                            'transparent',
                         ],
                         cutout: '80%',
                         rotation: 270,
@@ -33,8 +35,8 @@ export const FootballerCardIllustrationsDiagram: React.FC<{props: Diagram}> = ({
                             display: true,
                             text: name.toUpperCase(),
                             color: 'white',
-                        }
-                    }
+                        },
+                    },
                 }}
             />
             <div className="footballer-card-illustrations-diagram__values-area">
@@ -43,5 +45,5 @@ export const FootballerCardIllustrationsDiagram: React.FC<{props: Diagram}> = ({
                 <span className="footballer-card-illustrations-diagram__max">{max}</span>
             </div>
         </div>
-    )
-}
+    );
+};

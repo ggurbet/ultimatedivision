@@ -5,8 +5,8 @@ See LICENSE for copying information.
 
 import React, { DragEvent } from 'react';
 import './PlayingFormation.scss';
-import { FootballField } from '../../../../types/footballField';
 import { useDispatch, useSelector } from 'react-redux';
+import { FootballField } from '../../../../types/footballField';
 import { choseCardPosition, setDragStart, setDragTarget }
     from '../../../../store/reducers/footballField';
 import { PlayingAreaFootballerCard }
@@ -15,14 +15,15 @@ import { exchangeCards }
     from '../../../../store/reducers/footballField';
 import { RootState } from '../../../../store';
 
-export const PlayingFormation: React.FC<{ props: FootballField, formation: string }> = ({ props, formation }) => {
+export const PlayingFormation: React.FC<{ props: FootballField; formation: string }> = ({ props, formation }) => {
     const dispatch = useDispatch();
     const fieldSetup = useSelector((state: RootState) => state.fieldReducer.options);
-
+    /** prevent default user agent action */
     function dragOverHandler(e: DragEvent<HTMLAnchorElement>) {
         e.preventDefault();
     };
-
+    /** exchange player cards implemnentation:
+     *  set drag target and exchange dragStart and dragTarget  */
     function dropHandler(e: DragEvent<HTMLAnchorElement>, index: number) {
         dispatch(setDragTarget(index));
         dispatch(exchangeCards(fieldSetup.dragStart, fieldSetup.dragTarget));
@@ -32,11 +33,12 @@ export const PlayingFormation: React.FC<{ props: FootballField, formation: strin
         <div className={`playing-formation-${formation}`}>
             {props.cardsList.map((card, index) => {
                 const data = card.cardData;
+
                 return (
                     <a
-                        href={data? undefined : "#cardList"}
+                        href={data ? undefined : '#cardList'}
                         key={index}
-                        className={`playing-formation-${formation}__${data? 'card' : 'empty-card'}`}
+                        className={`playing-formation-${formation}__${data ? 'card' : 'empty-card'}`}
                         onClick={() => dispatch(choseCardPosition(index))}
                         draggable={true}
                         onDragStart={() => dispatch(setDragStart(index))}
@@ -49,8 +51,8 @@ export const PlayingFormation: React.FC<{ props: FootballField, formation: strin
                                 : null
                         }
                     </a>
-                )
+                );
             })}
         </div>
-    )
-}
+    );
+};

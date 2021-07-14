@@ -7,22 +7,22 @@ import React from 'react';
 
 import './FilterField.scss';
 
-import rectangle from '../../../../img/FootballFieldPage/FilterField/rectangle.png'
-import search from '../../../../img/FootballFieldPage/FilterField/search.png'
+import rectangle from '../../../../img/FootballFieldPage/FilterField/rectangle.png';
+import search from '../../../../img/FootballFieldPage/FilterField/search.png';
 
 export const FilterField: React.FC = () => {
-    const filterFieldTitles: { title: string, src: string }[] = [
+    const filterFieldTitles: Array<{ title: string; src: string }> = [
         {
             title: 'Card quality',
-            src: rectangle
+            src: rectangle,
         },
         {
             title: 'Overal rating',
-            src: rectangle
+            src: rectangle,
         },
         {
             title: 'Player`s position',
-            src: rectangle
+            src: rectangle,
         },
 
     ];
@@ -35,12 +35,12 @@ export const FilterField: React.FC = () => {
                         className="football-field-filter__list__item">
                         <form action="" className="football-field-filter__list__form">
                             <input
-                            type="text"
-                            placeholder="Player`s name"
-                            className="football-field-filter__list__input"
+                                type="text"
+                                placeholder="Player`s name"
+                                className="football-field-filter__list__input"
                             />
                             <button type="submit"
-                            className="football-field-filter__list__submit"
+                                className="football-field-filter__list__submit"
                             >
                                 <img
                                     src={search}
@@ -50,19 +50,17 @@ export const FilterField: React.FC = () => {
                             </button>
                         </form>
                     </li>
-                    {filterFieldTitles.map((item, index) => {
-                        return (
-                            <li key={index}
-                                className="football-field-filter__list__item">
-                                {item.title}
-                                <img
-                                    src={item.src}
-                                    alt="Filter icon"
-                                    className="football-field-filter__list__item__picture"
-                                />
-                            </li>
-                        );
-                    })}
+                    {filterFieldTitles.map((item, index) =>
+                        <li key={index}
+                            className="football-field-filter__list__item">
+                            {item.title}
+                            <img
+                                src={item.src}
+                                alt="Filter icon"
+                                className="football-field-filter__list__item__picture"
+                            />
+                        </li>
+                    )}
                 </ul>
             </div>
         </section>

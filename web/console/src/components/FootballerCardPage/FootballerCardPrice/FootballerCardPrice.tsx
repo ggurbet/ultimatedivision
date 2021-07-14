@@ -12,7 +12,11 @@ import { RootState } from '../../../store';
 import currency from '../../../img/FootballerCardPage/currency.png';
 
 export const FootballerCardPrice: React.FC = () => {
-    const priceData = useSelector((state: RootState) => state.cardReducer[0].price);
+    const FIRST_CARD_INDEX = 0;
+    const FULL_VALUE_STATISTIC_SCALE = 100;
+
+    const priceData = useSelector((state: RootState) =>
+        state.cardReducer[FIRST_CARD_INDEX].price);
     const prpValue: number = priceData.prp.value;
 
     return (
@@ -24,18 +28,18 @@ export const FootballerCardPrice: React.FC = () => {
                         type={Doughnut}
                         data={{
                             datasets: [{
-                                data: [prpValue, (100 - prpValue)],
+                                data: [prpValue, FULL_VALUE_STATISTIC_SCALE - prpValue],
                                 backgroundColor: [
                                     `${priceData.color}`,
-                                    '#5E5EAA'
+                                    '#5E5EAA',
                                 ],
                                 borderColor: [
-                                    'transparent'
+                                    'transparent',
                                 ],
                                 cutout: '80%',
                                 rotation: 90,
                                 esponsive: true,
-                                maintainAspectRatio: true
+                                maintainAspectRatio: true,
                             }],
                         }}
                     />

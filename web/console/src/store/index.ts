@@ -5,9 +5,9 @@ import { fieldReducer } from './reducers/footballField';
 
 const reducer = combineReducers({
     cardReducer,
-    fieldReducer
+    fieldReducer,
 });
 
 export const store = createStore(reducer);
 
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;

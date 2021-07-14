@@ -19,7 +19,10 @@ import { FootballerCardInformation } from
 import './FootballerCard.scss';
 
 export const FootballerCard: React.FC = () => {
-    const cardName = useSelector((state: RootState) => state.cardReducer[0].overalInfo[0].value);
+    /** TODO: Route config with cards ID */
+    const FIRST_CARD_INDEX = 0;
+    const cardName = useSelector((state: RootState) =>
+        state.cardReducer[FIRST_CARD_INDEX].overalInfo[FIRST_CARD_INDEX].value);
 
     return (
         <div className="footballer-card">

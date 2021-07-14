@@ -3,17 +3,16 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import React from 'react';
-import './FootballFieldInformationTactic.scss';
-
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { FotballFieldInformationLine } from '../../../../types/fotballerCard';
 
-import triangle from '../../../../img/FootballFieldPage/triangle.png'
-import { useState } from 'react';
+import triangle from '../../../../img/FootballFieldPage/triangle.png';
 import { ListStyle } from '../../../../utils/footballField';
 import { TriangleStyle } from '../../../../utils/footballField';
 import { handleTactics } from '../../../../store/reducers/footballField';
-import { useDispatch } from 'react-redux';
+
+import './FootballFieldInformationTactic.scss';
 
 export const FootballFieldInformationTactic: React.FC<{ props: FotballFieldInformationLine }> = ({ props }) => {
     const [optionVisibility, changeVisibility] = useState(true);
@@ -45,7 +44,7 @@ export const FootballFieldInformationTactic: React.FC<{ props: FotballFieldInfor
                 className="football-field-information-option__list"
                 id={props.id}
             >
-                {props.options.map((item, index) => (
+                {props.options.map((item, index) =>
                     <li
                         key={index}
                         className="football-field-information-option__item"
@@ -53,8 +52,8 @@ export const FootballFieldInformationTactic: React.FC<{ props: FotballFieldInfor
                     >
                         {item}
                     </li>
-                ))}
+                )}
             </ul>
         </div>
-    )
-}
+    );
+};

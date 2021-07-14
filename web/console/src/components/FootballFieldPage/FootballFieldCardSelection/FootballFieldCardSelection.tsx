@@ -14,11 +14,11 @@ export const FootballFieldCardSelection = () => {
     return (
         <div id="cardList" className="card-selection">
             <FilterField />
-            {cardList.map((card, index) => (
+            {cardList.map((card, index) =>
                 <a key={index} href="#playingArea" className="card-selection__card">
                     <PlayingAreaFootballerCard card={card} />
                 </a>
-            ))}
+            )}
         </div>
-    )
-}
+    );
+};

@@ -4,8 +4,9 @@ See LICENSE for copying information.
  */
 
 import React from 'react';
-import './FootballFieldInformation.scss'
+import './FootballFieldInformation.scss';
 
+import { FootballFieldInformationLine } from '../../../types/footballField';
 import { FootballFieldInformationFormation }
     from './FootballFieldInformationFormation/FootballFieldInformationFormation';
 import { FootballFieldInformationTactic }
@@ -13,14 +14,12 @@ import { FootballFieldInformationTactic }
 import { FootballFieldInformationCaptain }
     from './FootballFieldInformationCaptain/FootballFieldInformationCaptain';
 
-import { FootballFieldInformationLine } from '../../../types/footballField';
-
 export const FootballFieldInformation: React.FC = () => {
     const INFORMATION_FIELDS = {
         formation: new FootballFieldInformationLine('0', 'formation', ['4-4-2', '4-2-4', '4-3-3']),
         tactics: new FootballFieldInformationLine('1', 'tactics', ['attack', 'defence', 'regular']),
         captain: new FootballFieldInformationLine('2', 'captain', ['4-4-2', '4-2-4', '4-3-3']),
-    }
+    };
 
     return (
         <div className="football-field-information">
@@ -37,5 +36,5 @@ export const FootballFieldInformation: React.FC = () => {
                 props={INFORMATION_FIELDS.captain}
             />
         </div>
-    )
-}
+    );
+};

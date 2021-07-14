@@ -20,16 +20,14 @@ import './MarketPlace.scss';
 import { MyCard } from '../MyCard/MyCard';
 import { RouteConfig } from '../../../routes';
 
-
 export const MarketPlace = ({ ...children }) => {
     const cards = useSelector((state: RootState) => state.cardReducer);
 
-    //TODO: Route with SubRoutes
     let Component = MarketPlaceFootballerCard;
-    let title = "MARKETPLACE";
+    let title = 'MARKETPLACE';
     if (children.path === RouteConfig.MyCards.path) {
         Component = MyCard;
-        title = "MY CARDS";
+        title = 'MY CARDS';
     };
 
     return (
