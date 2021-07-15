@@ -16,6 +16,7 @@ import (
 	"ultimatedivision/admin/admins"
 	"ultimatedivision/admin/adminserver"
 	"ultimatedivision/cards"
+	"ultimatedivision/clubs"
 	"ultimatedivision/console/consoleserver"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
@@ -33,6 +34,9 @@ type DB interface {
 
 	// Cards provides access to cards db.
 	Cards() cards.DB
+
+	// Clubs provides access to clubs db.
+	Clubs() clubs.DB
 
 	// Close closes underlying db connection.
 	Close() error
@@ -85,6 +89,11 @@ type Peer struct {
 		Service *cards.Service
 	}
 
+	// exposes clubs related logic
+	Clubs struct {
+		Service *clubs.Service
+	}
+
 	// Admin web server server with web UI.
 	Admin struct {
 		Listener net.Listener
@@ -132,6 +141,12 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 	{ // cards setup
 		peer.Cards.Service = cards.NewService(
 			peer.Database.Cards(),
+		)
+	}
+
+	{ // clubs setup
+		peer.Clubs.Service = clubs.NewService(
+			peer.Database.Clubs(),
 		)
 	}
 
