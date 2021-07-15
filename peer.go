@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"net"
+	"ultimatedivision/users/userauth"
 
 	"github.com/zeebo/errs"
 	"golang.org/x/sync/errgroup"
@@ -49,6 +50,13 @@ type Config struct {
 		} `json:"auth"`
 	}
 
+	Users struct {
+		// Server userserver.Config `json:"server"`
+		Auth struct {
+			TokenAuthSecret string `json:"tokenAuthSecret"`
+		} `json:"auth"`
+	}
+
 	Consoles struct {
 		Server consoleserver.Config `json:"server"`
 	}
@@ -69,6 +77,7 @@ type Peer struct {
 	// exposes users related logic.
 	Users struct {
 		Service *users.Service
+		Auth    *userauth.Service
 	}
 
 	// exposes cards related logic.
@@ -99,6 +108,12 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 	{ // users setup
 		peer.Users.Service = users.NewService(
 			peer.Database.Users(),
+		)
+		peer.Users.Auth = userauth.NewService(
+			peer.Database.Users(),
+			auth.TokenSigner{
+				Secret: []byte(config.Users.Auth.TokenAuthSecret),
+			},
 		)
 	}
 
