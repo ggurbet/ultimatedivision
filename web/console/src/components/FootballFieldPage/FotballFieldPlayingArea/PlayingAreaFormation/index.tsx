@@ -4,16 +4,16 @@ See LICENSE for copying information.
  */
 
 import React, { DragEvent } from 'react';
-import './PlayingFormation.scss';
+
 import { useDispatch, useSelector } from 'react-redux';
-import { FootballField } from '../../../../types/footballField';
-import { choseCardPosition, setDragStart, setDragTarget }
-    from '../../../../store/reducers/footballField';
-import { PlayingAreaFootballerCard }
-    from '../../FootballFieldCardSelection/PlayingAreaFootballerCard/PlayingAreaFootballerCard';
-import { exchangeCards }
-    from '../../../../store/reducers/footballField';
+import { choseCardPosition, setDragStart, setDragTarget, exchangeCards }
+from '../../../../store/reducers/footballField';
 import { RootState } from '../../../../store';
+
+import { FootballField } from '../../../../types/footballField';
+import { PlayingAreaFootballerCard } from '../../FootballFieldCardSelection/PlayingAreaFootballerCard';
+
+import './index.scss';
 
 export const PlayingFormation: React.FC<{ props: FootballField; formation: string }> = ({ props, formation }) => {
     const dispatch = useDispatch();

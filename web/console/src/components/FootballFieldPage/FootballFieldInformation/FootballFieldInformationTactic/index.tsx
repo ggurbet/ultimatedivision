@@ -12,7 +12,7 @@ import { ListStyle } from '../../../../utils/footballField';
 import { TriangleStyle } from '../../../../utils/footballField';
 import { handleTactics } from '../../../../store/reducers/footballField';
 
-import './FootballFieldInformationTactic.scss';
+import './index.scss';
 
 export const FootballFieldInformationTactic: React.FC<{ props: FotballFieldInformationLine }> = ({ props }) => {
     const [optionVisibility, changeVisibility] = useState(true);

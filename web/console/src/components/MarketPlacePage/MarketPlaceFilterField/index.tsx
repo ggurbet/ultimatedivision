@@ -5,7 +5,7 @@ See LICENSE for copying information.
 
 import React from 'react';
 
-import './marketPlaceFilterField.scss';
+import './index.scss';
 
 import rectangle
     from '../../../img/MarketPlacePage/marketPlaceFilterField/rectangle.png';

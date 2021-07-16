@@ -6,7 +6,7 @@ See LICENSE for copying information.
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { PlayerCard } from '../../../PlayerCard/PlayerCard';
+import { PlayerCard } from '../../../PlayerCard';
 
 import { Card }
     from '../../../../store/reducers/footballerCard';
@@ -16,7 +16,7 @@ import { addCard, removeCard }
 import { FootballCardStyle }
     from '../../../../utils/footballField';
 
-import './PlayingAreaFootballerCard.scss';
+import './index.scss';
 
 export const PlayingAreaFootballerCard: React.FC<{ card: Card; index?: number; place?: string }> = ({ card, index, place }) => {
     const dispatch = useDispatch();

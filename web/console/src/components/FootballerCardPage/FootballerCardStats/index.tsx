@@ -5,7 +5,7 @@ See LICENSE for copying information.
 
 import React from 'react';
 import { CardStats } from '../../../types/fotballerCard';
-import './FootballerCardStats.scss';
+import './index.scss';
 
 export const FootballerCardStats: React.FC<{ props: CardStats }> = ({ props }) =>
     <div className="footballer-card-stats-item">

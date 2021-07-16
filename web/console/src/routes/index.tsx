@@ -5,9 +5,9 @@ See LICENSE for copying information.
 
 import React from 'react';
 import { Switch, RouteProps } from 'react-router-dom';
-import { FootballerCard } from '../components/FootballerCardPage/FootballerCard/FootballerCard';
-import { MarketPlace } from '../components/MarketPlacePage/MarketPlace/MarketPlace';
-import { FootballField } from '../components/FootballFieldPage/FootballField/FootballField';
+import { FootballerCard } from '../components/FootballerCardPage/FootballerCard';
+import { MarketPlace } from '../components/MarketPlacePage/MarketPlace';
+import { FootballField } from '../components/FootballFieldPage/FootballField';
 
 /** Route base config implementation */
 export class ComponentRoutes {

@@ -4,7 +4,9 @@ See LICENSE for copying information.
 */
 
 import React from 'react';
-import './FootballerCardPrice.scss';
+
+import './index.scss';
+
 import { Doughnut } from 'react-chartjs-2';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';

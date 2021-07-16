@@ -5,7 +5,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 
-import './FootballerCardIllustrationsRadar.scss';
+import './index.scss';
 
 import { Radar } from 'react-chartjs-2';
 

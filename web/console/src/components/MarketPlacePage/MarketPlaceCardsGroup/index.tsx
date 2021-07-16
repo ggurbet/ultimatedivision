@@ -5,7 +5,7 @@ See LICENSE for copying information.
 
 import React from 'react';
 
-import './MarketPlaceCardsGroup.scss';
+import './index.scss';
 
 import { Card } from '../../../store/reducers/footballerCard';
 

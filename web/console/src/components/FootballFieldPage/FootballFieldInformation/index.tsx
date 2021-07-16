@@ -4,15 +4,12 @@ See LICENSE for copying information.
  */
 
 import React from 'react';
-import './FootballFieldInformation.scss';
+import './index.scss';
 
 import { FootballFieldInformationLine } from '../../../types/footballField';
-import { FootballFieldInformationFormation }
-    from './FootballFieldInformationFormation/FootballFieldInformationFormation';
-import { FootballFieldInformationTactic }
-    from './FootballFieldInformationTactic/FootballFieldInformationTactic';
-import { FootballFieldInformationCaptain }
-    from './FootballFieldInformationCaptain/FootballFieldInformationCaptain';
+import { FootballFieldInformationFormation } from './FootballFieldInformationFormation';
+import { FootballFieldInformationTactic } from './FootballFieldInformationTactic';
+import { FootballFieldInformationCaptain } from './FootballFieldInformationCaptain';
 
 export const FootballFieldInformation: React.FC = () => {
     const INFORMATION_FIELDS = {

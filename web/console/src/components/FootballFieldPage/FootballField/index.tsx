@@ -4,15 +4,12 @@ See LICENSE for copying information.
  */
 
 import React, { DragEvent } from 'react';
-import './FootballField.scss';
+import './index.scss';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { FootballFieldPlayingArea }
-    from '../FotballFieldPlayingArea/FootballFieldPlayingArea';
-import { FootballFieldInformation }
-    from '../FootballFieldInformation/FootballFieldInformation';
-import { FootballFieldCardSelection }
-    from '../FootballFieldCardSelection/FootballFieldCardSelection';
+import { FootballFieldPlayingArea } from '../FotballFieldPlayingArea';
+import { FootballFieldInformation } from '../FootballFieldInformation';
+import { FootballFieldCardSelection } from '../FootballFieldCardSelection';
 import { RootState } from '../../../store';
 import { removeCard } from '../../../store/reducers/footballField';
 

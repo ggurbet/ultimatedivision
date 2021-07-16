@@ -1,12 +1,10 @@
 import React from 'react';
-import './FootballFieldCardSelection.scss';
+import './index.scss';
 
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { PlayingAreaFootballerCard }
-    from './PlayingAreaFootballerCard/PlayingAreaFootballerCard';
-import { FilterField }
-    from './FilterField/FilterField';
+import { PlayingAreaFootballerCard } from './PlayingAreaFootballerCard';
+import { FilterField } from './FilterField';
 
 export const FootballFieldCardSelection = () => {
     const cardList = useSelector((state: RootState) => state.cardReducer);

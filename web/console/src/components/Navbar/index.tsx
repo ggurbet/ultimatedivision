@@ -6,7 +6,7 @@ See LICENSE for copying information.
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import './Navbar.scss';
+import './index.scss';
 
 import ultimate from '../../img/Navbar/ultimate.png';
 

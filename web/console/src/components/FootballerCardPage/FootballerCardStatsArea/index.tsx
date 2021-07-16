@@ -6,9 +6,11 @@ See LICENSE for copying information.
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import './FootballerCardStatsArea.scss';
+
+import './index.scss';
+
 import { FootballerCardStats }
-    from '../FootballerCardStats/FootballerCardStats';
+    from '../FootballerCardStats';
 
 export const FootballerCardStatsArea: React.FC = () => {
     const FIRST_CARD_INDEX = 0;

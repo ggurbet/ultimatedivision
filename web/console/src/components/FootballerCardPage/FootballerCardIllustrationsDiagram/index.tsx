@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import React from 'react';
-import './FootballerCardIllustrationsDiagram.scss';
+import './index.scss';
 import { Doughnut } from 'react-chartjs-2';
 import { Diagram } from '../../../types/fotballerCard';
 

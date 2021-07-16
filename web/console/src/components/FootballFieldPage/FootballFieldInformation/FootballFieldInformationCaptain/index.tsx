@@ -14,7 +14,7 @@ import { handleCaptain } from '../../../../store/reducers/footballField';
 
 import triangle from '../../../../img/FootballFieldPage/triangle.png';
 
-import './FootballFieldInformationCaptain.scss';
+import './index.scss';
 
 export const FootballFieldInformationCaptain: React.FC<{ props: FotballFieldInformationLine }> = ({ props }) => {
     const [optionVisibility, changeVisibility] = useState(true);

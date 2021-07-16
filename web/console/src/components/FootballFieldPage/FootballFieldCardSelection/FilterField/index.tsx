@@ -5,7 +5,7 @@ See LICENSE for copying information.
 
 import React from 'react';
 
-import './FilterField.scss';
+import './index.scss';
 
 import rectangle from '../../../../img/FootballFieldPage/FilterField/rectangle.png';
 import search from '../../../../img/FootballFieldPage/FilterField/search.png';

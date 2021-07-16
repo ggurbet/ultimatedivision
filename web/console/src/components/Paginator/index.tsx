@@ -10,9 +10,9 @@ import next
 import previous
     from '../../img/UltimateDivisionPaginator/previous.png';
 import { PaginatorBlockPages }
-    from './PaginatorBlockPages/PaginatorBlockPages';
+    from './PaginatorBlockPages';
 
-import './Paginator.scss';
+import './index.scss';
 
 export const Paginator: React.FC<{ itemCount: number }> = ({ itemCount }) => {
     const FIRST_ITEM_PAGINATON = 1;

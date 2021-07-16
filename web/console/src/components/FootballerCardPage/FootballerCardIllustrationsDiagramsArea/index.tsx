@@ -5,10 +5,10 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 
-import './FootballerCardIllustrationsDiagramsArea.scss';
+import './index.scss';
 
 import { FootballerCardIllustrationsDiagram }
-    from '../FootballerCardIllustrationsDiagram/FootballerCardIllustrationsDiagram';
+    from '../FootballerCardIllustrationsDiagram';
 
 export const FootballerCardIllustrationsDiagramsArea: React.FC = () => {
     const FIRST_CARD_INDEX = 0;

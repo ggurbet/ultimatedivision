@@ -13,7 +13,7 @@ import { handleFormations } from '../../../../store/reducers/footballField';
 import { ListStyle } from '../../../../utils/footballField';
 import { TriangleStyle } from '../../../../utils/footballField';
 
-import './FootballFieldInformationFormation.scss';
+import './index.scss';
 
 export const FootballFieldInformationFormation: React.FC<{ props: FotballFieldInformationLine }> = ({ props }) => {
     const [optionVisibility, changeVisibility] = useState(true);
