@@ -3,17 +3,16 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
 
-import { MarketPlaceFilterField } from '../MarketPlaceFilterField';
 import { MarketPlaceCardsGroup } from '../MarketPlaceCardsGroup';
-import { Paginator } from '../../Paginator';
+import { MarketPlaceFilterField } from '../MarketPlaceFilterField';
 import { MarketPlaceFootballerCard } from '../MarketPlaceCardsGroup/MarketPlaceFootballerCard';
 import { MyCard } from '../MyCard';
+import { Paginator } from '../../Paginator';
 
 import { RouteConfig } from '../../../routes';
+import { RootState } from '../../../store';
 
 import './index.scss';
 

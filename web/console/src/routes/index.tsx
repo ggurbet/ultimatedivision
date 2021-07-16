@@ -3,11 +3,11 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import React from 'react';
-import { Switch, RouteProps } from 'react-router-dom';
+import { RouteProps, Switch } from 'react-router-dom';
+
 import { FootballerCard } from '../components/FootballerCardPage/FootballerCard';
-import { MarketPlace } from '../components/MarketPlacePage/MarketPlace';
 import { FootballField } from '../components/FootballFieldPage/FootballField';
+import { MarketPlace } from '../components/MarketPlacePage/MarketPlace';
 
 /** Route base config implementation */
 export class ComponentRoutes {
@@ -16,7 +16,11 @@ export class ComponentRoutes {
         public path: string,
         public component: React.FC,
         public exact: boolean,
-    ) { }
+    ) {
+        this.path = path;
+        this.component = component;
+        this.exact = exact;
+    }
 };
 
 /** Route config implementation */
@@ -39,7 +43,7 @@ export class RouteConfig {
     public static MyCards: ComponentRoutes = new ComponentRoutes(
         '/ud/marketplace/club',
         MarketPlace,
-        true
+        true,
     );
     public static Default: ComponentRoutes = new ComponentRoutes(
         '/ud/',
@@ -60,8 +64,7 @@ type RoutesProps = { component: React.FC } & RouteProps;
 const Route: React.FC<RoutesProps> = ({
     component: Component, ...children
 }) =>
-    <Component {...children} />
-    ;
+    <Component {...children} />;
 
 export const Routes = () =>
     <Switch>
@@ -71,7 +74,6 @@ export const Routes = () =>
                 path={route.path}
                 component={route.component}
                 exact={route.exact}
-            />
+            />,
         )}
-    </Switch>
-    ;
+    </Switch>;

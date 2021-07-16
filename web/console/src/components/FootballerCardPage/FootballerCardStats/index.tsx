@@ -3,8 +3,8 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
 */
 
-import React from 'react';
 import { CardStats } from '../../../types/fotballerCard';
+
 import './index.scss';
 
 export const FootballerCardStats: React.FC<{ props: CardStats }> = ({ props }) =>
@@ -43,7 +43,6 @@ export const FootballerCardStats: React.FC<{ props: CardStats }> = ({ props }) =
                 >
                     {item.value}
                 </span>
-            </div>
+            </div>,
         )}
-    </div>
-    ;
+    </div>;

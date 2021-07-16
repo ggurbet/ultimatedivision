@@ -3,14 +3,14 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
 */
 
-import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
-
-import './index.scss';
 
 import { FootballerCardStats }
     from '../FootballerCardStats';
+
+import { RootState } from '../../../store';
+
+import './index.scss';
 
 export const FootballerCardStatsArea: React.FC = () => {
     const FIRST_CARD_INDEX = 0;
@@ -23,7 +23,7 @@ export const FootballerCardStatsArea: React.FC = () => {
                 <FootballerCardStats
                     key={index}
                     props={item}
-                />
+                />,
             )}
         </div>
     );

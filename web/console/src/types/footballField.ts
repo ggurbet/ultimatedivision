@@ -71,5 +71,9 @@ export class FootballFieldInformationLine {
         public id: string = '',
         public title: string = '',
         public options: string[] = [],
-    ) { }
-}
+    ) {
+        this.id = id;
+        this.title = title;
+        this.options = options;
+    }
+};

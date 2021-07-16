@@ -3,12 +3,10 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import React from 'react';
-
-import './index.scss';
-
 import rectangle from '../../../../img/FootballFieldPage/FilterField/rectangle.png';
 import search from '../../../../img/FootballFieldPage/FilterField/search.png';
+
+import './index.scss';
 
 export const FilterField: React.FC = () => {
     const filterFieldTitles: Array<{ title: string; src: string }> = [
@@ -59,7 +57,7 @@ export const FilterField: React.FC = () => {
                                 alt="Filter icon"
                                 className="football-field-filter__list__item__picture"
                             />
-                        </li>
+                        </li>,
                     )}
                 </ul>
             </div>

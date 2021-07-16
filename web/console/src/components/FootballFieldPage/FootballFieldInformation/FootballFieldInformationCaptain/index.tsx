@@ -3,14 +3,12 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { FotballFieldInformationLine } from '../../../../types/fotballerCard';
-
-import { ListStyle } from '../../../../utils/footballField';
-import { TriangleStyle } from '../../../../utils/footballField';
 import { handleCaptain } from '../../../../store/reducers/footballField';
+import { ListStyle, TriangleStyle } from '../../../../utils/footballField';
 
 import triangle from '../../../../img/FootballFieldPage/triangle.png';
 
@@ -53,7 +51,7 @@ export const FootballFieldInformationCaptain: React.FC<{ props: FotballFieldInfo
                         onClick={() => dispatch(handleCaptain)}
                     >
                         {item}
-                    </li>
+                    </li>,
                 )}
             </ul>
         </div>

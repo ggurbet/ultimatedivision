@@ -3,14 +3,14 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { FotballFieldInformationLine } from '../../../../types/fotballerCard';
 
 import triangle from '../../../../img/FootballFieldPage/triangle.png';
-import { ListStyle } from '../../../../utils/footballField';
-import { TriangleStyle } from '../../../../utils/footballField';
+
+import { FotballFieldInformationLine } from '../../../../types/fotballerCard';
 import { handleTactics } from '../../../../store/reducers/footballField';
+import { ListStyle, TriangleStyle } from '../../../../utils/footballField';
 
 import './index.scss';
 
@@ -51,7 +51,7 @@ export const FootballFieldInformationTactic: React.FC<{ props: FotballFieldInfor
                         onClick={() => dispatch(handleTactics)}
                     >
                         {item}
-                    </li>
+                    </li>,
                 )}
             </ul>
         </div>

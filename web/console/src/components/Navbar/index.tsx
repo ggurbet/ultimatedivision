@@ -3,14 +3,13 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import './index.scss';
+import { RouteConfig } from '../../routes';
 
 import ultimate from '../../img/Navbar/ultimate.png';
 
-import { RouteConfig } from '../../routes';
+import './index.scss';
 
 export const Navbar: React.FC = () =>
     <div className="ultimatedivision-navbar">
@@ -25,7 +24,7 @@ export const Navbar: React.FC = () =>
                     to={RouteConfig.Default.path}
                     className="ultimatedivision-navbar__item__active"
                 >
-                        HOME
+                    HOME
                 </NavLink>
             </li>
             <li className="ultimatedivision-navbar__item">
@@ -33,7 +32,7 @@ export const Navbar: React.FC = () =>
                     to={RouteConfig.MarketPlace.path}
                     className="ultimatedivision-navbar__item__active"
                 >
-                        MARKETPLACE
+                    MARKETPLACE
                 </NavLink>
             </li>
             <li className="ultimatedivision-navbar__item">
@@ -41,7 +40,7 @@ export const Navbar: React.FC = () =>
                     to={RouteConfig.MyCards.path}
                     className="ultimatedivision-navbar__item__active"
                 >
-                        CLUB
+                    CLUB
                 </NavLink>
             </li>
             <li className="ultimatedivision-navbar__item">
@@ -49,9 +48,8 @@ export const Navbar: React.FC = () =>
                     to={RouteConfig.FootballField.path}
                     className="ultimatedivision-navbar__item__active"
                 >
-                        FIELD
+                    FIELD
                 </NavLink>
             </li>
         </ul >
-    </div >
-    ;
+    </div >;

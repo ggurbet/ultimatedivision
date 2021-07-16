@@ -2,14 +2,13 @@
 Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
-
-import React from 'react';
 import { useSelector } from 'react-redux';
-import './index.scss';
+
+import { PlayingFormation } from './PlayingAreaFormation';
 
 import { RootState } from '../../../store';
 
-import { PlayingFormation } from './PlayingAreaFormation';
+import './index.scss';
 
 export const FootballFieldPlayingArea: React.FC = () => {
     const formation = useSelector((state: RootState) => state.fieldReducer.options.formation);

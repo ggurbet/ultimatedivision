@@ -1,13 +1,13 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import React from 'react';
 import { useSelector } from 'react-redux';
+
+import { Radar } from 'react-chartjs-2';
+
 import { RootState } from '../../../store';
 
 import './index.scss';
-
-import { Radar } from 'react-chartjs-2';
 
 export const FootballerCardIllustrationsRadar: React.FC = () => {
     const FIRST_CARD_INDEX = 0;

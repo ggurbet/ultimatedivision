@@ -3,15 +3,15 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import React, { DragEvent } from 'react';
-
+import { DragEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { choseCardPosition, setDragStart, setDragTarget, exchangeCards }
-from '../../../../store/reducers/footballField';
-import { RootState } from '../../../../store';
 
-import { FootballField } from '../../../../types/footballField';
 import { PlayingAreaFootballerCard } from '../../FootballFieldCardSelection/PlayingAreaFootballerCard';
+
+import { choseCardPosition, exchangeCards, setDragStart, setDragTarget }
+    from '../../../../store/reducers/footballField';
+import { FootballField } from '../../../../types/footballField';
+import { RootState } from '../../../../store';
 
 import './index.scss';
 

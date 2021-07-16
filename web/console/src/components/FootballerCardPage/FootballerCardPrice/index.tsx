@@ -2,16 +2,15 @@
 Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
 */
-
-import React from 'react';
-
-import './index.scss';
+import { useSelector } from 'react-redux';
 
 import { Doughnut } from 'react-chartjs-2';
-import { useSelector } from 'react-redux';
+
 import { RootState } from '../../../store';
 
 import currency from '../../../img/FootballerCardPage/currency.png';
+
+import './index.scss';
 
 export const FootballerCardPrice: React.FC = () => {
     const FIRST_CARD_INDEX = 0;

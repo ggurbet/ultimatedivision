@@ -2,12 +2,9 @@
 Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
-
-import React from 'react';
+import { Card } from '../../../store/reducers/footballerCard';
 
 import './index.scss';
-
-import { Card } from '../../../store/reducers/footballerCard';
 
 export const MarketPlaceCardsGroup: React.FC<{ cards: Card[]; Component: React.FC<{ card: Card; key: number }> }> = ({ cards, Component }) =>
     <div className="marketplace-cards">
@@ -16,8 +13,7 @@ export const MarketPlaceCardsGroup: React.FC<{ cards: Card[]; Component: React.F
                 <Component
                     card={card}
                     key={index}
-                />
+                />,
             )}
         </div>
-    </div>
-    ;
+    </div>;
