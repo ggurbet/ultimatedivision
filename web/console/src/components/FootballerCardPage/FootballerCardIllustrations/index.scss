@@ -10,17 +10,45 @@
     flex-direction: column;
     &::after {
         @extend %pseudoelementsInFootballerCard;
-        top: 48%;
+        top: 32%;
     }
     &::before {
         @extend %pseudoelementsInFootballerCard;
-        top: 20%;
+        top: 55%;
     }
-    &__logo {
-        width: 80%;
-        position: relative;
-        bottom: 120px;
+    &__background-type {
+        position: absolute;
+        width: 108%;
+        left: -8px;
+        top: -80px;
+    }
+    &__face-picture {
+        z-index: 2;
+        position: absolute;
+        left: 0;
+        right: 0;
         margin: 0 auto;
+        top: 15px;
+        width: 60%;
     }
-
+    &__list {
+        margin: 210px 30px 200px 90px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        list-style: none;
+        &__item {
+            color: rgb(87, 86, 86);
+            z-index: 2;
+            font-size: 20px;
+        }
+    }
+    &__name {
+        color: rgb(87, 86, 86);
+        text-align: center;
+        width: 100%;
+        font-size: 24px;
+        z-index: 2;
+        margin-top: -20px;
+        position: absolute;
+    }
 }
