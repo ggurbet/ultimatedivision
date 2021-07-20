@@ -4,6 +4,11 @@
 @import './mixins';
 
 @font-face {
+    font-family: "Montserrat";
+    src: url('./fonts/Montserrat-Regular.ttf');
+}
+
+@font-face {
     font-family: "BebasNeue";
     src: url('./fonts/BebasNeue-Regular.ttf');
     font-style: normal;

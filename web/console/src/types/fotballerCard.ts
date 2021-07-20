@@ -4,10 +4,10 @@ See LICENSE for copying information.
  */
 
 /* eslint-disable */
-import diamond from '../img/MarketPlacePage/marketPlaceCardsGroup/diamond2.png';
-import gold from '../img/MarketPlacePage/marketPlaceCardsGroup/gold2.png';
-import silver from '../img/MarketPlacePage/marketPlaceCardsGroup/silver2.png';
-import wood from '../img/MarketPlacePage/marketPlaceCardsGroup/wood2.png';
+import diamond from '../img/MarketPlacePage/marketPlaceCardsGroup/diamond2.svg';
+import gold from '../img/MarketPlacePage/marketPlaceCardsGroup/gold2.svg';
+import silver from '../img/MarketPlacePage/marketPlaceCardsGroup/silver2.svg';
+import wood from '../img/MarketPlacePage/marketPlaceCardsGroup/wood2.svg';
 
 import currentBid
     from '../img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/bid.png';

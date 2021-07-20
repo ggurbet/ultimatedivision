@@ -13,6 +13,7 @@ See LICENSE for copying information.
         color: white;
         margin: 70px 0 50px 40px;
         font-size: 48px;
+        font-weight: 100;
         position: relative;
 
         &::after {
@@ -42,16 +43,29 @@ See LICENSE for copying information.
         position: relative;
         &__item {
             list-style: none;
-            color: white;
             cursor: pointer;
-
+            &__title {
+                font-family: 'Montserrat', sans-serif;
+                font-size: 14px;
+                color: white;
+            }
             &__picture {
                 margin-left: 5px;
                 vertical-align: middle;
             }
-
+            &__search {
+                border: 1px solid $marketPlaceBorderColor;
+                border-radius: 10px;
+                line-height: 18px;
+                background-color: transparent;
+                padding-left: 10px;
+                margin-left: 5px;
+                outline: none;
+                color: white;
+            }
         }
     }
+
 }
 
 @media (max-width: $desktopBreakPoint) {

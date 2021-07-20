@@ -3,8 +3,8 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
+import playerFace from '../../img/MarketPlacePage/marketPlaceCardsGroup/player.svg';
 import confirmIcon from '../../img/MarketPlacePage/MyCard/ok.png';
-import playerFace from '../../img/MarketPlacePage/marketPlaceCardsGroup/player.png';
 import priceGoldIcon from '../../img/MarketPlacePage/MyCard/goldPrice.png';
 import priceIcon
     from '../../img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/price.png';
