@@ -68,12 +68,12 @@
             }
         }
         &__empty-card {
-            background-image: url('../../../img/FootballFieldPage/emtyCard.png');
+            background-image: url('../../../img/FootballFieldPage/emptyCard.svg');
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
             &:hover {
-                background-image: url('../../../img/FootballFieldPage/emtyCardHover.png');
+                background-image: url('../../../img/FootballFieldPage/emptyCardHover.svg');
             }
         }
     }

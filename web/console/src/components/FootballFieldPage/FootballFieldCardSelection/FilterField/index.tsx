@@ -3,8 +3,8 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import rectangle from '../../../../img/FootballFieldPage/FilterField/rectangle.png';
-import search from '../../../../img/FootballFieldPage/FilterField/search.png';
+import rectangle from '../../../../img/FootballFieldPage/triangle.svg';
+import search from '../../../../img/FootballFieldPage/search.svg';
 
 import './index.scss';
 
@@ -29,23 +29,22 @@ export const FilterField: React.FC = () => {
         <section className="football-field-filter">
             <div className="football-field-filter__wrapper">
                 <ul className="football-field-filter__list">
-                    <li
-                        className="football-field-filter__list__item">
-                        <form action="" className="football-field-filter__list__form">
-                            <input
-                                type="text"
-                                placeholder="Player`s name"
-                                className="football-field-filter__list__input"
-                            />
+                    <li className="football-field-filter__list__item">
+                        <form action="" className="football-field-filter__form">
                             <button type="submit"
-                                className="football-field-filter__list__submit"
+                                className="football-field-filter__submit"
                             >
                                 <img
                                     src={search}
                                     alt="Filter icon"
-                                    className="football-field-filter__list__item__search-picture"
+                                    className="football-field-filter__item__search-picture"
                                 />
                             </button>
+                            <input
+                                type="text"
+                                placeholder="Player`s name"
+                                className="football-field-filter__input"
+                            />
                         </form>
                     </li>
                     {filterFieldTitles.map((item, index) =>

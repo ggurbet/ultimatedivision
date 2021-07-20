@@ -6,8 +6,10 @@
     width: 25%;
     max-width: 400px;
     border-radius: 5px;
+    font-family: "Montserrat";
+
     &__title {
-        font-weight: lighter;
+        text-transform: uppercase;
         margin: 24px 0 24px 24px;
     }
     &.football-field-information-option &:first-child {

@@ -10,6 +10,7 @@
         justify-content: space-between;
         align-items: center;
         transition: background-color 0.3s;
+        text-transform: capitalize;
         &:hover {
             background:  #464678;
         }

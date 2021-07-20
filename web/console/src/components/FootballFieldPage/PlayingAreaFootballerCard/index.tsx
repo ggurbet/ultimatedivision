@@ -9,18 +9,15 @@ import { PlayerCard } from '../../PlayerCard';
 
 import { Card }
     from '../../../store/reducers/footballerCard';
-import { RootState } from '../../../store';
-import { addCard, removeCard }
+import { removeCard }
     from '../../../store/reducers/footballField';
-import { FootballCardStyle }
-    from '../../../utils/footballField';
 
 import './index.scss';
 
 export const PlayingAreaFootballerCard: React.FC<{ card: Card; index?: number; place?: string }> = ({ card, index, place }) => {
     const dispatch = useDispatch();
     const [visibility, changeVisibility] = useState(false);
-    const style = new FootballCardStyle(visibility).style;
+    const style = visibility ? 'block' : 'none'
     /** remove player card implementation */
     function handleDeletion(e: any) {
         e.preventDefault();

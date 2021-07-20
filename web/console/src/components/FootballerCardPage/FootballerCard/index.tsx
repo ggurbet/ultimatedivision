@@ -3,22 +3,17 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
 */
 
-import { useSelector } from 'react-redux';
-
 import { FootballerCardIllustrations } from '../FootballerCardIllustrations';
 import { FootballerCardPrice } from '../FootballerCardPrice';
 import { FootballerCardStatsArea } from '../FootballerCardStatsArea';
 import { FootballerCardInformation } from '../FootballerCardInformation';
 
-import { RootState } from '../../../store';
-
 import './index.scss';
 
-export const FootballerCard: React.FC = () => {
-    /** TODO: Route config with cards ID */
+export const FootballerCard: React.FC = (props) => {
+    // @ts-ignore
+    const cardData = props.location.state.card;
     const FIRST_CARD_INDEX = 0;
-    const cardName = useSelector((state: RootState) =>
-        state.cardReducer[FIRST_CARD_INDEX].overalInfo[FIRST_CARD_INDEX].value);
 
     return (
         <div className="footballer-card">
@@ -26,14 +21,14 @@ export const FootballerCard: React.FC = () => {
                 <div className="footballer-card__wrapper">
                     <div className="footballer-card__name-wrapper">
                         <h1 className="footballer-card__name">
-                            {cardName}
+                            {cardData.overalInfo[FIRST_CARD_INDEX].value}
                         </h1>
                     </div>
-                    <FootballerCardIllustrations />
+                    <FootballerCardIllustrations card={cardData}/>
                     <div className="footballer-card__stats-area">
                         <FootballerCardPrice />
-                        <FootballerCardStatsArea />
-                        <FootballerCardInformation />
+                        <FootballerCardStatsArea card={cardData}/>
+                        <FootballerCardInformation card={cardData} />
                     </div>
                 </div>
             </div>

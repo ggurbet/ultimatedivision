@@ -8,7 +8,7 @@ import { Doughnut } from 'react-chartjs-2';
 
 import { RootState } from '../../../store';
 
-import currency from '../../../img/FootballerCardPage/currency.png';
+import currency from '../../../img/FootballerCardPage/currency.svg';
 
 import './index.scss';
 

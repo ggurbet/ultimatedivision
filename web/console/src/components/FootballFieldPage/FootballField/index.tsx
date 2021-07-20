@@ -7,7 +7,6 @@ import { DragEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { FootballFieldCardSelection } from '../FootballFieldCardSelection';
-import { FootballFieldInformation } from '../FootballFieldInformation';
 import { FootballFieldPlayingArea } from '../FotballFieldPlayingArea';
 
 import { RootState } from '../../../store';

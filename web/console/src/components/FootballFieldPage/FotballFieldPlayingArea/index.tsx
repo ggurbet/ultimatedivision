@@ -3,14 +3,14 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { FootballFieldInformation } from '../FootballFieldInformation'
+import { FootballFieldInformation } from '../FootballFieldInformation';
 import { PlayingAreaFootballerCard } from '../PlayingAreaFootballerCard';
 
 import { RootState } from '../../../store';
-import { choseCardPosition, setDragStart, setDragTarget, exchangeCards, removeCard }
+import { choseCardPosition, exchangeCards, removeCard, setDragStart, setDragTarget }
     from '../../../store/reducers/footballField';
 
 import './index.scss';
@@ -29,33 +29,43 @@ export const FootballFieldPlayingArea: React.FC = () => {
     /** outer padding of playingArea */
     const [outerOffset, handleOffset] = useState({ x: 0, y: 0 });
 
+    const DEFAULT_VALUE = 0;
+    const OFFSET_TOP = 330;
+
     /** with getBoundingClientRect() we gettins outer padding of playingArea on any screen width and scale */
     useEffect(() => {
         const playingArea = document.getElementById('playingArea');
         if (playingArea) {
             const position = playingArea.getBoundingClientRect();
-            handleOffset({ x: position.x + 60, y: position.y + 100 });
+            const HALF_OF_CARD_WIDTH = 60;
+            const HALF_OF_CARD_HEIGHT = 100;
+
+            handleOffset({
+                x: position.x + HALF_OF_CARD_WIDTH,
+                y: position.y + HALF_OF_CARD_HEIGHT,
+            });
         }
-    },[])
+    }, []);
     const useMousePosition = (ev: any) => {
         setMousePosition({ x: ev.pageX, y: ev.pageY });
     };
 
     /** getting dragged card index and changing state to allow mouseUp */
-    function dragStart(e: any, index: number = 0): void {
+    function dragStart(e: any, index: number = DEFAULT_VALUE): void {
         handleDrag(true);
         dispatch(setDragStart(index));
     }
-
+    /** eslint-disable */
     /** getting second drag index  and exchanging with first index*/
-    function onMouseUp(e: any, index: number = 0): void {
+    function onMouseUp(e: any, index: number = DEFAULT_VALUE): void {
         e.stopPropagation();
 
-        if (isDragging && dragStartIndex) {
+        if (isDragging && dragStartIndex !== null) {
             dispatch(setDragTarget(index));
             dispatch(exchangeCards(dragStartIndex, fieldSetup.options.dragTarget));
         }
-        dispatch(setDragTarget())
+
+        dispatch(setDragTarget());
         dispatch(setDragStart());
         handleDrag(false);
     }
@@ -66,8 +76,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
         dispatch(setDragStart());
     }
 
-
-/** deleting card when release beyond playing area */
+    /** deleting card when release beyond playing area */
     function removeFromArea() {
         if (isDragging) {
             dispatch(removeCard(dragStartIndex));
@@ -93,13 +102,14 @@ export const FootballFieldPlayingArea: React.FC = () => {
                 >
                     {fieldSetup.cardsList.map((card, index) => {
                         const data = card.cardData;
-                        const equality = (dragStartIndex === index);
-                        //TO DO: change style by some class to change style in card
+                        const equality = dragStartIndex === index;
+
+                        // TO DO: change style by some class to change style in card
                         return (
                             <a
                                 style={
                                     equality
-                                        ? { left: (x - outerOffset.x), top: (y - 330), zIndex: 5, pointerEvents: 'none' }
+                                        ? { left: x - outerOffset.x, top: y - OFFSET_TOP, zIndex: 5, pointerEvents: 'none' }
                                         : undefined
                                 }
                                 href={data ? undefined : '#cardList'}
@@ -122,3 +132,4 @@ export const FootballFieldPlayingArea: React.FC = () => {
         </div>
     );
 };
+

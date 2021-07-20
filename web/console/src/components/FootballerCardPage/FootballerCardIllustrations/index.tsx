@@ -6,17 +6,15 @@ See LICENSE for copying information.
 import { FootballerCardIllustrationsDiagramsArea } from '../FootballerCardIllustrationsDiagramsArea';
 import { FootballerCardIllustrationsRadar } from '../FootballerCardIllustrationsRadar';
 
-import icon from '../../../img/FootballerCardPage/diamond2.png';
-
 import './index.scss';
+import { Card } from '../../../store/reducers/footballerCard';
+import { PlayerCard } from '../../PlayerCard';
 
-export const FootballerCardIllustrations: React.FC = () =>
+export const FootballerCardIllustrations: React.FC<{card: Card}> = ({ card }) =>
     <div className="footballer-card-illustrations">
-        <img
-            src={icon}
-            alt="fotballer illustration"
-            className="footballer-card-illustrations__logo"
-        />
-        <FootballerCardIllustrationsRadar />
-        <FootballerCardIllustrationsDiagramsArea />
+        <div className="footballer-card-illustrations__card">
+            <PlayerCard card={card} parentClassName="footballer-card-illustrations__card"/>
+        </div>
+        <FootballerCardIllustrationsRadar card={card} />
+        <FootballerCardIllustrationsDiagramsArea card={card} />
     </div>;

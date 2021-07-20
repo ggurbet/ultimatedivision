@@ -6,19 +6,18 @@ See LICENSE for copying information.
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import triangle from '../../../../img/FootballFieldPage/triangle.png';
+import triangle from '../../../../img/FootballFieldPage/triangle.svg';
 
 import { FotballFieldInformationLine } from '../../../../types/fotballerCard';
 import { handleTactics } from '../../../../store/reducers/footballField';
-import { ListStyle, TriangleStyle } from '../../../../utils/footballField';
 
 import './index.scss';
 
 export const FootballFieldInformationTactic: React.FC<{ props: FotballFieldInformationLine }> = ({ props }) => {
     const [optionVisibility, changeVisibility] = useState(true);
 
-    const LIST_HEIGHT = new ListStyle(optionVisibility);
-    const TRIANGLE_ROTATE = new TriangleStyle(optionVisibility);
+    const listHeight = optionVisibility ? '0' : '90px';
+    const triangleRotate = optionVisibility ? 'rotate(-90deg)' : 'rotate(0deg)';
 
     const dispatch = useDispatch();
 
@@ -34,13 +33,13 @@ export const FootballFieldInformationTactic: React.FC<{ props: FotballFieldInfor
                 <img
                     className="football-field-information-option__image"
                     src={triangle}
-                    style={{ transform: TRIANGLE_ROTATE.style }}
+                    style={{ transform: triangleRotate }}
                     alt="triangle img"
                     id={`triangle-${props.id}`}
                 />
             </div>
             <ul
-                style={{ height: LIST_HEIGHT.style }}
+                style={{ height: listHeight }}
                 className="football-field-information-option__list"
                 id={props.id}
             >

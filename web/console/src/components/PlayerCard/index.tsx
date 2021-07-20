@@ -3,7 +3,7 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import { RouteConfig } from '../../routes';
 
@@ -25,11 +25,18 @@ export const PlayerCard: React.FC<{ card: Card; parentClassName: string }> = ({
             alt="Player face"
             draggable={false}
         />
-        <NavLink to={RouteConfig.FootballerCard.path} >
+        <Link
+            to={{
+                pathname: RouteConfig.FootballerCard.path,
+                state:{
+                    card,
+                },
+            }}
+        >
             <span className={`${parentClassName}__name`}>
                 {card.mainInfo.lastName}
             </span>
-        </NavLink>
+        </Link>
         <ul className={`${parentClassName}__list`}>
             {card.stats.map(
                 (property, index) =>

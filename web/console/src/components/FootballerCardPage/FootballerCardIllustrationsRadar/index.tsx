@@ -1,18 +1,14 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useSelector } from 'react-redux';
+import { Card } from '../../../store/reducers/footballerCard';
 
 import { Radar } from 'react-chartjs-2';
 
-import { RootState } from '../../../store';
-
 import './index.scss';
 
-export const FootballerCardIllustrationsRadar: React.FC = () => {
-    const FIRST_CARD_INDEX = 0;
-    const stats = useSelector((state: RootState) =>
-        state.cardReducer[FIRST_CARD_INDEX].stats);
+export const FootballerCardIllustrationsRadar: React.FC<{card: Card}> = ({ card }) => {
+    const stats = card.stats;
 
     return (
         <div className="footballer-card-illustrations-radar">
@@ -30,7 +26,7 @@ export const FootballerCardIllustrationsRadar: React.FC = () => {
                         line: {
                             borderWidth: 1,
                             borderColor: '#66ff8791',
-                        }
+                        },
                     },
                     animations: {
                         tension: {

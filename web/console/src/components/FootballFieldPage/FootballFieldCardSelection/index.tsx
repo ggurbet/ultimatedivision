@@ -9,7 +9,6 @@ import { addCard } from '../../../store/reducers/footballField';
 import { FilterField } from './FilterField';
 import { PlayerCard } from '../../PlayerCard';
 
-
 import './index.scss';
 import { Paginator } from '../../Paginator';
 

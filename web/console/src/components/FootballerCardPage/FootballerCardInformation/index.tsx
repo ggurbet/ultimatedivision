@@ -4,14 +4,12 @@
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../store';
+import { Card } from '../../../store/reducers/footballerCard';
 
 import './index.scss';
 
-export const FootballerCardInformation: React.FC = () => {
-    const FIRST_CARD_INDEX = 0;
-
-    const overalInfo = useSelector((state: RootState) =>
-        state.cardReducer[FIRST_CARD_INDEX].overalInfo);
+export const FootballerCardInformation: React.FC<{card: Card}> = ({ card }) => {
+    const overalInfo = card.overalInfo
 
     return (
         <div className="footballer-card-information">

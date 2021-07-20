@@ -11,11 +11,11 @@ import { FootballerCardStats }
 import { RootState } from '../../../store';
 
 import './index.scss';
+import { Card } from '../../../store/reducers/footballerCard';
 
-export const FootballerCardStatsArea: React.FC = () => {
+export const FootballerCardStatsArea: React.FC<{card: Card}> = ({ card }) => {
     const FIRST_CARD_INDEX = 0;
-    const stats = useSelector((state: RootState) =>
-        state.cardReducer[FIRST_CARD_INDEX].stats);
+    const stats = card.stats;
 
     return (
         <div className="footballer-card-stats">
