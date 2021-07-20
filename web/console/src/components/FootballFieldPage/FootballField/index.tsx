@@ -36,11 +36,7 @@ export const FootballField: React.FC = () => {
             onDragOver={e => dragOverHandler(e)}
         >
             <h1 className="football-field__title">Football Field</h1>
-            <div className="football-field__wrapper"
-            >
-                <FootballFieldPlayingArea />
-                <FootballFieldInformation />
-            </div>
+            <FootballFieldPlayingArea />
             <FootballFieldCardSelection />
         </div>
     );

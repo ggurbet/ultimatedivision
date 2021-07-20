@@ -2,7 +2,7 @@
 Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
-@import '../../../../index.scss';
+@import '../../../index.scss';
 
 .football-field-card {
     width: 110%;
@@ -40,14 +40,17 @@ See LICENSE for copying information.
         width: 60%;
     }
     &__list {
-        margin: 0 20px;
+        margin: 0 auto;
+        width: 70%;
         margin-top: 96px;
         display: grid;
+        padding-left: 4px;
         grid-column-gap: 0px;
         grid-template-columns: repeat(2, 1fr);
         justify-items: center;
         list-style: none;
         &__item {
+            width: 25px;
             color: rgb(87, 86, 86);
             z-index: 2;
             font-size: 11px;

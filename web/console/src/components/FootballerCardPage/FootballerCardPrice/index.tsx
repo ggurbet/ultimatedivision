@@ -24,7 +24,11 @@ export const FootballerCardPrice: React.FC = () => {
         <div className="footballer-card-price">
             <div className="footballer-card-price__wrapper">
                 <div className="footballer-card-price__diagram">
-                    <p className="footballer-card-price__diagram-value">{`PRP: ${prpValue}%`}</p>
+                    <p className="footballer-card-price__diagram-value">
+                        PRP: <span className="footballer-card-price__diagram-value-quantity">
+                            {prpValue}%
+                        </span>
+                    </p>
                     <Doughnut
                         type={Doughnut}
                         data={{

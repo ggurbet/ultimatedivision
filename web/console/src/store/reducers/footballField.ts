@@ -17,9 +17,11 @@ const DRAG_START = 'CurrentPossition';
 const DRAG_TARGET = 'DragTarget';
 const EXCHANGE_CARDS = 'ReplaceCard';
 
-const DEFAULT_REMOVE_CARD_INDEX = -1;
-const DEFAULT_ADDED_CARD_INDEX = 0;
-const DEFAULT_ADDED_CARD_DATA_INDEX = 1;
+const DEFAULT_CARD_INDEX = null;
+const FITST_ACTION_PARAM = 0;
+const SECOND_ACTION_PARAM = 1;
+
+type dragParamType = number | null;
 
 /** Chose type of cards positioning on football field */
 export const handleFormations = (option: string) => ({
@@ -33,7 +35,7 @@ export const addCard = (card: Card, index: number) => ({
     action: [card, index],
 });
 
-export const removeCard = (index: number = DEFAULT_REMOVE_CARD_INDEX) => ({
+export const removeCard = (index: dragParamType = DEFAULT_CARD_INDEX) => ({
     type: REMOVE_CARD,
     action: index,
 });
@@ -44,17 +46,17 @@ export const choseCardPosition = (index: number) => ({
     action: index,
 });
 
-export const setDragStart = (index: number) => ({
+export const setDragStart = (index: dragParamType = DEFAULT_CARD_INDEX) => ({
     type: DRAG_START,
     action: index,
 });
 
-export const setDragTarget = (index: number) => ({
+export const setDragTarget = (index: dragParamType = DEFAULT_CARD_INDEX) => ({
     type: DRAG_TARGET,
     action: index,
 });
 
-export const exchangeCards = (prevPosition: number, currentPosition: number) => ({
+export const exchangeCards = (prevPosition: dragParamType, currentPosition: dragParamType) => ({
     type: EXCHANGE_CARDS,
     action: [prevPosition, currentPosition],
 });
@@ -81,7 +83,7 @@ export const fieldReducer = (cardState = FieldSetup, action: any = {}) => {
         options.chosedCard = action.action;
         break;
     case ADD_CARD:
-        cardsList[action.action[DEFAULT_ADDED_CARD_DATA_INDEX]].cardData = action.action[DEFAULT_ADDED_CARD_INDEX];
+        cardsList[action.action[SECOND_ACTION_PARAM]].cardData = action.action[FITST_ACTION_PARAM];
         break;
     case REMOVE_CARD:
         cardsList[action.action].cardData = null;
@@ -93,9 +95,9 @@ export const fieldReducer = (cardState = FieldSetup, action: any = {}) => {
         options.dragTarget = action.action;
         break;
     case EXCHANGE_CARDS:
-        const prevValue = cardsList[action.action[DEFAULT_ADDED_CARD_INDEX]];
-        cardsList[action.action[DEFAULT_ADDED_CARD_INDEX]] = cardsList[action.action[DEFAULT_ADDED_CARD_DATA_INDEX]];
-        cardsList[action.action[DEFAULT_ADDED_CARD_DATA_INDEX]] = prevValue;
+        const prevValue = cardsList[action.action[FITST_ACTION_PARAM]];
+        cardsList[action.action[FITST_ACTION_PARAM]] = cardsList[action.action[SECOND_ACTION_PARAM]];
+        cardsList[action.action[SECOND_ACTION_PARAM]] = prevValue;
         break;
     default:
         break;

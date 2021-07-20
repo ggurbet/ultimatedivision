@@ -5,21 +5,20 @@ See LICENSE for copying information.
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { PlayerCard } from '../../../PlayerCard';
+import { PlayerCard } from '../../PlayerCard';
 
-import { addCard, removeCard }
-    from '../../../../store/reducers/footballField';
 import { Card }
-    from '../../../../store/reducers/footballerCard';
+    from '../../../store/reducers/footballerCard';
+import { RootState } from '../../../store';
+import { addCard, removeCard }
+    from '../../../store/reducers/footballField';
 import { FootballCardStyle }
-    from '../../../../utils/footballField';
-import { RootState } from '../../../../store';
+    from '../../../utils/footballField';
 
 import './index.scss';
 
 export const PlayingAreaFootballerCard: React.FC<{ card: Card; index?: number; place?: string }> = ({ card, index, place }) => {
     const dispatch = useDispatch();
-    const chosenCard = useSelector((state: RootState) => state.fieldReducer.options.chosedCard);
     const [visibility, changeVisibility] = useState(false);
     const style = new FootballCardStyle(visibility).style;
     /** remove player card implementation */
@@ -30,7 +29,7 @@ export const PlayingAreaFootballerCard: React.FC<{ card: Card; index?: number; p
 
     return (
         <div
-            onClick={place ? () => changeVisibility(prev => !prev) : () => dispatch(addCard(card, chosenCard))}
+            onClick={() => changeVisibility(prev => !prev)}
             className="football-field-card"
         >
             <div

@@ -26,6 +26,12 @@ export const FootballerCardIllustrationsRadar: React.FC = () => {
                     }],
                 }}
                 options={{
+                    elements: {
+                        line: {
+                            borderWidth: 1,
+                            borderColor: '#66ff8791',
+                        }
+                    },
                     animations: {
                         tension: {
                             duration: 1000,

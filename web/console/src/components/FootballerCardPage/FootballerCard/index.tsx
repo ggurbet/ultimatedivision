@@ -22,17 +22,19 @@ export const FootballerCard: React.FC = () => {
 
     return (
         <div className="footballer-card">
-            <div className="footballer-card__wrapper">
-                <div className="footballer-card__name-wrapper">
-                    <h1 className="footballer-card__name">
-                        {cardName}
-                    </h1>
-                </div>
-                <FootballerCardIllustrations />
-                <div className="footballer-card__stats-area">
-                    <FootballerCardPrice />
-                    <FootballerCardStatsArea />
-                    <FootballerCardInformation />
+            <div className="footballer-card__border">
+                <div className="footballer-card__wrapper">
+                    <div className="footballer-card__name-wrapper">
+                        <h1 className="footballer-card__name">
+                            {cardName}
+                        </h1>
+                    </div>
+                    <FootballerCardIllustrations />
+                    <div className="footballer-card__stats-area">
+                        <FootballerCardPrice />
+                        <FootballerCardStatsArea />
+                        <FootballerCardInformation />
+                    </div>
                 </div>
             </div>
         </div>
