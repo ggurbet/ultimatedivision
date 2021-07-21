@@ -6,10 +6,9 @@ See LICENSE for copying information.
 import { BrowserRouter } from 'react-router-dom';
 
 import { Navbar }
-    from './components/Navbar';
-import { Routes } from './routes/index';
+    from './app/components/Navbar';
+import { Routes } from './app/routes/index';
 
-import './App.scss';
 /** initial App setup */
 export function App() {
     return (

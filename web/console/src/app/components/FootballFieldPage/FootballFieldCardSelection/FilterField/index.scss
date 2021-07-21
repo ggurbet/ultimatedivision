@@ -1,0 +1,80 @@
+@import '../../../../../index.scss';
+
+.football-field-filter {
+    width: 100%;
+    position: relative;
+    &__wrapper {
+        width: 50%;
+        min-width: 600px;
+        background: $marketPlaceBorderColor;
+        clip-path: polygon(0% 0%, 94.1% 0, 100% 100%, 5% 100%);
+    }
+    &::after {
+        content: '';
+        position: absolute;
+        width: 80%;
+        height: 2px;
+        background-color: $marketPlaceBorderColor;
+        bottom: 0px;
+        right: -50px;
+    }
+    &::before{
+        content: '';
+        position: absolute;
+        width: 50%;
+        height: 2px;
+        background-color: $marketPlaceBorderColor;
+        top: 0px;
+        left: -50px;
+    }
+    &__form {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+    }
+    &__input {
+        background-color: transparent;
+        border: none;
+        width: 120px;
+        padding: 5px 10px;
+        color: white;
+        margin-right: 10px;
+        border-radius: 20px;
+        outline: none;
+        &::placeholder {
+            color: rgb(189, 189, 189);
+            font-size: 14px;
+        }
+    }
+    &__search-picture {
+        margin: 0;
+    }
+    &__submit {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    &__list {
+        background-color: #181829;
+        clip-path: polygon(0.6% 5%, 94% 5%, 99.2% 95%, 5% 95%);
+        display: flex;
+        padding: 15px 50px;
+        gap: 10px;
+        width: 100%;
+        justify-content: space-around;
+        align-items: center;
+        position: relative;
+        &__item {
+            list-style: none;
+            color: white;
+            cursor: pointer;
+
+            &__picture {
+                margin-left: 5px;
+                vertical-align: middle;
+            }
+        }
+    }
+}

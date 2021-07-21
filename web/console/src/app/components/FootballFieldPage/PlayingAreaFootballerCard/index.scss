@@ -1,0 +1,98 @@
+/*
+Copyright (C) 2021 Creditor Corp. Group.
+See LICENSE for copying information.
+ */
+
+@import '../../../../index.scss';
+
+.football-field-card {
+    width: 110%;
+    height: 115%;
+    position: absolute;
+    top: 0;
+    left: -5%;
+    cursor: pointer;
+    &__wrapper {
+        content: attr(data-content);
+        left: -2%;
+        top: -3%;
+        width: 105%;
+        height: 107%;
+        position: absolute;
+        background: linear-gradient(to right, #fff 20px, rgba(0, 0, 0, 0) 0,rgba(0, 0, 0, 0) 95px, rgba(0, 0, 0, 0) 0, #fff 20px) top/115px 2px repeat-x, /* top */
+            linear-gradient(#fff 30px, rgba(0, 0, 0, 0) 0,rgba(0, 0, 0, 0) 170px, rgba(0, 0, 0, 0) 0, #fff 20px) right/2px 200px repeat-y, /* right */
+            linear-gradient(to right, #fff 20px, rgba(0, 0, 0, 0) 0,rgba(0, 0, 0, 0) 95px, rgba(0, 0, 0, 0) 0, #fff 20px) bottom/115px 2px repeat-x, /* bottom */
+            linear-gradient(#fff 30px, rgba(0, 0, 0, 0) 0,rgba(0, 0, 0, 0) 170px, rgba(0, 0, 0, 0) 0, #fff 20px) left/2px 200px repeat-y; /* left */
+    }
+    &__background-type {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    &__face-picture {
+        z-index: 2;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        top: 26px;
+        width: 60%;
+    }
+    &__list {
+        margin: 0 auto;
+        width: 70%;
+        margin-top: 96px;
+        display: grid;
+        padding-left: 4px;
+        grid-column-gap: 0px;
+        grid-template-columns: repeat(2, 1fr);
+        justify-items: center;
+        list-style: none;
+        &__item {
+            width: 25px;
+            color: rgb(87, 86, 86);
+            z-index: 2;
+            font-size: 11px;
+        }
+    }
+    &__name {
+        color: rgb(87, 86, 86);
+        text-align: center;
+        width: 100%;
+        font-size: 10px;
+        z-index: 2;
+        margin-top: 18px;
+        position: absolute;
+    }
+    &__control {
+        position: absolute;
+        left: 20px;
+        padding: 7px;
+        z-index: 2;
+        color: $footballerCardTextColor;
+        background-color: $footballFielInfoBackground;
+        font-size: 11px;
+        font-weight: lighter;
+        border-radius: 5px;
+        transition: all 0.2s;
+        &::first-letter {
+            color: red;
+        }
+        &::before {
+            content: '';
+            background: $footballFielInfoBackground;
+            position: absolute;
+            left: 10px;
+            top: -5px;
+            width: 10px;
+            height: 10px;
+            transform: rotate(45deg);
+        }
+        &:hover {
+            color: white;
+            transform: scale(1.1);
+        }
+    }
+}

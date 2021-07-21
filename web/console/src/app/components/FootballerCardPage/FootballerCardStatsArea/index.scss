@@ -1,0 +1,21 @@
+@import '../../../../index.scss';
+
+.footballer-card-stats {
+    width: 100%;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 200px);
+    padding: 50px 0;
+    row-gap: 120px;
+    column-gap: 40px;
+    justify-content: center;
+    &::after {
+        @extend %pseudoelementsInFootballerCard;
+        bottom: 0;
+    }
+    &::before {
+        @extend %pseudoelementsInFootballerCard;
+        bottom: 50%;
+
+    }
+}

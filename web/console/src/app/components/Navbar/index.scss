@@ -1,0 +1,37 @@
+/*
+Copyright (C) 2021 Creditor Corp. Group.
+See LICENSE for copying information.
+ */
+
+@import '../../../index.scss';
+
+.ultimatedivision-navbar {
+    background-color: #181829;
+    padding: 15px 0px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+    padding-top: 30px;
+    &__list {
+        width: 60%;
+        display: flex;
+        align-items: center;
+    }
+    &__logo {
+        margin-left: 40px;
+    }
+    &__item {
+        list-style: none;
+        color: white;
+        margin-right: 40px;
+        font-size: 24px;
+        cursor: pointer;
+        text-decoration: none;
+        &__active {
+            text-decoration: none;
+            color: white;
+        }
+    }
+}
