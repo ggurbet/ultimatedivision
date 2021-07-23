@@ -16,7 +16,7 @@ import { RootState } from '../../../store';
 
 import './index.scss';
 
-export const MarketPlace = ({ ...children }) => {
+const MarketPlace = ({ ...children }) => {
     const cards = useSelector((state: RootState) => state.cardReducer);
 
     let Component = MarketPlaceFootballerCard;
@@ -40,3 +40,5 @@ export const MarketPlace = ({ ...children }) => {
         </section>
     );
 };
+
+export default MarketPlace;

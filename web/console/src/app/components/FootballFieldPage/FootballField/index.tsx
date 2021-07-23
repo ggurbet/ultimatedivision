@@ -14,7 +14,7 @@ import { removeCard } from '../../../store/reducers/footballField';
 
 import './index.scss';
 
-export const FootballField: React.FC = () => {
+const FootballField: React.FC = () => {
     const dispatch = useDispatch();
     const dragItemPosition = useSelector((state: RootState) => state.fieldReducer.options.dragStart);
     /** prevent default user agent action */
@@ -40,3 +40,5 @@ export const FootballField: React.FC = () => {
         </div>
     );
 };
+
+export default FootballField;

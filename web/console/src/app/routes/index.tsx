@@ -3,11 +3,12 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
+import { lazy } from 'react';
 import { RouteProps, Switch } from 'react-router-dom';
 
-import { FootballerCard } from '../components/FootballerCardPage/FootballerCard';
-import { FootballField } from '../components/FootballFieldPage/FootballField';
-import { MarketPlace } from '../components/MarketPlacePage/MarketPlace';
+const FootballerCard = lazy(() => import('../components/FootballerCardPage/FootballerCard'));
+const FootballField = lazy(() => import('../components/FootballFieldPage/FootballField'));
+const MarketPlace = lazy(() => import('../components/MarketPlacePage/MarketPlace'));
 
 /** Route base config implementation */
 export class ComponentRoutes {
