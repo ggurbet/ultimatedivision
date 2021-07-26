@@ -5,14 +5,14 @@ See LICENSE for copying information.
 
 import { useSelector } from 'react-redux';
 
-import { MarketPlaceCardsGroup } from '../MarketPlaceCardsGroup';
-import { MarketPlaceFilterField } from '../MarketPlaceFilterField';
-import { MarketPlaceFootballerCard } from '../MarketPlaceCardsGroup/MarketPlaceFootballerCard';
-import { MyCard } from '../MyCard';
-import { Paginator } from '../../Paginator';
+import { MarketPlaceCardsGroup } from '@marketPlace/MarketPlaceCardsGroup';
+import { MarketPlaceFilterField } from '@marketPlace/MarketPlaceFilterField';
+import { MarketPlaceFootballerCard } from '@marketPlace/MarketPlaceCardsGroup/MarketPlaceFootballerCard';
+import { MyCard } from '@marketPlace/MyCard';
+import { Paginator } from '@paginator';
 
-import { RouteConfig } from '../../../routes';
-import { RootState } from '../../../store';
+import { RouteConfig } from '@routes';
+import { RootState } from '@store';
 
 import './index.scss';
 

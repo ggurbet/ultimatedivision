@@ -3,7 +3,7 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-@import '../../../../index.scss';
+@import '@/index.scss';
 
 .marketplace-filter {
     margin-top: 50px;
@@ -54,14 +54,18 @@ See LICENSE for copying information.
                 vertical-align: middle;
             }
             &__search {
-                border: 1px solid $marketPlaceBorderColor;
-                border-radius: 10px;
-                line-height: 18px;
                 background-color: transparent;
-                padding-left: 10px;
-                margin-left: 5px;
-                outline: none;
+                border: none;
+                width: 120px;
+                padding: 5px 10px;
                 color: white;
+                margin-right: 10px;
+                border-radius: 20px;
+                outline: none;
+                &::placeholder {
+                    color: rgb(189, 189, 189);
+                    font-size: 14px;
+                }
             }
         }
     }

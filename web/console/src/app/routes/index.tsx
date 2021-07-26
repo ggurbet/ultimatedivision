@@ -6,9 +6,9 @@ See LICENSE for copying information.
 import { lazy } from 'react';
 import { RouteProps, Switch } from 'react-router-dom';
 
-const FootballerCard = lazy(() => import('../components/FootballerCardPage/FootballerCard'));
-const FootballField = lazy(() => import('../components/FootballFieldPage/FootballField'));
-const MarketPlace = lazy(() => import('../components/MarketPlacePage/MarketPlace'));
+const FootballerCard = lazy(() => import('@footballerCard/FootballerCard'));
+const FootballField = lazy(() => import('@footballField/FootballField'));
+const MarketPlace = lazy(() => import('@marketPlace/MarketPlace'));
 
 /** Route base config implementation */
 export class ComponentRoutes {
@@ -27,27 +27,27 @@ export class ComponentRoutes {
 /** Route config implementation */
 export class RouteConfig {
     public static MarketPlace: ComponentRoutes = new ComponentRoutes(
-        '/ud/marketplace',
+        '/test/marketplace',
         MarketPlace,
         true,
     );
     public static FootballerCard: ComponentRoutes = new ComponentRoutes(
-        '/ud/marketplace/card',
+        '/test/marketplace/card',
         FootballerCard,
         true,
     );
     public static FootballField: ComponentRoutes = new ComponentRoutes(
-        '/ud/field',
+        '/test/field',
         FootballField,
         true,
     );
     public static MyCards: ComponentRoutes = new ComponentRoutes(
-        '/ud/marketplace/club',
+        '/test/marketplace/club',
         MarketPlace,
         true,
     );
     public static Default: ComponentRoutes = new ComponentRoutes(
-        '/ud/',
+        '/test/',
         MarketPlace,
         true,
     );

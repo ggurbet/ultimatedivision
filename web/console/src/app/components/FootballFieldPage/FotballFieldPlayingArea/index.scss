@@ -1,4 +1,4 @@
-@import '../../../../index.scss';
+@import '@/index.scss';
 
 .playing-area {
     max-width: 900px;
@@ -6,10 +6,12 @@
     height: 900px;
     border: 8px solid white;
     border-radius: 10px;
-    background: url('../../../static/img/FootballFieldPage/football_field.jpg');
+    background-image: url('@img/FootballFieldPage/football_field.jpg');
     background-size: cover;
     background-position: center;
     cursor: default;
+    position: relative;
+    margin-bottom: 40px;
     &__wrapper {
         display: flex;
         align-items: flex-start;
@@ -18,17 +20,21 @@
 
     &__4-4-2,
     &__4-3-3,
-    &__4-2-4 {
+    &__4-2-4,
+    &__4-4-2-shadows,
+    &__4-3-3-shadows,
+    &__4-2-4-shadows  {
         width: 100%;
         height: 100%;
         position: relative;
+        z-index: 2;
         &__card,
         &__empty-card {
             position: absolute;
             width: 110px;
             height: 162px;
             transition: transform 0.3s;
-            z-index: 1;
+            z-index: 2;
             cursor: crosshair;
             &:hover {
                 transform: scale(1.1);
@@ -68,17 +74,18 @@
             }
         }
         &__empty-card {
-            background-image: url('../../../static/img/FootballFieldPage/emptyCard.svg');
+            background-image: url('@img/FootballFieldPage/emptyCard.svg');
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
             &:hover {
-                background-image: url('../../../static/img/FootballFieldPage/emptyCardHover.svg');
+                background-image: url('@img/FootballFieldPage/emptyCardHover.svg');
             }
         }
     }
 
-    &__4-2-4 {
+    &__4-2-4,
+    &__4-2-4-shadows {
         &__card,
         &__empty-card {
             &:nth-child(1) {
@@ -117,7 +124,8 @@
         }
     }
 
-    &__4-3-3 {
+    &__4-3-3,
+    &__4-3-3-shadows {
         &__card,
         &__empty-card {
             &:nth-child(1) {
@@ -153,6 +161,29 @@
             &:nth-child(11) {
                 @include footballFieldCardPosition(34%, 80%)
             }
+        }
+    }
+
+    &__4-4-2-shadows,
+    &__4-3-3-shadows,
+    &__4-2-4-shadows {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        z-index: 1;
+        &__shadow {
+            width: 90%;
+            position: relative;
+            top: 10px;
+            left: 4px;
+        }
+        &__card {
+            position: absolute;
+            width: 110px;
+            height: 162px;
+            z-index: 1;
+            cursor: crosshair;
         }
     }
 }

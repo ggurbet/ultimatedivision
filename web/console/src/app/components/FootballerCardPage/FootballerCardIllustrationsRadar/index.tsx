@@ -1,13 +1,13 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { Card } from '../../../store/reducers/footballerCard';
+import { Card } from '@store/reducers/footballerCard';
 
 import { Radar } from 'react-chartjs-2';
 
 import './index.scss';
 
-export const FootballerCardIllustrationsRadar: React.FC<{card: Card}> = ({ card }) => {
+export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({ card }) => {
     const stats = card.stats;
 
     return (

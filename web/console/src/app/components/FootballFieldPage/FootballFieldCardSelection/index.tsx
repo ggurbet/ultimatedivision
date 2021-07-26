@@ -4,18 +4,25 @@ See LICENSE for copying information.
  */
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { addCard } from '../../../store/reducers/footballField';
+import { addCard, cardSelectionVisibility } from '@store/reducers/footballField';
 
-import { FilterField } from './FilterField';
-import { PlayerCard } from '../../PlayerCard';
+import { FilterField } from '@footballField/FootballFieldCardSelection/FilterField';
+import { PlayerCard } from '@playerCard';
 
 import './index.scss';
-import { Paginator } from '../../Paginator';
+import { Paginator } from '@paginator';
+import { Card } from '@store/reducers/footballerCard';
 
 export const FootballFieldCardSelection = () => {
     const cardList = useSelector((state: RootState) => state.cardReducer);
     const dispatch = useDispatch();
     const fieldSetup = useSelector((state: RootState) => state.fieldReducer);
+
+    /** Add card to field, and hide card selection component */
+    function handleClick(card: Card, index: number) {
+        dispatch(addCard(card, index));
+        dispatch(cardSelectionVisibility(false));
+    }
 
     return (
         <div id="cardList" className="card-selection">
@@ -23,7 +30,7 @@ export const FootballFieldCardSelection = () => {
             <div className="card-selection__list">
                 {cardList.map((card, index) =>
                     <a key={index} href="#playingArea" className="card-selection__card"
-                        onClick={() => dispatch(addCard(card, fieldSetup.options.chosedCard))}
+                        onClick={() => handleClick(card, fieldSetup.options.chosedCard)}
                     >
                         <PlayerCard
                             card={card}

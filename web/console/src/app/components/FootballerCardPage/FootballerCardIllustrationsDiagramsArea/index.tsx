@@ -3,9 +3,9 @@
 
 
 import { FootballerCardIllustrationsDiagram }
-    from '../FootballerCardIllustrationsDiagram';
+    from '@footballerCard/FootballerCardIllustrationsDiagram';
 
-import { Card } from '../../../store/reducers/footballerCard';
+import { Card } from '@store/reducers/footballerCard';
 
 import './index.scss';
 

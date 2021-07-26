@@ -1,20 +1,17 @@
 .footballer-card {
     width: 100%;
-    min-height: 1500px;
     padding: 200px 70px 60px;
-    position: relative;
     background-color: #181829;
+    display: flex;
+    justify-content: center;
     font-weight: lighter;
     color: white;
     &__wrapper {
         display: flex;
-        width: 100%;
-        height: 100%;
-        max-width: 1700px;
         margin: 0 auto;
         padding: 20px 50px 50px;
-        position: relative;
         border-radius: 10px;
+        position: relative;
         background: linear-gradient(180deg, rgba(36, 36, 62, 0.496) 0%, rgba(31, 31, 52, 0.8) 100%),
             radial-gradient(170.68% 341.01% at 97.11% 95.96%, rgba(46, 46, 80, 0) 0%, rgba(99, 62, 146, 0.9) 100%),
             radial-gradient(130.06% 157.22% at 46.4% 72.11%, rgba(46, 46, 80, 0) 0%, rgba(57, 89, 137, 0.9) 100%),
@@ -37,7 +34,7 @@
         left: 0;
         right: 0;
         margin: 0 auto;
-        background-image: url('../../../static/img/FootballerCardPage/title.png');
+        background-image: url('@img/FootballerCardPage/title.png');
         background-size: contain;
         background-position: center;
     }

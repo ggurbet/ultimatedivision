@@ -1,4 +1,4 @@
-@import '../../../../../index.scss';
+@import '@/index.scss';
 
 .football-field-filter {
     width: 100%;
@@ -21,7 +21,7 @@
     &::before{
         content: '';
         position: absolute;
-        width: 50%;
+        width: 40%;
         height: 2px;
         background-color: $marketPlaceBorderColor;
         top: 0px;

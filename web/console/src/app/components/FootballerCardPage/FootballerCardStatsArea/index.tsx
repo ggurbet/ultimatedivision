@@ -3,17 +3,14 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
 */
 
-import { useSelector } from 'react-redux';
-
 import { FootballerCardStats }
-    from '../FootballerCardStats';
+    from '@footballerCard/FootballerCardStats';
 
-import { RootState } from '../../../store';
+import { Card } from '@store/reducers/footballerCard';
 
 import './index.scss';
-import { Card } from '../../../store/reducers/footballerCard';
 
-export const FootballerCardStatsArea: React.FC<{card: Card}> = ({ card }) => {
+export const FootballerCardStatsArea: React.FC<{ card: Card }> = ({ card }) => {
     const FIRST_CARD_INDEX = 0;
     const stats = card.stats;
 

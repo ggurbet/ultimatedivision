@@ -4,17 +4,22 @@ See LICENSE for copying information.
  */
 
 /* eslint-disable */
-import diamond from '../static/img/MarketPlacePage/marketPlaceCardsGroup/diamond2.svg';
-import gold from '../static/img/MarketPlacePage/marketPlaceCardsGroup/gold2.svg';
-import silver from '../static/img/MarketPlacePage/marketPlaceCardsGroup/silver2.svg';
-import wood from '../static/img/MarketPlacePage/marketPlaceCardsGroup/wood2.svg';
+import diamond from '@img/MarketPlacePage/marketPlaceCardsGroup/diamond2.svg';
+import gold from '@img/MarketPlacePage/marketPlaceCardsGroup/gold2.svg';
+import silver from '@img/MarketPlacePage/marketPlaceCardsGroup/silver2.svg';
+import wood from '@img/MarketPlacePage/marketPlaceCardsGroup/wood2.svg';
+
+import diamondShadow from '@img/MarketPlacePage/marketPlaceCardsGroup/diamondShadow.svg'
+import goldShadow from '@img/MarketPlacePage/marketPlaceCardsGroup/goldShadow.svg'
+import silverShadow from '@img/MarketPlacePage/marketPlaceCardsGroup/silverShadow.svg'
+import woodShadow from '@img/MarketPlacePage/marketPlaceCardsGroup/woodShadow.svg'
 
 import currentBid
-    from '../static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/bid.svg';
+    from '@img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/bid.svg';
 import minimumPrice
-    from '../static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/minimum.svg';
+    from '@img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/minimum.svg';
 import purchased
-    from '../static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/purchased.svg';
+    from '@img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/purchased.svg';
 
 /** player stats implementation */
 export class CardStats {
@@ -70,6 +75,13 @@ export class CardMainInfo {
         ];
         let background = qualities[this.bgType];
         return background;
+    };
+    get shadowType() {
+        const qualities = [
+            diamondShadow, goldShadow, silverShadow, woodShadow
+        ];
+        let shadow = qualities[this.bgType];
+        return shadow;
     };
     /** get image with price status depend on price status */
     get priceStatus() {

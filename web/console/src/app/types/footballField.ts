@@ -10,6 +10,7 @@ export class FootballField {
         captain: '',
         tactics: '',
         chosedCard: 0,
+        showCardSeletion: false,
         dragStart: null,
         dragTarget: null,
     };

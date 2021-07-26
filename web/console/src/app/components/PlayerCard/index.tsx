@@ -5,9 +5,9 @@ See LICENSE for copying information.
 
 import { Link, NavLink } from 'react-router-dom';
 
-import { RouteConfig } from '../../routes';
+import { RouteConfig } from '@routes';
 
-import { Card } from '../../store/reducers/footballerCard';
+import { Card } from '@store/reducers/footballerCard';
 
 export const PlayerCard: React.FC<{ card: Card; parentClassName: string }> = ({
     card, parentClassName,
@@ -28,7 +28,7 @@ export const PlayerCard: React.FC<{ card: Card; parentClassName: string }> = ({
         <Link
             to={{
                 pathname: RouteConfig.FootballerCard.path,
-                state:{
+                state: {
                     card,
                 },
             }}
