@@ -5,12 +5,12 @@
 
 @font-face {
     font-family: "Montserrat";
-    src: url('@fonts/Montserrat-Regular.ttf') format('truetype');
+    src: url('@static/fonts/Montserrat-Regular.ttf') format('truetype');
 }
 
 @font-face {
     font-family: "BebasNeue";
-    src: url('@fonts/BebasNeue-Regular.ttf') format('truetype');
+    src: url('@static/fonts/BebasNeue-Regular.ttf') format('truetype');
     font-style: normal;
     font-weight: lighter;
 }

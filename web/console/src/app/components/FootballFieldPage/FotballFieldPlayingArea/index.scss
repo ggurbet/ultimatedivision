@@ -6,7 +6,7 @@
     height: 900px;
     border: 8px solid white;
     border-radius: 10px;
-    background-image: url('@img/FootballFieldPage/football_field.jpg');
+    background-image: url('@static/img/FootballFieldPage/football_field.jpg');
     background-size: cover;
     background-position: center;
     cursor: default;
@@ -74,12 +74,12 @@
             }
         }
         &__empty-card {
-            background-image: url('@img/FootballFieldPage/emptyCard.svg');
+            background-image: url('@static/img/FootballFieldPage/emptyCard.svg');
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
             &:hover {
-                background-image: url('@img/FootballFieldPage/emptyCardHover.svg');
+                background-image: url('@static/img/FootballFieldPage/emptyCardHover.svg');
             }
         }
     }

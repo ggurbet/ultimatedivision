@@ -3,12 +3,12 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
-import { PlayerCard } from '@playerCard';
+import { PlayerCard } from '@components/PlayerCard';
 
-import { RouteConfig } from '@routes';
+import { RouteConfig } from '@/app/routes';
 import { Link } from 'react-router-dom';
 
-import { Card } from '@store/reducers/footballerCard';
+import { Card } from '@/app/store/reducers/footballerCard';
 
 import './index.scss';
 

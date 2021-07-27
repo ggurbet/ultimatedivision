@@ -4,9 +4,9 @@ See LICENSE for copying information.
 */
 
 import { FootballerCardStats }
-    from '@footballerCard/FootballerCardStats';
+    from '@components/FootballerCardPage/FootballerCardStats';
 
-import { Card } from '@store/reducers/footballerCard';
+import { Card } from '@/app/store/reducers/footballerCard';
 
 import './index.scss';
 

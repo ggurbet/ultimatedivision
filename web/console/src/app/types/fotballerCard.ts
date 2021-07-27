@@ -4,22 +4,22 @@ See LICENSE for copying information.
  */
 
 /* eslint-disable */
-import diamond from '@img/MarketPlacePage/marketPlaceCardsGroup/diamond2.svg';
-import gold from '@img/MarketPlacePage/marketPlaceCardsGroup/gold2.svg';
-import silver from '@img/MarketPlacePage/marketPlaceCardsGroup/silver2.svg';
-import wood from '@img/MarketPlacePage/marketPlaceCardsGroup/wood2.svg';
+import diamond from '@static/img/MarketPlacePage/marketPlaceCardsGroup/diamond2.svg';
+import gold from '@static/img/MarketPlacePage/marketPlaceCardsGroup/gold2.svg';
+import silver from '@static/img/MarketPlacePage/marketPlaceCardsGroup/silver2.svg';
+import wood from '@static/img/MarketPlacePage/marketPlaceCardsGroup/wood2.svg';
 
-import diamondShadow from '@img/MarketPlacePage/marketPlaceCardsGroup/diamondShadow.svg'
-import goldShadow from '@img/MarketPlacePage/marketPlaceCardsGroup/goldShadow.svg'
-import silverShadow from '@img/MarketPlacePage/marketPlaceCardsGroup/silverShadow.svg'
-import woodShadow from '@img/MarketPlacePage/marketPlaceCardsGroup/woodShadow.svg'
+import diamondShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/diamondShadow.svg'
+import goldShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/goldShadow.svg'
+import silverShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/silverShadow.svg'
+import woodShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/woodShadow.svg'
 
 import currentBid
-    from '@img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/bid.svg';
+    from '@static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/bid.svg';
 import minimumPrice
-    from '@img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/minimum.svg';
+    from '@static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/minimum.svg';
 import purchased
-    from '@img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/purchased.svg';
+    from '@static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/purchased.svg';
 
 /** player stats implementation */
 export class CardStats {

@@ -6,14 +6,15 @@ See LICENSE for copying information.
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { FootballFieldInformation } from '@footballField/FootballFieldInformation';
-import { PlayingAreaFootballerCard } from '@footballField/PlayingAreaFootballerCard';
+import { FootballFieldInformation } from '@components/FootballFieldPage/FootballFieldInformation';
+import { PlayingAreaFootballerCard } from '@components/FootballFieldPage/PlayingAreaFootballerCard';
 
-import { RootState } from '@store';
+import { RootState } from '@/app/store';
 import { cardSelectionVisibility, choseCardPosition, exchangeCards, removeCard, setDragStart, setDragTarget }
-    from '@store/reducers/footballField';
+    from '@/app/store/reducers/footballField';
 
 import './index.scss';
+import { FootballFieldCard } from '@/app/types/footballField';
 
 export const FootballFieldPlayingArea: React.FC = () => {
     const formation = useSelector((state: RootState) => state.fieldReducer.options.formation);
@@ -134,7 +135,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
                     })}
                 </div>
                 <div className={`playing-area__${formation}-shadows`}>
-                    {fieldSetup.cardsList.map((card, index) => {
+                    {fieldSetup.cardsList.map((card: FootballFieldCard, index: number) => {
                         const data = card.cardData;
 
                         return (

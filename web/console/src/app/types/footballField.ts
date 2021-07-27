@@ -3,7 +3,16 @@ Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
 
+import { Card } from '../store/reducers/footballerCard';
+
 /** Base FootballField implementation */
+
+export class FootballFieldCard {
+    constructor(
+        public id: number,
+        public cardData: null | Card,
+    ) { }
+}
 export class FootballField {
     public options = {
         formation: '4-4-2',
@@ -16,50 +25,18 @@ export class FootballField {
     };
     /** football team implementation */
     public cardsList = [
-        {
-            id: 0,
-            cardData: null,
-        },
-        {
-            id: 1,
-            cardData: null,
-        },
-        {
-            id: 2,
-            cardData: null,
-        },
-        {
-            id: 3,
-            cardData: null,
-        },
-        {
-            id: 4,
-            cardData: null,
-        },
-        {
-            id: 5,
-            cardData: null,
-        },
-        {
-            id: 6,
-            cardData: null,
-        },
-        {
-            id: 7,
-            cardData: null,
-        },
-        {
-            id: 8,
-            cardData: null,
-        },
-        {
-            id: 9,
-            cardData: null,
-        },
-        {
-            id: 10,
-            cardData: null,
-        },
+        new FootballFieldCard(0, null),
+        new FootballFieldCard(1, null),
+        new FootballFieldCard(2, null),
+        new FootballFieldCard(3, null),
+        new FootballFieldCard(4, null),
+        new FootballFieldCard(5, null),
+        new FootballFieldCard(6, null),
+        new FootballFieldCard(7, null),
+        new FootballFieldCard(8, null),
+        new FootballFieldCard(9, null),
+        new FootballFieldCard(10, null),
+
     ];
 }
 

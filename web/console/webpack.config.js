@@ -29,17 +29,8 @@ module.exports = {
     },
     resolve: {
         alias: {
-            "@footballerCard": path.resolve(__dirname, './src/app/components/FootballerCardPage/'),
-            "@footballField": path.resolve(__dirname, './src/app/components/FootballFieldPage/'),
-            "@marketPlace": path.resolve(__dirname, './src/app/components/MarketPlacePage/'),
-            "@navbar": path.resolve(__dirname, './src/app/components/Navbar/'),
-            "@paginator": path.resolve(__dirname, './src/app/components/Paginator/'),
-            "@playerCard": path.resolve(__dirname, './src/app/components/PlayerCard/'),
-            "@img": path.resolve(__dirname, './src/app/static/img/'),
-            "@fonts": path.resolve(__dirname, './src/app/static/fonts/'),
-            "@store": path.resolve(__dirname, './src/app/store/'),
-            "@types": path.resolve(__dirname, './src/app/types/'),
-            "@routes": path.resolve(__dirname, './src/app/routes/'),
+            "@components": path.resolve(__dirname, './src/app/components/'),
+            "@static": path.resolve(__dirname, './src/app/static/'),
             "@": path.resolve(__dirname, './src/'),
         },
         extensions: [

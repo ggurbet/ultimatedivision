@@ -6,19 +6,19 @@ See LICENSE for copying information.
 import { useState } from 'react';
 
 import rectangle
-    from '@img/MarketPlacePage/marketPlaceFilterField/rectangle.svg';
+    from '@static/img/MarketPlacePage/marketPlaceFilterField/rectangle.svg';
 import search
-    from '@img/MarketPlacePage/marketPlaceFilterField/search.svg';
+    from '@static/img/MarketPlacePage/marketPlaceFilterField/search.svg';
 import star
-    from '@img/MarketPlacePage/marketPlaceFilterField/star.svg';
+    from '@static/img/MarketPlacePage/marketPlaceFilterField/star.svg';
 import fut
-    from '@img/MarketPlacePage/marketPlaceFilterField/fut.svg';
+    from '@static/img/MarketPlacePage/marketPlaceFilterField/fut.svg';
 import eye
-    from '@img/MarketPlacePage/marketPlaceFilterField/eye.svg';
+    from '@static/img/MarketPlacePage/marketPlaceFilterField/eye.svg';
 import stars
-    from '@img/MarketPlacePage/marketPlaceFilterField/stars.svg';
+    from '@static/img/MarketPlacePage/marketPlaceFilterField/stars.svg';
 import parametres
-    from '@img/MarketPlacePage/marketPlaceFilterField/parametres.svg';
+    from '@static/img/MarketPlacePage/marketPlaceFilterField/parametres.svg';
 
 import './index.scss';
 

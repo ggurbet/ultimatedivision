@@ -4,14 +4,15 @@ See LICENSE for copying information.
  */
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { addCard, cardSelectionVisibility } from '@store/reducers/footballField';
+import { addCard, cardSelectionVisibility } from '@/app/store/reducers/footballField';
 
-import { FilterField } from '@footballField/FootballFieldCardSelection/FilterField';
-import { PlayerCard } from '@playerCard';
+import { FilterField } from
+    '@components/FootballFieldPage/FootballFieldCardSelection/FilterField';
+import { PlayerCard } from '@components/PlayerCard';
 
 import './index.scss';
-import { Paginator } from '@paginator';
-import { Card } from '@store/reducers/footballerCard';
+import { Paginator } from '@components/Paginator';
+import { Card } from '@/app/store/reducers/footballerCard';
 
 export const FootballFieldCardSelection = () => {
     const cardList = useSelector((state: RootState) => state.cardReducer);

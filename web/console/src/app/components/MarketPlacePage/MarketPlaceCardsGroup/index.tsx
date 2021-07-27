@@ -2,7 +2,7 @@
 Copyright (C) 2021 Creditor Corp. Group.
 See LICENSE for copying information.
  */
-import { Card } from '@store/reducers/footballerCard';
+import { Card } from '@/app/store/reducers/footballerCard';
 
 import './index.scss';
 

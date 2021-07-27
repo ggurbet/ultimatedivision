@@ -4,7 +4,7 @@
 
 import { Doughnut } from 'react-chartjs-2';
 
-import { Diagram } from '@types/fotballerCard';
+import { Diagram } from '@/app/types/fotballerCard';
 
 import './index.scss';
 

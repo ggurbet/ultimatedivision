@@ -5,9 +5,9 @@ See LICENSE for copying information.
 
 import { NavLink } from 'react-router-dom';
 
-import { RouteConfig } from '@routes';
+import { RouteConfig } from '@/app/routes';
 
-import ultimate from '@img/Navbar/ultimate.png';
+import ultimate from '@static/img/Navbar/ultimate.png';
 
 import './index.scss';
 

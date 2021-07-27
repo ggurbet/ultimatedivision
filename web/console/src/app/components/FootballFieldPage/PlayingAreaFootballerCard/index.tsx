@@ -5,10 +5,10 @@ See LICENSE for copying information.
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { PlayerCard } from '@playerCard';
+import { PlayerCard } from '@components/PlayerCard';
 
-import { Card } from '@store/reducers/footballerCard';
-import { removeCard } from '@store/reducers/footballField';
+import { Card } from '@/app/store/reducers/footballerCard';
+import { removeCard } from '@/app/store/reducers/footballField';
 
 import './index.scss';
 
