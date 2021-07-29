@@ -6,13 +6,17 @@ See LICENSE for copying information.
 import { Card } from '../store/reducers/footballerCard';
 
 /** Base FootballField implementation */
-
 export class FootballFieldCard {
+    /** class which implements fotballField card */
     constructor(
         public id: number,
         public cardData: null | Card,
     ) { }
 }
+/* eslint-disable no-magic-numbers */
+
+
+/** class which implements field setup */
 export class FootballField {
     public options = {
         formation: '4-4-2',

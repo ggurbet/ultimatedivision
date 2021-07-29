@@ -7,7 +7,7 @@ See LICENSE for copying information.
 .marketplace-playerCard {
     width: 178px;
     position: relative;
-    background: radial-gradient(#4a4a7a, #33335A);
+    background: radial-gradient(#4a4a7a, $highlightBackground);
     border-radius: 10px;
     box-shadow: white;
     padding-bottom: 40px;

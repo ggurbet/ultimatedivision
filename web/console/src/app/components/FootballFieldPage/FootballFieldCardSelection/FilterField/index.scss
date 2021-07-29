@@ -57,7 +57,7 @@
     }
 
     &__list {
-        background-color: #181829;
+        background-color: $mainBackground;
         clip-path: polygon(0.6% 5%, 94% 5%, 99.2% 95%, 5% 95%);
         display: flex;
         padding: 15px 50px;

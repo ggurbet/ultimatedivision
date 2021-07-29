@@ -6,7 +6,7 @@ See LICENSE for copying information.
 @import '@/index.scss';
 
 .marketplace {
-    background-color: #181829;
+    background-color: $mainBackground;
     padding: 15px 0px;
     position: relative;
     &::after {

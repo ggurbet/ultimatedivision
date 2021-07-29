@@ -1,7 +1,9 @@
+@import '@/index.scss';
+
 .footballer-card {
     width: 100%;
     padding: 200px 70px 60px;
-    background-color: #181829;
+    background-color: $mainBackground;
     display: flex;
     justify-content: center;
     font-weight: lighter;

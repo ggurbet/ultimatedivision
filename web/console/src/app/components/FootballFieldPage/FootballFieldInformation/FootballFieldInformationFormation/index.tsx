@@ -9,15 +9,16 @@ import { useDispatch } from 'react-redux';
 import { FotballFieldInformationLine } from '@/app/types/fotballerCard';
 import { handleFormations } from '@/app/store/reducers/footballField';
 
+import { DropdownStyle } from '@/app/utils/dropdownStyle';
+
 import triangle from '@static/img/FootballFieldPage/triangle.svg';
 
 import './index.scss';
 
 export const FootballFieldInformationFormation: React.FC<{ props: FotballFieldInformationLine }> = ({ props }) => {
-    const [optionVisibility, changeVisibility] = useState(true);
-
-    const listHeight = optionVisibility ? '0' : '90px';
-    const triangleRotate = optionVisibility ? 'rotate(-90deg)' : 'rotate(0deg)';
+    const [optionVisibility, changeVisibility] = useState(false);
+    const LIST_HEIGHT = 90;
+    const optionStyle = new DropdownStyle(optionVisibility, LIST_HEIGHT);
 
     const dispatch = useDispatch();
 
@@ -33,13 +34,13 @@ export const FootballFieldInformationFormation: React.FC<{ props: FotballFieldIn
                 <img
                     className="football-field-information-option__image"
                     src={triangle}
-                    style={{ transform: triangleRotate }}
+                    style={{ transform: optionStyle.triangleRotate }}
                     alt="triangle img"
                     id={`triangle-${props.id}`}
                 />
             </div>
             <ul
-                style={{ height: listHeight }}
+                style={{ height: optionStyle.listHeight }}
                 className="football-field-information-option__list"
                 id={props.id}
             >

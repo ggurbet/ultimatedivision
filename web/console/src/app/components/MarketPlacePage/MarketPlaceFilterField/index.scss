@@ -33,7 +33,7 @@ See LICENSE for copying information.
     }
 
     &__list {
-        background-color: #181829;
+        background-color: $mainBackground;
         clip-path: polygon(2.3% 5%, 95% 5%, 97.7% 95%, 5% 95%);
         display: flex;
         padding: 15px 100px;

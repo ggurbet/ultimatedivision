@@ -11,7 +11,7 @@
         flex-direction: row;
         justify-content: space-around;
         padding: 20px 0px;
-        background: #181829;
+        background: $mainBackground;
         position: relative;
         clip-path: polygon(5.3% 10%, 93% 10%, 95.7% 92%, 7% 91%);
     }
@@ -35,8 +35,8 @@
         flex-direction: row;
         &__item {
             list-style-type: none;
-            background-color: #3CCF5D;
-            color: #181829;
+            background-color: $cardHighlightColor;
+            color: $mainBackground;
             border-radius: 15px;
             padding: 5px 10px;
             margin-left: 20px;
