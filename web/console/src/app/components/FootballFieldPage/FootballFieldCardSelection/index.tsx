@@ -1,7 +1,5 @@
-/*
-Copyright (C) 2021 Creditor Corp. Group.
-See LICENSE for copying information.
- */
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { addCard, cardSelectionVisibility } from '@/app/store/reducers/footballField';

@@ -1,7 +1,5 @@
-/*
-Copyright (C) 2021 Creditor Corp. Group.
-See LICENSE for copying information.
- */
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
 
 import { PlayerCard } from '@components/PlayerCard';
 
@@ -17,7 +15,7 @@ export const MarketPlaceFootballerCard: React.FC<{ card: Card; place?: string }>
         className="marketplace-playerCard"
     >
         <Link
-            style={{ textDecoration: 'none' }}
+            className="marketplace-playerCard__link"
             to={{
                 pathname: RouteConfig.FootballerCard.path,
                 state: {

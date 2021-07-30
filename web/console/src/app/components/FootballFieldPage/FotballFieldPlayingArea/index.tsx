@@ -1,7 +1,5 @@
-/*
-Copyright (C) 2021 Creditor Corp. Group.
-See LICENSE for copying information.
- */
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

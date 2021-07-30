@@ -1,7 +1,5 @@
-/*
-Copyright (C) 2021 Creditor Corp. Group.
-See LICENSE for copying information.
- */
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
 
 import confirmIcon from '@static/img/MarketPlacePage/MyCard/ok.svg';
 import priceGoldIcon from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';

@@ -1,7 +1,5 @@
-/*
-Copyright (C) 2021 Creditor Corp. Group.
-See LICENSE for copying information.
- */
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
 
 import { useState } from 'react';
 
@@ -33,7 +31,6 @@ export const AboutMenu = () => {
             ],
         tokenomics:
             [
-
                 'UDT Spending',
                 'Play to Earn',
                 'Staking',
@@ -63,8 +60,8 @@ export const AboutMenu = () => {
                 style={{ height: whitePaperStyle.listHeight }}
             >
                 {
-                    RouteConfig.Default.subRoutes &&
-                    RouteConfig.Default.subRoutes.map((item, index) =>
+                    RouteConfig.WhitePaper.subRoutes &&
+                    RouteConfig.WhitePaper.subRoutes.map((item, index) =>
                         <li
                             key={index}
                             className="about-menu__whitepaper-item"

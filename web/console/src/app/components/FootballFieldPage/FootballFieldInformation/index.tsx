@@ -1,7 +1,5 @@
-/*
-Copyright (C) 2021 Creditor Corp. Group.
-See LICENSE for copying information.
- */
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
 import { FootballFieldInformationLine } from '@/app/types/footballField';
 import { FootballFieldInformationCaptain } from
     '@components/FootballFieldPage/FootballFieldInformation/FootballFieldInformationCaptain';

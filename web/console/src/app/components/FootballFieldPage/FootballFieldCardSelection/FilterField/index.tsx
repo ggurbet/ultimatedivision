@@ -1,7 +1,5 @@
-/*
-Copyright (C) 2021 Creditor Corp. Group.
-See LICENSE for copying information.
- */
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
 
 import rectangle from '@static/img/FootballFieldPage/triangle.svg';
 import search from '@static/img/FootballFieldPage/search.svg';

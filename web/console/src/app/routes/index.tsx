@@ -1,7 +1,6 @@
-/*
-Copyright (C) 2021 Creditor Corp. Group.
-See LICENSE for copying information.
- */
+//@ts-nocheck
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
 
 import { lazy } from 'react';
 import { RouteProps, Switch } from 'react-router-dom';
@@ -26,7 +25,7 @@ export class ComponentRoutes {
     /** data route config*/
     constructor(
         public path: string,
-        public component: React.FC<{children: ComponentRoutes[]}>,
+        public component: React.FC<{ children: ComponentRoutes[] }>,
         public exact: boolean,
         public subRoutes?: ComponentRoutes[]
     ) { }
@@ -80,13 +79,13 @@ export class RouteConfig {
                 true
             ),
         ]);
-    public static Default: ComponentRoutes = new ComponentRoutes(
+    public static WhitePaper: ComponentRoutes = new ComponentRoutes(
         '/test/whitepaper',
         About,
         false,
         [
             new ComponentRoutes(
-                '/test/whitepaper/',
+                '/test/whitepaper',
                 Summary,
                 true
             ),
@@ -107,12 +106,18 @@ export class RouteConfig {
             ),
         ]
     );
+    public static Default: ComponentRoutes = new ComponentRoutes(
+        '/test/',
+        MarketPlace,
+        true,
+    );
     public static routes: ComponentRoutes[] = [
         RouteConfig.MarketPlace,
         RouteConfig.FootballerCard,
         RouteConfig.FootballField,
         RouteConfig.MyCards,
         RouteConfig.Tokenomics,
+        RouteConfig.WhitePaper,
         RouteConfig.Default,
     ];
 };
