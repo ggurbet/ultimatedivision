@@ -276,7 +276,7 @@ func (cardsDB *cardsDB) ListWithFilters(ctx context.Context, filters []cards.Fil
 		card := cards.Card{}
 		if err = rows.Scan(
 			&card.ID, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle,
-			&card.HairColor, &card.DominantFoot, &card.UserID, &card.Tactics, &card.Positioning, &card.Composure, &card.Aggression,
+			&card.HairColor, &card.DominantFoot, &card.IsTattoos, &card.UserID, &card.Tactics, &card.Positioning, &card.Composure, &card.Aggression,
 			&card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration, &card.RunningSpeed, &card.ReactionSpeed,
 			&card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique, &card.Dribbling, &card.BallControl,
 			&card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing, &card.LongPassing, &card.ForwardPass,
