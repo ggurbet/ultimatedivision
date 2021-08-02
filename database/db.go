@@ -151,6 +151,11 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             card_position INTEGER                                         NOT NULL,
             capitan       BYTEA,
             PRIMARY KEY(id, card_id)
+        );
+        CREATE TABLE IF NOT EXISTS lootboxes(
+            user_id    BYTEA REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+            lootbox_id BYTEA                                        NOT NULL,
+            PRIMARY KEY(user_id, lootbox_id)
         );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)
