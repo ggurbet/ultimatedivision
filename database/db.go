@@ -70,6 +70,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
 			hair_style        INTEGER                        NOT NULL,
             hair_color        INTEGER                        NOT NULL,
             dominant_foot     VARCHAR                        NOT NULL,
+            is_tattoos        BOOLEAN                        NOT NULL,
             user_id           BYTEA    REFERENCES users(id)  NOT NULL,
             tactics           INTEGER                        NOT NULL,
             positioning       INTEGER                        NOT NULL,

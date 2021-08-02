@@ -32,14 +32,17 @@ type Cards struct {
 	cards *cards.Service
 
 	templates CardTemplates
+
+	percentageQualities cards.PercentageQualities
 }
 
 // NewCards is a constructor for cards controller.
-func NewCards(log logger.Logger, cards *cards.Service, templates CardTemplates) *Cards {
+func NewCards(log logger.Logger, cards *cards.Service, templates CardTemplates, percentageQualities cards.PercentageQualities) *Cards {
 	cardsController := &Cards{
-		log:       log,
-		cards:     cards,
-		templates: templates,
+		log:                 log,
+		cards:               cards,
+		templates:           templates,
+		percentageQualities: percentageQualities,
 	}
 
 	return cardsController
@@ -77,7 +80,10 @@ func (controller *Cards) Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "could not parse user id", http.StatusBadRequest)
 		return
 	}
-	if err := controller.cards.Create(ctx, userID); err != nil {
+
+	percentageQualities := []int{controller.percentageQualities.Wood, controller.percentageQualities.Silver, controller.percentageQualities.Gold, controller.percentageQualities.Diamond}
+
+	if err := controller.cards.Create(ctx, userID, percentageQualities); err != nil {
 		controller.log.Error("could not create card", ErrCards.Wrap(err))
 		http.Error(w, "could not create card", http.StatusInternalServerError)
 		return

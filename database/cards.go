@@ -46,7 +46,7 @@ type cardsDB struct {
 }
 
 const (
-	allFields = `id, player_name, quality, picture_type, height, weight, skin_color, hair_style, hair_color, dominant_foot, user_id,
+	allFields = `id, player_name, quality, picture_type, height, weight, skin_color, hair_style, hair_color, dominant_foot, is_tattoos, user_id,
 		tactics, positioning, composure, aggression, vision, awareness, crosses, physique, acceleration, running_speed, reaction_speed,
 		agility, stamina, strength, jumping, balance, technique, dribbling, ball_control, weak_foot, skill_moves, finesse, curve,
 		volleys, short_passing, long_passing, forward_pass, offense, finishing_ability, shot_power, accuracy, distance, penalty,
@@ -68,11 +68,11 @@ func (cardsDB *cardsDB) Create(ctx context.Context, card cards.Card) error {
 		VALUES 
 			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25,
 			$26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49,
-			$50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $60)
+			$50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $60, $61)
 		`
 	_, err = cardsDB.conn.ExecContext(ctx, query,
 		card.ID, card.PlayerName, card.Quality, card.PictureType, card.Height, card.Weight, card.SkinColor, card.HairStyle, card.HairColor,
-		card.DominantFoot, card.UserID, card.Tactics, card.Positioning, card.Composure, card.Aggression, card.Vision, card.Awareness,
+		card.DominantFoot, card.IsTattoos, card.UserID, card.Tactics, card.Positioning, card.Composure, card.Aggression, card.Vision, card.Awareness,
 		card.Crosses, card.Physique, card.Acceleration, card.RunningSpeed, card.ReactionSpeed, card.Agility, card.Stamina, card.Strength,
 		card.Jumping, card.Balance, card.Technique, card.Dribbling, card.BallControl, card.WeakFoot, card.SkillMoves, card.Finesse,
 		card.Curve, card.Volleys, card.ShortPassing, card.LongPassing, card.ForwardPass, card.Offense, card.FinishingAbility, card.ShotPower,
@@ -152,7 +152,7 @@ func (cardsDB *cardsDB) Get(ctx context.Context, id uuid.UUID) (cards.Card, erro
         `
 	err := cardsDB.conn.QueryRowContext(ctx, query, id).Scan(
 		&card.ID, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle,
-		&card.HairColor, &card.DominantFoot, &card.UserID, &card.Tactics, &card.Positioning, &card.Composure, &card.Aggression,
+		&card.HairColor, &card.DominantFoot, &card.IsTattoos, &card.UserID, &card.Tactics, &card.Positioning, &card.Composure, &card.Aggression,
 		&card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration, &card.RunningSpeed, &card.ReactionSpeed,
 		&card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique, &card.Dribbling, &card.BallControl,
 		&card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing, &card.LongPassing, &card.ForwardPass,
@@ -231,7 +231,7 @@ func (cardsDB *cardsDB) List(ctx context.Context) ([]cards.Card, error) {
 		card := cards.Card{}
 		if err = rows.Scan(
 			&card.ID, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle,
-			&card.HairColor, &card.DominantFoot, &card.UserID, &card.Tactics, &card.Positioning, &card.Composure, &card.Aggression,
+			&card.HairColor, &card.DominantFoot, &card.IsTattoos, &card.UserID, &card.Tactics, &card.Positioning, &card.Composure, &card.Aggression,
 			&card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration, &card.RunningSpeed, &card.ReactionSpeed,
 			&card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique, &card.Dribbling, &card.BallControl,
 			&card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing, &card.LongPassing, &card.ForwardPass,

@@ -59,10 +59,12 @@ type Server struct {
 		card  controllers.CardTemplates
 		auth  controllers.AuthTemplates
 	}
+
+	cards.PercentageQualities
 }
 
 // NewServer is a constructor for admin web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service) (*Server, error) {
+func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities) (*Server, error) {
 	server := &Server{
 		log:    log,
 		config: config,
@@ -100,7 +102,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	userRouter.HandleFunc("/delete/{id}", userController.Delete).Methods(http.MethodGet)
 
 	cardsRouter := router.PathPrefix("/cards").Subrouter().StrictSlash(true)
-	cardsController := controllers.NewCards(log, cards, server.templates.card)
+	cardsController := controllers.NewCards(log, cards, server.templates.card, percentageQualities)
 	cardsRouter.HandleFunc("", cardsController.List).Methods(http.MethodGet)
 	cardsRouter.HandleFunc("/create/{userID}", cardsController.Create).Methods(http.MethodGet)
 	cardsRouter.HandleFunc("/delete/{id}", cardsController.Delete).Methods(http.MethodGet)

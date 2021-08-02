@@ -41,13 +41,14 @@ type Card struct {
 	PlayerName       string       `json:"playerName"`
 	Quality          Quality      `json:"quality"`
 	PictureType      int          `json:"pictureType"`
-	Height           float32      `json:"height"`
-	Weight           float32      `json:"weight"`
+	Height           float64      `json:"height"`
+	Weight           float64      `json:"weight"`
 	SkinColor        int          `json:"skinColor"`
 	HairStyle        int          `json:"hairStyle"`
 	HairColor        int          `json:"hairColor"`
 	Accessories      []int        `json:"accessories"`
 	DominantFoot     DominantFoot `json:"dominantFoot"`
+	IsTattoos        bool         `json:"isTattoos"`
 	UserID           uuid.UUID    `json:"userId"`
 	Tactics          int          `json:"tactics"`
 	Positioning      int          `json:"positioning"`
@@ -106,8 +107,6 @@ type Quality string
 const (
 	// QualityWood indicates that card quality is wood.
 	QualityWood Quality = "wood"
-	// QualityBronze indicates that card quality is bronze.
-	QualityBronze Quality = "bronze"
 	// QualitySilver indicates that card quality is silver.
 	QualitySilver Quality = "silver"
 	// QualityGold indicates that card quality is gold.
@@ -155,6 +154,87 @@ const (
 	// DominantFootRight indicates that dominant foot of the footballer is right.
 	DominantFootRight DominantFoot = "right"
 )
+
+// RangeValueForSkills defines the list of possible group skills.
+var RangeValueForSkills = map[string][]int{}
+
+// Config defines values needed by generate cards.
+type Config struct {
+	Height struct {
+		Min float64 `json:"min"`
+		Max float64 `json:"max"`
+	} `json:"height"`
+
+	Weight struct {
+		Min float64 `json:"min"`
+		Max float64 `json:"max"`
+	} `json:"weight"`
+
+	DominantFoots struct {
+		Left  int `json:"left"`
+		Right int `json:"right"`
+	} `json:"dominantFoots"`
+
+	Skills struct {
+		Wood struct {
+			Elementary  int `json:"elementary"`
+			Basic       int `json:"basic"`
+			Medium      int `json:"medium"`
+			UpperMedium int `json:"upperMedium"`
+			Advanced    int `json:"advanced"`
+		} `json:"wood"`
+		Silver struct {
+			Elementary  int `json:"elementary"`
+			Basic       int `json:"basic"`
+			Medium      int `json:"medium"`
+			UpperMedium int `json:"upperMedium"`
+			Advanced    int `json:"advanced"`
+		} `json:"silver"`
+		Gold struct {
+			Elementary    int `json:"elementary"`
+			Basic         int `json:"basic"`
+			Medium        int `json:"medium"`
+			UpperMedium   int `json:"upperMedium"`
+			Advanced      int `json:"advanced"`
+			UpperAdvanced int `json:"upperAdvanced"`
+		} `json:"gold"`
+		Diamond struct {
+			Basic         int `json:"basic"`
+			Medium        int `json:"medium"`
+			UpperMedium   int `json:"upperMedium"`
+			Advanced      int `json:"advanced"`
+			UpperAdvanced int `json:"upperAdvanced"`
+		} `json:"diamond"`
+	} `json:"skills"`
+
+	RangeValueForSkills struct {
+		MinElementary    int `json:"minElementary"`
+		MaxElementary    int `json:"maxElementary"`
+		MinBasic         int `json:"minBasic"`
+		MaxBasic         int `json:"maxBasic"`
+		MinMedium        int `json:"minMedium"`
+		MaxMedium        int `json:"maxMedium"`
+		MinUpperMedium   int `json:"minUpperMedium"`
+		MaxUpperMedium   int `json:"maxUpperMedium"`
+		MinAdvanced      int `json:"minAdvanced"`
+		MaxAdvanced      int `json:"maxAdvanced"`
+		MinUpperAdvanced int `json:"minUpperAdvanced"`
+		MaxUpperAdvanced int `json:"maxUpperAdvanced"`
+	} `json:"rangeValueForSkills"`
+
+	Tattoos struct {
+		Gold    int `json:"gold"`
+		Diamond int `json:"diamond"`
+	} `json:"tattoos"`
+}
+
+// PercentageQualities entity for probabilities generate cards.
+type PercentageQualities struct {
+	Wood    int `json:"wood"`
+	Silver  int `json:"silver"`
+	Gold    int `json:"gold"`
+	Diamond int `json:"diamond"`
+}
 
 // Filters entity for using filter cards.
 type Filters map[Filter]string
