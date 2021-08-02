@@ -20,7 +20,7 @@ import (
 )
 
 func TestTeam(t *testing.T) {
-	user1 := users.User{
+	testUser := users.User{
 		ID:           uuid.New(),
 		Email:        "3560876@gmail.com",
 		PasswordHash: []byte{1},
@@ -32,163 +32,144 @@ func TestTeam(t *testing.T) {
 		CreatedAt:    time.Now(),
 	}
 
-	card1 := cards.Card{
-		ID:               uuid.New(),
-		PlayerName:       "test name",
-		Quality:          "bronze",
-		PictureType:      1,
-		Height:           178.8,
-		Weight:           72.2,
-		SkinColor:        1,
-		HairStyle:        1,
-		HairColor:        1,
-		Accessories:      []int{1, 2},
-		DominantFoot:     "left",
-		UserID:           user1.ID,
-		Tactics:          1,
-		Positioning:      2,
-		Composure:        3,
-		Aggression:       4,
-		Vision:           5,
-		Awareness:        6,
-		Crosses:          7,
-		Physique:         8,
-		Acceleration:     9,
-		RunningSpeed:     10,
-		ReactionSpeed:    11,
-		Agility:          12,
-		Stamina:          13,
-		Strength:         14,
-		Jumping:          15,
-		Balance:          16,
-		Technique:        17,
-		Dribbling:        18,
-		BallControl:      19,
-		WeakFoot:         20,
-		SkillMoves:       21,
-		Finesse:          22,
-		Curve:            23,
-		Volleys:          24,
-		ShortPassing:     25,
-		LongPassing:      26,
-		ForwardPass:      27,
-		Offense:          28,
-		FinishingAbility: 29,
-		ShotPower:        30,
-		Accuracy:         31,
-		Distance:         32,
-		Penalty:          33,
-		FreeKicks:        34,
-		Corners:          35,
-		HeadingAccuracy:  36,
-		Defence:          37,
-		OffsideTrap:      38,
-		Sliding:          39,
-		Tackles:          40,
-		BallFocus:        41,
-		Interceptions:    42,
-		Vigilance:        43,
-		Goalkeeping:      44,
-		Reflexes:         45,
-		Diving:           46,
-		Handling:         47,
-		Sweeping:         48,
-		Throwing:         49,
+	testClub := clubs.Club{
+		ID:        uuid.New(),
+		OwnerID:   testUser.ID,
+		Name:      testUser.NickName,
+		CreatedAt: time.Now().UTC(),
 	}
 
-	club := clubs.Club{
-		UserID:    user1.ID,
-		Formation: 1,
-		Tactic:    1,
-	}
-
-	capitan := card1.ID
-
-	player := clubs.Player{
-		UserID:   user1.ID,
-		CardID:   card1.ID,
-		Position: clubs.CAM,
-		Capitan:  capitan,
-	}
-
-	players := []clubs.Player{player}
-
-	updatedClub := clubs.Club{
-		UserID:    user1.ID,
+	testSquad := clubs.Squads{
+		ID:        uuid.New(),
+		Name:      "test squad",
+		ClubID:    testClub.ID,
+		Tactic:    clubs.Balanced,
 		Formation: clubs.FourTwoFour,
-		Tactic:    clubs.Regular,
+	}
+
+	testCard := cards.Card{
+		ID:     uuid.New(),
+		UserID: testUser.ID,
+	}
+
+	testSquadCards := clubs.SquadCards{
+		ID:       testSquad.ID,
+		CardID:   testCard.ID,
+		Position: clubs.CAM,
+	}
+
+	updatedSquadCards := []clubs.SquadCards{{
+		ID:       testSquad.ID,
+		CardID:   testCard.ID,
+		Position: clubs.CAM,
+		Capitan:  testCard.ID,
+	}}
+
+	updatedSquad := clubs.Squads{
+		ID:        testSquad.ID,
+		ClubID:    testClub.ID,
+		Formation: clubs.FourFourTwo,
+		Tactic:    clubs.Attack,
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
-		repositoryClub := db.Clubs()
-		repositoryCard := db.Cards()
-		repositoryUser := db.Users()
+		repositoryClubs := db.Clubs()
+		repositoryCards := db.Cards()
+		repositoryUsers := db.Users()
 
 		t.Run("Create club", func(t *testing.T) {
-			err := repositoryUser.Create(ctx, user1)
+			err := repositoryUsers.Create(ctx, testUser)
 			require.NoError(t, err)
 
-			err = repositoryClub.Create(ctx, club)
+			err = repositoryClubs.Create(ctx, testClub)
+			require.NoError(t, err)
+
+		})
+
+		t.Run("Create squad", func(t *testing.T) {
+			err := repositoryClubs.CreateSquad(ctx, testSquad)
 			require.NoError(t, err)
 		})
 
-		t.Run("Add card to the club", func(t *testing.T) {
-			err := repositoryCard.Create(ctx, card1)
+		t.Run("List clubs", func(t *testing.T) {
+			clubDB, err := repositoryClubs.List(ctx, testClub.ID)
 			require.NoError(t, err)
 
-			err = repositoryClub.Add(ctx, user1.ID, card1, capitan, clubs.CAM)
-			require.NoError(t, err)
+			compareClubs(t, clubDB, []clubs.Club{testClub})
 		})
 
-		t.Run("Get club", func(t *testing.T) {
-			clubFromDB, err := repositoryClub.GetClub(ctx, user1.ID)
+		t.Run("Get squad", func(t *testing.T) {
+			squadDB, err := repositoryClubs.GetSquad(ctx, testClub.ID)
 			require.NoError(t, err)
 
-			compareClubs(t, clubFromDB, club)
+			compareSquads(t, squadDB, testSquad)
 		})
 
-		t.Run("Get cards from club", func(t *testing.T) {
-			playersFromDB, err := repositoryClub.ListCards(ctx, user1.ID)
+		t.Run("Add card to squad", func(t *testing.T) {
+			err := repositoryCards.Create(ctx, testCard)
 			require.NoError(t, err)
 
-			comparePlayers(t, playersFromDB, players)
+			err = repositoryClubs.Add(ctx, testSquadCards)
+			require.NoError(t, err)
 		})
 
 		t.Run("Get capitan", func(t *testing.T) {
-			id, err := repositoryClub.GetCapitan(ctx, user1.ID)
+			capitan, err := repositoryClubs.GetCapitan(ctx, testSquad.ID)
 			require.NoError(t, err)
 
-			assert.Equal(t, id, capitan)
+			assert.Equal(t, capitan, uuid.Nil)
 		})
 
 		t.Run("Update capitan", func(t *testing.T) {
-			newCapitan := uuid.New()
-			err := repositoryClub.UpdateCapitan(ctx, newCapitan, user1.ID)
+			err := repositoryClubs.UpdateCapitan(ctx, testCard.ID, testSquad.ID)
 			require.NoError(t, err)
 		})
 
-		t.Run("Update club", func(t *testing.T) {
-			err := repositoryClub.Update(ctx, updatedClub)
+		t.Run("List cards from squad", func(t *testing.T) {
+			squadCardsDB, err := repositoryClubs.ListSquadCards(ctx, updatedSquad.ID)
+			require.NoError(t, err)
+
+			comparePlayers(t, squadCardsDB, updatedSquadCards)
+		})
+
+		t.Run("Update tactic and formation in squad", func(t *testing.T) {
+			err := repositoryClubs.UpdateTacticFormation(ctx, updatedSquad)
 			require.NoError(t, err)
 		})
 
+		t.Run("Update card position in squad", func(t *testing.T) {
+			err := repositoryClubs.UpdatePosition(ctx, updatedSquad.ID, testCard.ID, clubs.CM)
+			require.NoError(t, err)
+		})
 	})
 
 }
 
-func compareClubs(t *testing.T, clubDB clubs.Club, clubFake clubs.Club) {
-	assert.Equal(t, clubDB.UserID, clubFake.UserID)
-	assert.Equal(t, clubDB.Formation, clubFake.Formation)
-	assert.Equal(t, clubDB.Tactic, clubFake.Tactic)
+func compareClubs(t *testing.T, clubDB []clubs.Club, clubTest []clubs.Club) {
+	assert.Equal(t, len(clubDB), len(clubDB))
+
+	for i := 0; i < len(clubDB); i++ {
+		assert.Equal(t, clubDB[i].ID, clubTest[i].ID)
+		assert.Equal(t, clubDB[i].Name, clubTest[i].Name)
+		assert.Equal(t, clubDB[i].OwnerID, clubTest[i].OwnerID)
+		assert.WithinDuration(t, clubDB[i].CreatedAt, clubTest[i].CreatedAt, 1*time.Second)
+	}
 }
 
-func comparePlayers(t *testing.T, playersDB []clubs.Player, playersFake []clubs.Player) {
-	assert.Equal(t, len(playersDB), len(playersFake))
+func compareSquads(t *testing.T, squadDB clubs.Squads, squadTest clubs.Squads) {
+	assert.Equal(t, squadDB.ID, squadTest.ID)
+	assert.Equal(t, squadDB.ClubID, squadTest.ClubID)
+	assert.Equal(t, squadDB.Tactic, squadTest.Tactic)
+	assert.Equal(t, squadDB.Formation, squadTest.Formation)
+}
 
-	for i := 0; i < len(playersFake); i++ {
-		assert.Equal(t, playersDB[i].UserID, playersFake[i].UserID)
-		assert.Equal(t, playersDB[i].CardID, playersFake[i].CardID)
-		assert.Equal(t, playersDB[i].Capitan, playersFake[i].Capitan)
-		assert.Equal(t, playersDB[i].Position, playersFake[i].Position)
+func comparePlayers(t *testing.T, playersDB []clubs.SquadCards, playersTest []clubs.SquadCards) {
+	assert.Equal(t, len(playersDB), len(playersTest))
+
+	for i := 0; i < len(playersTest); i++ {
+		assert.Equal(t, playersDB[i].ID, playersTest[i].ID)
+		assert.Equal(t, playersDB[i].CardID, playersTest[i].CardID)
+		assert.Equal(t, playersDB[i].Capitan, playersTest[i].Capitan)
+		assert.Equal(t, playersDB[i].Position, playersTest[i].Position)
 	}
 }

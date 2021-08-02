@@ -5,18 +5,17 @@ package clubs
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
-
-	"ultimatedivision/cards"
 )
 
 // ErrNoClub indicated that club does not exist.
 var ErrNoClub = errs.Class("club does not exist")
 
-// ErrNoPlayer indicated that player does not exist.
-var ErrNoPlayer = errs.Class("players does not exist")
+// ErrNoSquad indicated that squad does not exist.
+var ErrNoSquad = errs.Class("squad does not exist")
 
 // DB is exposing access to clubs db.
 //
@@ -24,31 +23,47 @@ var ErrNoPlayer = errs.Class("players does not exist")
 type DB interface {
 	// Create creates club in the database.
 	Create(ctx context.Context, club Club) error
-	// Update updates club in the database.
-	Update(ctx context.Context, club Club) error
-	// GetClub gets team from database by user id.
-	GetClub(ctx context.Context, userID uuid.UUID) (Club, error)
-	// ListCards returns all cards from club.
-	ListCards(ctx context.Context, userID uuid.UUID) ([]Player, error)
-	// Add add new card to the team.
-	Add(ctx context.Context, userID uuid.UUID, card cards.Card, capitan uuid.UUID, position Position) error
-	// UpdateCapitan updates capitan in the team.
-	UpdateCapitan(ctx context.Context, capitan uuid.UUID, userID uuid.UUID) error
-	// GetCapitan returns id of clubs capitan.
-	GetCapitan(ctx context.Context, userID uuid.UUID) (uuid.UUID, error)
+	// CreateSquad creates squad for clubs in the database.
+	CreateSquad(ctx context.Context, squad Squads) error
+	// List returns all the clubs owned by the user.
+	List(ctx context.Context, userID uuid.UUID) ([]Club, error)
+	// GetSquad returns squad.
+	GetSquad(ctx context.Context, squadID uuid.UUID) (Squads, error)
+	// GetCapitan returns id of capitan.
+	GetCapitan(ctx context.Context, squadID uuid.UUID) (uuid.UUID, error)
+	// ListSquadCards returns all cards from squad.
+	ListSquadCards(ctx context.Context, squadID uuid.UUID) ([]SquadCards, error)
+	// Add add new card to the squad.
+	Add(ctx context.Context, squadCards SquadCards) error
+	// UpdateTacticFormation updates tactic and formation in the squad.
+	UpdateTacticFormation(ctx context.Context, squad Squads) error
+	// UpdateCapitan updates capitan in the squad.
+	UpdateCapitan(ctx context.Context, capitan uuid.UUID, squadID uuid.UUID) error
+	// UpdatePosition updates position of card in the squad.
+	UpdatePosition(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID, newPosition Position) error
 }
 
 // Club defines club entity.
 type Club struct {
-	UserID    uuid.UUID `json:"userID"`
+	ID        uuid.UUID `json:"id"`
+	OwnerID   uuid.UUID `json:"ownerId"`
+	Name      string    `json:"name"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+// Squads describes squads of clubs.
+type Squads struct {
+	ID        uuid.UUID `json:"id"`
+	Name      string    `json:"name"`
+	ClubID    uuid.UUID `json:"clubId"`
 	Formation Formation `json:"formation"`
 	Tactic    Tactic    `json:"tactic"`
 }
 
-// Player defines card entity which in top11.
-type Player struct {
-	UserID   uuid.UUID `json:"userID"`
-	CardID   uuid.UUID `json:"cardID"`
+// SquadCards defines all cards from squad.
+type SquadCards struct {
+	ID       uuid.UUID `json:"id"`
+	CardID   uuid.UUID `json:"cardId"`
 	Position Position  `json:"position"`
 	Capitan  uuid.UUID `json:"capitan"`
 }
@@ -74,8 +89,8 @@ const (
 	Attack Tactic = 1
 	// Defence defines defensive style.
 	Defence Tactic = 2
-	// Regular balance between attack and defense.
-	Regular Tactic = 3
+	// Balanced balance between attack and defense.
+	Balanced Tactic = 3
 )
 
 // Position defines a list of possible positions.
