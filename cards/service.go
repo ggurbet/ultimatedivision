@@ -103,6 +103,17 @@ func (service *Service) List(ctx context.Context) ([]Card, error) {
 	return service.cards.List(ctx)
 }
 
+// ListWithFilters returns all cards from DB, taking the necessary filters.
+func (service *Service) ListWithFilters(ctx context.Context, filters []Filters) ([]Card, error) {
+	for _, v := range filters {
+		err := v.Validate()
+		if err != nil {
+			return nil, err
+		}
+	}
+	return service.cards.ListWithFilters(ctx, filters)
+}
+
 // Delete destroy card in DB.
 func (service *Service) Delete(ctx context.Context, cardID uuid.UUID) error {
 	return service.cards.Delete(ctx, cardID)

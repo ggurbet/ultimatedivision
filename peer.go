@@ -180,6 +180,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			config.Consoles.Server,
 			logger,
 			peer.Console.Listener,
+			peer.Cards.Service,
 		)
 		if err != nil {
 			return nil, err
