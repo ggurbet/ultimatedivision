@@ -29,7 +29,7 @@ func NewService(cards DB, config Config) *Service {
 }
 
 // Create add card in DB.
-func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentageQualities []int) error {
+func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentageQualities []int) (Card, error) {
 
 	qualities := map[string]int{
 		"wood":    percentageQualities[0],
@@ -173,7 +173,7 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentage
 		Sweeping:         generateSkill(goalkeeping),
 		Throwing:         generateSkill(goalkeeping),
 	}
-	return service.cards.Create(ctx, card)
+	return card, service.cards.Create(ctx, card)
 }
 
 // searchValueByPercent search value string by percent.

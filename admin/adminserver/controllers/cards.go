@@ -83,7 +83,7 @@ func (controller *Cards) Create(w http.ResponseWriter, r *http.Request) {
 
 	percentageQualities := []int{controller.percentageQualities.Wood, controller.percentageQualities.Silver, controller.percentageQualities.Gold, controller.percentageQualities.Diamond}
 
-	if err := controller.cards.Create(ctx, userID, percentageQualities); err != nil {
+	if _, err := controller.cards.Create(ctx, userID, percentageQualities); err != nil {
 		controller.log.Error("could not create card", ErrCards.Wrap(err))
 		http.Error(w, "could not create card", http.StatusInternalServerError)
 		return
