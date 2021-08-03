@@ -9,13 +9,15 @@ import './index.scss';
 
 export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({ card }) => {
     const stats = card.stats;
+    const labels = ['TAC', 'PHY', 'TEC', 'OFF', 'DEF', 'GK']
 
     return (
         <div className="footballer-card-illustrations-radar">
             <Radar
                 type={Radar}
                 data={{
-                    labels: ['TAC', 'PHY', 'TEC', 'OFF', 'DEF', 'GK'],
+                    labels: stats.map((item, index )=> 
+                    `${labels[index]} ${item.average}`),
                     datasets: [{
                         backgroundColor: '#66FF8866',
                         data: stats.map(item => item.average),
@@ -58,7 +60,7 @@ export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({ car
                                 color: '#afafaf',
                             },
                             angleLines: {
-                                type: 'dashed',
+                                borderDash: [7,8],
                                 color: '#515180',
                             },
                             grid: {

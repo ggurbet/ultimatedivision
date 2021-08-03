@@ -1,25 +1,22 @@
-//Copyright (C) 2021 Creditor Corp. Group.
-//See LICENSE for copying information.
+// Copyright (C) 2021 Creditor Corp. Group.
+// See LICENSE for copying information.
 
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
+import { RouteConfig } from '@/app/routes';
 
 import { DropdownStyle } from '@/app/utils/dropdownStyle';
-
 import ultimate from '@static/img/Navbar/ultimate.png';
 import triangle from '@static/img/FootballFieldPage/triangle.svg';
-
 import './index.scss';
-import { Link } from 'react-router-dom';
-import { RouteConfig } from '@/app/routes';
 
 export const AboutMenu = () => {
     const [whitePaperVisibility, changeWhitePaperVisibility] = useState(false);
     const [tokenomicsVisibility, changeTokenomicsVisibility] = useState(false);
-
     const LIST_HEIGHT = 130;
     const whitePaperStyle = new DropdownStyle(whitePaperVisibility, LIST_HEIGHT);
     const tokenomicsStyle = new DropdownStyle(tokenomicsVisibility, LIST_HEIGHT);
-
     const menuFields = {
         whitepaper:
             [
@@ -37,7 +34,6 @@ export const AboutMenu = () => {
                 'UD DAO Fund',
             ],
     };
-
     return (
         <div className="about-menu">
             <div className="about-menu__logo-wrapper">
@@ -60,8 +56,8 @@ export const AboutMenu = () => {
                 style={{ height: whitePaperStyle.listHeight }}
             >
                 {
-                    RouteConfig.WhitePaper.subRoutes &&
-                    RouteConfig.WhitePaper.subRoutes.map((item, index) =>
+                    RouteConfig.Whitepaper.children &&
+                    RouteConfig.Whitepaper.children.map((item, index) =>
                         <li
                             key={index}
                             className="about-menu__whitepaper-item"
@@ -71,13 +67,11 @@ export const AboutMenu = () => {
                                 className="about-menu__whitepaper-link"
                             >
                                 {menuFields.whitepaper[index]}
-
                             </Link>
                         </li>
                     )
                 }
             </ul>
-
             <div
                 className="about-menu__tokenomics"
                 onClick={() => changeTokenomicsVisibility(prev => !prev)}
@@ -95,8 +89,8 @@ export const AboutMenu = () => {
                 style={{ height: tokenomicsStyle.listHeight }}
             >
                 {
-                    RouteConfig.Tokenomics.subRoutes &&
-                    RouteConfig.Tokenomics.subRoutes.map((item, index) =>
+                    RouteConfig.Tokenomics.children &&
+                    RouteConfig.Tokenomics.children.map((item, index) =>
                         <li
                             key={index}
                             className="about-menu__tokenomics-item"
@@ -106,7 +100,6 @@ export const AboutMenu = () => {
                                 className="about-menu__tokenomics-link"
                             >
                                 {menuFields.tokenomics[index]}
-
                             </Link>
                         </li>
                     )
