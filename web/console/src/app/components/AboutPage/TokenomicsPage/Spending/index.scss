@@ -1,0 +1,26 @@
+.spending {
+    &__title {
+        font-size: 40px;
+        margin-bottom: 40px;
+    }
+    &__subtitle {
+        font-size: 32px;
+        margin-bottom: 24px;
+    }
+    &__description {
+        font-family: 'Montserrat';
+        margin-bottom: 60px;
+    }
+    &__diagrams {
+        margin: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        width: 80%;
+        &__doughnut {
+            height: 550px;
+            width: 550px;
+            cursor: pointer;
+        }
+    }
+}

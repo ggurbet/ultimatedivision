@@ -17,7 +17,7 @@ import GameMechanics from '@/app/components/AboutPage/WhitePaperPage/GameMechani
 import PayToEarnEconomy from '@components/AboutPage/WhitePaperPage/PayToEarnEconomy';
 import Technology from '@components/AboutPage/WhitePaperPage/Technology';
 import Fund from '@components/AboutPage/TokenomicsPage/Fund';
-import PayToEarn from '@components/AboutPage/TokenomicsPage/PayToEarn';
+import PlayToEarn from '@components/AboutPage/TokenomicsPage/PlayToEarn';
 import Spending from '@components/AboutPage/TokenomicsPage/Spending';
 import Staking from '@components/AboutPage/TokenomicsPage/Staking';
 /** Route base config implementation */
@@ -103,7 +103,7 @@ export class RouteConfig {
     )
     public static PayToEarn: ComponentRoutes = new ComponentRoutes(
         'pay-to-earn',
-        PayToEarn,
+        PlayToEarn,
         true
     );
     public static Staking: ComponentRoutes = new ComponentRoutes(
