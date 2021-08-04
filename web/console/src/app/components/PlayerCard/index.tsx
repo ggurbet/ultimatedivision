@@ -3,7 +3,7 @@
 
 import { Link, NavLink } from 'react-router-dom';
 
-import { RouteConfig } from '@/app/routes';
+import { RouteConfig } from '@/app/router';
 
 import { Card } from '@/app/store/reducers/footballerCard';
 

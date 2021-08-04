@@ -9,7 +9,7 @@ import { MarketPlaceFootballerCard } from '@components/MarketPlacePage/MarketPla
 import { MyCard } from '@components/MarketPlacePage/MyCard';
 import { Paginator } from '@components/Paginator';
 
-import { RouteConfig } from '@/app/routes';
+import { RouteConfig } from '@/app/router';
 import { RootState } from '@/app/store';
 
 import './index.scss';

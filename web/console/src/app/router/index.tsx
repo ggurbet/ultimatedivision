@@ -22,7 +22,16 @@ import Spending from '@components/AboutPage/TokenomicsPage/Spending';
 import Staking from '@components/AboutPage/TokenomicsPage/Staking';
 /** Route base config implementation */
 /**interfafe fot AboutPage subroutes */
-export class ComponentRoutes {
+
+interface RouteItem {
+    path: string,
+    component: React.FC<any>,
+    exact: boolean,
+    children?: ComponentRoutes[],
+    with?: (child: ComponentRoutes, parrent: ComponentRoutes) => ComponentRoutes,
+    addChildren?: (children: ComponentRoutes[]) => ComponentRoutes
+}
+export class ComponentRoutes implements RouteItem {
     /** data route config*/
     constructor(
         public path: string,
@@ -141,7 +150,8 @@ export class RouteConfig {
         ])
     ];
 };
-export const Route: React.FC<ComponentRoutes> = ({
+
+export const Route: React.FC<RouteItem> = ({
     component: Component,
     ...children
 }) => <Component {...children} />;

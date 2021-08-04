@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { RouteConfig } from '@/app/routes';
+import { RouteConfig } from '@/app/router';
 
 import { DropdownStyle } from '@/app/utils/dropdownStyle';
 import ultimate from '@static/img/Navbar/ultimate.png';

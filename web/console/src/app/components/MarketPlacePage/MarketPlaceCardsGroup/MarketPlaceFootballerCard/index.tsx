@@ -3,7 +3,7 @@
 
 import { PlayerCard } from '@components/PlayerCard';
 
-import { RouteConfig } from '@/app/routes';
+import { RouteConfig } from '@/app/router';
 import { Link } from 'react-router-dom';
 
 import { Card } from '@/app/store/reducers/footballerCard';

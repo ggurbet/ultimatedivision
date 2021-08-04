@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import { Switch } from 'react-router-dom';
-import { ComponentRoutes, Route } from '@/app/routes';
+import { ComponentRoutes, Route } from '@/app/router';
 
 import { AboutMenu } from '../../AboutMenu';
 
