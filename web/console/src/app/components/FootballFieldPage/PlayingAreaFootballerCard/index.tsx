@@ -14,15 +14,22 @@ export const PlayingAreaFootballerCard: React.FC<{ card: Card; index?: number; p
     const dispatch = useDispatch();
     const [visibility, changeVisibility] = useState(false);
     const style = visibility ? 'block' : 'none';
+
+    /** show/hide delete block, preventing scroll to cardSelection */
+    function handleVisibility (e: any) {
+        e.stopPropagation();
+        changeVisibility(prev => !prev);
+    }
     /** remove player card implementation */
     function handleDeletion(e: any) {
+        e.stopPropagation();
         e.preventDefault();
         dispatch(removeCard(index));
     }
 
     return (
         <div
-            onClick={() => changeVisibility(prev => !prev)}
+            onClick={handleVisibility}
             className="football-field-card"
         >
             <div

@@ -1,6 +1,8 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     mode: 'development',
@@ -13,19 +15,27 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist/'),
         filename: '[name].[hash].js',
-        publicPath: '/'
+        publicPath: 'https://ultimatedivision.com/ud/'
     },
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Ultimate Division',
-            template: './public/index.html'
+            template: './public/index.html',
+            favicon: './src/app/static/img/favicon.ico'
         }),
-        new CleanWebpackPlugin()
+        new CleanWebpackPlugin(),
+        new CssMinimizerPlugin(),
+        new MiniCssExtractPlugin({
+            filename: "[name].css",
+            chunkFilename: "[id].css",
+        })
+
     ],
     devServer: {
         port: 3000,
         open: true,
-        historyApiFallback: true
+        historyApiFallback: true,
+        hot: true
     },
     resolve: {
         alias: {
@@ -55,7 +65,7 @@ module.exports = {
             {
                 test: /\.(s[c]ss|css)$/,
                 use: [
-                    'style-loader',
+                    MiniCssExtractPlugin.loader,
                     'css-loader',
                     'sass-loader',
                 ]
@@ -95,7 +105,7 @@ module.exports = {
                             },
                             // the webp option will enable WEBP
                             webp: {
-                                quality: 75
+                                enabled: false
                             }
                         }
                     },

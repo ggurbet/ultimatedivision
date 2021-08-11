@@ -1,4 +1,3 @@
-//@ts-nocheck|
 //Copyright (C) 2021 Creditor Corp. Group.
 //See LICENSE for copying information.
 
@@ -8,9 +7,8 @@ import { Switch } from 'react-router-dom';
 const FootballerCard = lazy(() => import('@components/FootballerCardPage/FootballerCard'));
 const FootballField = lazy(() => import('@components/FootballFieldPage/FootballField'));
 const MarketPlace = lazy(() => import('@components/MarketPlacePage/MarketPlace'));
-
-import { WhitePaper } from '../components/AboutPage/WhitePaperPage/WhitePaper';
-import { Tokenomics } from '../components/AboutPage/TokenomicsPage/Tokenomics';
+const WhitePaper = lazy(() => import('@components/AboutPage/WhitePaperPage/WhitePaper'));
+const Tokenomics = lazy(() => import('@components/AboutPage/TokenomicsPage/Tokenomics'));
 
 import Summary from '@/app/components/AboutPage/WhitePaperPage/Summary';
 import GameMechanics from '@/app/components/AboutPage/WhitePaperPage/GameMechanics';
@@ -41,11 +39,9 @@ export class ComponentRoutes implements RouteItem {
     ) { }
 
     public with(child: ComponentRoutes, parrent: ComponentRoutes): ComponentRoutes {
-        return new ComponentRoutes(
-            `${parrent.path}/${child.path}`,
-            child.component,
-            child.exact,
-        )
+        child.path = `${parrent.path}/${child.path}`;
+
+        return this;
     }
 
     public addChildren(children: ComponentRoutes[]): ComponentRoutes {
@@ -144,11 +140,11 @@ export class RouteConfig {
         ]),
         RouteConfig.Tokenomics.addChildren([
             RouteConfig.Spending,
-            RouteConfig.Fund,
+            RouteConfig.PayToEarn,
             RouteConfig.Staking,
-            RouteConfig.PayToEarn
+            RouteConfig.Fund,
         ])
-    ];
+    ]
 };
 
 export const Route: React.FC<RouteItem> = ({

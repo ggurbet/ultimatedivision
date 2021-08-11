@@ -53,6 +53,9 @@ export const FootballFieldPlayingArea: React.FC = () => {
     function handleClick(index: number) {
         dispatch(choseCardPosition(index));
         dispatch(cardSelectionVisibility(true));
+        setTimeout(() => {
+            window.scroll(0, 1200);
+        }, 100);
     };
 
     /** getting dragged card index and changing state to allow mouseUp */
@@ -111,13 +114,12 @@ export const FootballFieldPlayingArea: React.FC = () => {
                         // TO DO: change style by some class to change style in card
 
                         return (
-                            <a
+                            <div
                                 style={
                                     equality
                                         ? { left: x - outerOffset.x, top: y - OFFSET_TOP, zIndex: 5, pointerEvents: 'none' }
                                         : undefined
                                 }
-                                href={data ? undefined : '#cardList'}
                                 key={index}
                                 className={`playing-area__${formation}__${data ? 'card' : 'empty-card'}`}
                                 onClick={(e) => handleClick(index)}
@@ -128,7 +130,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
                                 {
                                     data && <PlayingAreaFootballerCard card={data} index={index} place={'PlayingArea'} />
                                 }
-                            </a>
+                            </div>
                         );
                     })}
                 </div>

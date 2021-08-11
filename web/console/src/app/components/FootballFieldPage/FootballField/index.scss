@@ -3,10 +3,10 @@
 .football-field {
     background-color: $mainBackground;
     color: white;
-    padding: 50px;
+    padding: 50px 0;
     &__title {
         font-weight: lighter;
-        margin-bottom: 40px;
+        margin: 0 0 40px 50px;
     }
     &__wrapper {
         overflow-y: hidden;

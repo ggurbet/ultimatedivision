@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 import { NavLink } from 'react-router-dom';
 import { RouteConfig } from '@/app/router';
-import ultimate from '@static/img/Navbar/ultimate.png';
+import ultimate from '@static/img/Navbar/ultimate.svg';
 import './index.scss';
 export const Navbar: React.FC = () =>
     <div className="ultimatedivision-navbar">
@@ -14,7 +14,7 @@ export const Navbar: React.FC = () =>
         <ul className="ultimatedivision-navbar__list">
             <li className="ultimatedivision-navbar__item">
                 <NavLink
-                    to={RouteConfig.Whitepaper.path}
+                    to={RouteConfig.Summary.path}
                     className="ultimatedivision-navbar__item__active"
                 >
                     HOME

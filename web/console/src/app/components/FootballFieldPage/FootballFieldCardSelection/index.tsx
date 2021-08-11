@@ -21,6 +21,9 @@ export const FootballFieldCardSelection = () => {
     function handleClick(card: Card, index: number) {
         dispatch(addCard(card, index));
         dispatch(cardSelectionVisibility(false));
+        setTimeout(() => {
+            window.scroll(0, 200);
+        }, 10);
     }
 
     return (
@@ -28,14 +31,16 @@ export const FootballFieldCardSelection = () => {
             <FilterField />
             <div className="card-selection__list">
                 {cardList.map((card, index) =>
-                    <a key={index} href="#playingArea" className="card-selection__card"
+                    <div
+                        key={index}
+                        className="card-selection__card"
                         onClick={() => handleClick(card, fieldSetup.options.chosedCard)}
                     >
                         <PlayerCard
                             card={card}
                             parentClassName={'card-selection__card'}
                         />
-                    </a>,
+                    </div>,
                 )}
             </div>
             <Paginator itemCount={cardList.length} />

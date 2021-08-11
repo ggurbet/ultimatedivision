@@ -1,7 +1,7 @@
 {
     "name": "cryptofotball",
     "version": "0.1.0",
-    "homepage": "https://ultimatedivision.com/test/",
+    "homepage": "https://ultimatedivision.com/ud/",
     "private": true,
     "dependencies": {
         "chart.js": "3.4.1",
@@ -16,7 +16,7 @@
     "scripts": {
         "lint": "eslint --fix --ext .ts,.tsx .",
         "start": "webpack serve --open",
-        "build": "webpack",
+        "build": "webpack --mode production",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
@@ -54,6 +54,7 @@
         "@typescript-eslint/eslint-plugin-tslint": "4.28.3",
         "clean-webpack-plugin": "4.0.0-alpha.0",
         "css-loader": "6.2.0",
+        "css-minimizer-webpack-plugin": "^3.0.2",
         "eslint": "7.30.0",
         "eslint-config-airbnb": "18.2.1",
         "eslint-config-prettier": "8.3.0",
@@ -66,6 +67,7 @@
         "extract-text-webpack-plugin": "3.0.2",
         "html-webpack-plugin": "5.3.2",
         "image-webpack-loader": "7.0.1",
+        "mini-css-extract-plugin": "^2.2.0",
         "node": "16.5.0",
         "prettier": "2.3.1",
         "sass": "1.35.2",

@@ -17,6 +17,8 @@ import './index.scss';
 const FootballField: React.FC = () => {
     const dispatch = useDispatch();
     const fieldSetup = useSelector((state: RootState) => state.fieldReducer.options);
+    const cardSelectionVisibility = useSelector((state: RootState) => state.fieldReducer.options.showCardSeletion);
+
     /** prevent default user agent action */
     function dragOverHandler(e: DragEvent<HTMLDivElement>) {
         e.preventDefault();
@@ -37,7 +39,7 @@ const FootballField: React.FC = () => {
             <h1 className="football-field__title">Football Field</h1>
             <FootballFieldPlayingArea />
             <div
-                style={{ height: fieldSetup.showCardSeletion ? 'unset' : '0' }}
+                style={{ height: cardSelectionVisibility? 'unset' : '0' }}
                 className="football-field__wrapper"
             >
                 < FootballFieldCardSelection />

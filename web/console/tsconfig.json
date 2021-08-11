@@ -34,10 +34,5 @@
     "isolatedModules": true,
     "noEmit": false,
     "jsx": "react-jsx",
-    // "outDir": "./dist/"
   },
-  // "include": [
-  //     "src/**/**/**/*.ts",
-  //     "src/**/**/*.ts",
-  // ]
 }
