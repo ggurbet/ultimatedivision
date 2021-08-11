@@ -154,8 +154,9 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             PRIMARY KEY(id, card_id)
         );
         CREATE TABLE IF NOT EXISTS lootboxes(
-            user_id    BYTEA REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-            lootbox_id BYTEA                                        NOT NULL,
+            user_id      BYTEA   REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+            lootbox_id   BYTEA                                          NOT NULL,
+            lootbox_name VARCHAR                                        NOT NULL,
             PRIMARY KEY(user_id, lootbox_id)
         );`
 
@@ -187,7 +188,7 @@ func (db *database) Cards() cards.DB {
 	return &cardsDB{conn: db.conn}
 }
 
-// Clubs provide access to club db.
+// Clubs provide access to clubs db.
 func (db *database) Clubs() clubs.DB {
 	return &clubsDB{conn: db.conn}
 }

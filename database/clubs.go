@@ -50,7 +50,7 @@ func (clubsDB *clubsDB) CreateSquad(ctx context.Context, squad clubs.Squads) err
 
 // Add inserts card to club.
 func (clubsDB *clubsDB) Add(ctx context.Context, squadCards clubs.SquadCards) error {
-	query := `INSERT  INTO squad_cards(id, card_id, card_position, capitan)
+	query := `INSERT INTO squad_cards(id, card_id, card_position, capitan)
 			  VALUES($1,$2,$3,$4)`
 
 	_, err := clubsDB.conn.ExecContext(ctx, query,

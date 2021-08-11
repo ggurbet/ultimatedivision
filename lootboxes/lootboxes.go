@@ -18,32 +18,34 @@ var ErrNoLootBox = errs.Class("lootbox does not exist")
 // architecture: DB
 type DB interface {
 	// Create creates lootbox of user in db.
-	Create(ctx context.Context, lootBox UserLootBoxes) error
+	Create(ctx context.Context, lootBox LootBox) error
 	// Delete deletes opened lootbox by user in db.
-	Delete(ctx context.Context, userID uuid.UUID, lootBoxID uuid.UUID) error
+	Delete(ctx context.Context, lootBox LootBox) error
 }
 
 // LootBox defines lootbox.
 type LootBox struct {
-	ID   uuid.UUID `json:"id"`
-	Name string    `json:"name"`
+	UserID    uuid.UUID `json:"userId"`
+	LootBoxID uuid.UUID `json:"id"`
+	Name      Type      `json:"name"`
 }
 
-// Probability defines probability of getting different types of cards.
-type Probability float32
+// Type defines type of LootBox.
+type Type string
+
+const (
+	// RegularBox defines regular box type.
+	RegularBox Type = "Regular Box"
+	// UDReleaseCelebrationBox defines UD Release Celebration Box type.
+	UDReleaseCelebrationBox Type = "UD Release Celebration Box"
+)
 
 // Config defines configuration for LootBox.
 type Config struct {
-	Cost     int         `json:"cost"`
-	CardsNum int         `json:"cardsNum"`
-	Wood     Probability `json:"wood"`
-	Silver   Probability `json:"silver"`
-	Gold     Probability `json:"gold"`
-	Diamond  Probability `json:"diamond"`
-}
-
-// UserLootBoxes describes lootbox that user has.
-type UserLootBoxes struct {
-	UserID    uuid.UUID `json:"userId"`
-	LootBoxID uuid.UUID `json:"LootBoxId"`
+	Cost     int `json:"cost"`
+	CardsNum int `json:"cardsNum"`
+	Wood     int `json:"wood"`
+	Silver   int `json:"silver"`
+	Gold     int `json:"gold"`
+	Diamond  int `json:"diamond"`
 }

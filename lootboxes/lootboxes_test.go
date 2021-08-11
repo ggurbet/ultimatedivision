@@ -30,14 +30,10 @@ func TestLootBox(t *testing.T) {
 		CreatedAt:    time.Now(),
 	}
 
-	RegularBox := lootboxes.LootBox{
-		ID:   uuid.New(),
-		Name: "Regular Box",
-	}
-
-	userLootBox := lootboxes.UserLootBoxes{
+	userLootBox := lootboxes.LootBox{
 		UserID:    user1.ID,
-		LootBoxID: RegularBox.ID,
+		LootBoxID: uuid.New(),
+		Name:      lootboxes.RegularBox,
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
@@ -53,7 +49,7 @@ func TestLootBox(t *testing.T) {
 		})
 
 		t.Run("Delete", func(t *testing.T) {
-			err := repositoryLootBoxes.Delete(ctx, userLootBox.UserID, userLootBox.LootBoxID)
+			err := repositoryLootBoxes.Delete(ctx, userLootBox)
 			require.NoError(t, err)
 		})
 	})

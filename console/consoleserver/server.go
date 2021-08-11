@@ -17,6 +17,7 @@ import (
 	"ultimatedivision/console/consoleserver/controllers"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/lootboxes"
 	"ultimatedivision/users/userauth"
 )
 
@@ -49,7 +50,7 @@ type Server struct {
 }
 
 // NewServer is a constructor for console web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service) (*Server, error) {
+func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service) (*Server, error) {
 	server := &Server{
 		log:      log,
 		config:   config,
@@ -57,7 +58,8 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	}
 
 	authController := controllers.NewAuth(server.log, server.authService, server.cookieAuth, server.templates.auth)
-	cardsController := NewCards(log, cards)
+	cardsController := controllers.NewCards(log, cards)
+	lootBoxesController := controllers.NewLootBoxes(log, lootBoxes)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/register", authController.RegisterTemplateHandler).Methods(http.MethodGet)
@@ -72,6 +74,10 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 
 	cardsRouter := router.PathPrefix("/cards").Subrouter()
 	cardsRouter.HandleFunc("", cardsController.List).Methods(http.MethodGet)
+
+	lootBoxesRouter := router.PathPrefix("/lootboxes").Subrouter()
+	lootBoxesRouter.HandleFunc("", lootBoxesController.Create).Methods(http.MethodPost)
+	lootBoxesRouter.HandleFunc("", lootBoxesController.Open).Methods(http.MethodDelete)
 
 	server.server = http.Server{
 		Handler: router,
