@@ -17,8 +17,10 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/clubs"
 	"ultimatedivision/console/consoleserver"
+	"ultimatedivision/console/emails"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/internal/mail"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/users"
 	"ultimatedivision/users/userauth"
@@ -67,6 +69,7 @@ type Config struct {
 
 	Consoles struct {
 		Server consoleserver.Config `json:"server"`
+		Emails *emails.Config       `json:"emails"`
 	}
 
 	Cards struct {
@@ -84,6 +87,7 @@ type Peer struct {
 	Config   Config
 	Log      logger.Logger
 	Database DB
+	Sender   mail.Sender
 
 	// exposes admins relates logic.
 	Admins struct {
@@ -120,13 +124,14 @@ type Peer struct {
 
 	// Console web server server with web UI.
 	Console struct {
-		Listener net.Listener
-		Endpoint *consoleserver.Server
+		Listener     net.Listener
+		Endpoint     *consoleserver.Server
+		EmailService *emails.Service
 	}
 }
 
 // New is a constructor for ultimatedivision.Peer.
-func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
+func New(logger logger.Logger, config Config, db DB, sender mail.Sender) (peer *Peer, err error) {
 	peer = &Peer{
 		Log:      logger,
 		Database: db,
@@ -141,7 +146,8 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			auth.TokenSigner{
 				Secret: []byte(config.Users.Auth.TokenAuthSecret),
 			},
-		)
+			peer.Console.EmailService,
+			logger)
 	}
 
 	{ // admins setup
@@ -219,6 +225,12 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		if err != nil {
 			return nil, err
 		}
+
+		peer.Console.EmailService = emails.NewService(
+			logger,
+			sender,
+			config.Consoles.Emails,
+		)
 	}
 
 	return peer, nil

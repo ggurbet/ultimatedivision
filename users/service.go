@@ -53,7 +53,7 @@ func (service *Service) Create(ctx context.Context, email, password, nickName, f
 		FirstName:    firstName,
 		LastName:     lastName,
 		LastLogin:    time.Time{},
-		Status:       StatusActive,
+		Status:       StatusCreated,
 		CreatedAt:    time.Now(),
 	}
 	err := user.EncodePass()

@@ -4,13 +4,13 @@
 package emails
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/mail"
-	"ultimatedivision/internal/random"
 )
 
 // Config defines values needed by mailservice service.
@@ -29,6 +29,7 @@ type Config struct {
 	TokenURI          string `help:"uri which is used when retrieving new access token" default:""`
 
 	TransactionsFileName string `help:"name of file that will be attached to email" default:"transactions"`
+	Domain               string `json:"domain"`
 }
 
 // Error indicates about email sending error.
@@ -52,16 +53,15 @@ func NewService(log logger.Logger, sender mail.Sender, config *Config) *Service 
 	}
 }
 
-// SendVerificationEmail is used to send email with verification OTP and link.
-func (service *Service) SendVerificationEmail(email string, otp random.OTP) error {
-	var message mail.Message
+// SendVerificationEmail is used to send email with verification link.
+func (service *Service) SendVerificationEmail(email, token string) error {
+	var verificationMessage mail.Message
 
-	// TODO: get better name
-	message.To = []mail.Address{{Address: email, Name: "Verify"}}
-	message.Date = time.Now().UTC()
-	message.PlainText = string(otp)
-	message.Subject = "confirm your email"
-	message.From = mail.Address{Address: service.config.From}
+	verificationMessage.To = []mail.Address{{Address: email, Name: "Verify"}}
+	verificationMessage.Date = time.Now().UTC()
+	verificationMessage.PlainText = fmt.Sprintf("%s/%s", service.config.Domain, token)
+	verificationMessage.Subject = "confirm your email"
+	verificationMessage.From = mail.Address{Address: service.config.From}
 
-	return service.sender.SendEmail(&message)
+	return service.sender.SendEmail(&verificationMessage)
 }

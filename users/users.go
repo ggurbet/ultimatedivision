@@ -6,6 +6,7 @@ package users
 import (
 	"context"
 	"time"
+	"unicode"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
@@ -37,10 +38,12 @@ type DB interface {
 type Status int
 
 const (
+	// StatusCreated indicates that user email is created.
+	StatusCreated Status = 0
 	// StatusActive indicates that user can login to the account.
-	StatusActive Status = 0
+	StatusActive Status = 1
 	// StatusSuspended indicates that user cannot login to the account.
-	StatusSuspended Status = 1
+	StatusSuspended Status = 2
 )
 
 // User describes user entity.
@@ -64,4 +67,32 @@ func (user *User) EncodePass() error {
 	}
 	user.PasswordHash = hash
 	return nil
+}
+
+// CreateUserFields for crete user.
+type CreateUserFields struct {
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	NickName  string `json:"nickName"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+}
+
+// IsPasswordValid check the password for all conditions.
+func IsPasswordValid(s string) bool {
+	var number, upper, special bool
+	letters := 0
+	for _, c := range s {
+		switch {
+		case unicode.IsNumber(c):
+			number = true
+		case unicode.IsUpper(c):
+			upper = true
+		case unicode.IsPunct(c) || unicode.IsSymbol(c) || unicode.IsMark(c):
+			special = true
+		case unicode.IsLetter(c) || c == ' ':
+			letters++
+		}
+	}
+	return len(s) >= 8 && letters >= 1 && number && upper && special
 }
