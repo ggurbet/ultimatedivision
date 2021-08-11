@@ -33,12 +33,12 @@ type DB interface {
 	GetCapitan(ctx context.Context, squadID uuid.UUID) (uuid.UUID, error)
 	// ListSquadCards returns all cards from squad.
 	ListSquadCards(ctx context.Context, squadID uuid.UUID) ([]SquadCards, error)
-	// Add add new card to the squad.
+	// Add adds new card to the squad.
 	Add(ctx context.Context, squadCards SquadCards) error
 	// UpdateTacticFormation updates tactic and formation in the squad.
 	UpdateTacticFormation(ctx context.Context, squad Squads) error
 	// UpdateCapitan updates capitan in the squad.
-	UpdateCapitan(ctx context.Context, capitan uuid.UUID, squadID uuid.UUID) error
+	UpdateCapitan(ctx context.Context, capitanID uuid.UUID, squadID uuid.UUID) error
 	// UpdatePosition updates position of card in the squad.
 	UpdatePosition(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID, newPosition Position) error
 }
@@ -62,10 +62,10 @@ type Squads struct {
 
 // SquadCards defines all cards from squad.
 type SquadCards struct {
-	ID       uuid.UUID `json:"id"`
-	CardID   uuid.UUID `json:"cardId"`
-	Position Position  `json:"position"`
-	Capitan  uuid.UUID `json:"capitan"`
+	ID        uuid.UUID `json:"id"`
+	CardID    uuid.UUID `json:"cardId"`
+	Position  Position  `json:"position"`
+	CapitanID uuid.UUID `json:"capitanId"`
 }
 
 // Formation defines a list of possible formations.

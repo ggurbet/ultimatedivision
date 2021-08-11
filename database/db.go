@@ -150,7 +150,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             id            BYTEA   REFERENCES squads(id) ON DELETE CASCADE NOT NULL,
             card_id       BYTEA   REFERENCES cards(id) ON DELETE CASCADE  NOT NULL, 
             card_position INTEGER                                         NOT NULL,
-            capitan       BYTEA,
+            capitan_id    BYTEA,
             PRIMARY KEY(id, card_id)
         );
         CREATE TABLE IF NOT EXISTS lootboxes(

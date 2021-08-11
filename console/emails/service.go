@@ -17,18 +17,18 @@ import (
 // TODO: separate on service and client configs.
 type Config struct {
 	Provider          string `json:"provider" default:"mock"`
-	SMTPServerAddress string `help:"smtp server address" default:""`
-	TemplatePath      string `help:"path to email templates source" default:""`
-	From              string `help:"sender email address" default:""`
-	AuthType          string `help:"smtp authentication type" default:"simulate"`
-	PlainLogin        string `help:"plain authentication user login" default:""`
-	PlainPassword     string `help:"plain authentication user password" default:""`
-	RefreshToken      string `help:"refresh token used to retrieve new access token" default:""`
-	ClientID          string `help:"oauth2 app's client id" default:""`
-	ClientSecret      string `help:"oauth2 app's client secret" default:""`
-	TokenURI          string `help:"uri which is used when retrieving new access token" default:""`
+	SMTPServerAddress string `json:"smtpServerAddress" help:"smtp server address"`
+	TemplatePath      string `json:"templatePath" help:"path to email templates source"`
+	From              string `json:"from" help:"sender email address"`
+	AuthType          string `json:"authType" help:"smtp authentication type"`
+	PlainLogin        string `json:"plainLogin" help:"plain authentication user login"`
+	PlainPassword     string `json:"plainPassword" help:"plain authentication user password"`
+	RefreshToken      string `json:"refreshToken" help:"refresh token used to retrieve new access token"`
+	ClientID          string `json:"clientId" help:"oauth2 app's client id"`
+	ClientSecret      string `json:"clientSecret" help:"oauth2 app's client secret"`
+	TokenURI          string `json:"tokenURI" help:"uri which is used when retrieving new access token"`
 
-	TransactionsFileName string `help:"name of file that will be attached to email" default:"transactions"`
+	TransactionsFileName string `json:"transactionsFileName" help:"name of file that will be attached to email"`
 	Domain               string `json:"domain"`
 }
 
@@ -41,11 +41,11 @@ var Error = errs.Class("email service error")
 type Service struct {
 	log    logger.Logger
 	sender mail.Sender
-	config *Config
+	config Config
 }
 
 // NewService is a constructor for service.
-func NewService(log logger.Logger, sender mail.Sender, config *Config) *Service {
+func NewService(log logger.Logger, sender mail.Sender, config Config) *Service {
 	return &Service{
 		log:    log,
 		sender: sender,

@@ -52,6 +52,12 @@ var (
 		RunE:        cmdRun,
 		Annotations: map[string]string{"type": "run"},
 	}
+	destroyCmd = &cobra.Command{
+		Use:         "destroy",
+		Short:       "deletes config folder",
+		RunE:        cmdDestroy,
+		Annotations: map[string]string{"type": "run"},
+	}
 	setupCfg Config
 	runCfg   Config
 
@@ -61,6 +67,7 @@ var (
 func init() {
 	rootCmd.AddCommand(setupCmd)
 	rootCmd.AddCommand(runCmd)
+	rootCmd.AddCommand(destroyCmd)
 }
 
 func main() {
@@ -149,6 +156,10 @@ func cmdRun(cmd *cobra.Command, args []string) (err error) {
 	closeError := peer.Close()
 
 	return Error.Wrap(errs.Combine(runError, closeError))
+}
+
+func cmdDestroy(cmd *cobra.Command, args []string) (err error) {
+	return os.RemoveAll(defaultConfigDir)
 }
 
 // readConfig reads config from default config dir.

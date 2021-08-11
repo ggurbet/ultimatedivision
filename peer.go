@@ -32,6 +32,7 @@ import (
 type DB interface {
 	// Admins provides access to admins db.
 	Admins() admins.DB
+
 	// Users provides access to users db.
 	Users() users.DB
 
@@ -46,7 +47,6 @@ type DB interface {
 
 	// Close closes underlying db connection.
 	Close() error
-
 	// CreateSchema create tables.
 	CreateSchema(ctx context.Context) error
 }
@@ -58,28 +58,28 @@ type Config struct {
 		Auth   struct {
 			TokenAuthSecret string `json:"tokenAuthSecret"`
 		} `json:"auth"`
-	}
+	} `json:"admins"`
 
 	Users struct {
 		// Server userserver.Config `json:"server"`
 		Auth struct {
 			TokenAuthSecret string `json:"tokenAuthSecret"`
 		} `json:"auth"`
-	}
+	} `json:"users"`
 
-	Consoles struct {
+	Console struct {
 		Server consoleserver.Config `json:"server"`
-		Emails *emails.Config       `json:"emails"`
-	}
+		Emails emails.Config        `json:"emails"`
+	} `json:"console"`
 
 	Cards struct {
 		cards.Config
 		cards.PercentageQualities `json:"percentageQualities"`
-	}
+	} `json:"cards"`
 
 	LootBoxes struct {
-		Config lootboxes.Config `json:"lootboxes"`
-	}
+		Config lootboxes.Config `json:"regular"`
+	} `json:"lootBoxes"`
 }
 
 // Peer is the representation of a ultimatedivision.
@@ -212,13 +212,13 @@ func New(logger logger.Logger, config Config, db DB, sender mail.Sender) (peer *
 	}
 
 	{ // console setup
-		peer.Console.Listener, err = net.Listen("tcp", config.Consoles.Server.Address)
+		peer.Console.Listener, err = net.Listen("tcp", config.Console.Server.Address)
 		if err != nil {
 			return nil, err
 		}
 
 		peer.Console.Endpoint, err = consoleserver.NewServer(
-			config.Consoles.Server,
+			config.Console.Server,
 			logger,
 			peer.Console.Listener,
 			peer.Cards.Service,
@@ -231,7 +231,7 @@ func New(logger logger.Logger, config Config, db DB, sender mail.Sender) (peer *
 		peer.Console.EmailService = emails.NewService(
 			logger,
 			sender,
-			config.Consoles.Emails,
+			config.Console.Emails,
 		)
 	}
 

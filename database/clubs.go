@@ -50,11 +50,11 @@ func (clubsDB *clubsDB) CreateSquad(ctx context.Context, squad clubs.Squads) err
 
 // Add inserts card to club.
 func (clubsDB *clubsDB) Add(ctx context.Context, squadCards clubs.SquadCards) error {
-	query := `INSERT INTO squad_cards(id, card_id, card_position, capitan)
+	query := `INSERT INTO squad_cards(id, card_id, card_position, capitan_id)
 			  VALUES($1,$2,$3,$4)`
 
 	_, err := clubsDB.conn.ExecContext(ctx, query,
-		squadCards.ID, squadCards.CardID, squadCards.Position, squadCards.Capitan)
+		squadCards.ID, squadCards.CardID, squadCards.Position, squadCards.CapitanID)
 
 	return ErrSquad.Wrap(err)
 }
@@ -113,7 +113,7 @@ func (clubsDB *clubsDB) GetSquad(ctx context.Context, clubID uuid.UUID) (clubs.S
 
 // ListSquadCards returns all cards from squad.
 func (clubsDB *clubsDB) ListSquadCards(ctx context.Context, squadID uuid.UUID) ([]clubs.SquadCards, error) {
-	query := `SELECT id, card_id, card_position, capitan 
+	query := `SELECT id, card_id, card_position, capitan_id 
 			  FROM squad_cards
 			  WHERE id = $1`
 
@@ -129,7 +129,7 @@ func (clubsDB *clubsDB) ListSquadCards(ctx context.Context, squadID uuid.UUID) (
 
 	for rows.Next() {
 		var player clubs.SquadCards
-		err = rows.Scan(&player.ID, &player.CardID, &player.Position, &player.Capitan)
+		err = rows.Scan(&player.ID, &player.CardID, &player.Position, &player.CapitanID)
 		if err != nil {
 			return nil, clubs.ErrNoSquad.Wrap(err)
 		}
@@ -155,12 +155,12 @@ func (clubsDB *clubsDB) UpdateTacticFormation(ctx context.Context, squad clubs.S
 }
 
 // UpdateCapitan updates capitan in the users team.
-func (clubsDB *clubsDB) UpdateCapitan(ctx context.Context, capitan uuid.UUID, squadID uuid.UUID) error {
+func (clubsDB *clubsDB) UpdateCapitan(ctx context.Context, capitanID uuid.UUID, squadID uuid.UUID) error {
 	query := `UPDATE squad_cards
-			  SET capitan = $1
+			  SET capitan_id = $1
 			  WHERE id = $2`
 
-	_, err := clubsDB.conn.ExecContext(ctx, query, capitan, squadID)
+	_, err := clubsDB.conn.ExecContext(ctx, query, capitanID, squadID)
 
 	return ErrSquad.Wrap(err)
 }
@@ -178,7 +178,7 @@ func (clubsDB *clubsDB) UpdatePosition(ctx context.Context, squadID uuid.UUID, c
 
 // GetCapitan returns id of capitan of the users team.
 func (clubsDB *clubsDB) GetCapitan(ctx context.Context, squadID uuid.UUID) (uuid.UUID, error) {
-	query := `SELECT capitan
+	query := `SELECT capitan_id
 			  FROM squad_cards
               WHERE id = $1`
 

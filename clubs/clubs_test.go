@@ -59,10 +59,10 @@ func TestTeam(t *testing.T) {
 	}
 
 	updatedSquadCards := []clubs.SquadCards{{
-		ID:       testSquad.ID,
-		CardID:   testCard.ID,
-		Position: clubs.CAM,
-		Capitan:  testCard.ID,
+		ID:        testSquad.ID,
+		CardID:    testCard.ID,
+		Position:  clubs.CAM,
+		CapitanID: testCard.ID,
 	}}
 
 	updatedSquad := clubs.Squads{
@@ -169,7 +169,7 @@ func comparePlayers(t *testing.T, playersDB []clubs.SquadCards, playersTest []cl
 	for i := 0; i < len(playersTest); i++ {
 		assert.Equal(t, playersDB[i].ID, playersTest[i].ID)
 		assert.Equal(t, playersDB[i].CardID, playersTest[i].CardID)
-		assert.Equal(t, playersDB[i].Capitan, playersTest[i].Capitan)
+		assert.Equal(t, playersDB[i].CapitanID, playersTest[i].CapitanID)
 		assert.Equal(t, playersDB[i].Position, playersTest[i].Position)
 	}
 }
