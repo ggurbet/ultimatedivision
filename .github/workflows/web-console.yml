@@ -24,11 +24,11 @@ jobs:
         node-version: '12'
     - name: Install
       run: npm install
-      working-directory: ./web
+      working-directory: ./web/console
     - name: Lint
       run: npm run lint
-      working-directory: ./web
+      working-directory: ./web/console
     - name: Build
       run: npm run build
-      working-directory: ./web
+      working-directory: ./web/console
       
