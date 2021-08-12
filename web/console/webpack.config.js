@@ -15,7 +15,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist/'),
         filename: '[name].[hash].js',
-        publicPath: 'https://ultimatedivision.com/ud/'
+        publicPath: '/static/dist/'
     },
     plugins: [
         new HtmlWebpackPlugin({

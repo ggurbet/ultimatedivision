@@ -217,16 +217,13 @@ func New(logger logger.Logger, config Config, db DB, sender mail.Sender) (peer *
 			return nil, err
 		}
 
-		peer.Console.Endpoint, err = consoleserver.NewServer(
+		peer.Console.Endpoint = consoleserver.NewServer(
 			config.Console.Server,
 			logger,
 			peer.Console.Listener,
 			peer.Cards.Service,
 			peer.LootBoxes.Service,
 		)
-		if err != nil {
-			return nil, err
-		}
 
 		peer.Console.EmailService = emails.NewService(
 			logger,
