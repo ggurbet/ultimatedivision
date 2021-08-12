@@ -1,10 +1,10 @@
-//Copyright (C) 2021 Creditor Corp. Group.
-//See LICENSE for copying information.
+// Copyright (C) 2021 Creditor Corp. Group.
+// See LICENSE for copying information.
 
 import { useSelector } from 'react-redux';
 
 import { MarketPlaceCardsGroup } from '@components/MarketPlacePage/MarketPlaceCardsGroup';
-import { MarketPlaceFilterField } from '@components/MarketPlacePage/MarketPlaceFilterField';
+import { FilterField } from '@/app/components/FilterField';
 import { MarketPlaceFootballerCard } from '@components/MarketPlacePage/MarketPlaceCardsGroup/MarketPlaceFootballerCard';
 import { MyCard } from '@components/MarketPlacePage/MyCard';
 import { Paginator } from '@components/Paginator';
@@ -26,7 +26,7 @@ const MarketPlace = ({ ...children }) => {
 
     return (
         <section className="marketplace">
-            <MarketPlaceFilterField
+            <FilterField
                 title={title}
             />
             <MarketPlaceCardsGroup

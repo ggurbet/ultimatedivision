@@ -1,8 +1,8 @@
-//Copyright (C) 2021 Creditor Corp. Group.
-//See LICENSE for copying information.
+// Copyright (C) 2021 Creditor Corp. Group.
+// See LICENSE for copying information.
 
 import { FootballField } from '@/app/types/footballField';
-import { Card } from '@/app/store/reducers/footballerCard';
+import { Card } from '@/app/types/fotballerCard';
 
 const FieldSetup = new FootballField();
 const FORMATION_TYPE = 'Formation';
@@ -80,34 +80,34 @@ export const fieldReducer = (cardState = FieldSetup, action: any = {}) => {
     const cardsList = cardState.cardsList;
 
     switch (action.type) {
-        case FORMATION_TYPE:
-            options.formation = action.action;
-            break;
-        case CARD_SELECTION_VISIBILITY:
-            options.showCardSeletion = action.action;
-            break;
-        case CHOSE_CARD_POSITION:
-            options.chosedCard = action.action;
-            break;
-        case ADD_CARD:
-            cardsList[action.action[SECOND_ACTION_PARAM]].cardData = action.action[FITST_ACTION_PARAM];
-            break;
-        case REMOVE_CARD:
-            cardsList[action.action].cardData = null;
-            break;
-        case DRAG_START:
-            options.dragStart = action.action;
-            break;
-        case DRAG_TARGET:
-            options.dragTarget = action.action;
-            break;
-        case EXCHANGE_CARDS:
-            const prevValue = cardsList[action.action[FITST_ACTION_PARAM]];
-            cardsList[action.action[FITST_ACTION_PARAM]] = cardsList[action.action[SECOND_ACTION_PARAM]];
-            cardsList[action.action[SECOND_ACTION_PARAM]] = prevValue;
-            break;
-        default:
-            break;
+    case FORMATION_TYPE:
+        options.formation = action.action;
+        break;
+    case CARD_SELECTION_VISIBILITY:
+        options.showCardSeletion = action.action;
+        break;
+    case CHOSE_CARD_POSITION:
+        options.chosedCard = action.action;
+        break;
+    case ADD_CARD:
+        cardsList[action.action[SECOND_ACTION_PARAM]].cardData = action.action[FITST_ACTION_PARAM];
+        break;
+    case REMOVE_CARD:
+        cardsList[action.action].cardData = null;
+        break;
+    case DRAG_START:
+        options.dragStart = action.action;
+        break;
+    case DRAG_TARGET:
+        options.dragTarget = action.action;
+        break;
+    case EXCHANGE_CARDS:
+        const prevValue = cardsList[action.action[FITST_ACTION_PARAM]];
+        cardsList[action.action[FITST_ACTION_PARAM]] = cardsList[action.action[SECOND_ACTION_PARAM]];
+        cardsList[action.action[SECOND_ACTION_PARAM]] = prevValue;
+        break;
+    default:
+        break;
     }
 
     return { ...cardState };

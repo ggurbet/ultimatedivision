@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { Card } from '@/app/store/reducers/footballerCard';
+import { Card } from '@/app/types/fotballerCard';
 
 import { Radar } from 'react-chartjs-2';
 
@@ -9,15 +9,15 @@ import './index.scss';
 
 export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({ card }) => {
     const stats = card.stats;
-    const labels = ['TAC', 'PHY', 'TEC', 'OFF', 'DEF', 'GK']
+    const labels = ['TAC', 'PHY', 'TEC', 'OFF', 'DEF', 'GK'];
 
     return (
         <div className="footballer-card-illustrations-radar">
             <Radar
                 type={Radar}
                 data={{
-                    labels: stats.map((item, index )=> 
-                    `${labels[index]} ${item.average}`),
+                    labels: stats.map((item, index) =>
+                        `${labels[index]} ${item.average}`),
                     datasets: [{
                         backgroundColor: '#66FF8866',
                         data: stats.map(item => item.average),
@@ -60,7 +60,7 @@ export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({ car
                                 color: '#afafaf',
                             },
                             angleLines: {
-                                borderDash: [7,8],
+                                borderDash: [7, 8],
                                 color: '#515180',
                             },
                             grid: {

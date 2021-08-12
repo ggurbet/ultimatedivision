@@ -1,7 +1,7 @@
-//Copyright (C) 2021 Creditor Corp. Group.
-//See LICENSE for copying information.
+// Copyright (C) 2021 Creditor Corp. Group.
+// See LICENSE for copying information.
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store';
+import { RootState } from '@/app/store';
 import { addCard, cardSelectionVisibility } from '@/app/store/reducers/footballField';
 
 import { FilterField } from
@@ -10,7 +10,7 @@ import { PlayerCard } from '@components/PlayerCard';
 
 import './index.scss';
 import { Paginator } from '@components/Paginator';
-import { Card } from '@/app/store/reducers/footballerCard';
+import { Card } from '@/app/types/fotballerCard';
 
 export const FootballFieldCardSelection = () => {
     const cardList = useSelector((state: RootState) => state.cardReducer);

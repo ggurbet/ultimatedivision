@@ -3,7 +3,7 @@
 
 @import '@/index.scss';
 
-.marketplace-filter {
+.filter-field {
     margin-top: 50px;
     width: 100%;
 
@@ -14,50 +14,48 @@
         font-weight: 100;
         position: relative;
 
-        &::after {
-            position: absolute;
-            content: '';
-            bottom: -52px;
-            left: -40px;
-            width: 90vw;
-            height: 2px;
-            background: $marketPlaceBorderColor;
-        }
     }
-
-    &__wrapper {
-        background: $marketPlaceBorderColor;
-        clip-path: polygon(2% 0%, 95% 0, 98% 100%, 5% 100%);
-    }
-
     &__list {
-        background-color: $mainBackground;
-        clip-path: polygon(2.3% 5%, 95% 5%, 97.7% 95%, 5% 95%);
+        background-image: url('@/app/static/img/FilterField/filterShape.svg');
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
         display: flex;
-        padding: 15px 100px;
-        width: 100%;
+        padding: 15px 40px;
+        width: 90%;
+        margin: 0 auto;
+        list-style: none;
         justify-content: space-around;
         align-items: center;
         position: relative;
+        &::before {
+            position: absolute;
+            content: '';
+            top: 0;
+            left: -20%;
+            width: 80vw;
+            height: 2px;
+            background: $marketPlaceBorderColor;
+        }
+        &::after {
+            position: absolute;
+            content: '';
+            bottom: 0;
+            right: -20%;
+            width: 80vw;
+            height: 2px;
+            background: $marketPlaceBorderColor;
+        }
         &__item {
-            list-style: none;
-            cursor: pointer;
-            &__title {
-                font-family: 'Montserrat', sans-serif;
-                font-size: 14px;
-                color: white;
-            }
-            &__picture {
-                margin-left: 5px;
-                vertical-align: middle;
+            &:first-child {
+                min-width: 160px;
             }
             &__search {
                 background-color: transparent;
                 border: none;
-                width: 120px;
+                width: 150px;
                 padding: 5px 10px;
                 color: white;
-                margin-right: 10px;
+                margin:  0 5px;
                 border-radius: 20px;
                 outline: none;
                 &::placeholder {
@@ -71,7 +69,7 @@
 }
 
 @media (max-width: $desktopBreakPoint) {
-    .marketplace-filter {
+    .filter-field {
         &__list {
             &__item {
                 font-size: 13px;

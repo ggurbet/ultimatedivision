@@ -14,22 +14,4 @@
         column-gap: 20px;
         row-gap: 20px;
     }
-    &::before {
-        position: absolute;
-        content: '';
-        width: 90vw;
-        right: 0;
-        top: -2px;
-        height: 2px;
-        background: $marketPlaceBorderColor;
-    }
-    &::after {
-        position: absolute;
-        content: '';
-        bottom: -56px;
-        left: 0px;
-        width: 90vw;
-        height: 2px;
-        background: $marketPlaceBorderColor;
-    }
 }

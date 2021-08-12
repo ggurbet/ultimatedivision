@@ -1,12 +1,12 @@
-//Copyright (C) 2021 Creditor Corp. Group.
-//See LICENSE for copying information.
+// Copyright (C) 2021 Creditor Corp. Group.
+// See LICENSE for copying information.
 
 import { PlayerCard } from '@components/PlayerCard';
 
 import { RouteConfig } from '@/app/router';
 import { Link } from 'react-router-dom';
 
-import { Card } from '@/app/store/reducers/footballerCard';
+import { Card } from '@/app/types/fotballerCard';
 
 import './index.scss';
 
