@@ -3,17 +3,26 @@
 
 import { Card } from '@/app/types/fotballerCard';
 
+const FIRST_CARD_TYPE = 0;
+const SECOND_CARD_TYPE = 1;
+const THIRD_CARD_TYPE = 2;
+const FOURTH_CARD_TYPE = 3;
+const CARDS_AMOUNT = 20;
+
 /** create list of player cards (implementation for test)*/
 function cardList(count: number): Card[] {
     const list: Card[] = [];
-    while (count > 0) {
-        list.push(new Card(0), new Card(1), new Card(2), new Card(3));
+    while (count) {
+        list.push(
+            new Card(FIRST_CARD_TYPE),
+            new Card(SECOND_CARD_TYPE),
+            new Card(THIRD_CARD_TYPE),
+            new Card(FOURTH_CARD_TYPE)
+        );
         count--;
     }
 
     return list;
 }
 
-export const cardReducer = (cardState = cardList(20), action: any = {}) => {
-    return cardState;
-};
+export const cardReducer = (cardState = cardList(CARDS_AMOUNT), action: any = {}) => cardState;

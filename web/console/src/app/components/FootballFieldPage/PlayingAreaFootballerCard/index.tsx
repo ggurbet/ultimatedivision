@@ -16,7 +16,7 @@ export const PlayingAreaFootballerCard: React.FC<{ card: Card; index?: number; p
     const style = visibility ? 'block' : 'none';
 
     /** show/hide delete block, preventing scroll to cardSelection */
-    function handleVisibility (e: any) {
+    function handleVisibility(e: any) {
         e.stopPropagation();
         changeVisibility(prev => !prev);
     }

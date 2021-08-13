@@ -6,25 +6,23 @@ import { ComponentRoutes, Route } from '@/app/router';
 
 import './index.scss';
 
-const WhitePaper: React.FC<{ children: ComponentRoutes[] }> = ({ children }) => {
-    return (
-        <div className="whitepaper">
-            <div className="whitepaper__wrapper">
-                <Switch>
-                    {children.map((route, index) => (
-                        <Route
-                            key={index}
-                            path={route.path}
-                            component={route.component}
-                            exact={route.exact}
-                            children={route.children}
-                        />
-                    ))
-                    }
-                </Switch>
-            </div>
+const WhitePaper: React.FC<{ children: ComponentRoutes[] }> = ({ children }) =>
+    <div className="whitepaper">
+        <div className="whitepaper__wrapper">
+            <Switch>
+                {children.map((route, index) =>
+                    <Route
+                        key={index}
+                        path={route.path}
+                        component={route.component}
+                        exact={route.exact}
+                        children={route.children}
+                    />
+                )
+                }
+            </Switch>
         </div>
-    )
-}
+    </div>;
+
 
 export default WhitePaper;

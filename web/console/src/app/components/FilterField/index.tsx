@@ -23,68 +23,32 @@ import { FilterFieldDropdown } from './FilterFieldDropdown';
 
 export const FilterField: React.FC<{ title: string }> = ({ title }) => {
     const [searchData, setSearchData] = useState('');
+    class FilterItem {
+        constructor(
+            public label: string,
+            public image: string,
+        ) { }
+    }
 
     const handleSerchChange = (event: any) => {
         setSearchData(event.target.value);
     };
 
-    const filterFieldTitles: Array<{ label: string; src: string }> = [
-        {
-            label: 'Version',
-            src: rectangle,
-        },
-        {
-            label: 'Positions',
-            src: rectangle,
-        },
-        {
-            label: 'Nations',
-            src: rectangle,
-        },
-        {
-            label: 'Leagues',
-            src: rectangle,
-        },
-        {
-            label: 'WRF',
-            src: rectangle,
-        },
-        {
-            label: 'Stats',
-            src: rectangle,
-        },
-        {
-            label: '',
-            src: star,
-        },
-        {
-            label: 'PS',
-            src: fut,
-        },
-        {
-            label: 'T&S',
-            src: rectangle,
-        },
-        {
-            label: '',
-            src: eye,
-        },
-        {
-            label: '',
-            src: stars,
-        },
-        {
-            label: 'RPP',
-            src: rectangle,
-        },
-        {
-            label: '',
-            src: parametres,
-        },
-        {
-            label: 'Misc',
-            src: rectangle,
-        },
+    const filterFieldTitles: FilterItem[] = [
+        new FilterItem('Version', rectangle),
+        new FilterItem('Positions', rectangle),
+        new FilterItem('Nations', rectangle),
+        new FilterItem('Leagues', rectangle),
+        new FilterItem('WRF', rectangle),
+        new FilterItem('Stats', rectangle),
+        new FilterItem('', star),
+        new FilterItem('PS', fut),
+        new FilterItem('T&S', rectangle),
+        new FilterItem('', eye),
+        new FilterItem('', star),
+        new FilterItem('RPP', rectangle),
+        new FilterItem('', parametres),
+        new FilterItem('Misc', rectangle),
     ];
 
     return (

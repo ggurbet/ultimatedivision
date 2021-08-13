@@ -17,13 +17,17 @@ export const FootballFieldCardSelection = () => {
     const dispatch = useDispatch();
     const fieldSetup = useSelector((state: RootState) => state.fieldReducer);
 
+    const Y_SCROLL_POINT = 200;
+    const X_SCROLL_POINT = 0;
+    const DELAY = 10;
+
     /** Add card to field, and hide card selection component */
     function handleClick(card: Card, index: number) {
         dispatch(addCard(card, index));
         dispatch(cardSelectionVisibility(false));
         setTimeout(() => {
-            window.scroll(0, 200);
-        }, 10);
+            window.scroll(X_SCROLL_POINT, Y_SCROLL_POINT);
+        }, DELAY);
     }
 
     return (

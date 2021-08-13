@@ -11,52 +11,53 @@ const Spending: React.FC = () => {
             value: 'Play to earn',
             points: 4182,
             style: {
-                'backgroundColor': '#A1B9CA'
-            }
+                'backgroundColor': '#A1B9CA',
+            },
         },
         {
             value: 'Private Sale',
             points: 2010,
             style: {
-                'backgroundColor': '#A1CAC5'
-            }
+                'backgroundColor': '#A1CAC5',
+            },
         },
         {
             value: 'Staking Rewards',
             points: 500,
             style: {
-                'backgroundColor': '#B3CAA1'
-            }
+                'backgroundColor': '#B3CAA1',
+            },
         },
         {
             value: 'Public Sale',
             points: 300,
             style: {
-                'backgroundColor': '#F9E1BF'
-            }
+                'backgroundColor': '#F9E1BF',
+            },
         },
         {
             value: 'Core Team',
             points: 129,
             style: {
-                'backgroundColor': '#F39B9B'
-            }
+                'backgroundColor': '#F39B9B',
+            },
         },
         {
             value: 'UD Fund',
             points: 3201,
             style: {
-                'backgroundColor': '#CAA1C8'
-            }
+                'backgroundColor': '#CAA1C8',
+            },
         },
         {
             value: 'Advisors',
             points: 542,
             style: {
-                'backgroundColor': '#BDC0FF'
-            }
+                'backgroundColor': '#BDC0FF',
+            },
         },
     ];
+
     return (
         <div className="spending">
             <h1 className="spending__title">
@@ -102,7 +103,7 @@ const Spending: React.FC = () => {
                         }
                         options={{
                             layout: {
-                                padding: '10'
+                                padding: '10',
                             },
                             plugins: {
                                 tooltip: {
@@ -120,19 +121,19 @@ const Spending: React.FC = () => {
                                     labels: {
                                         color: 'white',
                                         font: {
-                                            size: 16
+                                            size: 16,
                                         },
                                         usePointStyle: true,
-                                        padding: 30
-                                    }
-                                }
+                                        padding: 30,
+                                    },
+                                },
                             },
                         }}
                     />
                 </div>
             </div>
         </div>
-    )
+    );
 };
 
 export default Spending;

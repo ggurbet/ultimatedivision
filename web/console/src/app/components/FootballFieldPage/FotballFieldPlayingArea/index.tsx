@@ -1,5 +1,5 @@
-//Copyright (C) 2021 Creditor Corp. Group.
-//See LICENSE for copying information.
+// Copyright (C) 2021 Creditor Corp. Group.
+// See LICENSE for copying information.
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,6 +31,10 @@ export const FootballFieldPlayingArea: React.FC = () => {
     const DEFAULT_VALUE = 0;
     const OFFSET_TOP = 330;
 
+    const Y_SCROLL_POINT = 1200;
+    const X_SCROLL_POINT = 0;
+    const DELAY = 100;
+
     /** with getBoundingClientRect() we gettins outer padding of playingArea on any screen width and scale */
     useEffect(() => {
         const playingArea = document.getElementById('playingArea');
@@ -54,8 +58,8 @@ export const FootballFieldPlayingArea: React.FC = () => {
         dispatch(choseCardPosition(index));
         dispatch(cardSelectionVisibility(true));
         setTimeout(() => {
-            window.scroll(0, 1200);
-        }, 100);
+            window.scroll(X_SCROLL_POINT, Y_SCROLL_POINT);
+        }, DELAY);
     };
 
     /** getting dragged card index and changing state to allow mouseUp */

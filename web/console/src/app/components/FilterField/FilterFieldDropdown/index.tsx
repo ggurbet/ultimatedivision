@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import './index.scss';
 
-export const FilterFieldDropdown: React.FC<{ props: { label: string; src: string } }> = ({ props }) => {
-    const { label, src } = props;
+export const FilterFieldDropdown: React.FC<{ props: { label: string; image: string } }> = ({ props }) => {
+    const { label, image } = props;
     const [shouldDropdownShow, handleShowing] = useState(false);
     return (
         <div
@@ -14,8 +14,8 @@ export const FilterFieldDropdown: React.FC<{ props: { label: string; src: string
             </span>
             <img
                 className="filter-item__picture"
-                src={src}
-                alt={src && "filter icon"}
+                src={image}
+                alt={image && 'filter icon'}
             />
             <div
                 className="filter-item__dropdown"
@@ -24,5 +24,5 @@ export const FilterFieldDropdown: React.FC<{ props: { label: string; src: string
 
             </div>
         </div>
-    )
-}
+    );
+};

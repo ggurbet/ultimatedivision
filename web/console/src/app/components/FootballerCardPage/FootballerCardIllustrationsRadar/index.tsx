@@ -60,6 +60,7 @@ export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({ car
                                 color: '#afafaf',
                             },
                             angleLines: {
+                                /* eslint-disable */
                                 borderDash: [7, 8],
                                 color: '#515180',
                             },

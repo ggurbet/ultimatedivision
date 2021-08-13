@@ -1,5 +1,5 @@
-//Copyright (C) 2021 Creditor Corp. Group.
-//See LICENSE for copying information.
+// Copyright (C) 2021 Creditor Corp. Group.
+// See LICENSE for copying information.
 
 import { lazy } from 'react';
 import { Switch } from 'react-router-dom';
@@ -18,18 +18,9 @@ import Fund from '@components/AboutPage/TokenomicsPage/Fund';
 import PlayToEarn from '@components/AboutPage/TokenomicsPage/PlayToEarn';
 import Spending from '@components/AboutPage/TokenomicsPage/Spending';
 import Staking from '@components/AboutPage/TokenomicsPage/Staking';
-/** Route base config implementation */
-/**interfafe fot AboutPage subroutes */
 
-interface RouteItem {
-    path: string,
-    component: React.FC<any>,
-    exact: boolean,
-    children?: ComponentRoutes[],
-    with?: (child: ComponentRoutes, parrent: ComponentRoutes) => ComponentRoutes,
-    addChildren?: (children: ComponentRoutes[]) => ComponentRoutes
-}
-export class ComponentRoutes implements RouteItem {
+/** Route base config implementation */
+export class ComponentRoutes {
     /** data route config*/
     constructor(
         public path: string,
@@ -37,18 +28,30 @@ export class ComponentRoutes implements RouteItem {
         public exact: boolean,
         public children?: ComponentRoutes[]
     ) { }
-
+    /** Method for creating child subroutes path */
     public with(child: ComponentRoutes, parrent: ComponentRoutes): ComponentRoutes {
         child.path = `${parrent.path}/${child.path}`;
 
         return this;
     }
-
+    /** Call with method for each child */
     public addChildren(children: ComponentRoutes[]): ComponentRoutes {
-        this.children = children.map(item => item.with(item, this))
+        this.children = children.map(item => item.with(item, this));
+
         return this;
     }
 };
+
+/** interfafe fot AboutPage subroutes */
+interface RouteItem {
+    path: string;
+    component: React.FC<any>;
+    exact: boolean;
+    children?: ComponentRoutes[];
+    with?: (child: ComponentRoutes, parrent: ComponentRoutes) => ComponentRoutes;
+    addChildren?: (children: ComponentRoutes[]) => ComponentRoutes;
+}
+
 /** Route config implementation */
 export class RouteConfig {
     public static MarketPlace: ComponentRoutes = new ComponentRoutes(
@@ -90,12 +93,12 @@ export class RouteConfig {
         'game-mechanicks',
         GameMechanics,
         true
-    )
+    );
     public static PayToEarnEconomy: ComponentRoutes = new ComponentRoutes(
         'pay-to-earn-and-economy',
         PayToEarnEconomy,
         true
-    )
+    );
     public static Technology: ComponentRoutes = new ComponentRoutes(
         'technology',
         Technology,
@@ -105,7 +108,7 @@ export class RouteConfig {
         'udt-spending',
         Spending,
         true
-    )
+    );
     public static PayToEarn: ComponentRoutes = new ComponentRoutes(
         'pay-to-earn',
         PlayToEarn,
@@ -143,8 +146,8 @@ export class RouteConfig {
             RouteConfig.PayToEarn,
             RouteConfig.Staking,
             RouteConfig.Fund,
-        ])
-    ]
+        ]),
+    ];
 };
 
 export const Route: React.FC<RouteItem> = ({
@@ -154,15 +157,13 @@ export const Route: React.FC<RouteItem> = ({
 
 export const Routes = () =>
     <Switch>
-        {RouteConfig.routes.map((route, index) => {
-            return (
-                <Route
-                    key={index}
-                    path={route.path}
-                    component={route.component}
-                    exact={route.exact}
-                    children={route.children}
-                />
-            )
-        })}
+        {RouteConfig.routes.map((route, index) =>
+            <Route
+                key={index}
+                path={route.path}
+                component={route.component}
+                exact={route.exact}
+                children={route.children}
+            />
+        )}
     </Switch>;

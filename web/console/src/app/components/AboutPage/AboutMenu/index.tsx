@@ -40,6 +40,7 @@ export const AboutMenu = () => {
                 'UD DAO Fund',
             ],
     };
+
     return (
         shouldBeShowed ?
             <div className="about-menu">

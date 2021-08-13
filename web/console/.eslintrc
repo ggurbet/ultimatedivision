@@ -55,7 +55,25 @@
                 }
             }
         ],
-        "@typescript-eslint/naming-convention": "warn",
+        "@typescript-eslint/naming-convention": [
+            "warn",
+            {
+                "selector": "variable",
+                "format": [
+                    "camelCase",
+                    "PascalCase",
+                    "UPPER_CASE"
+                ],
+                "leadingUnderscore": "allow"
+            },
+            {
+                "selector": "function",
+                "format": [
+                    "camelCase",
+                    "PascalCase"
+                ]
+            }
+        ],
         "@typescript-eslint/no-empty-function": "warn",
         "@typescript-eslint/no-misused-new": "warn",
         "@typescript-eslint/no-unnecessary-boolean-literal-compare": "warn",
