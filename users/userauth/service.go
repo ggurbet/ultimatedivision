@@ -67,6 +67,7 @@ func (service *Service) Token(ctx context.Context, email string, password string
 	}
 
 	claims := auth.Claims{
+		ID:        user.ID,
 		Email:     user.Email,
 		ExpiresAt: time.Now().Add(TokenExpirationTime),
 	}
@@ -131,9 +132,14 @@ func (service *Service) authorize(ctx context.Context, claims *auth.Claims) (err
 		return ErrUnauthenticated.Wrap(err)
 	}
 
-	_, err = service.users.GetByEmail(ctx, claims.Email)
+	user, err := service.users.GetByEmail(ctx, claims.Email)
 	if err != nil {
-		return errs.New("authorization failed. no user with email: %s", claims.Email)
+		return ErrUnauthenticated.New("authorization failed. no user with email: %s", claims.Email)
+	}
+
+	if user.Status != users.StatusActive {
+		// TODO: return different errors on 0 and 2 statuses
+		return ErrUnauthenticated.New("authorization failed. no user with email: %s", claims.Email)
 	}
 
 	return nil

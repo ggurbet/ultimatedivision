@@ -19,7 +19,6 @@ import (
 	"ultimatedivision"
 	"ultimatedivision/database"
 	"ultimatedivision/internal/logger/zaplog"
-	"ultimatedivision/internal/mail"
 )
 
 // Error is a default error type for ultimatedivision cli.
@@ -139,14 +138,7 @@ func cmdRun(cmd *cobra.Command, args []string) (err error) {
 		log.Error("Error creating schema", Error.Wrap(err))
 	}
 
-	// TODO: modify this point.
-	sender := mail.SMTPSender{
-		ServerAddress: "",
-		From:          mail.Address{},
-		Auth:          nil,
-	}
-
-	peer, err := ultimatedivision.New(log, runCfg.Config, db, &sender)
+	peer, err := ultimatedivision.New(log, runCfg.Config, db)
 	if err != nil {
 		log.Error("Error starting ultimatedivision bank service", Error.Wrap(err))
 		return Error.Wrap(err)

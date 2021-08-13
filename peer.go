@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"net"
+	"net/mail"
 
 	"github.com/zeebo/errs"
 	"golang.org/x/sync/errgroup"
@@ -20,7 +21,7 @@ import (
 	"ultimatedivision/console/emails"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/internal/mail"
+	mail2 "ultimatedivision/internal/mail"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/users"
 	"ultimatedivision/users/userauth"
@@ -87,7 +88,7 @@ type Peer struct {
 	Config   Config
 	Log      logger.Logger
 	Database DB
-	Sender   mail.Sender
+	Sender   mail2.Sender
 
 	// exposes admins relates logic.
 	Admins struct {
@@ -131,7 +132,7 @@ type Peer struct {
 }
 
 // New is a constructor for ultimatedivision.Peer.
-func New(logger logger.Logger, config Config, db DB, sender mail.Sender) (peer *Peer, err error) {
+func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 	peer = &Peer{
 		Log:      logger,
 		Database: db,
@@ -225,9 +226,24 @@ func New(logger logger.Logger, config Config, db DB, sender mail.Sender) (peer *
 			peer.LootBoxes.Service,
 		)
 
+		from, err := mail.ParseAddress(config.Console.Emails.From)
+		if err != nil {
+			logger.Error("email address is not valid", err)
+			return nil, err
+		}
+
+		sender := mail2.SMTPSender{
+			ServerAddress: config.Console.Emails.SMTPServerAddress,
+			From:          *from,
+			Auth: mail2.LoginAuth{
+				Username: config.Console.Emails.PlainLogin,
+				Password: config.Console.Emails.PlainPassword,
+			},
+		}
+
 		peer.Console.EmailService = emails.NewService(
 			logger,
-			sender,
+			&sender,
 			config.Console.Emails,
 		)
 	}

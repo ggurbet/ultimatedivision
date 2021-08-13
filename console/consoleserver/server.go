@@ -77,11 +77,11 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	authRouter.HandleFunc("/email/confirm/{token}", authController.ConfirmEmail).Methods(http.MethodGet)
 
 	cardsRouter := router.PathPrefix("/cards").Subrouter()
-	cardsRouter.HandleFunc("", cardsController.List).Methods(http.MethodGet)
+	cardsRouter.Handle("", server.withAuth(http.HandlerFunc(cardsController.List))).Methods(http.MethodGet)
 
 	lootBoxesRouter := router.PathPrefix("/lootboxes").Subrouter()
-	lootBoxesRouter.HandleFunc("", lootBoxesController.Create).Methods(http.MethodPost)
-	lootBoxesRouter.HandleFunc("", lootBoxesController.Open).Methods(http.MethodDelete)
+	lootBoxesRouter.Handle("", server.withAuth(http.HandlerFunc(lootBoxesController.Create))).Methods(http.MethodPost)
+	lootBoxesRouter.Handle("", server.withAuth(http.HandlerFunc(lootBoxesController.Open))).Methods(http.MethodDelete)
 
 	fs := http.FileServer(http.Dir(server.config.StaticDir))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static", fs))
@@ -142,6 +142,29 @@ func (server *Server) appHandler(w http.ResponseWriter, r *http.Request) {
 		server.log.Error("index template could not be executed", err)
 		return
 	}
+}
+
+// withAuth performs initial authorization before every request.
+func (server *Server) withAuth(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+
+		token, err := server.cookieAuth.GetToken(r)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		}
+
+		ctx = auth.SetToken(ctx, []byte(token))
+
+		claims, err := server.authService.Authorize(ctx)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		}
+
+		ctx = auth.SetClaims(ctx, claims)
+
+		handler.ServeHTTP(w, r.Clone(ctx))
+	})
 }
 
 // initializeTemplates is used to initialize all templates.
