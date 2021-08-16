@@ -34,6 +34,7 @@ func TestCards(t *testing.T) {
 		Accessories:      []int{1, 2},
 		DominantFoot:     "left",
 		IsTattoos:        false,
+		Status:           cards.StatusActive,
 		UserID:           uuid.New(),
 		Tactics:          1,
 		Positioning:      2,
@@ -99,6 +100,7 @@ func TestCards(t *testing.T) {
 		Accessories:      []int{1, 2},
 		DominantFoot:     "right",
 		IsTattoos:        true,
+		Status:           cards.StatusSale,
 		UserID:           uuid.New(),
 		Tactics:          2,
 		Positioning:      2,
@@ -267,6 +269,28 @@ func TestCards(t *testing.T) {
 			assert.Equal(t, values, []string{"1", "1", "20", "yak", "yak %", "% yak", "% yak %"})
 		})
 
+		t.Run("update status", func(t *testing.T) {
+			card1.Status = cards.StatusActive
+			err := repositoryCards.UpdateStatus(ctx, card1.ID, card1.Status)
+			require.NoError(t, err)
+
+			allCards, err := repositoryCards.List(ctx)
+			assert.NoError(t, err)
+			assert.Equal(t, len(allCards), 2)
+			compareCards(t, card1, allCards[1])
+			compareCards(t, card2, allCards[0])
+		})
+
+		t.Run("update user id", func(t *testing.T) {
+			card1.UserID = user2.ID
+			err := repositoryCards.UpdateUserID(ctx, card1.ID, user2.ID)
+			require.NoError(t, err)
+
+			card, err := repositoryCards.Get(ctx, card1.ID)
+			assert.NoError(t, err)
+			compareCards(t, card1, card)
+		})
+
 		t.Run("delete", func(t *testing.T) {
 			err := repositoryCards.Delete(ctx, card1.ID)
 			require.NoError(t, err)
@@ -291,6 +315,7 @@ func compareCards(t *testing.T, card1, card2 cards.Card) {
 	assert.Equal(t, card1.Accessories, card2.Accessories)
 	assert.Equal(t, card1.DominantFoot, card2.DominantFoot)
 	assert.Equal(t, card1.IsTattoos, card2.IsTattoos)
+	assert.Equal(t, card1.Status, card2.Status)
 	assert.Equal(t, card1.UserID, card2.UserID)
 	assert.Equal(t, card1.Positioning, card2.Positioning)
 	assert.Equal(t, card1.Composure, card2.Composure)

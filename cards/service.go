@@ -122,6 +122,7 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentage
 		Accessories:      []int{1, 2},
 		DominantFoot:     DominantFoot(searchValueByPercent(dominantFoots)),
 		IsTattoos:        isTattoos,
+		Status:           StatusActive,
 		UserID:           userID,
 		Tactics:          tactics,
 		Positioning:      generateSkill(tactics),
@@ -234,6 +235,16 @@ func (service *Service) ListWithFilters(ctx context.Context, filters []Filters) 
 		}
 	}
 	return service.cards.ListWithFilters(ctx, filters)
+}
+
+// UpdateStatus updates card status.
+func (service *Service) UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error {
+	return service.cards.UpdateStatus(ctx, id, status)
+}
+
+// UpdateUserID updates card status.
+func (service *Service) UpdateUserID(ctx context.Context, id, userID uuid.UUID) error {
+	return service.cards.UpdateUserID(ctx, id, userID)
 }
 
 // Delete destroy card in DB.

@@ -31,6 +31,10 @@ type DB interface {
 	List(ctx context.Context) ([]Card, error)
 	// ListWithFilters returns all cards from the data base with filters.
 	ListWithFilters(ctx context.Context, filters []Filters) ([]Card, error)
+	// UpdateStatus updates status card in the database.
+	UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error
+	// UpdateUserID updates user id card in the database.
+	UpdateUserID(ctx context.Context, id, userID uuid.UUID) error
 	// Delete deletes card record in the data base.
 	Delete(ctx context.Context, id uuid.UUID) error
 }
@@ -49,6 +53,7 @@ type Card struct {
 	Accessories      []int        `json:"accessories"`
 	DominantFoot     DominantFoot `json:"dominantFoot"`
 	IsTattoos        bool         `json:"isTattoos"`
+	Status           Status       `json:"status"`
 	UserID           uuid.UUID    `json:"userId"`
 	Tactics          int          `json:"tactics"`
 	Positioning      int          `json:"positioning"`
@@ -153,6 +158,16 @@ const (
 	DominantFootLeft DominantFoot = "left"
 	// DominantFootRight indicates that dominant foot of the footballer is right.
 	DominantFootRight DominantFoot = "right"
+)
+
+// Status defines the list of possible card statuses.
+type Status int
+
+const (
+	// StatusActive indicates that the card can be used in a team and sold.
+	StatusActive Status = 0
+	// StatusSale indicates that the card is sold and can't used by the team.
+	StatusSale Status = 1
 )
 
 // RangeValueForSkills defines the list of possible group skills.
