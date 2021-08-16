@@ -33,7 +33,7 @@ func TestLootBox(t *testing.T) {
 	userLootBox := lootboxes.LootBox{
 		UserID:    user1.ID,
 		LootBoxID: uuid.New(),
-		Name:      lootboxes.RegularBox,
+		Type:      lootboxes.RegularBox,
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {

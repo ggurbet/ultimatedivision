@@ -31,7 +31,7 @@ func (lootboxesDB *lootboxesDB) Create(ctx context.Context, lootBox lootboxes.Lo
 	query := `INSERT INTO lootboxes(lootbox_id, user_id, lootbox_name)
               VALUES($1,$2,$3)`
 
-	_, err = lootboxesDB.conn.ExecContext(ctx, query, lootBox.UserID, lootBox.UserID, lootBox.Name)
+	_, err = lootboxesDB.conn.ExecContext(ctx, query, lootBox.UserID, lootBox.UserID, lootBox.Type)
 
 	if err != nil {
 		err = tx.Rollback()
