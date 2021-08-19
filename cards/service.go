@@ -242,7 +242,6 @@ func (service *Service) ListWithFilters(ctx context.Context, filters []Filters) 
 
 // ListByPlayerName returns cards from DB by player name.
 func (service *Service) ListByPlayerName(ctx context.Context, filter Filters) ([]Card, error) {
-
 	strings.ToValidUTF8(filter.Value, "")
 
 	// TODO: add best check

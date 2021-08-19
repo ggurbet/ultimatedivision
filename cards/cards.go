@@ -386,8 +386,6 @@ const (
 	FilterType Filter = "type"
 	// FilterPlayerName indicates the name of the card player name.
 	FilterPlayerName Filter = "player_name"
-	// FilterPrice indicates an price of the card.
-	// FilterPrice Filter = "price".
 )
 
 // Validate check of valid UTF-8 bytes and type.
@@ -413,7 +411,7 @@ func (f Filters) Validate() error {
 		return nil
 	}
 
-	if f.Name == FilterHeight || f.Name == FilterWeight { // || f.Name == FilterPrice
+	if f.Name == FilterHeight || f.Name == FilterWeight {
 		strings.ToValidUTF8(f.Value, "")
 
 		_, err := strconv.ParseFloat(f.Value, 64)
