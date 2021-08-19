@@ -7,6 +7,8 @@ import (
 	"context"
 	"math"
 	"math/rand"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -123,6 +125,7 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentage
 		DominantFoot:     DominantFoot(searchValueByPercent(dominantFoots)),
 		IsTattoos:        isTattoos,
 		Status:           StatusActive,
+		Type:             TypeWon,
 		UserID:           userID,
 		Tactics:          tactics,
 		Positioning:      generateSkill(tactics),
@@ -235,6 +238,20 @@ func (service *Service) ListWithFilters(ctx context.Context, filters []Filters) 
 		}
 	}
 	return service.cards.ListWithFilters(ctx, filters)
+}
+
+// ListByPlayerName returns cards from DB by player name.
+func (service *Service) ListByPlayerName(ctx context.Context, filter Filters) ([]Card, error) {
+
+	strings.ToValidUTF8(filter.Value, "")
+
+	// TODO: add best check
+	_, err := strconv.Atoi(filter.Value)
+	if err == nil {
+		return nil, ErrInvalidFilter.New("%s %s", filter.Value, err)
+	}
+
+	return service.cards.ListByPlayerName(ctx, filter)
 }
 
 // UpdateStatus updates card status.
