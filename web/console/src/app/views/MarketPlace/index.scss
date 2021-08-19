@@ -7,13 +7,4 @@
     background-color: $mainBackground;
     padding: 15px 0px;
     position: relative;
-    &::after {
-        position: absolute;
-        content: '';
-        width: 90vw;
-        right: 0;
-        bottom: 69px;
-        height: 2px;
-        background: $marketPlaceBorderColor;
-    }
 }

@@ -4,6 +4,7 @@ import './index.scss';
 export const FilterFieldDropdown: React.FC<{ props: { label: string; image: string } }> = ({ props }) => {
     const { label, image } = props;
     const [shouldDropdownShow, handleShowing] = useState(false);
+
     return (
         <div
             className="filter-item"

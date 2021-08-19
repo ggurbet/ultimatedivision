@@ -6,11 +6,11 @@ import { addCard, cardSelectionVisibility } from '@/app/store/reducers/footballF
 
 import { FilterField } from
     '@components/FootballFieldPage/FootballFieldCardSelection/FilterField';
-import { PlayerCard } from '@components/PlayerCard';
+import { PlayerCard } from '@components/common/PlayerCard';
 
 import './index.scss';
-import { Paginator } from '@components/Paginator';
-import { Card } from '@/app/types/fotballerCard';
+import { Paginator } from '@components/common/Paginator';
+import { Card } from '@/cards';
 
 export const FootballFieldCardSelection = () => {
     const cardList = useSelector((state: RootState) => state.cardReducer);

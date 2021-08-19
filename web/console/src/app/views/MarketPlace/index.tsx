@@ -4,34 +4,23 @@
 import { useSelector } from 'react-redux';
 
 import { MarketPlaceCardsGroup } from '@components/MarketPlacePage/MarketPlaceCardsGroup';
-import { FilterField } from '@/app/components/FilterField';
-import { MarketPlaceFootballerCard } from '@components/MarketPlacePage/MarketPlaceCardsGroup/MarketPlaceFootballerCard';
-import { MyCard } from '@components/MarketPlacePage/MyCard';
-import { Paginator } from '@components/Paginator';
+import { FilterField } from '@components/common/FilterField';
+import { Paginator } from '@components/common/Paginator';
 
-import { RouteConfig } from '@/app/router';
 import { RootState } from '@/app/store';
 
 import './index.scss';
 
-const MarketPlace = ({ ...children }) => {
+const MarketPlace = () => {
     const cards = useSelector((state: RootState) => state.cardReducer);
-
-    let Component = MarketPlaceFootballerCard;
-    let title = 'MARKETPLACE';
-    if (children.path === RouteConfig.MyCards.path) {
-        Component = MyCard;
-        title = 'MY CARDS';
-    };
 
     return (
         <section className="marketplace">
             <FilterField
-                title={title}
+                title="MARKETPLACE"
             />
             <MarketPlaceCardsGroup
                 cards={cards}
-                Component={Component}
             />
             <Paginator
                 itemCount={cards.length} />

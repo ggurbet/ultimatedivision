@@ -5,7 +5,7 @@ import { Link, NavLink } from 'react-router-dom';
 
 import { RouteConfig } from '@/app/router';
 
-import { Card } from '@/app/types/fotballerCard';
+import { Card } from '@/cards';
 
 export const PlayerCard: React.FC<{ card: Card; parentClassName: string }> = ({
     card, parentClassName,

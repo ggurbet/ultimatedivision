@@ -1,0 +1,17 @@
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
+
+@import '@/index.scss';
+
+.club-cards {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    &__wrapper {
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat((6, 1fr));
+        column-gap: 20px;
+        row-gap: 20px;
+    }
+}

@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { PlayerCard } from '@components/PlayerCard';
+import { PlayerCard } from '@components/common/PlayerCard';
 
-import { Card } from '@/app/types/fotballerCard';
+import { Card } from '@/cards';
 import { removeCard } from '@/app/store/reducers/footballField';
 
 import './index.scss';

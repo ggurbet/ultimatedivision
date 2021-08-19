@@ -30,7 +30,7 @@ export const Navbar: React.FC = () =>
             </li>
             <li className="ultimatedivision-navbar__item">
                 <NavLink
-                    to={RouteConfig.MyCards.path}
+                    to={RouteConfig.Club.path}
                     className="ultimatedivision-navbar__item__active"
                 >
                     CLUB
