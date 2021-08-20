@@ -9,6 +9,10 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
+
+	"ultimatedivision/internal/auth"
+	"ultimatedivision/users"
+	"ultimatedivision/users/userauth"
 )
 
 // ErrClubs indicates that there was an error in the service.
@@ -19,6 +23,7 @@ var ErrClubs = errs.Class("clubs service error")
 // architecture: Service
 type Service struct {
 	clubs DB
+	users users.Service
 }
 
 // NewService is a constructor for clubs service.
@@ -29,80 +34,81 @@ func NewService(clubs DB) *Service {
 }
 
 // Create creates clubs.
-func (service *Service) Create(ctx context.Context, userID uuid.UUID) error {
-	newClub := Club{
-		ID:        uuid.New(),
-		OwnerID:   userID,
-		CreatedAt: time.Now().UTC(),
+func (service *Service) Create(ctx context.Context) error {
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		return userauth.ErrUnauthenticated.Wrap(err)
 	}
 
-	return service.clubs.Create(ctx, newClub)
-}
-
-// CreateSquad creates new squad for club.
-func (service *Service) CreateSquad(ctx context.Context, clubID uuid.UUID) error {
-	newSquad := Squads{
-		ID:     uuid.New(),
-		ClubID: clubID,
-	}
-
-	return service.clubs.CreateSquad(ctx, newSquad)
-}
-
-// Add add new card to the squad of the club.
-func (service *Service) Add(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID, position Position) error {
-	capitanID, err := service.clubs.GetCapitan(ctx, squadID)
+	nickname, err := service.users.GetNickNameByID(ctx, claims.ID)
 	if err != nil {
 		return ErrClubs.Wrap(err)
 	}
 
-	newSquadCard := SquadCards{
-		ID:        squadID,
-		CardID:    cardID,
-		Position:  position,
-		CapitanID: capitanID,
+	newClub := Club{
+		ID:        uuid.New(),
+		OwnerID:   claims.ID,
+		Name:      nickname,
+		CreatedAt: time.Now().UTC(),
 	}
 
-	return service.clubs.Add(ctx, newSquadCard)
+	return ErrClubs.Wrap(service.clubs.Create(ctx, newClub))
+}
+
+// CreateSquad creates new squad for club.
+func (service *Service) CreateSquad(ctx context.Context, clubID uuid.UUID) error {
+	newSquad := Squad{
+		ID:     uuid.New(),
+		ClubID: clubID,
+	}
+
+	return ErrClubs.Wrap(service.clubs.CreateSquad(ctx, newSquad))
+}
+
+// Add add new card to the squad of the club.
+func (service *Service) Add(ctx context.Context, newSquadCard SquadCard) error {
+	return ErrClubs.Wrap(service.clubs.AddSquadCard(ctx, newSquadCard))
+}
+
+// Delete deletes card from squad.
+func (service *Service) Delete(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID) error {
+	return ErrClubs.Wrap(service.clubs.DeleteSquadCard(ctx, squadID, cardID))
 }
 
 // UpdateSquad updates tactic and formation of the squad.
-func (service *Service) UpdateSquad(ctx context.Context, squadID uuid.UUID, tactic Tactic, formation Formation) error {
-	updatedSquad := Squads{
-		ID:        squadID,
-		Formation: formation,
-		Tactic:    tactic,
-	}
-
-	return service.clubs.UpdateTacticFormation(ctx, updatedSquad)
-}
-
-// UpdateCapitan updates capitan in the club.
-func (service *Service) UpdateCapitan(ctx context.Context, squadID uuid.UUID, capitanID uuid.UUID) error {
-	return service.clubs.UpdateCapitan(ctx, capitanID, squadID)
+func (service *Service) UpdateSquad(ctx context.Context, updatedSquad Squad) error {
+	return ErrClubs.Wrap(service.clubs.UpdateTacticFormationCaptain(ctx, updatedSquad))
 }
 
 // UpdateCardPosition updates position of card in the squad.
-func (service *Service) UpdateCardPosition(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID, position Position) error {
-	return service.clubs.UpdatePosition(ctx, squadID, cardID, position)
+func (service *Service) UpdateCardPosition(ctx context.Context, squadCard SquadCard) error {
+	return ErrClubs.Wrap(service.clubs.UpdatePosition(ctx, squadCard.SquadID, squadCard.CardID, squadCard.Position))
 }
 
 // GetSquad returns all squads from club.
-func (service *Service) GetSquad(ctx context.Context, clubID uuid.UUID) (Squads, []SquadCards, error) {
+func (service *Service) GetSquad(ctx context.Context, clubID uuid.UUID) (Squad, []SquadCard, error) {
 	squad, err := service.clubs.GetSquad(ctx, clubID)
 	if err != nil {
-		return Squads{}, nil, ErrClubs.Wrap(err)
+		return Squad{}, nil, ErrClubs.Wrap(err)
 	}
 
 	squadCards, err := service.clubs.ListSquadCards(ctx, squad.ID)
 	if err != nil {
-		return Squads{}, nil, ErrClubs.Wrap(err)
+		return Squad{}, nil, ErrClubs.Wrap(err)
 	}
 
 	return squad, squadCards, nil
 }
 
-// List returns users clubs.
-func (service *Service) List(ctx context.Context, userID uuid.UUID) ([]Club, error) {
-	return service.clubs.List(ctx, userID)
+// Get returns user club.
+func (service *Service) Get(ctx context.Context) (Club, error) {
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		return Club{}, userauth.ErrUnauthenticated.Wrap(err)
+	}
+
+	userID := claims.ID
+
+	club, err := service.clubs.GetByUserID(ctx, userID)
+	return club, ErrClubs.Wrap(err)
 }

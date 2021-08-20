@@ -32,6 +32,8 @@ type DB interface {
 	Update(ctx context.Context, status int, id uuid.UUID) error
 	// Delete deletes a user in the database.
 	Delete(ctx context.Context, id uuid.UUID) error
+	// GetNickNameByID returns nickname by user id from the database.
+	GetNickNameByID(ctx context.Context, id uuid.UUID) (string, error)
 }
 
 // Status defines the list of possible user statuses.

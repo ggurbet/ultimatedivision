@@ -73,3 +73,10 @@ func (service *Service) Delete(ctx context.Context, id uuid.UUID) error {
 func (service *Service) Update(ctx context.Context, status int, id uuid.UUID) error {
 	return service.users.Update(ctx, status, id)
 }
+
+// GetNickNameByID returns nickname of user.
+func (service *Service) GetNickNameByID(ctx context.Context, id uuid.UUID) (string, error) {
+	nickname, err := service.users.GetNickNameByID(ctx, id)
+
+	return nickname, ErrUsers.Wrap(err)
+}

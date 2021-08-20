@@ -132,3 +132,24 @@ func (usersDB *usersDB) Update(ctx context.Context, status int, id uuid.UUID) er
 
 	return nil
 }
+
+// GetNickNameByID returns users nickname by user id.
+func (usersDB *usersDB) GetNickNameByID(ctx context.Context, id uuid.UUID) (string, error) {
+	query := `SELECT nick_name
+              FROM users
+              WHERE id = $1`
+	row := usersDB.conn.QueryRowContext(ctx, query, id)
+
+	var nickname string
+
+	err := row.Scan(&nickname)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nickname, users.ErrNoUser.Wrap(err)
+		}
+
+		return nickname, ErrUsers.Wrap(err)
+	}
+
+	return nickname, nil
+}

@@ -16,6 +16,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"ultimatedivision/cards"
+	"ultimatedivision/clubs"
 	"ultimatedivision/console/consoleserver/controllers"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
@@ -54,7 +55,7 @@ type Server struct {
 }
 
 // NewServer is a constructor for console web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service) *Server {
+func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service, clubs *clubs.Service) *Server {
 	server := &Server{
 		log:      log,
 		config:   config,
@@ -63,6 +64,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 
 	authController := controllers.NewAuth(server.log, server.authService, server.cookieAuth, server.templates.auth)
 	cardsController := controllers.NewCards(log, cards)
+	clubsController := controllers.NewClubs(log, clubs)
 	lootBoxesController := controllers.NewLootBoxes(log, lootBoxes)
 
 	router := mux.NewRouter()
@@ -78,6 +80,19 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 
 	cardsRouter := router.PathPrefix("/cards").Subrouter()
 	cardsRouter.Handle("", server.withAuth(http.HandlerFunc(cardsController.List))).Methods(http.MethodGet)
+
+	clubsRouter := apiRouter.PathPrefix("/clubs").Subrouter()
+	clubsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.Create))).Methods(http.MethodPost)
+	clubsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.Get))).Methods(http.MethodGet)
+	clubsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.UpdateSquad))).Methods(http.MethodPatch)
+
+	squadsRouter := clubsRouter.Path("/squads").Subrouter()
+	squadsRouter.Handle("/{clubId}", server.withAuth(http.HandlerFunc(clubsController.Create))).Methods(http.MethodPost)
+
+	squadCardsRouter := squadsRouter.Path("/squad-cards").Subrouter()
+	squadCardsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.Add))).Methods(http.MethodPost)
+	squadCardsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.UpdatePosition))).Methods(http.MethodPatch)
+	squadCardsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.Delete))).Methods(http.MethodDelete)
 
 	lootBoxesRouter := router.PathPrefix("/lootboxes").Subrouter()
 	lootBoxesRouter.Handle("", server.withAuth(http.HandlerFunc(lootBoxesController.Create))).Methods(http.MethodPost)

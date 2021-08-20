@@ -90,6 +90,13 @@ func TestUsers(t *testing.T) {
 			err := repository.Delete(ctx, user1.ID)
 			require.NoError(t, err)
 		})
+
+		t.Run("get users nickname", func(t *testing.T) {
+			nickname, err := repository.GetNickNameByID(ctx, user2.ID)
+			require.NoError(t, err)
+
+			assert.Equal(t, user2.NickName, nickname)
+		})
 	})
 }
 
