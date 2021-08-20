@@ -12,6 +12,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
+	"ultimatedivision/internal/auth"
+	"ultimatedivision/users/userauth"
 )
 
 // Service is handling cards related logic.
@@ -32,6 +35,10 @@ func NewService(cards DB, config Config) *Service {
 
 // Create add card in DB.
 func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentageQualities []int) (Card, error) {
+	сlaims, err := auth.GetClaims(ctx)
+	if err != nil {
+		return Card{}, userauth.ErrUnauthenticated.Wrap(err)
+	}
 
 	qualities := map[string]int{
 		"wood":    percentageQualities[0],
@@ -126,7 +133,7 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentage
 		IsTattoos:        isTattoos,
 		Status:           StatusActive,
 		Type:             TypeWon,
-		UserID:           userID,
+		UserID:           сlaims.ID,
 		Tactics:          tactics,
 		Positioning:      generateSkill(tactics),
 		Composure:        generateSkill(tactics),
@@ -221,16 +228,30 @@ func round(x, unit float64) float64 {
 
 // Get returns card from DB.
 func (service *Service) Get(ctx context.Context, cardID uuid.UUID) (Card, error) {
+	_, err := auth.GetClaims(ctx)
+	if err != nil {
+		return Card{}, userauth.ErrUnauthenticated.Wrap(err)
+	}
+
 	return service.cards.Get(ctx, cardID)
 }
 
 // List returns all cards from DB.
 func (service *Service) List(ctx context.Context) ([]Card, error) {
+	_, err := auth.GetClaims(ctx)
+	if err != nil {
+		return nil, userauth.ErrUnauthenticated.Wrap(err)
+	}
 	return service.cards.List(ctx)
 }
 
 // ListWithFilters returns all cards from DB, taking the necessary filters.
 func (service *Service) ListWithFilters(ctx context.Context, filters []Filters) ([]Card, error) {
+	_, err := auth.GetClaims(ctx)
+	if err != nil {
+		return nil, userauth.ErrUnauthenticated.Wrap(err)
+	}
+
 	for _, v := range filters {
 		err := v.Validate()
 		if err != nil {
@@ -242,10 +263,15 @@ func (service *Service) ListWithFilters(ctx context.Context, filters []Filters) 
 
 // ListByPlayerName returns cards from DB by player name.
 func (service *Service) ListByPlayerName(ctx context.Context, filter Filters) ([]Card, error) {
+	_, err := auth.GetClaims(ctx)
+	if err != nil {
+		return nil, userauth.ErrUnauthenticated.Wrap(err)
+	}
+
 	strings.ToValidUTF8(filter.Value, "")
 
 	// TODO: add best check
-	_, err := strconv.Atoi(filter.Value)
+	_, err = strconv.Atoi(filter.Value)
 	if err == nil {
 		return nil, ErrInvalidFilter.New("%s %s", filter.Value, err)
 	}
@@ -255,15 +281,20 @@ func (service *Service) ListByPlayerName(ctx context.Context, filter Filters) ([
 
 // UpdateStatus updates card status.
 func (service *Service) UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error {
-	return service.cards.UpdateStatus(ctx, id, status)
+	return ErrCards.Wrap(service.cards.UpdateStatus(ctx, id, status))
 }
 
 // UpdateUserID updates card status.
 func (service *Service) UpdateUserID(ctx context.Context, id, userID uuid.UUID) error {
-	return service.cards.UpdateUserID(ctx, id, userID)
+	return ErrCards.Wrap(service.cards.UpdateUserID(ctx, id, userID))
 }
 
 // Delete destroy card in DB.
 func (service *Service) Delete(ctx context.Context, cardID uuid.UUID) error {
-	return service.cards.Delete(ctx, cardID)
+	_, err := auth.GetClaims(ctx)
+	if err != nil {
+		return userauth.ErrUnauthenticated.Wrap(err)
+	}
+
+	return ErrCards.Wrap(service.cards.Delete(ctx, cardID))
 }
