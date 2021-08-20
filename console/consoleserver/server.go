@@ -77,8 +77,8 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	authRouter.HandleFunc("/email/confirm/{token}", authController.ConfirmEmail).Methods(http.MethodGet)
 
 	cardsRouter := router.PathPrefix("/cards").Subrouter()
-	cardsRouter.Handle("", http.HandlerFunc(cardsController.List)).Methods(http.MethodGet)
-	cardsRouter.Handle("/byPlayerName", http.HandlerFunc(cardsController.ListByPlayerName)).Methods(http.MethodGet)
+	cardsRouter.Handle("", server.withAuth(http.HandlerFunc(cardsController.List))).Methods(http.MethodGet)
+	cardsRouter.Handle("/byPlayerName", server.withAuth(http.HandlerFunc(cardsController.ListByPlayerName))).Methods(http.MethodGet)
 
 	lootBoxesRouter := router.PathPrefix("/lootboxes").Subrouter()
 	lootBoxesRouter.Handle("", server.withAuth(http.HandlerFunc(lootBoxesController.Create))).Methods(http.MethodPost)

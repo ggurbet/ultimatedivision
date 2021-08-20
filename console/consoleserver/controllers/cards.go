@@ -20,6 +20,10 @@ var (
 	ErrCards = errs.Class("cards controller error")
 )
 
+const (
+	NumberPositionOfUrlParameter = 0
+)
+
 // Cards is a mvc controller that handles all cards related views.
 type Cards struct {
 	log logger.Logger
@@ -40,6 +44,7 @@ func NewCards(log logger.Logger, cards *cards.Service) *Cards {
 // List is an endpoint that allows will view cards.
 func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	w.Header().Set("Content-Type", "application/json")
 	var cardsList []cards.Card
 	var err error
 	var filters []cards.Filters
@@ -63,7 +68,7 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 
 			filter := cards.Filters{
 				Name:           cards.Filter(name),
-				Value:          value[0],
+				Value:          value[NumberPositionOfUrlParameter],
 				SearchOperator: action,
 			}
 			filters = append(filters, filter)
@@ -78,7 +83,7 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 	}
 	if err != nil {
 		controller.log.Error("could not get cards list", ErrCards.Wrap(err))
-		http.Error(w, "could not get cards list", http.StatusInternalServerError)
+		controller.serveError(w, http.StatusInternalServerError, ErrCards.Wrap(err))
 		return
 	}
 
@@ -91,6 +96,7 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 // ListByPlayerName is an endpoint that allows will view cards by player name.
 func (controller *Cards) ListByPlayerName(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	w.Header().Set("Content-Type", "application/json")
 
 	var filter cards.Filters
 	playerName := r.URL.Query().Get(string(cards.FilterPlayerName))
@@ -105,7 +111,7 @@ func (controller *Cards) ListByPlayerName(w http.ResponseWriter, r *http.Request
 	cardsList, err := controller.cards.ListByPlayerName(ctx, filter)
 	if err != nil {
 		controller.log.Error("could not get cards list", ErrCards.Wrap(err))
-		http.Error(w, "could not get cards list", http.StatusInternalServerError)
+		controller.serveError(w, http.StatusInternalServerError, ErrCards.Wrap(err))
 		return
 	}
 
@@ -113,5 +119,20 @@ func (controller *Cards) ListByPlayerName(w http.ResponseWriter, r *http.Request
 		controller.log.Error("failed to write json response", ErrCards.Wrap(err))
 		return
 	}
+}
 
+// serveError replies to the request with specific code and error message.
+func (controller *Cards) serveError(w http.ResponseWriter, status int, err error) {
+	w.WriteHeader(status)
+
+	var response struct {
+		Error string `json:"error"`
+	}
+
+	response.Error = err.Error()
+
+	err = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		controller.log.Error("failed to write json error response", ErrCards.Wrap(err))
+	}
 }
