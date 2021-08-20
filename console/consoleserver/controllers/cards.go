@@ -13,6 +13,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/sqlsearchoperators"
+	"ultimatedivision/users/userauth"
 )
 
 var (
@@ -83,6 +84,17 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 	}
 	if err != nil {
 		controller.log.Error("could not get cards list", ErrCards.Wrap(err))
+
+		if userauth.ErrUnauthenticated.Has(err) {
+			controller.serveError(w, http.StatusUnauthorized, ErrCards.Wrap(err))
+			return
+		}
+
+		if cards.ErrNoCard.Has(err) {
+			controller.serveError(w, http.StatusNotFound, ErrCards.Wrap(err))
+			return
+		}
+
 		controller.serveError(w, http.StatusInternalServerError, ErrCards.Wrap(err))
 		return
 	}
@@ -111,6 +123,17 @@ func (controller *Cards) ListByPlayerName(w http.ResponseWriter, r *http.Request
 	cardsList, err := controller.cards.ListByPlayerName(ctx, filter)
 	if err != nil {
 		controller.log.Error("could not get cards list", ErrCards.Wrap(err))
+
+		if userauth.ErrUnauthenticated.Has(err) {
+			controller.serveError(w, http.StatusUnauthorized, ErrCards.Wrap(err))
+			return
+		}
+
+		if cards.ErrNoCard.Has(err) {
+			controller.serveError(w, http.StatusNotFound, ErrCards.Wrap(err))
+			return
+		}
+
 		controller.serveError(w, http.StatusInternalServerError, ErrCards.Wrap(err))
 		return
 	}
