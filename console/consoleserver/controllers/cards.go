@@ -22,8 +22,8 @@ var (
 )
 
 const (
-	// NumberPositionOfURLParameter is a number that shows the position of the url parameter.
-	NumberPositionOfURLParameter = 0
+	// numberPositionOfURLParameter is a number that shows the position of the url parameter.
+	numberPositionOfURLParameter = 0
 )
 
 // Cards is a mvc controller that handles all cards related views.
@@ -70,7 +70,7 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 
 			filter := cards.Filters{
 				Name:           cards.Filter(name),
-				Value:          value[NumberPositionOfURLParameter],
+				Value:          value[numberPositionOfURLParameter],
 				SearchOperator: action,
 			}
 			filters = append(filters, filter)
