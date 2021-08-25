@@ -180,18 +180,19 @@ func (service *Service) Register(ctx context.Context, email, password, nickName,
 		return Error.Wrap(err)
 	}
 
-	token, err := service.Token(ctx, user.Email, string(user.PasswordHash))
+	// @TODO I am testing and fixing this points.
+	_, err = service.Token(ctx, user.Email, password)
 	if err != nil {
 		return Error.Wrap(err)
 	}
 
 	// launch a goroutine that sends the email verification.
-	go func() {
-		err = service.emailService.SendVerificationEmail(user.Email, token)
-		if err != nil {
-			service.log.Error("Unable to send account activation email", Error.Wrap(err))
-		}
-	}()
+	//go func() {
+	//	err = service.emailService.SendVerificationEmail(user.Email, token)
+	//	if err != nil {
+	//		service.log.Error("Unable to send account activation email", Error.Wrap(err))
+	//	}
+	//}()
 
 	return err
 }

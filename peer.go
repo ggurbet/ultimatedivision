@@ -225,6 +225,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Cards.Service,
 			peer.LootBoxes.Service,
 			peer.Clubs.Service,
+			peer.Users.Auth,
 		)
 
 		from, err := mail.ParseAddress(config.Console.Emails.From)
