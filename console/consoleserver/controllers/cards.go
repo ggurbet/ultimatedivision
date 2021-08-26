@@ -47,34 +47,41 @@ func NewCards(log logger.Logger, cards *cards.Service) *Cards {
 func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	w.Header().Set("Content-Type", "application/json")
-	var cardsList []cards.Card
-	var err error
-	var filters []cards.Filters
+	var (
+		cardsList []cards.Card
+		err       error
+		filters   []cards.Filters
+	)
 	urlQuery := r.URL.Query()
 
-	for key, value := range urlQuery {
-		for k, v := range sqlsearchoperators.SearchOperators {
-			name := key
-			action := sqlsearchoperators.EQ
+	if len(urlQuery) > 0 {
+		for key, value := range urlQuery {
+			filter := cards.Filters{
+				Name:           "",
+				Value:          value[numberPositionOfURLParameter],
+				SearchOperator: "",
+			}
 
-			if strings.HasSuffix(key, k) {
-				countName := len(key) - 1 + len(k)
-				name = key[:countName]
-				action = v
+			for k, v := range sqlsearchoperators.SearchOperators {
+				if strings.HasSuffix(key, k) {
+					countName := len(key) - (1 + len(k))
+					filter.Name = cards.Filter(key[:countName])
+					filter.SearchOperator = v
+				}
 			}
 
 			keyFilter := cards.Filter(key)
 			if keyFilter == cards.FilterQuality || keyFilter == cards.FilterDominantFoot || keyFilter == cards.FilterType {
-				action = sqlsearchoperators.EQ
+				filter.Name = cards.Filter(key)
+				filter.SearchOperator = sqlsearchoperators.EQ
 			}
 
-			filter := cards.Filters{
-				Name:           cards.Filter(name),
-				Value:          value[numberPositionOfURLParameter],
-				SearchOperator: action,
+			if filter.Name == "" {
+				controller.serveError(w, http.StatusBadRequest, cards.ErrInvalidFilter.New("invalid name parameter - "+key))
+				return
 			}
+
 			filters = append(filters, filter)
-			break
 		}
 	}
 
@@ -85,18 +92,14 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 	}
 	if err != nil {
 		controller.log.Error("could not get cards list", ErrCards.Wrap(err))
-
-		if userauth.ErrUnauthenticated.Has(err) {
+		switch {
+		case userauth.ErrUnauthenticated.Has(err):
 			controller.serveError(w, http.StatusUnauthorized, ErrCards.Wrap(err))
-			return
-		}
-
-		if cards.ErrNoCard.Has(err) {
+		case cards.ErrNoCard.Has(err):
 			controller.serveError(w, http.StatusNotFound, ErrCards.Wrap(err))
-			return
+		default:
+			controller.serveError(w, http.StatusInternalServerError, ErrCards.Wrap(err))
 		}
-
-		controller.serveError(w, http.StatusInternalServerError, ErrCards.Wrap(err))
 		return
 	}
 
@@ -113,29 +116,27 @@ func (controller *Cards) ListByPlayerName(w http.ResponseWriter, r *http.Request
 
 	var filter cards.Filters
 	playerName := r.URL.Query().Get(string(cards.FilterPlayerName))
-	if playerName != "" {
-		filter = cards.Filters{
-			Name:           cards.FilterPlayerName,
-			Value:          playerName,
-			SearchOperator: sqlsearchoperators.LIKE,
-		}
+	if playerName == "" {
+		controller.serveError(w, http.StatusBadRequest, ErrCards.New("empty player name parameter"))
+		return
+	}
+	filter = cards.Filters{
+		Name:           cards.FilterPlayerName,
+		Value:          playerName,
+		SearchOperator: sqlsearchoperators.LIKE,
 	}
 
 	cardsList, err := controller.cards.ListByPlayerName(ctx, filter)
 	if err != nil {
 		controller.log.Error("could not get cards list", ErrCards.Wrap(err))
-
-		if userauth.ErrUnauthenticated.Has(err) {
+		switch {
+		case userauth.ErrUnauthenticated.Has(err):
 			controller.serveError(w, http.StatusUnauthorized, ErrCards.Wrap(err))
-			return
-		}
-
-		if cards.ErrNoCard.Has(err) {
+		case cards.ErrNoCard.Has(err):
 			controller.serveError(w, http.StatusNotFound, ErrCards.Wrap(err))
-			return
+		default:
+			controller.serveError(w, http.StatusInternalServerError, ErrCards.Wrap(err))
 		}
-
-		controller.serveError(w, http.StatusInternalServerError, ErrCards.Wrap(err))
 		return
 	}
 
