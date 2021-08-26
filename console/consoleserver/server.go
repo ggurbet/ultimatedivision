@@ -21,6 +21,7 @@ import (
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/lootboxes"
+	"ultimatedivision/marketplace"
 	"ultimatedivision/users/userauth"
 )
 
@@ -60,7 +61,7 @@ type Server struct {
 }
 
 // NewServer is a constructor for console web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service, clubs *clubs.Service, userAuth *userauth.Service) *Server {
+func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service, marketplace *marketplace.Service, clubs *clubs.Service, userAuth *userauth.Service) *Server {
 	server := &Server{
 		log:         log,
 		config:      config,
@@ -76,6 +77,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	cardsController := controllers.NewCards(log, cards)
 	clubsController := controllers.NewClubs(log, clubs)
 	lootBoxesController := controllers.NewLootBoxes(log, lootBoxes)
+	marketplaceController := controllers.NewMarketplace(log, marketplace)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/register", authController.RegisterTemplateHandler).Methods(http.MethodGet)
@@ -107,6 +109,12 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	lootBoxesRouter := router.PathPrefix("/lootboxes").Subrouter()
 	lootBoxesRouter.Handle("", server.withAuth(http.HandlerFunc(lootBoxesController.Create))).Methods(http.MethodPost)
 	lootBoxesRouter.Handle("", server.withAuth(http.HandlerFunc(lootBoxesController.Open))).Methods(http.MethodDelete)
+
+	marketplaceRouter := apiRouter.PathPrefix("/marketplace").Subrouter()
+	marketplaceRouter.Handle("", server.withAuth(http.HandlerFunc(marketplaceController.ListActiveLots))).Methods(http.MethodGet)
+	marketplaceRouter.Handle("/{id}", server.withAuth(http.HandlerFunc(marketplaceController.GetLotByID))).Methods(http.MethodGet)
+	marketplaceRouter.Handle("", server.withAuth(http.HandlerFunc(marketplaceController.CreateLot))).Methods(http.MethodPost)
+	marketplaceRouter.Handle("/bet", server.withAuth(http.HandlerFunc(marketplaceController.PlaceBetLot))).Methods(http.MethodPost)
 
 	fs := http.FileServer(http.Dir(server.config.StaticDir))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static", fs))
