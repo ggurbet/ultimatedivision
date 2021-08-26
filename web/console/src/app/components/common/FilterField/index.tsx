@@ -13,8 +13,6 @@ import fut
     from '@static/img/FilterField/fut.svg';
 import eye
     from '@static/img/FilterField/eye.svg';
-import stars
-    from '@static/img/FilterField/stars.svg';
 import parametres
     from '@static/img/FilterField/parametres.svg';
 
@@ -23,7 +21,10 @@ import { FilterFieldDropdown } from './FilterFieldDropdown';
 
 export const FilterField: React.FC<{ title: string }> = ({ title }) => {
     const [searchData, setSearchData] = useState('');
+
+    /** Class for each filter field item */
     class FilterItem {
+        /** labe is text filling of field, image - src for image  */
         constructor(
             public label: string,
             public image: string,

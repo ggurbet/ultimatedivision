@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 import next from '@static/img/UltimateDivisionPaginator/next.svg';
 import previous from '@static/img/UltimateDivisionPaginator/previous.svg';
-import { PaginatorBlockPages } from '@components/Paginator/PaginatorBlockPages';
+import { PaginatorBlockPages } from '@components/common/Paginator/PaginatorBlockPages';
 
 import './index.scss';
 

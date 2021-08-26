@@ -4,7 +4,7 @@
 import { FootballerCardStats }
     from '@components/FootballerCardPage/FootballerCardStats';
 
-import { Card } from '@/app/types/fotballerCard';
+import { Card } from '@/cards';
 
 import './index.scss';
 

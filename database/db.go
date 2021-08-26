@@ -15,6 +15,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/clubs"
 	"ultimatedivision/lootboxes"
+	"ultimatedivision/marketplace"
 	"ultimatedivision/users"
 )
 
@@ -58,7 +59,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             last_login       TIMESTAMP WITH TIME ZONE NOT NULL,
             status           INTEGER                  NOT NULL,
             created_at       TIMESTAMP WITH TIME ZONE NOT NULL
-		);
+        );
         CREATE TABLE IF NOT EXISTS cards (
             id                BYTEA         PRIMARY KEY                            NOT NULL,
             player_name       VARCHAR                                              NOT NULL,
@@ -146,13 +147,13 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             squad_name    VARCHAR,
             club_id       BYTEA   REFERENCES clubs(id) ON DELETE CASCADE NOT NULL,
             tactic        INTEGER                                        NOT NULL,
-            formation     INTEGER                                        NOT NULL
+            formation     INTEGER                                        NOT NULL,
+            captain_id    BYTEA
         );
         CREATE TABLE IF NOT EXISTS squad_cards (
             id            BYTEA   REFERENCES squads(id) ON DELETE CASCADE NOT NULL,
             card_id       BYTEA   REFERENCES cards(id) ON DELETE CASCADE  NOT NULL, 
             card_position INTEGER                                         NOT NULL,
-            capitan_id    BYTEA,
             PRIMARY KEY(id, card_id)
         );
         CREATE TABLE IF NOT EXISTS lootboxes(
@@ -160,6 +161,20 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             lootbox_id   BYTEA                                          NOT NULL,
             lootbox_name VARCHAR                                        NOT NULL,
             PRIMARY KEY(user_id, lootbox_id)
+        );
+        CREATE TABLE IF NOT EXISTS lots (
+            id            BYTEA                    PRIMARY KEY                            NOT NULL,
+            item_id       BYTEA                                                           NOT NULL,
+            type          VARCHAR                                                         NOT NULL,
+            user_id       BYTEA                    REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+            shopper_id    BYTEA,
+            status        VARCHAR                                                         NOT NULL,
+            start_price   NUMERIC(16,2)                                                   NOT NULL,
+            max_price     NUMERIC(16,2),
+            current_price NUMERIC(16,2),
+            start_time    TIMESTAMP WITH TIME ZONE                                        NOT NULL,
+            end_time      TIMESTAMP WITH TIME ZONE                                        NOT NULL,
+            period        INTEGER                                                         NOT NULL
         );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)
@@ -198,4 +213,9 @@ func (db *database) Clubs() clubs.DB {
 // LootBoxes provide access to lootboxes db.
 func (db *database) LootBoxes() lootboxes.DB {
 	return &lootboxesDB{conn: db.conn}
+}
+
+// Marketplace provided access to accounts db.
+func (db *database) Marketplace() marketplace.DB {
+	return &marketplaceDB{conn: db.conn}
 }

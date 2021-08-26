@@ -24,21 +24,21 @@ type DB interface {
 	// Create creates club in the database.
 	Create(ctx context.Context, club Club) error
 	// CreateSquad creates squad for clubs in the database.
-	CreateSquad(ctx context.Context, squad Squads) error
-	// List returns all the clubs owned by the user.
-	List(ctx context.Context, userID uuid.UUID) ([]Club, error)
+	CreateSquad(ctx context.Context, squad Squad) error
+	// GetByUserID returns club owned by the user.
+	GetByUserID(ctx context.Context, userID uuid.UUID) (Club, error)
 	// GetSquad returns squad.
-	GetSquad(ctx context.Context, squadID uuid.UUID) (Squads, error)
-	// GetCapitan returns id of capitan.
-	GetCapitan(ctx context.Context, squadID uuid.UUID) (uuid.UUID, error)
+	GetSquad(ctx context.Context, squadID uuid.UUID) (Squad, error)
+	// GetCaptainID returns id of captain.
+	GetCaptainID(ctx context.Context, squadID uuid.UUID) (uuid.UUID, error)
 	// ListSquadCards returns all cards from squad.
-	ListSquadCards(ctx context.Context, squadID uuid.UUID) ([]SquadCards, error)
-	// Add adds new card to the squad.
-	Add(ctx context.Context, squadCards SquadCards) error
-	// UpdateTacticFormation updates tactic and formation in the squad.
-	UpdateTacticFormation(ctx context.Context, squad Squads) error
-	// UpdateCapitan updates capitan in the squad.
-	UpdateCapitan(ctx context.Context, capitanID uuid.UUID, squadID uuid.UUID) error
+	ListSquadCards(ctx context.Context, squadID uuid.UUID) ([]SquadCard, error)
+	// AddSquadCard add new card to the squad.
+	AddSquadCard(ctx context.Context, squadCards SquadCard) error
+	// DeleteSquadCard deletes card from squad.
+	DeleteSquadCard(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID) error
+	// UpdateTacticFormationCaptain updates tactic, formation and capitan in the squad.
+	UpdateTacticFormationCaptain(ctx context.Context, squad Squad) error
 	// UpdatePosition updates position of card in the squad.
 	UpdatePosition(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID, newPosition Position) error
 }
@@ -46,26 +46,26 @@ type DB interface {
 // Club defines club entity.
 type Club struct {
 	ID        uuid.UUID `json:"id"`
-	OwnerID   uuid.UUID `json:"ownerId"`
+	OwnerID   uuid.UUID `json:"-"`
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 
-// Squads describes squads of clubs.
-type Squads struct {
+// Squad describes squads of clubs.
+type Squad struct {
 	ID        uuid.UUID `json:"id"`
-	Name      string    `json:"name"`
+	Name      string    `json:"-"`
 	ClubID    uuid.UUID `json:"clubId"`
 	Formation Formation `json:"formation"`
 	Tactic    Tactic    `json:"tactic"`
+	CaptainID uuid.UUID `json:"captainId"`
 }
 
-// SquadCards defines all cards from squad.
-type SquadCards struct {
-	ID        uuid.UUID `json:"id"`
-	CardID    uuid.UUID `json:"cardId"`
-	Position  Position  `json:"position"`
-	CapitanID uuid.UUID `json:"capitanId"`
+// SquadCard defines all cards from squad.
+type SquadCard struct {
+	SquadID  uuid.UUID `json:"squadId"`
+	CardID   uuid.UUID `json:"cardId"`
+	Position Position  `json:"position"`
 }
 
 // Formation defines a list of possible formations.

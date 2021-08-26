@@ -23,6 +23,7 @@ import (
 	"ultimatedivision/internal/logger"
 	mail2 "ultimatedivision/internal/mail"
 	"ultimatedivision/lootboxes"
+	"ultimatedivision/marketplace"
 	"ultimatedivision/users"
 	"ultimatedivision/users/userauth"
 )
@@ -46,8 +47,12 @@ type DB interface {
 	// LootBoxes provides access to lootboxes db.
 	LootBoxes() lootboxes.DB
 
+	// Marketplace provides access to marketplace db.
+	Marketplace() marketplace.DB
+
 	// Close closes underlying db connection.
 	Close() error
+
 	// CreateSchema create tables.
 	CreateSchema(ctx context.Context) error
 }
@@ -81,6 +86,10 @@ type Config struct {
 	LootBoxes struct {
 		Config lootboxes.Config `json:"lootBoxes"`
 	} `json:"lootBoxes"`
+
+	Marketplace struct {
+		marketplace.Config
+	} `json:"marketplace"`
 }
 
 // Peer is the representation of a ultimatedivision.
@@ -115,6 +124,12 @@ type Peer struct {
 	// exposes lootboxes related logic.
 	LootBoxes struct {
 		Service *lootboxes.Service
+	}
+
+	// exposes marketplace related logic
+	Marketplace struct {
+		Service            *marketplace.Service
+		ExpirationLotChore *marketplace.Chore
 	}
 
 	// Admin web server server with web UI.
@@ -191,6 +206,22 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
+	{ // marketplace setup
+		peer.Marketplace.Service = marketplace.NewService(
+			peer.Database.Marketplace(),
+			peer.Users.Service,
+			peer.Cards.Service,
+		)
+
+		peer.Marketplace.ExpirationLotChore = marketplace.NewChore(
+			peer.Log,
+			config.Marketplace.Config,
+			peer.Database.Marketplace(),
+			peer.Users.Service,
+			peer.Cards.Service,
+		)
+	}
+
 	{ // admin setup
 		peer.Admin.Listener, err = net.Listen("tcp", config.Admins.Server.Address)
 		if err != nil {
@@ -224,6 +255,8 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Console.Listener,
 			peer.Cards.Service,
 			peer.LootBoxes.Service,
+			peer.Clubs.Service,
+			peer.Users.Auth,
 		)
 
 		from, err := mail.ParseAddress(config.Console.Emails.From)
@@ -261,6 +294,9 @@ func (peer *Peer) Run(ctx context.Context) error {
 	})
 	group.Go(func() error {
 		return ignoreCancel(peer.Console.Endpoint.Run(ctx))
+	})
+	group.Go(func() error {
+		return ignoreCancel(peer.Marketplace.ExpirationLotChore.Run(ctx))
 	})
 
 	return group.Wait()

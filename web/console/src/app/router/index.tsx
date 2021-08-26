@@ -4,20 +4,21 @@
 import { lazy } from 'react';
 import { Switch } from 'react-router-dom';
 
-const FootballerCard = lazy(() => import('@components/FootballerCardPage/FootballerCard'));
-const FootballField = lazy(() => import('@components/FootballFieldPage/FootballField'));
-const MarketPlace = lazy(() => import('@components/MarketPlacePage/MarketPlace'));
-const WhitePaper = lazy(() => import('@components/AboutPage/WhitePaperPage/WhitePaper'));
-const Tokenomics = lazy(() => import('@components/AboutPage/TokenomicsPage/Tokenomics'));
+const MarketPlace = lazy(() => import('@/app/views/MarketPlace'));
+const Club = lazy(() => import('@/app/views/Club'));
+const FootballerCard = lazy(() => import('@/app/views/FootballerCard'));
+const FootballField = lazy(() => import('@/app/views/FootballField'));
+const WhitePaper = lazy(() => import('@/app/views/WhitePaper'));
+const Tokenomics = lazy(() => import('@/app/views/Tokenomics'));
 
-import Summary from '@/app/components/AboutPage/WhitePaperPage/Summary';
-import GameMechanics from '@/app/components/AboutPage/WhitePaperPage/GameMechanics';
-import PayToEarnEconomy from '@components/AboutPage/WhitePaperPage/PayToEarnEconomy';
-import Technology from '@components/AboutPage/WhitePaperPage/Technology';
-import Fund from '@components/AboutPage/TokenomicsPage/Fund';
-import PlayToEarn from '@components/AboutPage/TokenomicsPage/PlayToEarn';
-import Spending from '@components/AboutPage/TokenomicsPage/Spending';
-import Staking from '@components/AboutPage/TokenomicsPage/Staking';
+import Summary from '@components/WhitePaperPage/Summary';
+import GameMechanics from '@components/WhitePaperPage/GameMechanics';
+import PayToEarnEconomy from '@components/WhitePaperPage/PayToEarnEconomy';
+import Technology from '@components/WhitePaperPage/Technology';
+import Fund from '@components/TokenomicsPage/Fund';
+import PlayToEarn from '@components/TokenomicsPage/PlayToEarn';
+import Spending from '@components/TokenomicsPage/Spending';
+import Staking from '@components/TokenomicsPage/Staking';
 
 /** Route base config implementation */
 export class ComponentRoutes {
@@ -69,9 +70,9 @@ export class RouteConfig {
         FootballField,
         true,
     );
-    public static MyCards: ComponentRoutes = new ComponentRoutes(
+    public static Club: ComponentRoutes = new ComponentRoutes(
         '/club',
-        MarketPlace,
+        Club,
         true,
     );
     public static Whitepaper: ComponentRoutes = new ComponentRoutes(
@@ -133,8 +134,8 @@ export class RouteConfig {
         RouteConfig.Default,
         RouteConfig.FootballField,
         RouteConfig.MarketPlace,
+        RouteConfig.Club,
         RouteConfig.FootballerCard,
-        RouteConfig.MyCards,
         RouteConfig.Whitepaper.addChildren([
             RouteConfig.Summary,
             RouteConfig.GameMechanick,

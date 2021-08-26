@@ -1,16 +1,16 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { PlayerCard } from '@components/PlayerCard';
+import { PlayerCard } from '@components/common/PlayerCard';
 
 import { RouteConfig } from '@/app/router';
 import { Link } from 'react-router-dom';
 
-import { Card } from '@/app/types/fotballerCard';
+import { Card } from '@/cards';
 
 import './index.scss';
 
-export const MarketPlaceFootballerCard: React.FC<{ card: Card; place?: string }> = ({ card, place }) =>
+export const MarketPlaceFootballerCard: React.FC<{ card: Card; place?: string }> = ({ card }) =>
     <div
         className="marketplace-playerCard"
     >

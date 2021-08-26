@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { FotballFieldInformationLine } from '@/app/types/fotballerCard';
+import { FotballFieldInformationLine } from '@/cards';
 import { handleFormations } from '@/app/store/reducers/footballField';
 
 import { DropdownStyle } from '@/app/utils/dropdownStyle';
