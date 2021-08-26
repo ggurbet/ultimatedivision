@@ -184,7 +184,7 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentage
 		Sweeping:         generateSkill(goalkeeping),
 		Throwing:         generateSkill(goalkeeping),
 	}
-	return card, service.cards.Create(ctx, card)
+	return card, ErrCards.Wrap(service.cards.Create(ctx, card))
 }
 
 // searchValueByPercent search value string by percent.
@@ -232,8 +232,8 @@ func (service *Service) Get(ctx context.Context, cardID uuid.UUID) (Card, error)
 	if err != nil {
 		return Card{}, userauth.ErrUnauthenticated.Wrap(err)
 	}
-
-	return service.cards.Get(ctx, cardID)
+	card, err := service.cards.Get(ctx, cardID)
+	return card, ErrCards.Wrap(err)
 }
 
 // List returns all cards from DB.
@@ -242,7 +242,8 @@ func (service *Service) List(ctx context.Context) ([]Card, error) {
 	if err != nil {
 		return nil, userauth.ErrUnauthenticated.Wrap(err)
 	}
-	return service.cards.List(ctx)
+	cards, err := service.cards.List(ctx)
+	return cards, ErrCards.Wrap(err)
 }
 
 // ListWithFilters returns all cards from DB, taking the necessary filters.
@@ -258,7 +259,8 @@ func (service *Service) ListWithFilters(ctx context.Context, filters []Filters) 
 			return nil, err
 		}
 	}
-	return service.cards.ListWithFilters(ctx, filters)
+	cards, err := service.cards.ListWithFilters(ctx, filters)
+	return cards, ErrCards.Wrap(err)
 }
 
 // ListByPlayerName returns cards from DB by player name.
@@ -276,7 +278,8 @@ func (service *Service) ListByPlayerName(ctx context.Context, filter Filters) ([
 		return nil, ErrInvalidFilter.New("%s %s", filter.Value, err)
 	}
 
-	return service.cards.ListByPlayerName(ctx, filter)
+	cards, err := service.cards.ListByPlayerName(ctx, filter)
+	return cards, ErrCards.Wrap(err)
 }
 
 // UpdateStatus updates card status.
@@ -295,6 +298,5 @@ func (service *Service) Delete(ctx context.Context, cardID uuid.UUID) error {
 	if err != nil {
 		return userauth.ErrUnauthenticated.Wrap(err)
 	}
-
 	return ErrCards.Wrap(service.cards.Delete(ctx, cardID))
 }

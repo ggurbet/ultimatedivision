@@ -297,10 +297,10 @@ const (
 	FilterPhysique Filter = "physique"
 	// FilterAcceleration indicates an acceleration of the card.
 	FilterAcceleration Filter = "acceleration"
-	// FilterRunningSpeed indicates an runningSpeed of the card.
-	FilterRunningSpeed Filter = "runningSpeed"
-	// FilterReactionSpeed indicates an reactionSpeed of the card.
-	FilterReactionSpeed Filter = "reactionSpeed"
+	// FilterRunningSpeed indicates an running speed of the card.
+	FilterRunningSpeed Filter = "running_speed"
+	// FilterReactionSpeed indicates an reaction speed of the card.
+	FilterReactionSpeed Filter = "reaction_speed"
 	// FilterAgility indicates an agility of the card.
 	FilterAgility Filter = "agility"
 	// FilterStamina indicates an stamina of the card.
@@ -315,52 +315,52 @@ const (
 	FilterTechnique Filter = "technique"
 	// FilterDribbling indicates an dribbling of the card.
 	FilterDribbling Filter = "dribbling"
-	// FilterBallControl indicates an ballControl of the card.
-	FilterBallControl Filter = "ballControl"
-	// FilterWeakFoot indicates an weakFoot of the card.
-	FilterWeakFoot Filter = "weakFoot"
-	// FilterSkillMoves indicates an skillMoves of the card.
-	FilterSkillMoves Filter = "skillMoves"
+	// FilterBallControl indicates an ball control of the card.
+	FilterBallControl Filter = "ball_control"
+	// FilterWeakFoot indicates an weak foot of the card.
+	FilterWeakFoot Filter = "weak_foot"
+	// FilterSkillMoves indicates an skill moves of the card.
+	FilterSkillMoves Filter = "skill_moves"
 	// FilterFinesse indicates an finesse of the card.
 	FilterFinesse Filter = "finesse"
 	// FilterCurve indicates an curve of the card.
 	FilterCurve Filter = "curve"
 	// FilterVolleys indicates an volleys of the card.
 	FilterVolleys Filter = "volleys"
-	// FilterShortPassing indicates an shortPassing of the card.
-	FilterShortPassing Filter = "shortPassing"
-	// FilterLongPassing indicates an longPassing of the card.
-	FilterLongPassing Filter = "longPassing"
-	// FilterForwardPass indicates an forwardPass of the card.
-	FilterForwardPass Filter = "forwardPass"
+	// FilterShortPassing indicates an short passing of the card.
+	FilterShortPassing Filter = "short_passing"
+	// FilterLongPassing indicates an long passing of the card.
+	FilterLongPassing Filter = "long_passing"
+	// FilterForwardPass indicates an forward pass of the card.
+	FilterForwardPass Filter = "forward_pass"
 	// FilterOffense indicates an offense of the card.
 	FilterOffense Filter = "offense"
-	// FilterFinishingAbility indicates an finishingAbility of the card.
-	FilterFinishingAbility Filter = "finishingAbility"
-	// FilterShotPower indicates an shotPower of the card.
-	FilterShotPower Filter = "shotPower"
+	// FilterFinishingAbility indicates an finishing ability of the card.
+	FilterFinishingAbility Filter = "finishing_ability"
+	// FilterShotPower indicates an shot power of the card.
+	FilterShotPower Filter = "shot_power"
 	// FilterAccuracy indicates an accuracy of the card.
 	FilterAccuracy Filter = "accuracy"
 	// FilterDistance indicates an distance of the card.
 	FilterDistance Filter = "distance"
 	// FilterPenalty indicates an penalty of the card.
 	FilterPenalty Filter = "penalty"
-	// FilterFreeKicks indicates an freeKicks of the card.
-	FilterFreeKicks Filter = "freeKicks"
+	// FilterFreeKicks indicates an free kicks of the card.
+	FilterFreeKicks Filter = "free_kicks"
 	// FilterCorners indicates an corners of the card.
 	FilterCorners Filter = "corners"
-	// FilterHeadingAccuracy indicates an headingAccuracy of the card.
-	FilterHeadingAccuracy Filter = "headingAccuracy"
+	// FilterHeadingAccuracy indicates an heading accuracy of the card.
+	FilterHeadingAccuracy Filter = "heading_accuracy"
 	// FilterDefence indicates an defence of the card.
 	FilterDefence Filter = "defence"
-	// FilterOffsideTrap indicates an offsideTrap of the card.
-	FilterOffsideTrap Filter = "offsideTrap"
+	// FilterOffsideTrap indicates an offside trap of the card.
+	FilterOffsideTrap Filter = "offside_trap"
 	// FilterSliding indicates an sliding of the card.
 	FilterSliding Filter = "sliding"
 	// FilterTackles indicates an tackles of the card.
 	FilterTackles Filter = "tackles"
-	// FilterBallFocus indicates an ballFocus of the card.
-	FilterBallFocus Filter = "ballFocus"
+	// FilterBallFocus indicates an ball focus of the card.
+	FilterBallFocus Filter = "ball_focus"
 	// FilterInterceptions indicates an interceptions of the card.
 	FilterInterceptions Filter = "interceptions"
 	// FilterVigilance indicates an vigilance of the card.
@@ -384,7 +384,7 @@ const (
 	// FilterWeight indicates an weight of the card.
 	FilterWeight Filter = "weight"
 	// FilterDominantFoot indicates an dominant foot of the card.
-	FilterDominantFoot Filter = "dominantFoot"
+	FilterDominantFoot Filter = "dominant_foot"
 	// FilterType indicates an type of the card.
 	FilterType Filter = "type"
 	// FilterPlayerName indicates the name of the card player name.
@@ -427,32 +427,44 @@ func (f Filters) Validate() error {
 	if f.Name == FilterQuality {
 		strings.ToValidUTF8(f.Value, "")
 
+		if f.SearchOperator != sqlsearchoperators.EQ {
+			return ErrInvalidFilter.New("'%s' not suitable for %s", f.SearchOperator, f.Name)
+		}
+
 		quality := Quality(f.Value)
 		if quality == QualityWood || quality == QualitySilver || quality == QualityGold || quality == QualityDiamond {
 			return nil
 		}
-		return ErrInvalidFilter.New("%s %s", f.Value, " is not an indicator of quality card")
+		return ErrInvalidFilter.New("%s %s", f.Value, "is not an indicator of quality card")
 	}
 
 	if f.Name == FilterDominantFoot {
 		strings.ToValidUTF8(f.Value, "")
 
+		if f.SearchOperator != sqlsearchoperators.EQ {
+			return ErrInvalidFilter.New("'%s' not suitable for %s", f.SearchOperator, f.Name)
+		}
+
 		dominantFoot := DominantFoot(f.Value)
 		if dominantFoot == DominantFootLeft || dominantFoot == DominantFootRight {
 			return nil
 		}
-		return ErrInvalidFilter.New("%s %s", f.Value, " is not an indicator of dominant foot card")
+		return ErrInvalidFilter.New("%s %s", f.Value, "is not an indicator of dominant foot card")
 	}
 
 	if f.Name == FilterType {
 		strings.ToValidUTF8(f.Value, "")
 
+		if f.SearchOperator != sqlsearchoperators.EQ {
+			return ErrInvalidFilter.New("'%s' not suitable for %s", f.SearchOperator, f.Name)
+		}
+
 		filterType := Type(f.Value)
 		if filterType == TypeWon || filterType == TypeBought {
 			return nil
 		}
-		return ErrInvalidFilter.New("%s %s", f.Value, " is not an indicator of type card")
+		return ErrInvalidFilter.New("%s %s", f.Value, "is not an indicator of type card")
 	}
 
-	return ErrInvalidFilter.New("invalid name parameter - " + string(f.Name))
+	return ErrInvalidFilter.New("invalid name parameter")
 }
