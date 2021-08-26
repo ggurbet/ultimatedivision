@@ -118,8 +118,8 @@ type WinLot struct {
 	Amount    float64   `json:"amount"`
 }
 
-// Validate check is empty fields of create lot entity.
-func (createLot CreateLot) Validate() error {
+// ValidateCreateLot check is empty fields of create lot entity.
+func (createLot CreateLot) ValidateCreateLot() error {
 	if createLot.ItemID.String() == "" {
 		return ErrMarketplace.New("item id is empty")
 	}
@@ -130,6 +130,19 @@ func (createLot CreateLot) Validate() error {
 
 	if createLot.Period == 0 {
 		return ErrMarketplace.New("period is empty")
+	}
+
+	return nil
+}
+
+// ValidateBetLot check is empty fields of bet lot entity.
+func (betLot BetLot) ValidateBetLot() error {
+	if betLot.ID.String() == "" {
+		return ErrMarketplace.New("lot id is empty")
+	}
+
+	if betLot.BetAmount == 0 {
+		return ErrMarketplace.New("bet amount is empty")
 	}
 
 	return nil
