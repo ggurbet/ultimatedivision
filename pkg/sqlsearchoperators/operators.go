@@ -5,12 +5,11 @@ package sqlsearchoperators
 
 // SearchOperators entity to mapping a list of possible search operators for sql.
 var SearchOperators = map[string]SearchOperator{
-	"eq":   EQ,
-	"gt":   GT,
-	"lt":   LT,
-	"gte":  GTE,
-	"lte":  LTE,
-	"like": LIKE,
+	"eq":  EQ,
+	"gt":  GT,
+	"lt":  LT,
+	"gte": GTE,
+	"lte": LTE,
 }
 
 // SearchOperator defines the list of possible search operators for sql.
