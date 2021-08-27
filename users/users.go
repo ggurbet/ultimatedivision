@@ -30,6 +30,8 @@ type DB interface {
 	Create(ctx context.Context, user User) error
 	// Update updates a status in the database.
 	Update(ctx context.Context, status int, id uuid.UUID) error
+	// UpdatePassword updates a password in the database.
+	UpdatePassword(ctx context.Context, passwordHash []byte, id uuid.UUID) error
 	// Delete deletes a user in the database.
 	Delete(ctx context.Context, id uuid.UUID) error
 	// GetNickNameByID returns nickname by user id from the database.
@@ -78,6 +80,19 @@ type CreateUserFields struct {
 	NickName  string `json:"nickName"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
+}
+
+// Profile for user profile.
+type Profile struct {
+	Email     string    `json:"email"`
+	NickName  string    `json:"nickName"`
+	CreatedAt time.Time `json:"registerDate"`
+}
+
+// Password for old/new passwords.
+type Password struct {
+	Password    string `json:"password"`
+	NewPassword string `json:"newPassword"`
 }
 
 // IsPasswordValid check the password for all conditions.

@@ -6,7 +6,6 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -36,20 +35,6 @@ func NewMarketplace(log logger.Logger, marketplace *marketplace.Service) *Market
 	}
 
 	return marketplaceController
-}
-
-// ResponseLot describes the values required to response for get lot by id.
-type ResponseLot struct {
-	ID           uuid.UUID          `json:"id"`
-	ItemID       uuid.UUID          `json:"itemId"`
-	Type         marketplace.Type   `json:"type"`
-	Status       marketplace.Status `json:"status"`
-	StartPrice   float64            `json:"startPrice"`
-	MaxPrice     float64            `json:"maxPrice"`
-	CurrentPrice float64            `json:"currentPrice"`
-	StartTime    time.Time          `json:"startTime"`
-	EndTime      time.Time          `json:"endTime"`
-	Period       marketplace.Period `json:"period"`
 }
 
 // ListActiveLots is an endpoint that returns active lots list.
@@ -108,7 +93,7 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	responseLot := ResponseLot{
+	responseLot := marketplace.ResponseLot{
 		ID:           lot.ID,
 		ItemID:       lot.ItemID,
 		Type:         lot.Type,

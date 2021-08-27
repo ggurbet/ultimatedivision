@@ -22,6 +22,7 @@ import (
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
+	"ultimatedivision/users"
 	"ultimatedivision/users/userauth"
 )
 
@@ -61,7 +62,7 @@ type Server struct {
 }
 
 // NewServer is a constructor for console web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service, marketplace *marketplace.Service, clubs *clubs.Service, userAuth *userauth.Service) *Server {
+func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service, marketplace *marketplace.Service, clubs *clubs.Service, userAuth *userauth.Service, users *users.Service) *Server {
 	server := &Server{
 		log:         log,
 		config:      config,
@@ -74,6 +75,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	}
 
 	authController := controllers.NewAuth(server.log, server.authService, server.cookieAuth, server.templates.auth)
+	userController := controllers.NewUsers(server.log, users)
 	cardsController := controllers.NewCards(log, cards)
 	clubsController := controllers.NewClubs(log, clubs)
 	lootBoxesController := controllers.NewLootBoxes(log, lootBoxes)
@@ -89,6 +91,10 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	authRouter.HandleFunc("/logout", authController.Logout).Methods(http.MethodPost)
 	authRouter.HandleFunc("/register", authController.Register).Methods(http.MethodPost)
 	authRouter.HandleFunc("/email/confirm/{token}", authController.ConfirmEmail).Methods(http.MethodGet)
+	authRouter.Handle("/change-password", server.withAuth(http.HandlerFunc(authController.ChangePassword))).Methods(http.MethodPost)
+
+	profile := apiRouter.PathPrefix("/profile").Subrouter()
+	profile.Handle("", server.withAuth(http.HandlerFunc(userController.GetProfile))).Methods(http.MethodGet)
 
 	cardsRouter := apiRouter.PathPrefix("/cards").Subrouter()
 	cardsRouter.Handle("", server.withAuth(http.HandlerFunc(cardsController.List))).Methods(http.MethodGet)

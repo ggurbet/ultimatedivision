@@ -32,8 +32,8 @@ type cardsDB struct {
 }
 
 const (
-	allFields = `id, player_name, quality, picture_type, height, weight, skin_color, hair_style, hair_color, dominant_foot, is_tattoos, status, 
-		type, user_id, tactics, positioning, composure, aggression, vision, awareness, crosses, physique, acceleration, running_speed, 
+	allFields = `id, player_name, quality, picture_type, height, weight, skin_color, hair_style, hair_color, dominant_foot, is_tattoos, status,
+		type, user_id, tactics, positioning, composure, aggression, vision, awareness, crosses, physique, acceleration, running_speed,
 		reaction_speed, agility, stamina, strength, jumping, balance, technique, dribbling, ball_control, weak_foot, skill_moves, finesse, curve,
 		volleys, short_passing, long_passing, forward_pass, offense, finishing_ability, shot_power, accuracy, distance, penalty, free_kicks, 
 		corners, heading_accuracy, defence, offside_trap, sliding, tackles, ball_focus, interceptions, vigilance, goalkeeping, reflexes, 
@@ -129,7 +129,7 @@ func buildStringForManyRecordsValue(query string, cardID uuid.UUID, accessories 
 func (cardsDB *cardsDB) Get(ctx context.Context, id uuid.UUID) (cards.Card, error) {
 	card := cards.Card{}
 	query :=
-		`SELECT 
+		`SELECT
             ` + allFields + `
         FROM 
             cards
@@ -165,7 +165,7 @@ func (cardsDB *cardsDB) Get(ctx context.Context, id uuid.UUID) (cards.Card, erro
 // listAccessoryIdsByCardID returns all accessories for card by id from the database.
 func listAccessoryIdsByCardID(ctx context.Context, cardsDB *cardsDB, cardID uuid.UUID) ([]int, error) {
 	query :=
-		`SELECT 
+		`SELECT
             accessory_id
         FROM 
             cards_accessories
@@ -198,7 +198,7 @@ func listAccessoryIdsByCardID(ctx context.Context, cardsDB *cardsDB, cardID uuid
 // List returns all cards from the data base.
 func (cardsDB *cardsDB) List(ctx context.Context) ([]cards.Card, error) {
 	query :=
-		`SELECT 
+		`SELECT
             ` + allFields + ` 
         FROM 
             cards
@@ -248,7 +248,16 @@ func (cardsDB *cardsDB) List(ctx context.Context) ([]cards.Card, error) {
 func (cardsDB *cardsDB) ListWithFilters(ctx context.Context, filters []cards.Filters) ([]cards.Card, error) {
 	whereClause, valuesString := BuildWhereClauseDependsOnCardsFilters(filters)
 	valuesInterface := ValidDBParameters(valuesString)
-	query := fmt.Sprintf("SELECT %s FROM cards %s", allFields, whereClause)
+	query := fmt.Sprintf(`
+        SELECT
+            cards.id, player_name, quality, picture_type, height, weight, skin_color, hair_style, hair_color, dominant_foot, is_tattoos, cards.status, cards.type,
+            cards.user_id, tactics, positioning, composure, aggression, vision, awareness, crosses, physique, acceleration, running_speed, reaction_speed, agility,
+            stamina, strength, jumping, balance, technique, dribbling, ball_control, weak_foot, skill_moves, finesse, curve, volleys, short_passing, long_passing,
+            forward_pass, offense, finishing_ability, shot_power, accuracy, distance, penalty, free_kicks, corners, heading_accuracy, defence, offside_trap, sliding,
+            tackles, ball_focus, interceptions, vigilance, goalkeeping, reflexes, diving, handling, sweeping, throwing
+        FROM
+            cards %s`,
+		whereClause)
 
 	rows, err := cardsDB.conn.QueryContext(ctx, query, valuesInterface...)
 	if err != nil {
@@ -303,7 +312,7 @@ func (cardsDB *cardsDB) ListByPlayerName(ctx context.Context, filter cards.Filte
 		err = errs.Combine(err, rows.Close())
 	}()
 
-	data := []cards.Card{}
+	var data []cards.Card
 	for rows.Next() {
 		card := cards.Card{}
 		if err = rows.Scan(
@@ -348,14 +357,40 @@ func BuildWhereClauseDependsOnCardsFilters(filters []cards.Filters) (string, []s
 	var query string
 	var values []string
 	var where []string
+	var leftJoin string
 
 	for _, filter := range filters {
+		if filter.Name != cards.FilterPrice {
+			values = append(values, filter.Value)
+			where = append(where, fmt.Sprintf(`cards.%s %s %s`, filter.Name, filter.SearchOperator, "$"+strconv.Itoa(len(values))))
+			continue
+		}
 
-		values = append(values, filter.Value)
-		where = append(where, fmt.Sprintf(`%s %s %s`, filter.Name, filter.SearchOperator, "$"+strconv.Itoa(len(values))))
+		for _, v := range filters {
+			if v.Name == cards.FilterType && v.Value == string(cards.TypeBought) {
+				leftJoin = " LEFT JOIN lots ON cards.id = lots.item_id "
+				values = append(values, filter.Value)
+				where = append(where, fmt.Sprintf(`
+					CASE WHEN
+						lots.current_price = 0
+					THEN
+						lots.start_price
+					ELSE
+						lots.current_price
+					END
+						%s %s`,
+					filter.SearchOperator,
+					"$"+strconv.Itoa(len(values))))
+			}
+		}
 	}
 
-	query = (" WHERE " + strings.Join(where, " AND "))
+	if leftJoin != "" {
+		query += leftJoin
+	}
+	if len(where) > 0 {
+		query += " WHERE " + strings.Join(where, " AND ")
+	}
 	return query, values
 }
 
