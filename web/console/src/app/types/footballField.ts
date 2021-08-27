@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { Card } from '@/cards';
+import { Card } from '@/card';
 
 /** Base FootballField implementation */
 export class FootballFieldCard {
