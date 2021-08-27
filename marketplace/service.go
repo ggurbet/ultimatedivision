@@ -40,6 +40,7 @@ func (service *Service) CreateLot(ctx context.Context, createLot CreateLot) erro
 		return userauth.ErrUnauthenticated.Wrap(err)
 	}
 
+	// TODO: add transaction
 	card, err := service.cards.Get(ctx, createLot.ItemID)
 	if err == nil {
 		if card.UserID != claims.ID {
@@ -66,7 +67,7 @@ func (service *Service) CreateLot(ctx context.Context, createLot CreateLot) erro
 		return ErrMarketplace.Wrap(err)
 	}
 
-	if createLot.MaxPrice != 0 || createLot.MaxPrice < createLot.StartPrice {
+	if createLot.MaxPrice != 0 && createLot.MaxPrice < createLot.StartPrice {
 		return ErrMarketplace.New("max price less start price")
 	}
 
@@ -134,8 +135,14 @@ func (service *Service) PlaceBetLot(ctx context.Context, betLot BetLot) error {
 	if err != nil {
 		return ErrMarketplace.Wrap(err)
 	}
+	if lot.Status == StatusSold || lot.Status == StatusSoldBuynow {
+		return ErrMarketplace.New("the lot is already on sale")
+	}
+	if lot.Status == StatusExpired {
+		return ErrMarketplace.New("the lot is already on expired")
+	}
 
-	if betLot.BetAmount < lot.CurrentPrice {
+	if betLot.BetAmount < lot.StartPrice || betLot.BetAmount <= lot.CurrentPrice {
 		return ErrMarketplace.New("not enough money")
 	}
 
@@ -149,7 +156,7 @@ func (service *Service) PlaceBetLot(ctx context.Context, betLot BetLot) error {
 		return ErrMarketplace.Wrap(err)
 	}
 
-	if betLot.BetAmount >= lot.MaxPrice || lot.MaxPrice != 0 {
+	if betLot.BetAmount >= lot.MaxPrice && lot.MaxPrice != 0 {
 		if err := service.UpdateCurrentPriceLot(ctx, betLot.ID, lot.MaxPrice); err != nil {
 			return ErrMarketplace.Wrap(err)
 		}
@@ -195,8 +202,10 @@ func (service *Service) WinLot(ctx context.Context, winLot WinLot) error {
 			return ErrMarketplace.Wrap(err)
 		}
 
-		if err := service.cards.UpdateUserID(ctx, winLot.ItemID, winLot.ShopperID); err != nil {
-			return ErrMarketplace.Wrap(err)
+		if winLot.UserID != winLot.ShopperID {
+			if err := service.cards.UpdateUserID(ctx, winLot.ItemID, winLot.ShopperID); err != nil {
+				return ErrMarketplace.Wrap(err)
+			}
 		}
 	}
 	// TODO: check other items
