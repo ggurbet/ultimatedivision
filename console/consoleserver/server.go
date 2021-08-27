@@ -94,8 +94,9 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	profile := apiRouter.PathPrefix("/profile").Subrouter()
 	profile.Handle("", server.withAuth(http.HandlerFunc(userController.GetProfile))).Methods(http.MethodGet)
 
-	cardsRouter := router.PathPrefix("/cards").Subrouter()
+	cardsRouter := apiRouter.PathPrefix("/cards").Subrouter()
 	cardsRouter.Handle("", server.withAuth(http.HandlerFunc(cardsController.List))).Methods(http.MethodGet)
+	cardsRouter.Handle("/byPlayerName", server.withAuth(http.HandlerFunc(cardsController.ListByPlayerName))).Methods(http.MethodGet)
 
 	clubsRouter := apiRouter.PathPrefix("/clubs").Subrouter()
 	clubsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.Create))).Methods(http.MethodPost)

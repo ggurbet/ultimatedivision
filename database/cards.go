@@ -24,20 +24,6 @@ var _ cards.DB = (*cardsDB)(nil)
 // ErrCard indicates that there was an error in the database.
 var ErrCard = errs.Class("cards repository error")
 
-// Action defines the list of possible filter actions.
-type Action string
-
-const (
-	// EQ - equal to value.
-	EQ Action = "="
-	// GTE - greater than or equal to value.
-	GTE Action = ">="
-	// LTE - less than or equal to value.
-	LTE Action = "<="
-	// LIKE - like to value.
-	LIKE Action = "LIKE"
-)
-
 // cardsDB provides access to cards db.
 //
 // architecture: Database
@@ -46,12 +32,12 @@ type cardsDB struct {
 }
 
 const (
-	allFields = `id, player_name, quality, picture_type, height, weight, skin_color, hair_style, hair_color, dominant_foot, is_tattoos, status, user_id,
-		tactics, positioning, composure, aggression, vision, awareness, crosses, physique, acceleration, running_speed, reaction_speed,
-		agility, stamina, strength, jumping, balance, technique, dribbling, ball_control, weak_foot, skill_moves, finesse, curve,
-		volleys, short_passing, long_passing, forward_pass, offense, finishing_ability, shot_power, accuracy, distance, penalty,
-		free_kicks, corners, heading_accuracy, defence, offside_trap, sliding, tackles, ball_focus, interceptions, vigilance, goalkeeping,
-		reflexes, diving, handling, sweeping, throwing
+	allFields = `id, player_name, quality, picture_type, height, weight, skin_color, hair_style, hair_color, dominant_foot, is_tattoos, status,
+		type, user_id, tactics, positioning, composure, aggression, vision, awareness, crosses, physique, acceleration, running_speed,
+		reaction_speed, agility, stamina, strength, jumping, balance, technique, dribbling, ball_control, weak_foot, skill_moves, finesse, curve,
+		volleys, short_passing, long_passing, forward_pass, offense, finishing_ability, shot_power, accuracy, distance, penalty, free_kicks, 
+		corners, heading_accuracy, defence, offside_trap, sliding, tackles, ball_focus, interceptions, vigilance, goalkeeping, reflexes, 
+		diving, handling, sweeping, throwing
 		`
 )
 
@@ -68,17 +54,17 @@ func (cardsDB *cardsDB) Create(ctx context.Context, card cards.Card) error {
 		VALUES 
 			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25,
 			$26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49,
-			$50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $60, $61, $62)
+			$50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $60, $61, $62, $63)
 		`
 	_, err = cardsDB.conn.ExecContext(ctx, query,
 		card.ID, card.PlayerName, card.Quality, card.PictureType, card.Height, card.Weight, card.SkinColor, card.HairStyle, card.HairColor,
-		card.DominantFoot, card.IsTattoos, card.Status, card.UserID, card.Tactics, card.Positioning, card.Composure, card.Aggression, card.Vision, card.Awareness,
-		card.Crosses, card.Physique, card.Acceleration, card.RunningSpeed, card.ReactionSpeed, card.Agility, card.Stamina, card.Strength,
-		card.Jumping, card.Balance, card.Technique, card.Dribbling, card.BallControl, card.WeakFoot, card.SkillMoves, card.Finesse,
-		card.Curve, card.Volleys, card.ShortPassing, card.LongPassing, card.ForwardPass, card.Offense, card.FinishingAbility, card.ShotPower,
-		card.Accuracy, card.Distance, card.Penalty, card.FreeKicks, card.Corners, card.HeadingAccuracy, card.Defence, card.OffsideTrap,
-		card.Sliding, card.Tackles, card.BallFocus, card.Interceptions, card.Vigilance, card.Goalkeeping, card.Reflexes, card.Diving,
-		card.Handling, card.Sweeping, card.Throwing,
+		card.DominantFoot, card.IsTattoos, card.Status, card.Type, card.UserID, card.Tactics, card.Positioning, card.Composure, card.Aggression,
+		card.Vision, card.Awareness, card.Crosses, card.Physique, card.Acceleration, card.RunningSpeed, card.ReactionSpeed, card.Agility,
+		card.Stamina, card.Strength, card.Jumping, card.Balance, card.Technique, card.Dribbling, card.BallControl, card.WeakFoot, card.SkillMoves,
+		card.Finesse, card.Curve, card.Volleys, card.ShortPassing, card.LongPassing, card.ForwardPass, card.Offense, card.FinishingAbility,
+		card.ShotPower, card.Accuracy, card.Distance, card.Penalty, card.FreeKicks, card.Corners, card.HeadingAccuracy, card.Defence,
+		card.OffsideTrap, card.Sliding, card.Tackles, card.BallFocus, card.Interceptions, card.Vigilance, card.Goalkeeping, card.Reflexes,
+		card.Diving, card.Handling, card.Sweeping, card.Throwing,
 	)
 	if err != nil {
 		// TODO: add defer for Rollback()
@@ -143,7 +129,7 @@ func buildStringForManyRecordsValue(query string, cardID uuid.UUID, accessories 
 func (cardsDB *cardsDB) Get(ctx context.Context, id uuid.UUID) (cards.Card, error) {
 	card := cards.Card{}
 	query :=
-		`SELECT 
+		`SELECT
             ` + allFields + `
         FROM 
             cards
@@ -152,12 +138,12 @@ func (cardsDB *cardsDB) Get(ctx context.Context, id uuid.UUID) (cards.Card, erro
         `
 	err := cardsDB.conn.QueryRowContext(ctx, query, id).Scan(
 		&card.ID, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle,
-		&card.HairColor, &card.DominantFoot, &card.IsTattoos, &card.Status, &card.UserID, &card.Tactics, &card.Positioning, &card.Composure, &card.Aggression,
-		&card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration, &card.RunningSpeed, &card.ReactionSpeed,
-		&card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique, &card.Dribbling, &card.BallControl,
-		&card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing, &card.LongPassing, &card.ForwardPass,
-		&card.Offense, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance, &card.Penalty, &card.FreeKicks, &card.Corners,
-		&card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles, &card.BallFocus, &card.Interceptions,
+		&card.HairColor, &card.DominantFoot, &card.IsTattoos, &card.Status, &card.Type, &card.UserID, &card.Tactics, &card.Positioning,
+		&card.Composure, &card.Aggression, &card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration, &card.RunningSpeed,
+		&card.ReactionSpeed, &card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique, &card.Dribbling,
+		&card.BallControl, &card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing, &card.LongPassing,
+		&card.ForwardPass, &card.Offense, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance, &card.Penalty, &card.FreeKicks,
+		&card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles, &card.BallFocus, &card.Interceptions,
 		&card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing,
 	)
 
@@ -179,7 +165,7 @@ func (cardsDB *cardsDB) Get(ctx context.Context, id uuid.UUID) (cards.Card, erro
 // listAccessoryIdsByCardID returns all accessories for card by id from the database.
 func listAccessoryIdsByCardID(ctx context.Context, cardsDB *cardsDB, cardID uuid.UUID) ([]int, error) {
 	query :=
-		`SELECT 
+		`SELECT
             accessory_id
         FROM 
             cards_accessories
@@ -212,7 +198,7 @@ func listAccessoryIdsByCardID(ctx context.Context, cardsDB *cardsDB, cardID uuid
 // List returns all cards from the data base.
 func (cardsDB *cardsDB) List(ctx context.Context) ([]cards.Card, error) {
 	query :=
-		`SELECT 
+		`SELECT
             ` + allFields + ` 
         FROM 
             cards
@@ -231,13 +217,14 @@ func (cardsDB *cardsDB) List(ctx context.Context) ([]cards.Card, error) {
 		card := cards.Card{}
 		if err = rows.Scan(
 			&card.ID, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle,
-			&card.HairColor, &card.DominantFoot, &card.IsTattoos, &card.Status, &card.UserID, &card.Tactics, &card.Positioning, &card.Composure, &card.Aggression,
-			&card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration, &card.RunningSpeed, &card.ReactionSpeed,
-			&card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique, &card.Dribbling, &card.BallControl,
-			&card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing, &card.LongPassing, &card.ForwardPass,
-			&card.Offense, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance, &card.Penalty, &card.FreeKicks, &card.Corners,
-			&card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles, &card.BallFocus, &card.Interceptions,
-			&card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing,
+			&card.HairColor, &card.DominantFoot, &card.IsTattoos, &card.Status, &card.Type, &card.UserID, &card.Tactics, &card.Positioning,
+			&card.Composure, &card.Aggression, &card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration,
+			&card.RunningSpeed, &card.ReactionSpeed, &card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique,
+			&card.Dribbling, &card.BallControl, &card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing,
+			&card.LongPassing, &card.ForwardPass, &card.Offense, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance,
+			&card.Penalty, &card.FreeKicks, &card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles,
+			&card.BallFocus, &card.Interceptions, &card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping,
+			&card.Throwing,
 		); err != nil {
 			return nil, cards.ErrNoCard.Wrap(err)
 		}
@@ -261,7 +248,16 @@ func (cardsDB *cardsDB) List(ctx context.Context) ([]cards.Card, error) {
 func (cardsDB *cardsDB) ListWithFilters(ctx context.Context, filters []cards.Filters) ([]cards.Card, error) {
 	whereClause, valuesString := BuildWhereClauseDependsOnCardsFilters(filters)
 	valuesInterface := ValidDBParameters(valuesString)
-	query := fmt.Sprintf("SELECT %s FROM cards %s", allFields, whereClause)
+	query := fmt.Sprintf(`
+        SELECT
+            cards.id, player_name, quality, picture_type, height, weight, skin_color, hair_style, hair_color, dominant_foot, is_tattoos, cards.status, cards.type,
+            cards.user_id, tactics, positioning, composure, aggression, vision, awareness, crosses, physique, acceleration, running_speed, reaction_speed, agility,
+            stamina, strength, jumping, balance, technique, dribbling, ball_control, weak_foot, skill_moves, finesse, curve, volleys, short_passing, long_passing,
+            forward_pass, offense, finishing_ability, shot_power, accuracy, distance, penalty, free_kicks, corners, heading_accuracy, defence, offside_trap, sliding,
+            tackles, ball_focus, interceptions, vigilance, goalkeeping, reflexes, diving, handling, sweeping, throwing
+        FROM
+            cards %s`,
+		whereClause)
 
 	rows, err := cardsDB.conn.QueryContext(ctx, query, valuesInterface...)
 	if err != nil {
@@ -276,13 +272,58 @@ func (cardsDB *cardsDB) ListWithFilters(ctx context.Context, filters []cards.Fil
 		card := cards.Card{}
 		if err = rows.Scan(
 			&card.ID, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle,
-			&card.HairColor, &card.DominantFoot, &card.IsTattoos, &card.Status, &card.UserID, &card.Tactics, &card.Positioning, &card.Composure, &card.Aggression,
-			&card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration, &card.RunningSpeed, &card.ReactionSpeed,
-			&card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique, &card.Dribbling, &card.BallControl,
-			&card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing, &card.LongPassing, &card.ForwardPass,
-			&card.Offense, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance, &card.Penalty, &card.FreeKicks, &card.Corners,
-			&card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles, &card.BallFocus, &card.Interceptions,
-			&card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing,
+			&card.HairColor, &card.DominantFoot, &card.IsTattoos, &card.Status, &card.Type, &card.UserID, &card.Tactics, &card.Positioning,
+			&card.Composure, &card.Aggression, &card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration, &card.RunningSpeed,
+			&card.ReactionSpeed, &card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique, &card.Dribbling,
+			&card.BallControl, &card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing, &card.LongPassing,
+			&card.ForwardPass, &card.Offense, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance, &card.Penalty,
+			&card.FreeKicks, &card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles, &card.BallFocus,
+			&card.Interceptions, &card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing,
+		); err != nil {
+			return nil, cards.ErrNoCard.Wrap(err)
+		}
+
+		accessoryIds, err := listAccessoryIdsByCardID(ctx, cardsDB, card.ID)
+		if err != nil {
+			return nil, ErrCard.Wrap(err)
+		}
+		card.Accessories = accessoryIds
+
+		data = append(data, card)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, ErrCard.Wrap(err)
+	}
+
+	return data, nil
+}
+
+// ListByPlayerName returns all cards from DB by player name.
+func (cardsDB *cardsDB) ListByPlayerName(ctx context.Context, filter cards.Filters) ([]cards.Card, error) {
+	whereClause, valuesString := BuildWhereClauseDependsOnPlayerNameCards(filter)
+	valuesInterface := ValidDBParameters(valuesString)
+	query := fmt.Sprintf("SELECT %s FROM cards %s", allFields, whereClause)
+
+	rows, err := cardsDB.conn.QueryContext(ctx, query, valuesInterface...)
+	if err != nil {
+		return nil, ErrCard.Wrap(err)
+	}
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	var data []cards.Card
+	for rows.Next() {
+		card := cards.Card{}
+		if err = rows.Scan(
+			&card.ID, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle,
+			&card.HairColor, &card.DominantFoot, &card.IsTattoos, &card.Status, &card.Type, &card.UserID, &card.Tactics, &card.Positioning,
+			&card.Composure, &card.Aggression, &card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration, &card.RunningSpeed,
+			&card.ReactionSpeed, &card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique, &card.Dribbling,
+			&card.BallControl, &card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing, &card.LongPassing,
+			&card.ForwardPass, &card.Offense, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance, &card.Penalty,
+			&card.FreeKicks, &card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles, &card.BallFocus,
+			&card.Interceptions, &card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing,
 		); err != nil {
 			return nil, cards.ErrNoCard.Wrap(err)
 		}
@@ -315,52 +356,60 @@ func ValidDBParameters(stringSlice []string) []interface{} {
 func BuildWhereClauseDependsOnCardsFilters(filters []cards.Filters) (string, []string) {
 	var query string
 	var values []string
-	var valuesAND []string
-	var valuesOR []string
-	var whereAND []string
-	var whereOR []string
+	var where []string
+	var leftJoin string
 
-	for _, v := range filters {
-		if _, found := v[cards.Tactics]; found == true {
-			valuesAND = append(valuesAND, v[cards.Tactics])
-			whereAND = append(whereAND, fmt.Sprintf(`%s %s %s`, cards.Tactics, EQ, "$"+strconv.Itoa(len(valuesAND))))
+	for _, filter := range filters {
+		if filter.Name != cards.FilterPrice {
+			values = append(values, filter.Value)
+			where = append(where, fmt.Sprintf(`cards.%s %s %s`, filter.Name, filter.SearchOperator, "$"+strconv.Itoa(len(values))))
+			continue
 		}
 
-		if _, found := v[cards.MinPhysique]; found == true {
-			valuesAND = append(valuesAND, v[cards.MinPhysique])
-			whereAND = append(whereAND, fmt.Sprintf(`%s %s %s`, cards.Physique, GTE, "$"+strconv.Itoa(len(valuesAND))))
-		}
-
-		if _, found := v[cards.MaxPhysique]; found == true {
-			valuesAND = append(valuesAND, v[cards.MaxPhysique])
-			whereAND = append(whereAND, fmt.Sprintf(`%s %s %s`, cards.Physique, LTE, "$"+strconv.Itoa(len(valuesAND))))
-		}
-	}
-	if len(whereAND) > 0 {
-		query = (" WHERE " + strings.Join(whereAND, " AND "))
-		values = append(values, valuesAND...)
-	}
-
-	for _, v := range filters {
-		if _, found := v[cards.PlayerName]; found == true {
-			valuesOR = append(valuesOR, v[cards.PlayerName])
-			whereOR = append(whereOR, fmt.Sprintf(`%s %s %s`, cards.PlayerName, LIKE, "$"+strconv.Itoa(len(valuesAND)+len(valuesOR))))
-			valuesOR = append(valuesOR, v[cards.PlayerName]+" %")
-			whereOR = append(whereOR, fmt.Sprintf(`%s %s %s`, cards.PlayerName, LIKE, "$"+strconv.Itoa(len(valuesAND)+len(valuesOR))))
-			valuesOR = append(valuesOR, "% "+v[cards.PlayerName])
-			whereOR = append(whereOR, fmt.Sprintf(`%s %s %s`, cards.PlayerName, LIKE, "$"+strconv.Itoa(len(valuesAND)+len(valuesOR))))
-			valuesOR = append(valuesOR, "% "+v[cards.PlayerName]+" %")
-			whereOR = append(whereOR, fmt.Sprintf(`%s %s %s`, cards.PlayerName, LIKE, "$"+strconv.Itoa(len(valuesAND)+len(valuesOR))))
+		for _, v := range filters {
+			if v.Name == cards.FilterType && v.Value == string(cards.TypeBought) {
+				leftJoin = " LEFT JOIN lots ON cards.id = lots.item_id "
+				values = append(values, filter.Value)
+				where = append(where, fmt.Sprintf(`
+					CASE WHEN
+						lots.current_price = 0
+					THEN
+						lots.start_price
+					ELSE
+						lots.current_price
+					END
+						%s %s`,
+					filter.SearchOperator,
+					"$"+strconv.Itoa(len(values))))
+			}
 		}
 	}
-	if len(whereAND) > 0 && len(whereOR) > 0 {
-		query += (" AND (" + strings.Join(whereOR, " OR ") + ")")
-		values = append(values, valuesOR...)
-	} else if len(whereOR) > 0 {
-		query += (" WHERE (" + strings.Join(whereOR, " OR ") + ")")
-		values = append(values, valuesOR...)
-	}
 
+	if leftJoin != "" {
+		query += leftJoin
+	}
+	if len(where) > 0 {
+		query += " WHERE " + strings.Join(where, " AND ")
+	}
+	return query, values
+}
+
+// BuildWhereClauseDependsOnPlayerNameCards build WHERE string for player name.
+func BuildWhereClauseDependsOnPlayerNameCards(filter cards.Filters) (string, []string) {
+	var query string
+	var values []string
+	var where []string
+
+	values = append(values, filter.Value)
+	where = append(where, fmt.Sprintf(`%s %s %s`, filter.Name, filter.SearchOperator, "$"+strconv.Itoa(len(values))))
+	values = append(values, filter.Value+" %")
+	where = append(where, fmt.Sprintf(`%s %s %s`, filter.Name, filter.SearchOperator, "$"+strconv.Itoa(len(values))))
+	values = append(values, "% "+filter.Value)
+	where = append(where, fmt.Sprintf(`%s %s %s`, filter.Name, filter.SearchOperator, "$"+strconv.Itoa(len(values))))
+	values = append(values, "% "+filter.Value+" %")
+	where = append(where, fmt.Sprintf(`%s %s %s`, filter.Name, filter.SearchOperator, "$"+strconv.Itoa(len(values))))
+
+	query = (" WHERE " + strings.Join(where, " OR "))
 	return query, values
 }
 

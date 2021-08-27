@@ -73,6 +73,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             dominant_foot     VARCHAR                                              NOT NULL,
             is_tattoos        BOOLEAN                                              NOT NULL,
             status            INTEGER                                              NOT NULL,
+            type              VARCHAR                                              NOT NULL,
             user_id           BYTEA         REFERENCES users(id) ON DELETE CASCADE NOT NULL,
             tactics           INTEGER                                              NOT NULL,
             positioning       INTEGER                                              NOT NULL,

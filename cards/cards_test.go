@@ -5,6 +5,8 @@ package cards_test
 
 import (
 	"context"
+	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -16,6 +18,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/database"
 	"ultimatedivision/database/dbtesting"
+	"ultimatedivision/pkg/sqlsearchoperators"
 	"ultimatedivision/users"
 )
 
@@ -35,6 +38,7 @@ func TestCards(t *testing.T) {
 		DominantFoot:     "left",
 		IsTattoos:        false,
 		Status:           cards.StatusActive,
+		Type:             cards.TypeWon,
 		UserID:           uuid.New(),
 		Tactics:          1,
 		Positioning:      2,
@@ -177,6 +181,24 @@ func TestCards(t *testing.T) {
 		CreatedAt:    time.Now(),
 	}
 
+	filter1 := cards.Filters{
+		Name:           cards.FilterTactics,
+		Value:          "1",
+		SearchOperator: sqlsearchoperators.GTE,
+	}
+
+	filter2 := cards.Filters{
+		Name:           cards.FilterType,
+		Value:          string(cards.TypeWon),
+		SearchOperator: sqlsearchoperators.EQ,
+	}
+
+	filter3 := cards.Filters{
+		Name:           cards.FilterPlayerName,
+		Value:          "yak",
+		SearchOperator: sqlsearchoperators.LIKE,
+	}
+
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repositoryCards := db.Cards()
 		repositoryUsers := db.Users()
@@ -216,20 +238,8 @@ func TestCards(t *testing.T) {
 		})
 
 		t.Run("list with filters", func(t *testing.T) {
-			filters := []cards.Filters{
-				{
-					cards.Tactics: "1",
-				},
-				{
-					cards.MinPhysique: "1",
-				},
-				{
-					cards.MaxPhysique: "20",
-				},
-				{
-					cards.PlayerName: "yak",
-				},
-			}
+			filters := []cards.Filters{}
+			filters = append(filters, filter1, filter2)
 
 			for _, v := range filters {
 				err := v.Validate()
@@ -242,21 +252,23 @@ func TestCards(t *testing.T) {
 			compareCards(t, card1, allCards[0])
 		})
 
-		t.Run("build where string", func(t *testing.T) {
-			filters := []cards.Filters{
-				{
-					cards.Tactics: "1",
-				},
-				{
-					cards.MinPhysique: "1",
-				},
-				{
-					cards.MaxPhysique: "20",
-				},
-				{
-					cards.PlayerName: "yak",
-				},
+		t.Run("list by player name", func(t *testing.T) {
+			strings.ToValidUTF8(filter3.Value, "")
+
+			_, err := strconv.Atoi(filter3.Value)
+			if err == nil {
+				assert.NoError(t, err)
 			}
+
+			allCards, err := repositoryCards.ListByPlayerName(ctx, filter3)
+			assert.NoError(t, err)
+			assert.Equal(t, len(allCards), 1)
+			compareCards(t, card1, allCards[0])
+		})
+
+		t.Run("build where string", func(t *testing.T) {
+			filters := []cards.Filters{}
+			filters = append(filters, filter1, filter2)
 
 			for _, v := range filters {
 				err := v.Validate()
@@ -265,8 +277,23 @@ func TestCards(t *testing.T) {
 
 			queryString, values := database.BuildWhereClauseDependsOnCardsFilters(filters)
 
-			assert.Equal(t, queryString, ` WHERE tactics = $1 AND physique >= $2 AND physique <= $3 AND (player_name LIKE $4 OR player_name LIKE $5 OR player_name LIKE $6 OR player_name LIKE $7)`)
-			assert.Equal(t, values, []string{"1", "1", "20", "yak", "yak %", "% yak", "% yak %"})
+			assert.Equal(t, queryString, ` WHERE cards.tactics >= $1 AND cards.type = $2`)
+			assert.Equal(t, values, []string{"1", "won"})
+		})
+
+		t.Run("build where string for player name", func(t *testing.T) {
+
+			strings.ToValidUTF8(filter3.Value, "")
+
+			_, err := strconv.Atoi(filter3.Value)
+			if err == nil {
+				assert.NoError(t, err)
+			}
+
+			queryString, values := database.BuildWhereClauseDependsOnPlayerNameCards(filter3)
+
+			assert.Equal(t, queryString, ` WHERE player_name LIKE $1 OR player_name LIKE $2 OR player_name LIKE $3 OR player_name LIKE $4`)
+			assert.Equal(t, values, []string{"yak", "yak %", "% yak", "% yak %"})
 		})
 
 		t.Run("update status", func(t *testing.T) {

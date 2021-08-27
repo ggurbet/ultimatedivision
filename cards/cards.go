@@ -5,9 +5,6 @@ package cards
 
 import (
 	"context"
-	"fmt"
-	"strconv"
-	"strings"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
@@ -15,6 +12,9 @@ import (
 
 // ErrNoCard indicated that card does not exist.
 var ErrNoCard = errs.Class("card does not exist")
+
+// ErrCards indicated that there was an error in service.
+var ErrCards = errs.Class("cards service error")
 
 // ErrInvalidFilter indicated that filter does not valid.
 var ErrInvalidFilter = errs.Class("invalid filter")
@@ -31,6 +31,8 @@ type DB interface {
 	List(ctx context.Context) ([]Card, error)
 	// ListWithFilters returns all cards from the data base with filters.
 	ListWithFilters(ctx context.Context, filters []Filters) ([]Card, error)
+	// ListByPlayerName returns cards from DB by player name.
+	ListByPlayerName(ctx context.Context, filters Filters) ([]Card, error)
 	// UpdateStatus updates status card in the database.
 	UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error
 	// UpdateUserID updates user id card in the database.
@@ -54,6 +56,7 @@ type Card struct {
 	DominantFoot     DominantFoot `json:"dominantFoot"`
 	IsTattoos        bool         `json:"isTattoos"`
 	Status           Status       `json:"status"`
+	Type             Type         `json:"type"`
 	UserID           uuid.UUID    `json:"userId"`
 	Tactics          int          `json:"tactics"`
 	Positioning      int          `json:"positioning"`
@@ -170,6 +173,16 @@ const (
 	StatusSale Status = 1
 )
 
+// Type defines the list of possible card Typees.
+type Type string
+
+const (
+	// TypeWon indicates that the card won in a lootbox.
+	TypeWon Type = "won"
+	// TypeBought indicates that the card bought on the marketplaced.
+	TypeBought Type = "bought"
+)
+
 // RangeValueForSkills defines the list of possible group skills.
 var RangeValueForSkills = map[string][]int{}
 
@@ -249,79 +262,4 @@ type PercentageQualities struct {
 	Silver  int `json:"silver"`
 	Gold    int `json:"gold"`
 	Diamond int `json:"diamond"`
-}
-
-// Filters entity for using filter cards.
-type Filters map[Filter]string
-
-// Filter defines the list of possible filters.
-type Filter string
-
-const (
-	// Tactics indicates an assessment of the card's tactics.
-	Tactics Filter = "tactics"
-	// MinPhysique indicates an assessment of the card's minimum physique.
-	MinPhysique Filter = "min_physique"
-	// MaxPhysique indicates an assessment of the card's maximum physique.
-	MaxPhysique Filter = "max_physique"
-	// Physique indicates an assessment of the card's physique.
-	Physique Filter = "physique"
-	// PlayerName indicates the name of the card player name.
-	PlayerName Filter = "player_name"
-)
-
-// SliceFilters entity for using group filter cards.
-type SliceFilters []Filters
-
-// Add check is empty and append value to slice.
-func (s *SliceFilters) Add(name Filter, value string) {
-	if value == "" {
-		return
-	}
-
-	filter := Filters{
-		name: value,
-	}
-	*s = append(*s, filter)
-}
-
-// Validate check of valid UTF-8 bytes and type.
-func (f Filters) Validate() error {
-	if _, found := f[Tactics]; found == true {
-		strings.ToValidUTF8(f[Tactics], "")
-
-		_, err := strconv.Atoi(f[Tactics])
-		if err != nil {
-			return ErrInvalidFilter.Wrap(fmt.Errorf("%s %s", f[Tactics], err))
-		}
-	}
-
-	if _, found := f[MinPhysique]; found == true {
-		strings.ToValidUTF8(f[MinPhysique], "")
-
-		_, err := strconv.Atoi(f[MinPhysique])
-		if err != nil {
-			return ErrInvalidFilter.Wrap(fmt.Errorf("%s %s", f[MinPhysique], err))
-		}
-	}
-
-	if _, found := f[MaxPhysique]; found == true {
-		strings.ToValidUTF8(f[MaxPhysique], "")
-
-		_, err := strconv.Atoi(f[MaxPhysique])
-		if err != nil {
-			return ErrInvalidFilter.Wrap(fmt.Errorf("%s %s", f[MaxPhysique], err))
-		}
-	}
-
-	if _, found := f[PlayerName]; found == true {
-		strings.ToValidUTF8(f[PlayerName], "")
-
-		_, err := strconv.Atoi(f[PlayerName])
-		if err == nil {
-			return ErrInvalidFilter.Wrap(fmt.Errorf("%s %s", f[PlayerName], err))
-		}
-	}
-
-	return nil
 }
