@@ -115,7 +115,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
                     {fieldSetup.cardsList.map((card, index) => {
                         const data = card.cardData;
                         const equality = dragStartIndex === index;
-                        // TO DO: change style by some class to change style in card
+                        // TODO: change style by some class to change style in card
 
                         return (
                             <div

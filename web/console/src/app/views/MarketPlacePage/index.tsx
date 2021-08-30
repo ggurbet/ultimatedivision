@@ -13,7 +13,7 @@ import { createCardList } from '@/app/store/actions/cards';
 import './index.scss';
 
 const MarketPlace = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     // dispatch(createCardList());
     const cards = useSelector((state: RootState) => state.cardsReducer.cards);
 

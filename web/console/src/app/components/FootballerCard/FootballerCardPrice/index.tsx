@@ -1,5 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
+
 import { useSelector } from 'react-redux';
 
 import { Doughnut } from 'react-chartjs-2';
