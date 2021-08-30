@@ -7,7 +7,7 @@ import { ComponentRoutes, Route } from '@/app/router';
 import './index.scss';
 
 const WhitePaper: React.FC<{ children: ComponentRoutes[] }> = ({ children }) =>
-    <div className="whitepaper">
+    <section className="whitepaper">
         <div className="whitepaper__wrapper">
             <Switch>
                 {children.map((route, index) =>
@@ -22,7 +22,7 @@ const WhitePaper: React.FC<{ children: ComponentRoutes[] }> = ({ children }) =>
                 }
             </Switch>
         </div>
-    </div>;
+    </section>;
 
 
 export default WhitePaper;

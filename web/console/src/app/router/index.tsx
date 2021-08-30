@@ -10,6 +10,7 @@ const FootballerCard = lazy(() => import('@/app/views/FootballerCardPage'));
 const FootballField = lazy(() => import('@/app/views/FootballFieldPage'));
 const WhitePaper = lazy(() => import('@/app/views/WhitePaperPage'));
 const Tokenomics = lazy(() => import('@/app/views/TokenomicsPage'));
+const Store = lazy(() => import('@/app/views/StorePage'));
 
 import Summary from '@components/WhitePaper/Summary';
 import GameMechanics from '@components/WhitePaper/GameMechanics';
@@ -68,6 +69,11 @@ export class RouteConfig {
     public static FootballField: ComponentRoutes = new ComponentRoutes(
         '/field',
         FootballField,
+        true,
+    );
+    public static Store: ComponentRoutes = new ComponentRoutes(
+        '/store',
+        Store,
         true,
     );
     public static Club: ComponentRoutes = new ComponentRoutes(
@@ -136,6 +142,7 @@ export class RouteConfig {
         RouteConfig.MarketPlace,
         RouteConfig.Club,
         RouteConfig.FootballerCard,
+        RouteConfig.Store,
         RouteConfig.Whitepaper.addChildren([
             RouteConfig.Summary,
             RouteConfig.GameMechanick,

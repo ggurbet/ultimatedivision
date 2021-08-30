@@ -7,7 +7,7 @@ import { ComponentRoutes, Route } from '@/app/router';
 import './index.scss';
 
 const Tokenomics: React.FC<{ children: ComponentRoutes[] }> = ({ children }) =>
-    <div className="tokenomics">
+    <section className="tokenomics">
         <div className="tokenomics__wrapper">
             <Switch>
                 {children.map((route, index) =>
@@ -22,7 +22,7 @@ const Tokenomics: React.FC<{ children: ComponentRoutes[] }> = ({ children }) =>
                 }
             </Switch>
         </div>
-    </div>;
+    </section>;
 
 
 export default Tokenomics;

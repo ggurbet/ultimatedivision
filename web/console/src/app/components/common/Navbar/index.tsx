@@ -22,6 +22,14 @@ export const Navbar: React.FC = () =>
             </li>
             <li className="ultimatedivision-navbar__item">
                 <NavLink
+                    to={RouteConfig.Store.path}
+                    className="ultimatedivision-navbar__item__active"
+                >
+                    Store
+                </NavLink>
+            </li>
+            <li className="ultimatedivision-navbar__item">
+                <NavLink
                     to={RouteConfig.MarketPlace.path}
                     className="ultimatedivision-navbar__item__active"
                 >
