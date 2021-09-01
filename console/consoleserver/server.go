@@ -98,7 +98,6 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 
 	cardsRouter := apiRouter.PathPrefix("/cards").Subrouter()
 	cardsRouter.Handle("", server.withAuth(http.HandlerFunc(cardsController.List))).Methods(http.MethodGet)
-	cardsRouter.Handle("/byPlayerName", server.withAuth(http.HandlerFunc(cardsController.ListByPlayerName))).Methods(http.MethodGet)
 
 	clubsRouter := apiRouter.PathPrefix("/clubs").Subrouter()
 	clubsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.Create))).Methods(http.MethodPost)

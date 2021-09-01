@@ -13,6 +13,7 @@ import (
 
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/users/userauth"
 )
 
 var (
@@ -52,17 +53,24 @@ func NewCards(log logger.Logger, cards *cards.Service, templates CardTemplates, 
 func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	cards, err := controller.cards.List(ctx)
+	listCards, err := controller.cards.List(ctx)
 	if err != nil {
 		controller.log.Error("could not get cards list", ErrCards.Wrap(err))
-		http.Error(w, "could not get cards list", http.StatusInternalServerError)
+		switch {
+		case userauth.ErrUnauthenticated.Has(err):
+			http.Error(w, ErrCards.Wrap(err).Error(), http.StatusUnauthorized)
+		case cards.ErrNoCard.Has(err):
+			http.Error(w, ErrCards.Wrap(err).Error(), http.StatusNotFound)
+		default:
+			http.Error(w, ErrCards.Wrap(err).Error(), http.StatusInternalServerError)
+		}
 		return
 	}
 
-	err = controller.templates.List.Execute(w, cards)
+	err = controller.templates.List.Execute(w, listCards)
 	if err != nil {
 		controller.log.Error("can not execute list cards template", ErrCards.Wrap(err))
-		http.Error(w, "can not execute list cards template", http.StatusInternalServerError)
+		http.Error(w, ErrCards.Wrap(err).Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -85,7 +93,13 @@ func (controller *Cards) Create(w http.ResponseWriter, r *http.Request) {
 
 	if _, err := controller.cards.Create(ctx, userID, percentageQualities); err != nil {
 		controller.log.Error("could not create card", ErrCards.Wrap(err))
-		http.Error(w, "could not create card", http.StatusInternalServerError)
+
+		if userauth.ErrUnauthenticated.Has(err) {
+			http.Error(w, ErrCards.Wrap(err).Error(), http.StatusUnauthorized)
+			return
+		}
+
+		http.Error(w, ErrCards.Wrap(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -107,7 +121,13 @@ func (controller *Cards) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 	if err := controller.cards.Delete(ctx, id); err != nil {
 		controller.log.Error("could not delete card", ErrCards.Wrap(err))
-		http.Error(w, "could not delete card", http.StatusInternalServerError)
+
+		if userauth.ErrUnauthenticated.Has(err) {
+			http.Error(w, ErrCards.Wrap(err).Error(), http.StatusUnauthorized)
+			return
+		}
+
+		http.Error(w, ErrCards.Wrap(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
