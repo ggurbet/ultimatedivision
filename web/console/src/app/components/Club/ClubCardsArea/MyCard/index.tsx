@@ -3,6 +3,10 @@
 
 import { PlayerCard } from '@components/common/PlayerCard';
 
+/** TODO: replace it by class fields */
+import confirmIcon from '@static/img/MarketPlacePage/MyCard/ok.svg';
+import priceGoldIcon from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';
+
 import { Link } from 'react-router-dom';
 import { RouteConfig } from '@/app/router';
 
@@ -25,12 +29,12 @@ export const MyCard: React.FC<{ card: Card }> = ({ card }) =>
         >
             <img
                 className="marketplace-myCard__confirm-icon"
-                src={card.mainInfo.confirmIcon}
+                src={confirmIcon}
                 alt="Confirm icon"
             />
             <img
                 className="marketplace-myCard__price-gold"
-                src={card.mainInfo.priceGoldIcon}
+                src={priceGoldIcon}
                 alt="Price icon"
             />
             <PlayerCard

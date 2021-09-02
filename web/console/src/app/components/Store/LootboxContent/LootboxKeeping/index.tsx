@@ -16,7 +16,7 @@ import './index.scss';
 export const LootboxKeeping: React.FC<{ handleOpening: Dispatch<SetStateAction<boolean>> }> = ({ handleOpening }) => {
     // TODO: replace by backend data
     /* eslint-disable-next-line */
-    const cards = useSelector((state: RootState) => state.cardsReducer.cards.slice(0, 5));
+    const cards = useSelector((state: RootState) => state.cardsReducer.clubCards.slice(0, 5));
 
     return (
         <div className="box-keeping">
@@ -24,9 +24,9 @@ export const LootboxKeeping: React.FC<{ handleOpening: Dispatch<SetStateAction<b
                 Card
             </h1>
             <div className="box-keeping__card-wrapper">
-                {cards.map((card, item) =>
+                {cards.map((card, index) =>
                     <div className="box-keeping__card">
-                        <MyCard card={card} key={item} />
+                        <MyCard card={card} key={index} />
                     </div>
                 )}
             </div>

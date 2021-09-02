@@ -15,7 +15,7 @@ import './index.scss';
 export const LootboxOpening = () => {
     // TODO: will be replaced by backend data
     // eslint-disable-next-line
-    const card = useSelector((state: RootState) => state.cardsReducer.cards[0]);
+    const card = useSelector((state: RootState) => state.cardsReducer.clubCards[0]);
 
     return (
         <div className="box-animation">

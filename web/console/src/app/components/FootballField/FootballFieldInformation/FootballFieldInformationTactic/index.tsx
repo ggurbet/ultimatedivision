@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { FotballFieldInformationLine } from '@/card';
+import { FootballFieldInformationLine } from '@/app/types/footballField';
 import { setTactic } from '@/app/store/actions/footballField';
 
 import { DropdownStyle } from '@/app/utils/dropdownStyle';
@@ -13,7 +13,7 @@ import triangle from '@static/img/FootballFieldPage/triangle.svg';
 
 import './index.scss';
 
-export const FootballFieldInformationTactic: React.FC<{ props: FotballFieldInformationLine }> = ({ props }) => {
+export const FootballFieldInformationTactic: React.FC<{ props: FootballFieldInformationLine }> = ({ props }) => {
     const [optionVisibility, changeVisibility] = useState(false);
     const LIST_HEIGHT = 90;
     const optionStyle = new DropdownStyle(optionVisibility, LIST_HEIGHT);

@@ -10,14 +10,13 @@ import { Card } from '@/card';
 import './index.scss';
 
 export const FootballerCardIllustrationsDiagramsArea: React.FC<{ card: Card }> = ({ card }) => {
-    const FIRST_CARD_INDEX = 0;
-    const diagramData = card.diagram;
+    const diagramData = card.diagramArea;
 
     return (
         <div className="footballer-card-illustrations-diagram-area">
-            {diagramData.map(item =>
+            {diagramData.map((item, index) =>
                 <FootballerCardIllustrationsDiagram
-                    key={item.id}
+                    key={index}
                     props={item}
                 />,
             )}

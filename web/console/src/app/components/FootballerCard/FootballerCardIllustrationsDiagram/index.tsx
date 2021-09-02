@@ -2,17 +2,15 @@
 // See LICENSE for copying information.
 
 
+import { CardField } from '@/card';
 import { Doughnut } from 'react-chartjs-2';
-
-import { Diagram } from '@/card';
 
 import './index.scss';
 
-export const FootballerCardIllustrationsDiagram: React.FC<{ props: Diagram }> = ({ props }) => {
-    const { name, min, max, value } = props;
-    const FULL_VALUE_STATISTIC_SCALE = 100;
+export const FootballerCardIllustrationsDiagram: React.FC<{ props: CardField }> = ({ props }) => {
+    const { value, label } = props;
+    const FULL_VALUE_STATISTIC_SCALE = 2000;
     /** percent value of player stat */
-    const statsValue = Math.round((value - min) / max * FULL_VALUE_STATISTIC_SCALE);
 
     return (
         <div className="footballer-card-illustrations-diagram">
@@ -20,7 +18,7 @@ export const FootballerCardIllustrationsDiagram: React.FC<{ props: Diagram }> = 
                 type={Doughnut}
                 data={{
                     datasets: [{
-                        data: [statsValue, FULL_VALUE_STATISTIC_SCALE - statsValue],
+                        data: [value, FULL_VALUE_STATISTIC_SCALE - +value],
                         backgroundColor: ['#3CCF5D', '#5E5EAA'],
                         borderColor: [
                             'transparent',
@@ -35,16 +33,16 @@ export const FootballerCardIllustrationsDiagram: React.FC<{ props: Diagram }> = 
                     plugins: {
                         title: {
                             display: true,
-                            text: name.toUpperCase(),
+                            text: label.toUpperCase(),
                             color: 'white',
                         },
                     },
                 }}
             />
             <div className="footballer-card-illustrations-diagram__values-area">
-                <span className="footballer-card-illustrations-diagram__min">{min}</span>
+                <span className="footballer-card-illustrations-diagram__min">{0}</span>
                 <span className="footballer-card-illustrations-diagram__value">{value}</span>
-                <span className="footballer-card-illustrations-diagram__max">{max}</span>
+                <span className="footballer-card-illustrations-diagram__max">{FULL_VALUE_STATISTIC_SCALE}</span>
             </div>
         </div>
     );

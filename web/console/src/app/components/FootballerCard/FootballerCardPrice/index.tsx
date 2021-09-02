@@ -16,8 +16,9 @@ export const FootballerCardPrice: React.FC = () => {
     const FULL_VALUE_STATISTIC_SCALE = 100;
 
     const priceData = useSelector((state: RootState) =>
-        state.cardsReducer.cards[FIRST_CARD_INDEX].price);
-    const prpValue: number = priceData.prp.value;
+        state.cardsReducer.marketplaceCards[FIRST_CARD_INDEX].cardPrice);
+        // @ts-ignore
+    const prpValue: number = priceData.prp;
 
     return (
         <div className="footballer-card-price">
@@ -51,7 +52,7 @@ export const FootballerCardPrice: React.FC = () => {
                 <div className="footballer-card-price__info-area">
                     <h2 className="footballer-card-price__price">
                         <>
-                            {priceData.price.value}
+                            {priceData.price}
                             <img
                                 className="footballer-card-price__price-currency"
                                 src={currency}
@@ -64,14 +65,14 @@ export const FootballerCardPrice: React.FC = () => {
                             Price updated: <span
                                 className="footballer-card-price__value"
                             >
-                                {priceData.updated.value} mins ago
+                                {priceData.updated} mins ago
                             </span>
                         </div>
                         <div>
                             PR: <span
                                 className="footballer-card-price__value"
                             >
-                                {priceData.pr.value}
+                                {priceData.pr}
                             </span>
                         </div>
                     </div>

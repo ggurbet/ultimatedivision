@@ -9,8 +9,7 @@ import { Card } from '@/card';
 import './index.scss';
 
 export const FootballerCardStatsArea: React.FC<{ card: Card }> = ({ card }) => {
-    const FIRST_CARD_INDEX = 0;
-    const stats = card.stats;
+    const stats = card.statsArea;
 
     return (
         <div className="footballer-card-stats">

@@ -8,7 +8,7 @@ import { Radar } from 'react-chartjs-2';
 import './index.scss';
 
 export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({ card }) => {
-    const stats = card.stats;
+    const stats = card.statsArea;
     const labels = ['TAC', 'PHY', 'TEC', 'OFF', 'DEF', 'GK'];
 
     return (

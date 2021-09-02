@@ -1,21 +1,22 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store';
+import { marketplaceCards } from '@/app/store/actions/cards';
+import { useCards } from '@/app/hooks/cards';
 
 import { MarketPlaceCardsGroup } from '@components/MarketPlace/MarketPlaceCardsGroup';
 import { FilterField } from '@components/common/FilterField';
 import { Paginator } from '@components/common/Paginator';
 
-import { RootState } from '@/app/store';
-import { createCardList } from '@/app/store/actions/cards';
-
 import './index.scss';
 
-const MarketPlace = () => {
-    // const dispatch = useDispatch();
-    // dispatch(createCardList());
-    const cards = useSelector((state: RootState) => state.cardsReducer.cards);
+const MarketPlace: React.FC = () => {
+    /** TODO: decide use custom hook or directly dispatch thunk into useEffect*/
+    useCards(marketplaceCards);
+
+    const cards = useSelector((state: RootState) => state.cardsReducer.marketplaceCards);
 
     return (
         <section className="marketplace">
