@@ -2,19 +2,24 @@
 // See LICENSE for copying information.
 
 import { Dispatch, SetStateAction } from 'react';
+import { useDispatch } from 'react-redux';
+
 import { LootboxStats } from '@/app/types/lootBox';
 
+import { openLootbox } from '@/app/store/actions/lootboxes';
+
+import { LootboxCardQuality } from './LootboxCardQuality';
 
 import wood from '@static/img/StorePage/BoxCard/wood.svg';
 import silver from '@static/img/StorePage/BoxCard/silver.svg';
 import gold from '@static/img/StorePage/BoxCard/gold.svg';
 import diamond from '@static/img/StorePage/BoxCard/diamond.svg';
 import coin from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';
-import { LootboxCardQuality } from './LootboxCardQuality';
 
 import './index.scss';
 
 export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch<SetStateAction<boolean>> }> = ({ data, handleOpening }) => {
+    const dispatch = useDispatch();
     const qualities = [
         {
             name: 'Wood',
@@ -36,9 +41,7 @@ export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch
 
     const handleAnimation = () => {
         handleOpening(true);
-        // setTimeout(() =>{
-        //     handleOpening(false)
-        // }, 7000)
+        dispatch(openLootbox({ uuid: data.id, name: data.title }));
     };
 
     return (
