@@ -1,19 +1,21 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { BoxData } from '@/lootBox';
+import { Dispatch, SetStateAction } from 'react';
+import { LootboxStats } from '@/app/types/lootBox';
+
 
 import box from '@static/img/StorePage/BoxCard/box.svg';
 import coolBox from '@static/img/StorePage/BoxCard/coolBox.svg';
-import { BoxCard } from '../BoxCard';
+import { LootboxCard } from './LootboxCard';
 
 import './index.scss';
 
-export const BoxSelection = () => {
+export const LootboxSelection: React.FC<{ handleOpening: Dispatch<SetStateAction<boolean>> }> = ({ handleOpening }) => {
     const REGULAR_BOX_CARDS_QUANTITY = 5;
     const COOL_BOX_CARDS_QUANTITY = 10;
     const boxesData = [
-        new BoxData(
+        new LootboxStats(
             box,
             'Regular Box',
             REGULAR_BOX_CARDS_QUANTITY,
@@ -21,7 +23,7 @@ export const BoxSelection = () => {
             [80, 15, 4, 1],
             '200,000'
         ),
-        new BoxData(
+        new LootboxStats(
             coolBox,
             'Cool Box',
             COOL_BOX_CARDS_QUANTITY,
@@ -34,7 +36,11 @@ export const BoxSelection = () => {
     return (
         <div className="box-selection">
             {boxesData.map((item, index) =>
-                <BoxCard data={item} key={index}/>
+                <LootboxCard
+                    data={item}
+                    key={index}
+                    handleOpening={handleOpening}
+                />
             )}
         </div>
     );

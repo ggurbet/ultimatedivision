@@ -1,17 +1,19 @@
 @import '@/index.scss';
 
 .store {
-    min-height: 100vh;
+    min-height: 90vh;
     min-width: 100%;
+    overflow: hidden;
     background: $mainBackground;
     background-image:  url('@static/img/StorePage/background.svg');
-    background-size: contain;
+    background-size: cover;
     background-position: center;
-    padding: 100px 70px;
+    padding: 0;
     color: white;
     &__title {
         font-weight: lighter;
         font-size: 48px;
+        margin-left: 70px;
         margin-bottom: 80px;
     }
 }

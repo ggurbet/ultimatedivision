@@ -1,0 +1,12 @@
+@import '@/index.scss';
+
+.box-content {
+    width: 100%;
+    height: 90vh;
+    overflow: hidden;
+    background: $mainBackground;
+    background-image: url('@static/img/StorePage/background.svg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}

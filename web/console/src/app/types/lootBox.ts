@@ -2,8 +2,8 @@
 // See LICENSE for copying information.
 
 /** Class for lootBox Cards in store */
-export class BoxData {
-    /** boxData implementation */
+export class LootboxStats {
+    /** LootboxStats implementation */
     constructor(
         public icon: string,
         public title: string,

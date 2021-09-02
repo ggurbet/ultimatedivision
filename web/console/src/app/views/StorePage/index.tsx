@@ -1,16 +1,29 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { BoxSelection } from '@/app/components/Store/BoxSelection';
+import { LootboxContent } from '@/app/components/Store/LootboxContent';
+import { LootboxSelection } from '@/app/components/Store/LootboxSelection';
+import { useState } from 'react';
 import './index.scss';
 
-const Store = () =>
-    <section className="store">
-        <h1 className="store__title">Box</h1>
-        <div className="store__wrapper">
-            <BoxSelection />
-        </div>
-    </section>;
+const Store = () => {
+    const [isOpening, handleOpening] = useState(false);
+
+    return (
+        <section className="store">
+            <div className="store__wrapper">
+                {!isOpening ?
+                    <>
+                        <h1 className="store__title">Box</h1>
+                        <LootboxSelection handleOpening={handleOpening} />
+                    </>
+                    :
+                    <LootboxContent handleOpening={handleOpening} />
+                }
+            </div>
+        </section>
+    );
+};
 
 
 export default Store;
