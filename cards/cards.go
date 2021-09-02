@@ -16,9 +16,6 @@ var ErrNoCard = errs.Class("card does not exist")
 // ErrCards indicated that there was an error in service.
 var ErrCards = errs.Class("cards service error")
 
-// ErrInvalidFilter indicated that filter does not valid.
-var ErrInvalidFilter = errs.Class("invalid filter")
-
 // DB is exposing access to cards db.
 //
 // architecture: DB

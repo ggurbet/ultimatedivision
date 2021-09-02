@@ -6,24 +6,17 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
 
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/sqlsearchoperators"
-	"ultimatedivision/users/userauth"
 )
 
 var (
 	// ErrCards is an internal error type for cards controller.
 	ErrCards = errs.Class("cards controller error")
-)
-
-const (
-	// numberPositionOfURLParameter is a number that shows the position of the url parameter.
-	numberPositionOfURLParameter = 0
 )
 
 // Cards is a mvc controller that handles all cards related views.
@@ -50,41 +43,15 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 	var (
 		cardsList []cards.Card
 		err       error
-		filters   []cards.Filters
+		filters   cards.SliceFilters
 	)
-
 	urlQuery := r.URL.Query()
 	playerName := urlQuery.Get(string(cards.FilterPlayerName))
+
 	if playerName == "" {
-		for key, value := range urlQuery {
-			filter := cards.Filters{
-				Name:           "",
-				Value:          value[numberPositionOfURLParameter],
-				SearchOperator: "",
-			}
-
-			for k, v := range sqlsearchoperators.SearchOperators {
-				if strings.HasSuffix(key, k) {
-					countName := len(key) - (1 + len(k))
-					filter.Name = cards.Filter(key[:countName])
-					filter.SearchOperator = v
-				}
-			}
-
-			keyFilter := cards.Filter(key)
-			if keyFilter == cards.FilterQuality || keyFilter == cards.FilterDominantFoot || keyFilter == cards.FilterType {
-				filter.Name = cards.Filter(key)
-				filter.SearchOperator = sqlsearchoperators.EQ
-			}
-
-			if filter.Name == "" {
-				controller.serveError(w, http.StatusBadRequest, cards.ErrInvalidFilter.New("invalid name parameter - "+key))
-				return
-			}
-
-			filters = append(filters, filter)
+		if err := filters.DecodingURLParameters(urlQuery); err != nil {
+			controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
 		}
-
 		if len(filters) > 0 {
 			cardsList, err = controller.cards.ListWithFilters(ctx, filters)
 		} else {
@@ -101,8 +68,6 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		controller.log.Error("could not get cards list", ErrCards.Wrap(err))
 		switch {
-		case userauth.ErrUnauthenticated.Has(err):
-			controller.serveError(w, http.StatusUnauthorized, ErrCards.Wrap(err))
 		case cards.ErrNoCard.Has(err):
 			controller.serveError(w, http.StatusNotFound, ErrCards.Wrap(err))
 		default:
@@ -120,11 +85,9 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 // serveError replies to the request with specific code and error message.
 func (controller *Cards) serveError(w http.ResponseWriter, status int, err error) {
 	w.WriteHeader(status)
-
 	var response struct {
 		Error string `json:"error"`
 	}
-
 	response.Error = err.Error()
 
 	err = json.NewEncoder(w).Encode(response)
