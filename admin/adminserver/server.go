@@ -10,12 +10,12 @@ import (
 	"net"
 	"net/http"
 	"path/filepath"
-	"ultimatedivision/admin/adminauth"
 
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 	"golang.org/x/sync/errgroup"
 
+	"ultimatedivision/admin/adminauth"
 	"ultimatedivision/admin/admins"
 	"ultimatedivision/admin/adminserver/controllers"
 	"ultimatedivision/cards"
@@ -87,14 +87,14 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	router.HandleFunc("/logout", authController.Logout).Methods(http.MethodPost)
 
 	adminsRouter := router.PathPrefix("/admins").Subrouter().StrictSlash(true)
-	// managersRouter.Use(server.withAuth) // TODO: implement cookie auth and auth service.
+	adminsRouter.Use(server.withAuth)
 	adminsController := controllers.NewAdmins(log, admins, server.templates.admin)
 	adminsRouter.HandleFunc("", adminsController.List).Methods(http.MethodGet)
 	adminsRouter.HandleFunc("/create", adminsController.Create).Methods(http.MethodGet, http.MethodPost)
 	adminsRouter.HandleFunc("/update/{id}", adminsController.Update).Methods(http.MethodGet, http.MethodPost)
 
 	userRouter := router.PathPrefix("/users").Subrouter().StrictSlash(true)
-	// userRouter.Use(server.withAuth) // TODO: implement cookie auth and auth service.
+	userRouter.Use(server.withAuth)
 	userController := controllers.NewUsers(log, users, server.templates.user)
 	userRouter.HandleFunc("", userController.List).Methods(http.MethodGet)
 	userRouter.HandleFunc("/create", userController.Create).Methods(http.MethodGet, http.MethodPost)
@@ -193,9 +193,7 @@ func (server *Server) withAuth(handler http.Handler) http.Handler {
 				controllers.Redirect(w, r, "/login/", "GET")
 			}
 
-			ctx = auth.SetToken(ctx, []byte(token))
-
-			claims, err := server.authService.Authorize(ctx)
+			claims, err := server.authService.Authorize(ctx, token)
 			if err != nil {
 				controllers.Redirect(w, r, "/login/", "GET")
 			}
