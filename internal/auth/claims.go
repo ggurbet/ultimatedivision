@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-
 	"github.com/zeebo/errs"
 )
 
@@ -19,7 +18,7 @@ var ClaimsError = errs.Class("admin auth claims error")
 // Claims represents data signed by server and used for authentication.
 // TODO: add id everywhere.
 type Claims struct {
-	ID        uuid.UUID `json:"id"`
+	UserID    uuid.UUID `json:"userId"`
 	Email     string    `json:"email"`
 	ExpiresAt time.Time `json:"expiresAt"`
 }

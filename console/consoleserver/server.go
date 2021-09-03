@@ -93,16 +93,18 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	authRouter.HandleFunc("/email/confirm/{token}", authController.ConfirmEmail).Methods(http.MethodGet)
 	authRouter.Handle("/change-password", server.withAuth(http.HandlerFunc(authController.ChangePassword))).Methods(http.MethodPost)
 
-	profile := apiRouter.PathPrefix("/profile").Subrouter()
-	profile.Handle("", server.withAuth(http.HandlerFunc(userController.GetProfile))).Methods(http.MethodGet)
+	profileRouter := apiRouter.PathPrefix("/profile").Subrouter()
+	profileRouter.Use(server.withAuth)
+	profileRouter.HandleFunc("", userController.GetProfile).Methods(http.MethodGet)
 
 	cardsRouter := apiRouter.PathPrefix("/cards").Subrouter()
 	cardsRouter.Handle("", server.withAuth(http.HandlerFunc(cardsController.List))).Methods(http.MethodGet)
 
 	clubsRouter := apiRouter.PathPrefix("/clubs").Subrouter()
-	clubsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.Create))).Methods(http.MethodPost)
-	clubsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.Get))).Methods(http.MethodGet)
-	clubsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.UpdateSquad))).Methods(http.MethodPatch)
+	clubsRouter.Use(server.withAuth)
+	clubsRouter.HandleFunc("", clubsController.Create).Methods(http.MethodPost)
+	clubsRouter.HandleFunc("", clubsController.Get).Methods(http.MethodGet)
+	clubsRouter.HandleFunc("", clubsController.UpdateSquad).Methods(http.MethodPatch)
 
 	squadsRouter := clubsRouter.Path("/squads").Subrouter()
 	squadsRouter.Handle("/{clubId}", server.withAuth(http.HandlerFunc(clubsController.Create))).Methods(http.MethodPost)
@@ -113,14 +115,16 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	squadCardsRouter.Handle("", server.withAuth(http.HandlerFunc(clubsController.Delete))).Methods(http.MethodDelete)
 
 	lootBoxesRouter := router.PathPrefix("/lootboxes").Subrouter()
-	lootBoxesRouter.Handle("", server.withAuth(http.HandlerFunc(lootBoxesController.Create))).Methods(http.MethodPost)
-	lootBoxesRouter.Handle("", server.withAuth(http.HandlerFunc(lootBoxesController.Open))).Methods(http.MethodDelete)
+	lootBoxesRouter.Use(server.withAuth)
+	lootBoxesRouter.HandleFunc("", lootBoxesController.Create).Methods(http.MethodPost)
+	lootBoxesRouter.HandleFunc("/{id}", lootBoxesController.Open).Methods(http.MethodDelete)
 
 	marketplaceRouter := apiRouter.PathPrefix("/marketplace").Subrouter()
-	marketplaceRouter.Handle("", server.withAuth(http.HandlerFunc(marketplaceController.ListActiveLots))).Methods(http.MethodGet)
-	marketplaceRouter.Handle("/{id}", server.withAuth(http.HandlerFunc(marketplaceController.GetLotByID))).Methods(http.MethodGet)
-	marketplaceRouter.Handle("", server.withAuth(http.HandlerFunc(marketplaceController.CreateLot))).Methods(http.MethodPost)
-	marketplaceRouter.Handle("/bet", server.withAuth(http.HandlerFunc(marketplaceController.PlaceBetLot))).Methods(http.MethodPost)
+	marketplaceRouter.Use(server.withAuth)
+	marketplaceRouter.HandleFunc("", marketplaceController.ListActiveLots).Methods(http.MethodGet)
+	marketplaceRouter.HandleFunc("/{id}", marketplaceController.GetLotByID).Methods(http.MethodGet)
+	marketplaceRouter.HandleFunc("", marketplaceController.CreateLot).Methods(http.MethodPost)
+	marketplaceRouter.HandleFunc("/bet", marketplaceController.PlaceBetLot).Methods(http.MethodPost)
 
 	fs := http.FileServer(http.Dir(server.config.StaticDir))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static", fs))
@@ -191,13 +195,13 @@ func (server *Server) withAuth(handler http.Handler) http.Handler {
 		token, err := server.cookieAuth.GetToken(r)
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
 		}
 
-		ctx = auth.SetToken(ctx, []byte(token))
-
-		claims, err := server.authService.Authorize(ctx)
+		claims, err := server.authService.Authorize(ctx, token)
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
 		}
 
 		ctx = auth.SetClaims(ctx, claims)

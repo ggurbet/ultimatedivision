@@ -10,9 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/internal/auth"
 	"ultimatedivision/users"
-	"ultimatedivision/users/userauth"
 )
 
 // ErrClubs indicates that there was an error in the service.
@@ -34,20 +32,15 @@ func NewService(clubs DB) *Service {
 }
 
 // Create creates clubs.
-func (service *Service) Create(ctx context.Context) error {
-	claims, err := auth.GetClaims(ctx)
-	if err != nil {
-		return userauth.ErrUnauthenticated.Wrap(err)
-	}
-
-	nickname, err := service.users.GetNickNameByID(ctx, claims.ID)
+func (service *Service) Create(ctx context.Context, userID uuid.UUID) error {
+	nickname, err := service.users.GetNickNameByID(ctx, userID)
 	if err != nil {
 		return ErrClubs.Wrap(err)
 	}
 
 	newClub := Club{
 		ID:        uuid.New(),
-		OwnerID:   claims.ID,
+		OwnerID:   userID,
 		Name:      nickname,
 		CreatedAt: time.Now().UTC(),
 	}
@@ -101,14 +94,7 @@ func (service *Service) GetSquad(ctx context.Context, clubID uuid.UUID) (Squad, 
 }
 
 // Get returns user club.
-func (service *Service) Get(ctx context.Context) (Club, error) {
-	claims, err := auth.GetClaims(ctx)
-	if err != nil {
-		return Club{}, userauth.ErrUnauthenticated.Wrap(err)
-	}
-
-	userID := claims.ID
-
+func (service *Service) Get(ctx context.Context, userID uuid.UUID) (Club, error) {
 	club, err := service.clubs.GetByUserID(ctx, userID)
 	return club, ErrClubs.Wrap(err)
 }

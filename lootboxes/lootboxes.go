@@ -16,7 +16,7 @@ type DB interface {
 	// Create creates lootbox of user in db.
 	Create(ctx context.Context, lootBox LootBox) error
 	// Delete deletes opened lootbox by user in db.
-	Delete(ctx context.Context, lootBox LootBox) error
+	Delete(ctx context.Context, lootboxID uuid.UUID) error
 }
 
 // LootBox defines lootbox.

@@ -6,11 +6,13 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"ultimatedivision/internal/auth"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/users/userauth"
@@ -117,17 +119,23 @@ func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request)
 	ctx := r.Context()
 	w.Header().Set("Content-Type", "application/json")
 
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusUnauthorized, ErrMarketplace.Wrap(err))
+		return
+	}
+
 	var createLot marketplace.CreateLot
-	if err := json.NewDecoder(r.Body).Decode(&createLot); err != nil {
+	if err = json.NewDecoder(r.Body).Decode(&createLot); err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
 		return
 	}
 
-	if err := createLot.ValidateCreateLot(); err != nil {
+	if err = createLot.ValidateCreateLot(); err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
 	}
 
-	if err := controller.marketplace.CreateLot(ctx, createLot); err != nil {
+	if err = controller.marketplace.CreateLot(ctx, claims.UserID, createLot); err != nil {
 		controller.log.Error("could not create lot", ErrMarketplace.Wrap(err))
 
 		if userauth.ErrUnauthenticated.Has(err) {
@@ -145,17 +153,23 @@ func (controller *Marketplace) PlaceBetLot(w http.ResponseWriter, r *http.Reques
 	ctx := r.Context()
 	w.Header().Set("Content-Type", "application/json")
 
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusUnauthorized, ErrMarketplace.Wrap(err))
+		return
+	}
+
 	var betLot marketplace.BetLot
-	if err := json.NewDecoder(r.Body).Decode(&betLot); err != nil {
+	if err = json.NewDecoder(r.Body).Decode(&betLot); err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
 		return
 	}
 
-	if err := betLot.ValidateBetLot(); err != nil {
+	if err = betLot.ValidateBetLot(); err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
 	}
 
-	if err := controller.marketplace.PlaceBetLot(ctx, betLot); err != nil {
+	if err = controller.marketplace.PlaceBetLot(ctx, claims.UserID, betLot); err != nil {
 		controller.log.Error("could not place bet lot", ErrMarketplace.Wrap(err))
 
 		if userauth.ErrUnauthenticated.Has(err) {

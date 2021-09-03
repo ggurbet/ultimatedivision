@@ -49,7 +49,7 @@ func TestLootBox(t *testing.T) {
 		})
 
 		t.Run("Delete", func(t *testing.T) {
-			err := repositoryLootBoxes.Delete(ctx, userLootBox)
+			err := repositoryLootBoxes.Delete(ctx, userLootBox.LootBoxID)
 			require.NoError(t, err)
 		})
 	})

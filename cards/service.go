@@ -111,7 +111,8 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentage
 	}
 
 	card := Card{
-		ID:               uuid.New(),
+		ID: uuid.New(),
+		// TODO: change it.
 		PlayerName:       "Dmytro",
 		Quality:          Quality(quality),
 		PictureType:      1,
