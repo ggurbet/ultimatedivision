@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"ultimatedivision"
+	"ultimatedivision/cards"
 	"ultimatedivision/database/dbtesting"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/users"
@@ -71,8 +72,142 @@ func TestMarketplace(t *testing.T) {
 		CreatedAt:    time.Now(),
 	}
 
+	card1 := cards.Card{
+		ID:               uuid.New(),
+		PlayerName:       "Dmytro yak muk",
+		Quality:          "wood",
+		PictureType:      1,
+		Height:           178.8,
+		Weight:           72.2,
+		SkinColor:        1,
+		HairStyle:        1,
+		HairColor:        1,
+		Accessories:      []int{1, 2},
+		DominantFoot:     "left",
+		IsTattoos:        false,
+		Status:           cards.StatusActive,
+		Type:             cards.TypeWon,
+		UserID:           uuid.New(),
+		Tactics:          1,
+		Positioning:      2,
+		Composure:        3,
+		Aggression:       4,
+		Vision:           5,
+		Awareness:        6,
+		Crosses:          7,
+		Physique:         8,
+		Acceleration:     9,
+		RunningSpeed:     10,
+		ReactionSpeed:    11,
+		Agility:          12,
+		Stamina:          13,
+		Strength:         14,
+		Jumping:          15,
+		Balance:          16,
+		Technique:        17,
+		Dribbling:        18,
+		BallControl:      19,
+		WeakFoot:         20,
+		SkillMoves:       21,
+		Finesse:          22,
+		Curve:            23,
+		Volleys:          24,
+		ShortPassing:     25,
+		LongPassing:      26,
+		ForwardPass:      27,
+		Offense:          28,
+		FinishingAbility: 29,
+		ShotPower:        30,
+		Accuracy:         31,
+		Distance:         32,
+		Penalty:          33,
+		FreeKicks:        34,
+		Corners:          35,
+		HeadingAccuracy:  36,
+		Defence:          37,
+		OffsideTrap:      38,
+		Sliding:          39,
+		Tackles:          40,
+		BallFocus:        41,
+		Interceptions:    42,
+		Vigilance:        43,
+		Goalkeeping:      44,
+		Reflexes:         45,
+		Diving:           46,
+		Handling:         47,
+		Sweeping:         48,
+		Throwing:         49,
+	}
+
+	card2 := cards.Card{
+		ID:               uuid.New(),
+		PlayerName:       "Vova",
+		Quality:          "gold",
+		PictureType:      2,
+		Height:           179.9,
+		Weight:           73.3,
+		SkinColor:        2,
+		HairStyle:        2,
+		HairColor:        2,
+		Accessories:      []int{1, 2},
+		DominantFoot:     "right",
+		IsTattoos:        true,
+		Status:           cards.StatusSale,
+		UserID:           uuid.New(),
+		Tactics:          2,
+		Positioning:      2,
+		Composure:        3,
+		Aggression:       4,
+		Vision:           5,
+		Awareness:        6,
+		Crosses:          7,
+		Physique:         8,
+		Acceleration:     9,
+		RunningSpeed:     10,
+		ReactionSpeed:    11,
+		Agility:          12,
+		Stamina:          13,
+		Strength:         14,
+		Jumping:          15,
+		Balance:          16,
+		Technique:        17,
+		Dribbling:        18,
+		BallControl:      19,
+		WeakFoot:         20,
+		SkillMoves:       21,
+		Finesse:          22,
+		Curve:            23,
+		Volleys:          24,
+		ShortPassing:     25,
+		LongPassing:      26,
+		ForwardPass:      27,
+		Offense:          28,
+		FinishingAbility: 29,
+		ShotPower:        30,
+		Accuracy:         31,
+		Distance:         32,
+		Penalty:          33,
+		FreeKicks:        34,
+		Corners:          35,
+		HeadingAccuracy:  36,
+		Defence:          37,
+		OffsideTrap:      38,
+		Sliding:          39,
+		Tackles:          40,
+		BallFocus:        41,
+		Interceptions:    42,
+		Vigilance:        43,
+		Goalkeeping:      44,
+		Reflexes:         45,
+		Diving:           46,
+		Handling:         47,
+		Sweeping:         48,
+		Throwing:         49,
+	}
+
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repositoryMarketplace := db.Marketplace()
+		repositoryCards := db.Cards()
 		repositoryUsers := db.Users()
 		id := uuid.New()
 		t.Run("get sql no rows", func(t *testing.T) {
@@ -85,6 +220,11 @@ func TestMarketplace(t *testing.T) {
 			err := repositoryUsers.Create(ctx, user1)
 			require.NoError(t, err)
 
+			card1.UserID = user1.ID
+			err = repositoryCards.Create(ctx, card1)
+			require.NoError(t, err)
+
+			lot1.ItemID = card1.ID
 			lot1.UserID = user1.ID
 			err = repositoryMarketplace.CreateLot(ctx, lot1)
 			require.NoError(t, err)
@@ -98,11 +238,27 @@ func TestMarketplace(t *testing.T) {
 			err := repositoryUsers.Create(ctx, user2)
 			require.NoError(t, err)
 
+			card2.UserID = user2.ID
+			err = repositoryCards.Create(ctx, card2)
+			require.NoError(t, err)
+
+			lot2.ItemID = card2.ID
 			lot2.UserID = user2.ID
 			err = repositoryMarketplace.CreateLot(ctx, lot2)
 			require.NoError(t, err)
 
 			activeLots, err := repositoryMarketplace.ListActiveLots(ctx)
+			assert.NoError(t, err)
+			assert.Equal(t, len(activeLots), 1)
+			compareLot(t, lot2, activeLots[0])
+		})
+
+		t.Run("list active by item id", func(t *testing.T) {
+			var cardsIds []uuid.UUID
+			cardsIds = append(cardsIds, card1.ID)
+			cardsIds = append(cardsIds, card2.ID)
+
+			activeLots, err := repositoryMarketplace.ListActiveLotsByItemID(ctx, cardsIds)
 			assert.NoError(t, err)
 			assert.Equal(t, len(activeLots), 1)
 			compareLot(t, lot2, activeLots[0])

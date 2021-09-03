@@ -236,7 +236,7 @@ func (service *Service) ListWithFilters(ctx context.Context, filters []Filters) 
 	for _, v := range filters {
 		err := v.Validate()
 		if err != nil {
-			return nil, err
+			return nil, ErrCards.Wrap(err)
 		}
 	}
 	cards, err := service.cards.ListWithFilters(ctx, filters)

@@ -182,7 +182,7 @@ func (service *Service) Register(ctx context.Context, email, password, nickName,
 		return Error.Wrap(err)
 	}
 
-	// launch a goroutine that sends the email verification.
+	// TODO: launch a goroutine that sends the email verification.
 	// go func() {
 	// 	err = service.emailService.SendVerificationEmail(user.Email, token)
 	// 	if err != nil {

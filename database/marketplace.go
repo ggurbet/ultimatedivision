@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/marketplace"
@@ -109,6 +110,43 @@ func (marketplaceDB *marketplaceDB) ListActiveLots(ctx context.Context) ([]marke
 		return nil, ErrMarketplace.Wrap(err)
 	}
 
+	return lots, nil
+}
+
+// ListActiveLotsByItemID returns active lots from the data base by item id.
+func (marketplaceDB *marketplaceDB) ListActiveLotsByItemID(ctx context.Context, itemIds []uuid.UUID) ([]marketplace.Lot, error) {
+	query :=
+		`SELECT 
+			` + allLotOfFields + ` 
+		FROM 
+			lots
+		WHERE
+			status = $1 AND item_id = ANY($2)
+		`
+
+	rows, err := marketplaceDB.conn.QueryContext(ctx, query, marketplace.StatusActive, pq.Array(itemIds))
+	if err != nil {
+		return nil, ErrMarketplace.Wrap(err)
+	}
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	lots := []marketplace.Lot{}
+	for rows.Next() {
+		lot := marketplace.Lot{}
+		if err = rows.Scan(
+			&lot.ID, &lot.ItemID, &lot.Type, &lot.UserID, &lot.ShopperID, &lot.Status,
+			&lot.StartPrice, &lot.MaxPrice, &lot.CurrentPrice, &lot.StartTime, &lot.EndTime, &lot.Period,
+		); err != nil {
+			return nil, marketplace.ErrNoLot.Wrap(err)
+		}
+
+		lots = append(lots, lot)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, ErrMarketplace.Wrap(err)
+	}
 	return lots, nil
 }
 

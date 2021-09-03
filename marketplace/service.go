@@ -5,6 +5,8 @@ package marketplace
 
 import (
 	"context"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -32,11 +34,11 @@ func NewService(marketplace DB, users *users.Service, cards *cards.Service) *Ser
 }
 
 // CreateLot add lot in DB.
-func (service *Service) CreateLot(ctx context.Context, userID uuid.UUID, createLot CreateLot) error {
+func (service *Service) CreateLot(ctx context.Context, createLot CreateLot) error {
 	// TODO: add transaction
 	card, err := service.cards.Get(ctx, createLot.ItemID)
 	if err == nil {
-		if card.UserID != userID {
+		if card.UserID != createLot.UserID {
 			return ErrMarketplace.New("it is not the user's card")
 		}
 
@@ -56,7 +58,7 @@ func (service *Service) CreateLot(ctx context.Context, userID uuid.UUID, createL
 		return ErrMarketplace.New("not found item by id")
 	}
 
-	if _, err := service.users.Get(ctx, userID); err != nil {
+	if _, err := service.users.Get(ctx, createLot.UserID); err != nil {
 		return ErrMarketplace.Wrap(err)
 	}
 
@@ -72,7 +74,7 @@ func (service *Service) CreateLot(ctx context.Context, userID uuid.UUID, createL
 		ID:         uuid.New(),
 		ItemID:     createLot.ItemID,
 		Type:       createLot.Type,
-		UserID:     userID,
+		UserID:     createLot.UserID,
 		Status:     StatusActive,
 		StartPrice: createLot.StartPrice,
 		MaxPrice:   createLot.MaxPrice,
@@ -87,14 +89,59 @@ func (service *Service) CreateLot(ctx context.Context, userID uuid.UUID, createL
 // GetLotByID returns lot by id from DB.
 func (service *Service) GetLotByID(ctx context.Context, id uuid.UUID) (Lot, error) {
 	lot, err := service.marketplace.GetLotByID(ctx, id)
-
 	return lot, ErrMarketplace.Wrap(err)
 }
 
 // ListActiveLots returns active lots from DB.
 func (service *Service) ListActiveLots(ctx context.Context) ([]Lot, error) {
 	lots, err := service.marketplace.ListActiveLots(ctx)
+	return lots, ErrMarketplace.Wrap(err)
+}
 
+// ListActiveLotsWithFilters returns active lots from DB, taking the necessary filters.
+func (service *Service) ListActiveLotsWithFilters(ctx context.Context, filters []cards.Filters) ([]Lot, error) {
+	for _, v := range filters {
+		err := v.Validate()
+		if err != nil {
+			return nil, ErrMarketplace.Wrap(err)
+		}
+	}
+
+	cards, err := service.cards.ListWithFilters(ctx, filters)
+	if err != nil {
+		return nil, ErrMarketplace.Wrap(err)
+	}
+
+	var cardIds []uuid.UUID
+	for _, v := range cards {
+		cardIds = append(cardIds, v.ID)
+	}
+
+	lots, err := service.marketplace.ListActiveLotsByItemID(ctx, cardIds)
+	return lots, ErrMarketplace.Wrap(err)
+}
+
+// ListActiveLotsByPlayerName returns active lots from DB by player name card.
+func (service *Service) ListActiveLotsByPlayerName(ctx context.Context, filter cards.Filters) ([]Lot, error) {
+	strings.ToValidUTF8(filter.Value, "")
+
+	// TODO: add best check
+	_, err := strconv.Atoi(filter.Value)
+	if err == nil {
+		return nil, ErrMarketplace.Wrap(cards.ErrInvalidFilter.New("%s %s", filter.Value, err))
+	}
+
+	cards, err := service.cards.ListByPlayerName(ctx, filter)
+	if err != nil {
+		return nil, ErrMarketplace.Wrap(err)
+	}
+
+	var cardIds []uuid.UUID
+	for _, v := range cards {
+		cardIds = append(cardIds, v.ID)
+	}
+
+	lots, err := service.marketplace.ListActiveLotsByItemID(ctx, cardIds)
 	return lots, ErrMarketplace.Wrap(err)
 }
 
@@ -105,8 +152,8 @@ func (service *Service) ListExpiredLot(ctx context.Context) ([]Lot, error) {
 }
 
 // PlaceBetLot checks the amount of money and makes a bet.
-func (service *Service) PlaceBetLot(ctx context.Context, userID uuid.UUID, betLot BetLot) error {
-	if _, err := service.users.Get(ctx, userID); err != nil {
+func (service *Service) PlaceBetLot(ctx context.Context, betLot BetLot) error {
+	if _, err := service.users.Get(ctx, betLot.UserID); err != nil {
 		return ErrMarketplace.Wrap(err)
 	}
 	// TODO: check if the user has the required amount of money.
@@ -132,7 +179,7 @@ func (service *Service) PlaceBetLot(ctx context.Context, userID uuid.UUID, betLo
 	// TODO: update status to `hold` for new user's money.
 	// TODO: unhold old user's money if exist.
 
-	if err = service.UpdateShopperIDLot(ctx, betLot.ID, userID); err != nil {
+	if err := service.UpdateShopperIDLot(ctx, betLot.ID, betLot.UserID); err != nil {
 		return ErrMarketplace.Wrap(err)
 	}
 
@@ -146,7 +193,7 @@ func (service *Service) PlaceBetLot(ctx context.Context, userID uuid.UUID, betLo
 			ItemID:    lot.ItemID,
 			Type:      TypeCard,
 			UserID:    lot.UserID,
-			ShopperID: userID,
+			ShopperID: betLot.UserID,
 			Status:    StatusSoldBuynow,
 			Amount:    lot.MaxPrice,
 		}
