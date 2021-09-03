@@ -174,7 +174,7 @@ func (service *Service) PlaceBetLot(ctx context.Context, betLot BetLot) error {
 	}
 
 	/** TODO: the transaction may be required for all operations,
-	so that an error in the middle does not lead to an unwanted result in the database. **/
+	  so that an error in the middle does not lead to an unwanted result in the database. **/
 
 	// TODO: update status to `hold` for new user's money.
 	// TODO: unhold old user's money if exist.

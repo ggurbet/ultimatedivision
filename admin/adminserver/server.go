@@ -21,6 +21,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/marketplace"
 	"ultimatedivision/users"
 )
 
@@ -54,17 +55,18 @@ type Server struct {
 	cookieAuth  *auth.CookieAuth
 
 	templates struct {
-		admin controllers.AdminTemplates
-		user  controllers.UserTemplates
-		card  controllers.CardTemplates
-		auth  controllers.AuthTemplates
+		admin       controllers.AdminTemplates
+		user        controllers.UserTemplates
+		card        controllers.CardTemplates
+		auth        controllers.AuthTemplates
+		marketplace controllers.MarketplaceTemplates
 	}
 
 	cards.PercentageQualities
 }
 
 // NewServer is a constructor for admin web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities) (*Server, error) {
+func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities, marketplace *marketplace.Service) (*Server, error) {
 	server := &Server{
 		log:    log,
 		config: config,
@@ -107,6 +109,14 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	cardsRouter.HandleFunc("", cardsController.List).Methods(http.MethodGet)
 	cardsRouter.HandleFunc("/create/{userId}", cardsController.Create).Methods(http.MethodGet)
 	cardsRouter.HandleFunc("/delete/{id}", cardsController.Delete).Methods(http.MethodGet)
+
+	marketplaceRouter := router.PathPrefix("/marketplace").Subrouter().StrictSlash(true)
+	marketplaceRouter.Use(server.withAuth)
+	marketplaceController := controllers.NewMarketplace(log, marketplace, cards, users, server.templates.marketplace)
+	marketplaceRouter.HandleFunc("", marketplaceController.ListActiveLots).Methods(http.MethodGet)
+	marketplaceRouter.HandleFunc("/get/{id}", marketplaceController.GetLotByID).Methods(http.MethodGet)
+	marketplaceRouter.HandleFunc("/create", marketplaceController.CreateLot).Methods(http.MethodGet, http.MethodPost)
+	marketplaceRouter.HandleFunc("/bet/{id}", marketplaceController.PlaceBetLot).Methods(http.MethodGet, http.MethodPost)
 
 	server.server = http.Server{
 		Handler: router,
@@ -170,6 +180,26 @@ func (server *Server) initializeTemplates() (err error) {
 	}
 
 	server.templates.card.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "cards", "list.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.marketplace.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "marketplace", "list.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.marketplace.Get, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "marketplace", "get.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.marketplace.Create, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "marketplace", "create.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.marketplace.Bet, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "marketplace", "bet.html"))
 	if err != nil {
 		return err
 	}

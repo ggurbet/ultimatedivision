@@ -9,6 +9,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
+
+	"ultimatedivision/cards"
+	"ultimatedivision/users"
 )
 
 // ErrNoLot indicated that lot does not exist.
@@ -164,4 +167,16 @@ type ResponseLot struct {
 	StartTime    time.Time `json:"startTime"`
 	EndTime      time.Time `json:"endTime"`
 	Period       Period    `json:"period"`
+}
+
+// ResponseCreateLot entity describes the values required to response for create lot in admin.
+type ResponseCreateLot struct {
+	Cards []cards.Card
+	Users []users.User
+}
+
+// ResponsePlaceBetLot entity describes the values required to response for place bet lot in admin.
+type ResponsePlaceBetLot struct {
+	ID    uuid.UUID
+	Users []users.User
 }

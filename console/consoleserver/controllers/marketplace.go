@@ -91,11 +91,6 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 	vars := mux.Vars(r)
 	w.Header().Set("Content-Type", "application/json")
 
-	if vars["id"] == "" {
-		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.New("id parameter is empty"))
-		return
-	}
-
 	id, err := uuid.Parse(vars["id"])
 	if err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
@@ -140,6 +135,7 @@ func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request)
 
 	claims, err := auth.GetClaims(ctx)
 	if err != nil {
+		controller.log.Error("could not authorize user", ErrMarketplace.Wrap(err))
 		controller.serveError(w, http.StatusUnauthorized, ErrMarketplace.Wrap(err))
 		return
 	}
@@ -169,6 +165,7 @@ func (controller *Marketplace) PlaceBetLot(w http.ResponseWriter, r *http.Reques
 
 	claims, err := auth.GetClaims(ctx)
 	if err != nil {
+		controller.log.Error("could not authorize user", ErrMarketplace.Wrap(err))
 		controller.serveError(w, http.StatusUnauthorized, ErrMarketplace.Wrap(err))
 		return
 	}
