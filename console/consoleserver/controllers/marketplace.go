@@ -6,7 +6,6 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"ultimatedivision/internal/auth"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
