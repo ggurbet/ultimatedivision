@@ -11,24 +11,25 @@ class CardSetup {
     /** class implementation */
     constructor(
         public cardService: CardService,
-        public marketplaceCards: Card[],
-        public clubCards: Card[]
-    ) {}
-}
+        public marketplace: Card[],
+        public club: Card[],
+    ) { };
+};
+
 const cardClient = new CardClient();
 const cardService = new CardService(cardClient);
 export const cardSetup = new CardSetup(cardService, [], []);
 
 export const cardsReducer = (cardState = cardSetup, action: any = {}) => {
     switch (action.type) {
-    case GET_USER_CARDS:
-        cardState.clubCards = action.action;
-        break;
-    case GET_SELLING_CARDS:
-        cardState.marketplaceCards = action.action;
-        break;
-    default:
-        break;
+        case GET_USER_CARDS:
+            cardState.club = action.cards;
+            break;
+        case GET_SELLING_CARDS:
+            cardState.marketplace = action.cards;
+            break;
+        default:
+            break;
     }
 
     return { ...cardState };

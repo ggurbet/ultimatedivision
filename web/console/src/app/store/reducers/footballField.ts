@@ -18,44 +18,41 @@ import {
 
 const FieldSetup = new FootballField();
 
-
-const FITST_ACTION_PARAM = 0;
-const SECOND_ACTION_PARAM = 1;
-
-
 export const fieldReducer = (cardState = FieldSetup, action: any = {}) => {
     const options = cardState.options;
-    const cardsList = cardState.cardsList;
+    const cards = cardState.cards;
 
     switch (action.type) {
-    case FORMATION:
-        options.formation = action.action;
-        break;
-    case SELECTION_VISIBILITY:
-        options.showCardSeletion = action.action;
-        break;
-    case CARD_POSITION:
-        options.chosedCard = action.action;
-        break;
-    case ADD_CARD:
-        cardsList[action.action[SECOND_ACTION_PARAM]].cardData = action.action[FITST_ACTION_PARAM];
-        break;
-    case REMOVE_CARD:
-        cardsList[action.action].cardData = null;
-        break;
-    case DRAG_START:
-        options.dragStart = action.action;
-        break;
-    case DRAG_TARGET:
-        options.dragTarget = action.action;
-        break;
-    case EXCHANGE_CARDS:
-        const prevValue = cardsList[action.action[FITST_ACTION_PARAM]];
-        cardsList[action.action[FITST_ACTION_PARAM]] = cardsList[action.action[SECOND_ACTION_PARAM]];
-        cardsList[action.action[SECOND_ACTION_PARAM]] = prevValue;
-        break;
-    default:
-        break;
+        case FORMATION:
+            options.formation = action.formation;
+            break;
+        case SELECTION_VISIBILITY:
+            options.showCardSeletion = action.isVisible;
+            break;
+        case CARD_POSITION:
+            options.chosedCard = action.position;
+            break;
+        case ADD_CARD:
+            cards[action.fieldCard.index].card =
+                action.fieldCard.card;
+            break;
+        case REMOVE_CARD:
+            cards[action.index].card = null;
+            break;
+        case DRAG_START:
+            options.dragStart = action.index;
+            break;
+        case DRAG_TARGET:
+            options.dragTarget = action.index;
+            break;
+        case EXCHANGE_CARDS:
+            const prevCard = cards[action.position.previous];
+            cards[action.position.previous] =
+                cards[action.position.current];
+            cards[action.position.current] = prevCard;
+            break;
+        default:
+            break;
     }
 
     return { ...cardState };

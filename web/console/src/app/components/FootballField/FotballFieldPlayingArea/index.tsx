@@ -7,12 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FootballFieldInformation } from '@components/FootballField/FootballFieldInformation';
 import { PlayingAreaFootballerCard } from '@components/FootballField/PlayingAreaFootballerCard';
 
+import { FootballFieldCard } from '@/app/types/footballField';
+
 import { RootState } from '@/app/store';
-import { cardSelectionVisibility, choseCardPosition, exchangeCards, removeCard, setDragStart, setDragTarget }
+import { cardSelectionVisibility, choosePosition, exchangeCards, removeCard, setDragStart, setDragTarget }
     from '@/app/store/actions/footballField';
 
 import './index.scss';
-import { FootballFieldCard } from '@/app/types/footballField';
 
 export const FootballFieldPlayingArea: React.FC = () => {
     const formation = useSelector((state: RootState) => state.fieldReducer.options.formation);
@@ -55,7 +56,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
 
     /** Add card position, and shows card selection */
     function handleClick(index: number) {
-        dispatch(choseCardPosition(index));
+        dispatch(choosePosition(index));
         dispatch(cardSelectionVisibility(true));
         setTimeout(() => {
             window.scroll(X_SCROLL_POINT, Y_SCROLL_POINT);
@@ -112,8 +113,8 @@ export const FootballFieldPlayingArea: React.FC = () => {
                     className={`playing-area__${formation}`}
                     onMouseUp={mouseUpOnArea}
                 >
-                    {fieldSetup.cardsList.map((card, index) => {
-                        const data = card.cardData;
+                    {fieldSetup.cards.map((fieldCard: FootballFieldCard, index: number) => {
+                        const card = fieldCard.card;
                         const equality = dragStartIndex === index;
                         // TODO: change style by some class to change style in card
 
@@ -125,29 +126,29 @@ export const FootballFieldPlayingArea: React.FC = () => {
                                         : undefined
                                 }
                                 key={index}
-                                className={`playing-area__${formation}__${data ? 'card' : 'empty-card'}`}
+                                className={`playing-area__${formation}__${card ? 'card' : 'empty-card'}`}
                                 onClick={(e) => handleClick(index)}
                                 onDragStart={(e) => dragStart(e, index)}
                                 onMouseUp={(e) => onMouseUp(e, index)}
                                 draggable={true}
                             >
                                 {
-                                    data && <PlayingAreaFootballerCard card={data} index={index} place={'PlayingArea'} />
+                                    card && <PlayingAreaFootballerCard card={card} index={index} place={'PlayingArea'} />
                                 }
                             </div>
                         );
                     })}
                 </div>
                 <div className={`playing-area__${formation}-shadows`}>
-                    {fieldSetup.cardsList.map((card: FootballFieldCard, index: number) => {
-                        const data = card.cardData;
+                    {fieldSetup.cards.map((fieldCard: FootballFieldCard, index: number) => {
+                        const card = fieldCard.card;
 
                         return (
                             <div
                                 className={`playing-area__${formation}-shadows__card`}
                                 key={index}
                             >
-                                {data &&
+                                {card &&
                                     <img
                                         // If data exist it has maininfo, but TS do not let me use it even with check
                                         // @ts-ignore

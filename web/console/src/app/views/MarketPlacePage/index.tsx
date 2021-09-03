@@ -2,6 +2,7 @@
 // See LICENSE for copying information.
 
 import { useSelector } from 'react-redux';
+
 import { RootState } from '@/app/store';
 import { marketplaceCards } from '@/app/store/actions/cards';
 import { useCards } from '@/app/hooks/cards';
@@ -16,7 +17,7 @@ const MarketPlace: React.FC = () => {
     /** TODO: decide use custom hook or directly dispatch thunk into useEffect*/
     useCards(marketplaceCards);
 
-    const cards = useSelector((state: RootState) => state.cardsReducer.marketplaceCards);
+    const cards = useSelector((state: RootState) => state.cardsReducer.marketplace);
 
     return (
         <section className="marketplace">

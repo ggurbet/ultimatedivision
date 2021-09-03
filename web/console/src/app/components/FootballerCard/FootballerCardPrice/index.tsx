@@ -16,7 +16,7 @@ export const FootballerCardPrice: React.FC = () => {
     const FULL_VALUE_STATISTIC_SCALE = 100;
 
     const priceData = useSelector((state: RootState) =>
-        state.cardsReducer.marketplaceCards[FIRST_CARD_INDEX].cardPrice);
+        state.cardsReducer.marketplace[FIRST_CARD_INDEX].cardPrice);
         // @ts-ignore
     const prpValue: number = priceData.prp;
 

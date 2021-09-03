@@ -13,7 +13,7 @@ import { Paginator } from '@components/common/Paginator';
 import { Card } from '@/card';
 
 export const FootballFieldCardSelection = () => {
-    const cards = useSelector((state: RootState) => state.cardsReducer.clubCards);
+    const cards = useSelector((state: RootState) => state.cardsReducer.club);
     const dispatch = useDispatch();
     const fieldSetup = useSelector((state: RootState) => state.fieldReducer);
 

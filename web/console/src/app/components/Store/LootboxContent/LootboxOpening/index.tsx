@@ -1,13 +1,15 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import { useSelector } from 'react-redux';
+
 import { MyCard } from '@/app/components/Club/ClubCardsArea/MyCard';
 import { RootState } from '@/app/store';
+
 import boxBody from '@static/img/StorePage/BoxContent/boxBody.svg';
 import boxCover from '@static/img/StorePage/BoxContent/boxCover.svg';
 import boxLight from '@static/img/StorePage/BoxContent/boxLight.svg';
 import ribbons from '@static/img/StorePage/BoxContent/ribbons.svg';
-import { useSelector } from 'react-redux';
 
 import './index.scss';
 
@@ -15,7 +17,7 @@ import './index.scss';
 export const LootboxOpening = () => {
     // TODO: will be replaced by backend data
     // eslint-disable-next-line
-    const card = useSelector((state: RootState) => state.cardsReducer.clubCards[0]);
+    const card = useSelector((state: RootState) => state.cardsReducer.club[0]);
 
     return (
         <div className="box-animation">
