@@ -105,7 +105,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	cardsRouter.Use(server.withAuth)
 	cardsController := controllers.NewCards(log, cards, server.templates.card, percentageQualities)
 	cardsRouter.HandleFunc("", cardsController.List).Methods(http.MethodGet)
-	cardsRouter.HandleFunc("/create/{userID}", cardsController.Create).Methods(http.MethodGet)
+	cardsRouter.HandleFunc("/create/{userId}", cardsController.Create).Methods(http.MethodGet)
 	cardsRouter.HandleFunc("/delete/{id}", cardsController.Delete).Methods(http.MethodGet)
 
 	server.server = http.Server{

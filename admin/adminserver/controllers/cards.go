@@ -83,11 +83,7 @@ func (controller *Cards) Create(w http.ResponseWriter, r *http.Request) {
 		controller.percentageQualities.Diamond,
 	}
 
-	if vars["userID"] == "" {
-		http.Error(w, "userID parameter is empty", http.StatusBadRequest)
-		return
-	}
-	userID, err := uuid.Parse(vars["userID"])
+	userID, err := uuid.Parse(vars["userId"])
 	if err != nil {
 		http.Error(w, "could not parse user id", http.StatusBadRequest)
 		return
