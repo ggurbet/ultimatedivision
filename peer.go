@@ -238,6 +238,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Cards.Service,
 			config.Cards.PercentageQualities,
 			peer.Marketplace.Service,
+			peer.LootBoxes.Service,
 		)
 		if err != nil {
 			return nil, err

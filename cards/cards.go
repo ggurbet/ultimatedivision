@@ -120,6 +120,19 @@ const (
 	QualityDiamond Quality = "diamond"
 )
 
+// QualityToValue describes quality-to-value ratio.
+var QualityToValue = map[Quality]int{
+	QualityWood:    0,
+	QualitySilver:  1,
+	QualityGold:    2,
+	QualityDiamond: 3,
+}
+
+// GetValueOfQuality returns value of card by key.
+func (quality Quality) GetValueOfQuality() int {
+	return QualityToValue[quality]
+}
+
 // PictureType defines the list of possible card picture types.
 var PictureType = map[int]string{
 	1: "https://drive.google.com/file/d/1ESKPpiCoMUkOEpaa40VBFl4O1bPrDntS/view?usp=sharing",

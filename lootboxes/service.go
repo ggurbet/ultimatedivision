@@ -34,8 +34,14 @@ func NewService(config Config, lootboxes DB, cards *cards.Service) *Service {
 }
 
 // Create creates LootBox.
-func (service *Service) Create(ctx context.Context, userLootBox LootBox) error {
-	return ErrLootBoxes.Wrap(service.lootboxes.Create(ctx, userLootBox))
+func (service *Service) Create(ctx context.Context, lootBoxType Type, userID uuid.UUID) (LootBox, error) {
+	userLootBox := LootBox{
+		UserID:    userID,
+		LootBoxID: uuid.New(),
+		Type:      lootBoxType,
+	}
+
+	return userLootBox, ErrLootBoxes.Wrap(service.lootboxes.Create(ctx, userLootBox))
 }
 
 // Open opens lootbox by user.
@@ -43,14 +49,17 @@ func (service *Service) Open(ctx context.Context, userID, lootboxID uuid.UUID) (
 	cardsNum := 0
 	probabilities := make([]int, 0, 4)
 
-	// TODO: get from db.
-	// if userLootBox.Type == RegularBox {
-	// 	cardsNum = service.config.RegularBoxConfig.CardsNum
-	// 	probabilities = []int{service.config.RegularBoxConfig.Wood, service.config.RegularBoxConfig.Silver, service.config.RegularBoxConfig.Gold, service.config.RegularBoxConfig.Diamond}
-	// } else if userLootBox.Type == UDReleaseCelebrationBox {
-	// 	cardsNum = service.config.UDReleaseCelebrationBoxConfig.CardsNum
-	// 	probabilities = []int{service.config.UDReleaseCelebrationBoxConfig.Wood, service.config.UDReleaseCelebrationBoxConfig.Silver, service.config.UDReleaseCelebrationBoxConfig.Gold, service.config.UDReleaseCelebrationBoxConfig.Diamond}
-	// }
+	userLootBox, err := service.lootboxes.Get(ctx, lootboxID)
+	if err != nil {
+		return nil, ErrLootBoxes.Wrap(err)
+	}
+	if userLootBox.Type == RegularBox {
+		cardsNum = service.config.RegularBoxConfig.CardsNum
+		probabilities = []int{service.config.RegularBoxConfig.Wood, service.config.RegularBoxConfig.Silver, service.config.RegularBoxConfig.Gold, service.config.RegularBoxConfig.Diamond}
+	} else if userLootBox.Type == UDReleaseCelebrationBox {
+		cardsNum = service.config.UDReleaseCelebrationBoxConfig.CardsNum
+		probabilities = []int{service.config.UDReleaseCelebrationBoxConfig.Wood, service.config.UDReleaseCelebrationBoxConfig.Silver, service.config.UDReleaseCelebrationBoxConfig.Gold, service.config.UDReleaseCelebrationBoxConfig.Diamond}
+	}
 
 	var lootBoxCards []cards.Card
 
@@ -63,7 +72,16 @@ func (service *Service) Open(ctx context.Context, userID, lootboxID uuid.UUID) (
 		lootBoxCards = append(lootBoxCards, card)
 	}
 
-	err := service.lootboxes.Delete(ctx, lootboxID)
+	sortLootBoxCards(lootBoxCards)
+
+	err = service.lootboxes.Delete(ctx, lootboxID)
 
 	return lootBoxCards, ErrLootBoxes.Wrap(err)
+}
+
+// List returns all loot boxes.
+func (service *Service) List(ctx context.Context) ([]LootBox, error) {
+	userLootBoxes, err := service.lootboxes.List(ctx)
+
+	return userLootBoxes, ErrLootBoxes.Wrap(err)
 }
