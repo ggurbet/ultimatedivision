@@ -19,7 +19,7 @@ export const buyLootbox = (lootbox: Card[]) => ({
 const client = new LootboxClient();
 const service = new LootboxService(client);
 /** thunk that handles opening new lootbox */
-export const openLootbox = (lootbox: Lootbox) => async function (dispatch: Dispatch) {
+export const openLootbox = (lootbox: Lootbox) => async function(dispatch: Dispatch) {
     const opennedLootbox = await service.buy(lootbox);
     dispatch(buyLootbox(opennedLootbox));
 };

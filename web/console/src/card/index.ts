@@ -46,9 +46,11 @@ export class CardStats {
         public abbreviated: string = '',
         public fields: CardField[] = []
     ) { }
-    public average: number = this.fields
-        .map(item => +item.value)
-        .reduce((prev, current) => prev + current) / this.fields.length;
+    get average() {
+        return Math.round(this.fields
+            .map(item => +item.value)
+            .reduce((prev, current) => prev + current) / this.fields.length);
+    }
     /** abbreviated title of card stat name */
     get abbr(): string {
         return this.title.slice(0, 3);

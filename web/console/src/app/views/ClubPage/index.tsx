@@ -4,7 +4,7 @@
 import { useSelector } from 'react-redux';
 
 import { RootState } from '@/app/store';
-import { useCards } from '@/app/hooks/cards';
+import { useClub } from '@/app/hooks/club';
 import { userCards } from '@/app/store/actions/cards';
 
 import { ClubCardsArea } from '@components/Club/ClubCardsArea';
@@ -15,9 +15,7 @@ import './index.scss';
 
 const Club: React.FC = () => {
     /** TODO: decide use custom hook or directly dispatch thunk into useEffect*/
-    useCards(userCards);
-
-    const cards = useSelector((state: RootState) => state.cardsReducer.club);
+    const cards = useClub();
 
     return (
         <section className="club">

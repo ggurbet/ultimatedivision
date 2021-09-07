@@ -5,7 +5,7 @@
  * HttpClient is a custom wrapper around fetch api.
  * Exposes get, post and delete methods for JSON strings.
  */
- export class HttpClient {
+export class HttpClient {
     /**
      * Performs POST http request with JSON body.
      * @param path

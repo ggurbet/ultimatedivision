@@ -5,9 +5,9 @@
     min-width: 100%;
     overflow: hidden;
     background: $mainBackground;
-    background-image:  url('@static/img/StorePage/background.svg');
-    background-size: cover;
+    background-image:  url('@static/img/StorePage/background.png');
     background-position: center;
+    background-repeat: no-repeat;
     padding: 0;
     color: white;
     &__title {
