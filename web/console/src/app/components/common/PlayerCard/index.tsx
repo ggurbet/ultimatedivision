@@ -13,7 +13,8 @@ export const PlayerCard: React.FC<{ card: Card; parentClassName: string }> = ({
     <>
         <img
             className={`${parentClassName}__background-type`}
-            src={card.style?.background}
+            /** TODO: check for undefined will removed after correct Card type */
+            src={card.style && card.style.background}
             alt="background img"
             draggable={false}
         />

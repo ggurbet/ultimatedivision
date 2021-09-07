@@ -30,7 +30,7 @@ export const fieldReducer = (cardState = FieldSetup, action: any = {}) => {
             options.showCardSeletion = action.isVisible;
             break;
         case CARD_POSITION:
-            options.chosedCard = action.position;
+            options.chosedCard = action.index;
             break;
         case ADD_CARD:
             cards[action.fieldCard.index].card =
