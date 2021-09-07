@@ -3,9 +3,7 @@
 
 import { useSelector } from 'react-redux';
 
-import { RootState } from '@/app/store';
 import { useClub } from '@/app/hooks/club';
-import { userCards } from '@/app/store/actions/cards';
 
 import { ClubCardsArea } from '@components/Club/ClubCardsArea';
 import { FilterField } from '@components/common/FilterField';

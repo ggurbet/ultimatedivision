@@ -6,15 +6,15 @@ import './index.scss';
 const Fund: React.FC = () =>
     <div className="ud-fund">
         <h1 className="ud-fund__title">
-                UD Fund
+            UD Fund
         </h1>
         <p className="ud-fund__description">
-                UD DAO fund will be allocated to support the development of the game's ecosystem and invite outside developers.
-                The fund will be incorporated under decentralised governance model and will be managed through voting by the
-                UDT token holders.
+            UD DAO fund will be allocated to support the development of the game's ecosystem and invite outside developers.
+            The fund will be incorporated under decentralised governance model and will be managed through voting by the
+            UDT token holders.
             <br /><br />
-                Voting will take place to determine short-term goals of the project. Members can propose their ideas and get
-                funding based on community voting. The entire UD planning and management will gradually evolve into DAO
+            Voting will take place to determine short-term goals of the project. Members can propose their ideas and get
+            funding based on community voting. The entire UD planning and management will gradually evolve into DAO
         </p>
     </div>;
 

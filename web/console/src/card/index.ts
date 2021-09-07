@@ -59,11 +59,11 @@ export class CardStats {
     get color(): string {
         const STATISTIC_UPPER_BOUND = 90;
         const STATISTIC_LOWER_BOUND = 50;
-
+​
         const STATISTIC_UPPER_BOUND_COLOR = '#3CCF5D';
         const STATISTIC_MEDIUM_BOUND_COLOR = '#E8EC16';
         const STATISTIC_LOWER_BOUND_COLOR = '#FF4200';
-
+​
         switch (true) {
             case this.average >= STATISTIC_UPPER_BOUND:
                 return STATISTIC_UPPER_BOUND_COLOR;
@@ -74,79 +74,150 @@ export class CardStats {
         }
     }
 }
-
+​
+export interface CardInterface {
+    id: string,
+    playerName: string,
+    quality: string,
+    pictureType: number,
+    height: number,
+    weight: number,
+    skinColor: number,
+    hairStyle: number,
+    hairColor: number,
+    accessories: number[],
+    dominantFoot: string,
+    isTatoos: boolean,
+    status: number,
+    type: string,
+    userId: string,
+    tactics: number,
+    positioning: number,
+    composure: number,
+    aggression: number,
+    vision: number,
+    awareness: number,
+    crosses: number,
+    physique: number,
+    acceleration: number,
+    runningSpeed: number,
+    reactionSpeed: number,
+    agility: number,
+    stamina: number,
+    strength: number,
+    jumping: number,
+    balance: number,
+    technique: number,
+    dribbling: number,
+    ballControl: number,
+    weakFoot: number,
+    skillMoves: number,
+    finesse: number,
+    curve: number,
+    volleys: number,
+    shortPassing: number,
+    longPassing: number,
+    forwardPass: number,
+    offense: number,
+    finishingAbility: number,
+    shotPower: number,
+    accuracy: number,
+    distance: number,
+    penalty: number,
+    freeKicks: number,
+    corners: number,
+    headingAccuracy: number,
+    defence: number,
+    offsideTrap: number,
+    sliding: number,
+    tackles: number,
+    ballFocus: number,
+    interceptions: number,
+    vigilance: number,
+    goalkeeping: number,
+    reflexes: number,
+    diving: number,
+    handling: number,
+    sweeping: number,
+    throwing: number
+}
+​
 /** Card base implementation */
 export class Card {
+    id: string = '';
+    playerName: string = '';
+    quality: string = '';
+    pictureType: number = 0;
+    height: number = 0;
+    weight: number = 0;
+    skinColor: number = 0;
+    hairStyle: number = 0;
+    hairColor: number = 0;
+    accessories: number[] = [];
+    dominantFoot: string = '';
+    isTatoos: boolean = false;
+    status: number = 0;
+    type: string = '';
+    userId: string = '';
+    tactics: number = 0;
+    positioning: number = 0;
+    composure: number = 0;
+    aggression: number = 0;
+    vision: number = 0;
+    awareness: number = 0;
+    crosses: number = 0;
+    physique: number = 0;
+    acceleration: number = 0;
+    runningSpeed: number = 0;
+    reactionSpeed: number = 0;
+    agility: number = 0;
+    stamina: number = 0;
+    strength: number = 0;
+    jumping: number = 0;
+    balance: number = 0;
+    technique: number = 0;
+    dribbling: number = 0;
+    ballControl: number = 0;
+    weakFoot: number = 0;
+    skillMoves: number = 0;
+    finesse: number = 0;
+    curve: number = 0;
+    volleys: number = 0;
+    shortPassing: number = 0;
+    longPassing: number = 0;
+    forwardPass: number = 0;
+    offense: number = 0;
+    finishingAbility: number = 0;
+    shotPower: number = 0;
+    accuracy: number = 0;
+    distance: number = 0;
+    penalty: number = 0;
+    freeKicks: number = 0;
+    corners: number = 0;
+    headingAccuracy: number = 0;
+    defence: number = 0;
+    offsideTrap: number = 0;
+    sliding: number = 0;
+    tackles: number = 0;
+    ballFocus: number = 0;
+    interceptions: number = 0;
+    vigilance: number = 0;
+    goalkeeping: number = 0;
+    reflexes: number = 0;
+    diving: number = 0;
+    handling: number = 0;
+    sweeping: number = 0;
+    throwing: number = 0;
     /** Card fields */
     constructor(
-        public id: string,
-        public playerName: string,
-        public quality: string,
-        public pictureType: number,
-        public height: number,
-        public weight: number,
-        public skinColor: number,
-        public hairStyle: number,
-        public hairColor: number,
-        public accessories: number[],
-        public dominantFoot: string,
-        public isTatoos: boolean,
-        public status: number,
-        public type: string,
-        public userId: string,
-        public tactics: number,
-        public positioning: number,
-        public composure: number,
-        public aggression: number,
-        public vision: number,
-        public awareness: number,
-        public crosses: number,
-        public physique: number,
-        public acceleration: number,
-        public runningSpeed: number,
-        public reactionSpeed: number,
-        public agility: number,
-        public stamina: number,
-        public strength: number,
-        public jumping: number,
-        public balance: number,
-        public technique: number,
-        public dribbling: number,
-        public ballControl: number,
-        public weakFoot: number,
-        public skillMoves: number,
-        public finesse: number,
-        public curve: number,
-        public volleys: number,
-        public shortPassing: number,
-        public longPassing: number,
-        public forwardPass: number,
-        public offense: number,
-        public finishingAbility: number,
-        public shotPower: number,
-        public accuracy: number,
-        public distance: number,
-        public penalty: number,
-        public freeKicks: number,
-        public corners: number,
-        public headingAccuracy: number,
-        public defence: number,
-        public offsideTrap: number,
-        public sliding: number,
-        public tackles: number,
-        public ballFocus: number,
-        public interceptions: number,
-        public vigilance: number,
-        public goalkeeping: number,
-        public reflexes: number,
-        public diving: number,
-        public handling: number,
-        public sweeping: number,
-        public throwing: number,
-    ) { }
-
+        card: Partial<CardInterface> = {}
+    ) {
+        Object.assign(this, card);
+    }
+​
     /** returns background type and shadow type according to quality */
     get style() {
+​
         switch (this.quality) {
             case 'wood':
                 return {
@@ -174,7 +245,7 @@ export class Card {
     get face() {
         return playerFace
     }
-
+​
     /**TODO: for testing, will be replaced */
     get cardPrice() {
         const prp = 75;
@@ -185,13 +256,13 @@ export class Card {
         const PRICE_UPPER_BOUND = 80;
         const PRICE_MEDIUM_BOUND = 70;
         const PRICE_LOWER_BOUND = 50;
-
+​
         const PRICE_UPPER_BOUND_COLOR = '#1898D7';
         const PRICE_MEDIUM_BOUND_COLOR = '#3CCF5D';
         const PRICE_LOWER_BOUND_COLOR = '#E86C27';
         const PRICE_DEFAULT_BOUND_COLOR = '#FF4200';
         let color: string;
-
+​
         switch (true) {
             case prp >= PRICE_UPPER_BOUND:
                 color = PRICE_UPPER_BOUND_COLOR;
@@ -205,7 +276,7 @@ export class Card {
             default:
                 color = PRICE_DEFAULT_BOUND_COLOR;
         }
-
+​
         return {
             prp,
             color,
@@ -214,7 +285,7 @@ export class Card {
             price
         }
     }
-
+​
     /** Using in footballerCard in info block */
     get infoBlock() {
         return [
@@ -240,7 +311,7 @@ export class Card {
             new CardField('age', '36 years old'),
         ];
     }
-
+​
     /** Using in diagramm area in footballerCard */
     get diagramArea() {
         // TODO: need to get real min and max values to convert into diagram value
@@ -254,7 +325,7 @@ export class Card {
             new CardField('in game stats', 688),
         ];
     }
-
+​
     /** returns fields for card stats area in footballerCard */
     get statsArea() {
         return [

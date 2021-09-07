@@ -4,7 +4,7 @@
 import { Dispatch } from 'redux';
 
 import { CardClient } from '@/api/cards';
-import { Card } from '@/card';
+import { Card, CardInterface } from '@/card';
 import { CardService } from '@/card/service';
 
 export const GET_USER_CARDS = ' GET_CARDS';
@@ -26,13 +26,13 @@ const service = new CardService(client);
 export const userCards = () => async function (dispatch: Dispatch) {
     const response = await service.getUserCards();
     const cards = await response.json();
-
-    await dispatch(getUserCards(cards));
+    dispatch(getUserCards(cards.map((card: Partial<CardInterface>) => new Card(card))));
 };
 /** thunk for creating user cards list */
 export const marketplaceCards = () => async function (dispatch: Dispatch) {
     const response = await service.getSellingCards();
     const cards = await response.json();
+    await dispatch(getSellingCards(cards.map((card: Partial<CardInterface>) => new Card(card))));
 
     await dispatch(getSellingCards(cards));
 };

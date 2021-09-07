@@ -71,14 +71,17 @@ const Spending: React.FC = () => {
                 UDT Spending
             </h2>
             <p className="spending__description">
-                UDT can be spent in-game to obtain packs that contain new player cards. New player cards will have a high demand to form better squads.
+                UDT can be spent in-game to obtain packs that contain new player cards.
+                New player cards will have a high demand to form better squads.
                 New cards will also have intrinsic collector value.
                 <br /><br />
-                UDT will also be the main circulating currency on the marketplace and will be used in smart contracts between players.
+                UDT will also be the main circulating currency on the marketplace and will be used in smart
+                contracts between players.
                 <br /><br />
                 Some cosmetic and consumable in-games items will also require a steady UDT flow for every player.
                 <br /><br />
-                Overall, UDT will be necessary in-game currency that facilitates player interaction and rewards winners and high-performing teams.
+                Overall, UDT will be necessary in-game currency that facilitates player interaction and rewards
+                winners and high-performing teams.
             </p>
             <div className="spending__diagrams">
                 <div className="spending__diagrams__doughnut">
