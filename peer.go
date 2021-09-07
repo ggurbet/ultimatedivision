@@ -195,6 +195,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 	{ // clubs setup
 		peer.Clubs.Service = clubs.NewService(
 			peer.Database.Clubs(),
+			peer.Users.Service,
 		)
 	}
 

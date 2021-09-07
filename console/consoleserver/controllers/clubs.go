@@ -14,7 +14,6 @@ import (
 	"ultimatedivision/clubs"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/users/userauth"
 )
 
 var (
@@ -64,14 +63,12 @@ func (controller *Clubs) CreateSquad(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	params := mux.Vars(r)
-	idParam := params["clubId"]
-
-	if idParam == "" {
+	if params["clubId"] == "" {
 		controller.serveError(w, http.StatusBadRequest, ErrClubs.New("empty id parameter"))
 		return
 	}
 
-	id, err := uuid.Parse(idParam)
+	id, err := uuid.Parse(params["clubId"])
 	if err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
 		return
@@ -80,12 +77,6 @@ func (controller *Clubs) CreateSquad(w http.ResponseWriter, r *http.Request) {
 	err = controller.clubs.CreateSquad(ctx, id)
 	if err != nil {
 		controller.log.Error("could not create club", ErrClubs.Wrap(err))
-
-		if userauth.ErrUnauthenticated.Has(err) {
-			controller.serveError(w, http.StatusUnauthorized, ErrClubs.Wrap(err))
-			return
-		}
-
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
 		return
 	}
@@ -145,14 +136,32 @@ func (controller *Clubs) UpdatePosition(w http.ResponseWriter, r *http.Request) 
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 
-	var squadCard clubs.SquadCard
+	params := mux.Vars(r)
+	if params["cardId"] == "" || params["squadId"] == "" {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.New("empty id parameter"))
+		return
+	}
 
-	if err := json.NewDecoder(r.Body).Decode(&squadCard); err != nil {
+	cardID, err := uuid.Parse(params["cardId"])
+	if err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
 		return
 	}
 
-	err := controller.clubs.UpdateCardPosition(ctx, squadCard)
+	squadID, err := uuid.Parse(params["squadId"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
+		return
+	}
+
+	var squadCard clubs.SquadCard
+
+	if err = json.NewDecoder(r.Body).Decode(&squadCard); err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
+		return
+	}
+
+	err = controller.clubs.UpdateCardPosition(ctx, squadID, cardID, squadCard.Position)
 	if err != nil {
 		controller.log.Error("could not update card position", ErrClubs.Wrap(err))
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
@@ -165,14 +174,26 @@ func (controller *Clubs) UpdateSquad(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 
-	var updatedSquad clubs.Squad
+	params := mux.Vars(r)
+	if params["squadId"] == "" {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.New("empty id parameter"))
+		return
+	}
 
-	if err := json.NewDecoder(r.Body).Decode(&updatedSquad); err != nil {
+	squadID, err := uuid.Parse(params["squadId"])
+	if err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
 		return
 	}
 
-	err := controller.clubs.UpdateSquad(ctx, updatedSquad)
+	var updatedSquad clubs.Squad
+
+	if err = json.NewDecoder(r.Body).Decode(&updatedSquad); err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
+		return
+	}
+
+	err = controller.clubs.UpdateSquad(ctx, squadID, updatedSquad.Formation, updatedSquad.Tactic, updatedSquad.CaptainID)
 	if err != nil {
 		controller.log.Error("could not update squad", ErrClubs.Wrap(err))
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
@@ -180,19 +201,37 @@ func (controller *Clubs) UpdateSquad(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Add is an endpoint that add new card to the squad.
+// Add is an endpoint that adds new card to the squad.
 func (controller *Clubs) Add(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 
-	var newSquadCard clubs.SquadCard
+	params := mux.Vars(r)
+	if params["squadId"] == "" || params["cardId"] == "" {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.New("empty id parameter"))
+		return
+	}
 
-	if err := json.NewDecoder(r.Body).Decode(&newSquadCard); err != nil {
+	cardID, err := uuid.Parse(params["cardId"])
+	if err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
 		return
 	}
 
-	err := controller.clubs.Add(ctx, newSquadCard)
+	squadID, err := uuid.Parse(params["squadId"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
+		return
+	}
+
+	var newSquadCard clubs.SquadCard
+
+	if err = json.NewDecoder(r.Body).Decode(&newSquadCard); err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
+		return
+	}
+
+	err = controller.clubs.Add(ctx, newSquadCard.Position, squadID, cardID)
 	if err != nil {
 		controller.log.Error("could not add card to the squad", ErrClubs.Wrap(err))
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
@@ -205,14 +244,25 @@ func (controller *Clubs) Delete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 
-	var squadCard clubs.SquadCard
+	params := mux.Vars(r)
+	if params["cardId"] == "" || params["squadId"] == "" {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.New("empty id parameter"))
+		return
+	}
 
-	if err := json.NewDecoder(r.Body).Decode(&squadCard); err != nil {
+	cardID, err := uuid.Parse(params["cardId"])
+	if err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
 		return
 	}
 
-	err := controller.clubs.Delete(ctx, squadCard.SquadID, squadCard.CardID)
+	squadID, err := uuid.Parse(params["squadId"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
+		return
+	}
+
+	err = controller.clubs.Delete(ctx, squadID, cardID)
 	if err != nil {
 		controller.log.Error("could not delete card from the squad", ErrClubs.Wrap(err))
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))

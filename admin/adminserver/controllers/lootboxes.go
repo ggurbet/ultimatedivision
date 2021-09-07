@@ -102,7 +102,7 @@ func (controller *LootBoxes) Open(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cards, err := controller.lootboxes.Open(ctx, lootboxID, userID)
+	cards, err := controller.lootboxes.Open(ctx, userID, lootboxID)
 	if err != nil {
 		controller.log.Error("could not open loot box", ErrLootBoxes.Wrap(err))
 		switch {

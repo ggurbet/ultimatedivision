@@ -21,13 +21,14 @@ var ErrClubs = errs.Class("clubs service error")
 // architecture: Service
 type Service struct {
 	clubs DB
-	users users.Service
+	users *users.Service
 }
 
 // NewService is a constructor for clubs service.
-func NewService(clubs DB) *Service {
+func NewService(clubs DB, users *users.Service) *Service {
 	return &Service{
 		clubs: clubs,
+		users: users,
 	}
 }
 
@@ -59,23 +60,36 @@ func (service *Service) CreateSquad(ctx context.Context, clubID uuid.UUID) error
 }
 
 // Add add new card to the squad of the club.
-func (service *Service) Add(ctx context.Context, newSquadCard SquadCard) error {
+func (service *Service) Add(ctx context.Context, position Position, squadID, cardID uuid.UUID) error {
+	newSquadCard := SquadCard{
+		SquadID:  squadID,
+		CardID:   cardID,
+		Position: position,
+	}
+
 	return ErrClubs.Wrap(service.clubs.AddSquadCard(ctx, newSquadCard))
 }
 
 // Delete deletes card from squad.
-func (service *Service) Delete(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID) error {
+func (service *Service) Delete(ctx context.Context, squadID, cardID uuid.UUID) error {
 	return ErrClubs.Wrap(service.clubs.DeleteSquadCard(ctx, squadID, cardID))
 }
 
 // UpdateSquad updates tactic and formation of the squad.
-func (service *Service) UpdateSquad(ctx context.Context, updatedSquad Squad) error {
+func (service *Service) UpdateSquad(ctx context.Context, squadID uuid.UUID, formation Formation, tactic Tactic, captainID uuid.UUID) error {
+	updatedSquad := Squad{
+		ID:        squadID,
+		Tactic:    tactic,
+		Formation: formation,
+		CaptainID: captainID,
+	}
+
 	return ErrClubs.Wrap(service.clubs.UpdateTacticFormationCaptain(ctx, updatedSquad))
 }
 
 // UpdateCardPosition updates position of card in the squad.
-func (service *Service) UpdateCardPosition(ctx context.Context, squadCard SquadCard) error {
-	return ErrClubs.Wrap(service.clubs.UpdatePosition(ctx, squadCard.SquadID, squadCard.CardID, squadCard.Position))
+func (service *Service) UpdateCardPosition(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID, newPosition Position) error {
+	return ErrClubs.Wrap(service.clubs.UpdatePosition(ctx, newPosition, squadID, cardID))
 }
 
 // GetSquad returns all squads from club.
