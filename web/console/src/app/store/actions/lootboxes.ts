@@ -6,7 +6,7 @@ import { Dispatch } from 'redux';
 import { Card } from '@/card';
 import { LootboxClient } from '@/api/lootboxes';
 import { Lootbox } from '@/lootbox';
-import { LootboxService } from '@/lootbox/servise';
+import { LootboxService } from '@/lootbox/service';
 
 export const BUY_LOOTBOX = 'BUY_LOOTBOX';
 export const OPEN_LOOTBOX = 'OPEN_LOOTBOX';
