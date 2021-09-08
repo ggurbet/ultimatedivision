@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Portal | Create Lootbox</title>
+</head>
+<body>
+<form action="/lootboxes/create/{{.}}" method="post">
+  <form>
+    <p><b>Choose type of loot box</b></p>
+    <p><input name="lootbox" type="radio" value="Regular Box" checked="checked"> Regular box</p>
+    <p><input name="lootbox" type="radio" value="UD Release Celebration Box"> UD Release Celebration Box</p>
+    <input type="submit" value="Create">
+  </form>
+</form>
+</body>
+</html>

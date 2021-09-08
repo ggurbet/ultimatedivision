@@ -7,11 +7,11 @@ import { FootballerCardStatsArea } from '@components/FootballerCard/FootballerCa
 import { FootballerCardInformation } from '@components/FootballerCard/FootballerCardInformation';
 
 import './index.scss';
+import { Card } from '@/card';
 
 const FootballerCard: React.FC = (props) => {
     // @ts-ignore
-    const cardData = props.location.state.card;
-    const FIRST_CARD_INDEX = 0;
+    const cardData: Card = props.location.state.card;
 
     return (
         <div className="footballer-card">
@@ -19,7 +19,7 @@ const FootballerCard: React.FC = (props) => {
                 <div className="footballer-card__wrapper">
                     <div className="footballer-card__name-wrapper">
                         <h1 className="footballer-card__name">
-                            {cardData.overalInfo[FIRST_CARD_INDEX].value}
+                            {cardData.playerName}
                         </h1>
                     </div>
                     <FootballerCardIllustrations card={cardData} />

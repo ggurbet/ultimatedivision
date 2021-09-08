@@ -14,6 +14,9 @@ import (
 	"ultimatedivision/clubs"
 )
 
+// ensures that clubsDB implements clubs.DB.
+var _ clubs.DB = (*clubsDB)(nil)
+
 // ErrClubs indicates that there was an error in the database.
 var ErrClubs = errs.Class("clubs repository error")
 
@@ -61,11 +64,11 @@ func (clubsDB *clubsDB) AddSquadCard(ctx context.Context, squadCards clubs.Squad
 }
 
 // DeleteSquadCard deletes card from squad.
-func (clubsDB *clubsDB) DeleteSquadCard(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID) error {
+func (clubsDB *clubsDB) DeleteSquadCard(ctx context.Context, squadID, cardID uuid.UUID) error {
 	query := `DELETE FROM squad_cards
-              WHERE id = $1 AND card_id = $2`
+              WHERE card_id = $1 and id = $2`
 
-	_, err := clubsDB.conn.ExecContext(ctx, query, squadID, cardID)
+	_, err := clubsDB.conn.ExecContext(ctx, query, cardID, squadID)
 
 	return ErrSquad.Wrap(err)
 }
@@ -149,7 +152,7 @@ func (clubsDB *clubsDB) ListSquadCards(ctx context.Context, squadID uuid.UUID) (
 // UpdateTacticFormationCaptain updates tactic, formation and capitan in the squad.
 func (clubsDB *clubsDB) UpdateTacticFormationCaptain(ctx context.Context, squad clubs.Squad) error {
 	query := `UPDATE squads
-			  SET tactic = $1, formation = $2
+			  SET tactic = $1, formation = $2, captain_id = $3
   			  WHERE id = $3`
 
 	_, err := clubsDB.conn.ExecContext(ctx, query, squad.Tactic, squad.Formation, squad.ID)
@@ -158,10 +161,10 @@ func (clubsDB *clubsDB) UpdateTacticFormationCaptain(ctx context.Context, squad 
 }
 
 // UpdatePosition updates position of card in the squad.
-func (clubsDB *clubsDB) UpdatePosition(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID, newPosition clubs.Position) error {
+func (clubsDB *clubsDB) UpdatePosition(ctx context.Context, newPosition clubs.Position, squadID, cardID uuid.UUID) error {
 	query := `UPDATE squad_cards
 			  SET card_position = $1
-			  WHERE card_id = $2 AND id = $3`
+			  WHERE card_id = $2 and id = $3`
 
 	_, err := clubsDB.conn.ExecContext(ctx, query, newPosition, cardID, squadID)
 

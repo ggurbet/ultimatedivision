@@ -18,54 +18,60 @@ type dragParamType = number | null;
 const DEFAULT_CARD_INDEX = null;
 
 /** Chose type of cards positioning on football field */
-export const setFormation = (option: string) => ({
+export const setFormation = (formation: string) => ({
     type: FORMATION,
-    action: option,
+    formation,
 });
 
-export const cardSelectionVisibility = (option: boolean) => ({
+export const cardSelectionVisibility = (isVisible: boolean) => ({
     type: SELECTION_VISIBILITY,
-    action: option,
+    isVisible,
 });
 
 /** Adding into cardList in reducer */
 export const addCard = (card: Card, index: number) => ({
     type: ADD_CARD,
-    action: [card, index],
+    fieldCard: {
+        card,
+        index,
+    },
 });
 
 export const removeCard = (index: dragParamType = DEFAULT_CARD_INDEX) => ({
     type: REMOVE_CARD,
-    action: index,
+    index,
 });
 
 /** Selection position of card which should be added */
-export const choseCardPosition = (index: number) => ({
+export const choosePosition = (index: number) => ({
     type: CARD_POSITION,
-    action: index,
+    index,
 });
 
 export const setDragStart = (index: dragParamType = DEFAULT_CARD_INDEX) => ({
     type: DRAG_START,
-    action: index,
+    index,
 });
 
 export const setDragTarget = (index: dragParamType = DEFAULT_CARD_INDEX) => ({
     type: DRAG_TARGET,
-    action: index,
+    index,
 });
 
-export const exchangeCards = (prevPosition: dragParamType, currentPosition: dragParamType) => ({
+export const exchangeCards = (previous: dragParamType, current: dragParamType) => ({
     type: EXCHANGE_CARDS,
-    action: [prevPosition, currentPosition],
+    position: {
+        previous,
+        current,
+    },
 });
 
-export const setTactic = (option: string) => ({
+export const setTactic = (tactic: string) => ({
     type: TACTICS,
-    action: option,
+    tactic,
 });
 
-export const setCaptain = (option: string) => ({
+export const setCaptain = (captain: string) => ({
     type: CAPTAIN,
-    action: option,
+    captain,
 });

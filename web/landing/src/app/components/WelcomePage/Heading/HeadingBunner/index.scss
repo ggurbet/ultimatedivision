@@ -1,0 +1,55 @@
+@import '/src/index.scss';
+
+.heading-container {
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    &__ball {
+        position: relative;
+
+        animation: bounce 5s ease-in-out both infinite;
+        @keyframes bounce {
+            0% {
+                transform: translateY(-60px);
+            }
+            50% {
+                transform: translateY(20px);
+            }
+            100% {
+                transform: translateY(-60px);
+            }
+        }
+    }
+    &__logo, &__logo-text {
+        position: absolute;
+        z-index: 2;
+    }
+    &__logo-text {
+        top: 150px;
+        transition: top 0.3s;
+    }
+
+    @media (max-width: $tabletBreakPoint) {
+        background-size: cover;
+        margin-bottom: 50px;
+        &__ball {
+            width: 60%;
+            height: min-intrinsic;
+        }
+        &__logo-text {
+            width: 80%;
+            height: min-intrinsic;
+            top: 180px;
+        }
+    }
+    @media (max-width: $phoneBreakPoint) {
+        &__logo {
+            width: 80px;
+            height: min-intrinsic;
+        }
+        &__logo-text {
+            top: 120px;
+        }
+    }
+}

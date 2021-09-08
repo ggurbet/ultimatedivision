@@ -131,7 +131,7 @@ func (controller *Users) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	uuid, err := uuid.Parse(id)
+	userID, err := uuid.Parse(id)
 	if err != nil {
 		http.Error(w, "could not parse uuid", http.StatusBadRequest)
 		return
@@ -139,7 +139,7 @@ func (controller *Users) Update(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		user, err := controller.users.Get(ctx, uuid)
+		user, err := controller.users.Get(ctx, userID)
 		if err != nil {
 			controller.log.Error("could not get user", ErrUsers.Wrap(err))
 			if users.ErrNoUser.Has(err) {
@@ -157,24 +157,19 @@ func (controller *Users) Update(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case http.MethodPost:
-		err := r.ParseForm()
+		err = r.ParseForm()
 		if err != nil {
 			http.Error(w, "could not get users form", http.StatusBadRequest)
 			return
 		}
 
-		status := r.FormValue("status")
-		if status == "" {
-			http.Error(w, "status is empty", http.StatusBadRequest)
-			return
-		}
-		s, err := strconv.Atoi(status)
+		status, err := strconv.Atoi(r.FormValue("status"))
 		if err != nil {
-			http.Error(w, "could not converted to type int", http.StatusBadRequest)
+			http.Error(w, "invalid status", http.StatusBadRequest)
 			return
 		}
 
-		err = controller.users.Update(ctx, s, uuid)
+		err = controller.users.Update(ctx, users.Status(status), userID)
 		if err != nil {
 			controller.log.Error("could not update users status", ErrUsers.Wrap(err))
 			http.Error(w, "could not update users status", http.StatusInternalServerError)

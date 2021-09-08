@@ -6,11 +6,10 @@ package lootboxes
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
-	"ultimatedivision/internal/auth"
-	"ultimatedivision/users/userauth"
 )
 
 // ErrLootBoxes indicates that there was an error in the service.
@@ -35,29 +34,25 @@ func NewService(config Config, lootboxes DB, cards *cards.Service) *Service {
 }
 
 // Create creates LootBox.
-func (service *Service) Create(ctx context.Context, userLootBox LootBox) error {
-	claims, err := auth.GetClaims(ctx)
-	if err != nil {
-		return userauth.ErrUnauthenticated.Wrap(err)
+func (service *Service) Create(ctx context.Context, lootBoxType Type, userID uuid.UUID) (LootBox, error) {
+	userLootBox := LootBox{
+		UserID:    userID,
+		LootBoxID: uuid.New(),
+		Type:      lootBoxType,
 	}
 
-	userLootBox.UserID = claims.ID
-
-	return ErrLootBoxes.Wrap(service.lootboxes.Create(ctx, userLootBox))
+	return userLootBox, ErrLootBoxes.Wrap(service.lootboxes.Create(ctx, userLootBox))
 }
 
 // Open opens lootbox by user.
-func (service *Service) Open(ctx context.Context, userLootBox LootBox) ([]cards.Card, error) {
-	claims, err := auth.GetClaims(ctx)
-	if err != nil {
-		return nil, userauth.ErrUnauthenticated.Wrap(err)
-	}
-
-	userLootBox.UserID = claims.ID
-
+func (service *Service) Open(ctx context.Context, userID, lootboxID uuid.UUID) ([]cards.Card, error) {
 	cardsNum := 0
 	probabilities := make([]int, 0, 4)
 
+	userLootBox, err := service.lootboxes.Get(ctx, lootboxID)
+	if err != nil {
+		return nil, ErrLootBoxes.Wrap(err)
+	}
 	if userLootBox.Type == RegularBox {
 		cardsNum = service.config.RegularBoxConfig.CardsNum
 		probabilities = []int{service.config.RegularBoxConfig.Wood, service.config.RegularBoxConfig.Silver, service.config.RegularBoxConfig.Gold, service.config.RegularBoxConfig.Diamond}
@@ -69,7 +64,7 @@ func (service *Service) Open(ctx context.Context, userLootBox LootBox) ([]cards.
 	var lootBoxCards []cards.Card
 
 	for i := 0; i < cardsNum; i++ {
-		card, err := service.cards.Create(ctx, userLootBox.UserID, probabilities)
+		card, err := service.cards.Create(ctx, userID, probabilities)
 		if err != nil {
 			return lootBoxCards, ErrLootBoxes.Wrap(err)
 		}
@@ -77,7 +72,16 @@ func (service *Service) Open(ctx context.Context, userLootBox LootBox) ([]cards.
 		lootBoxCards = append(lootBoxCards, card)
 	}
 
-	err = service.lootboxes.Delete(ctx, userLootBox)
+	sortLootBoxCards(lootBoxCards)
+
+	err = service.lootboxes.Delete(ctx, lootboxID)
 
 	return lootBoxCards, ErrLootBoxes.Wrap(err)
+}
+
+// List returns all loot boxes.
+func (service *Service) List(ctx context.Context) ([]LootBox, error) {
+	userLootBoxes, err := service.lootboxes.List(ctx)
+
+	return userLootBoxes, ErrLootBoxes.Wrap(err)
 }

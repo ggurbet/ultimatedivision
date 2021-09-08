@@ -1,0 +1,324 @@
+@import '/src/index.scss';
+
+.register {
+    display: flex;
+    &__represent-reset {
+        float: left;
+        height: 100vh;
+        width: 50%;
+        text-align: center;
+        background: radial-gradient(#292948 0%, #675EAE 100%);
+        overflow: hidden;
+        &__ultimate {
+            margin: 40% auto;
+        }
+    }
+    &__represent {
+        display: block;
+        width: 50%;
+        height: 100vh;
+        text-align: center;
+        background-size: cover;
+        background-image: url('@static/images/registerPage/ball.svg');
+        background-position: center;
+        overflow: hidden;
+        &__ultimate {
+            margin: 10% auto;
+        }
+    }
+    &__sign-up, &__sign-in, &__reset {
+        float: right;
+        width: 50%;;
+        height: 100vh;
+        padding-left: 100px;
+        &__go-back {
+            display: inline-block;
+            margin-top: 10%;
+            font-size: 18px;
+            text-decoration: none;
+            &__title {
+                text-decoration: none;
+                margin-left: 5px;
+                color: #8C8C8C;
+            }
+        }
+        &__title {
+            margin-top: 20%;
+            font-weight: 100;
+            font-size: 50px;
+        }
+        &__description {
+            margin-top: 40px;
+            &__title {
+                font-size: 27px;
+                font-weight: 100;
+            }
+            &__information {
+                margin-top: 10px;
+                width: 60%;
+                color: #8C8C8C;
+                &__sign {
+                    text-decoration: none;
+                    color: #3CCF56;
+                    cursor: pointer;
+                    margin-left: 5px;
+                }
+            }
+        }
+        &__go-back {
+            margin-top: 10%;
+            text-decoration: none;
+            color: #8C8C8C;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        &__sign-form {
+            width: 310px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            &__email, &__name, &__surname, &__password, &__confirm,
+            &__email-error, &__name-error, &__surname-error, &__password-error {
+                border: 1px solid #8C8C8C;
+                outline: none;
+                width: 100%;
+                line-height: 40px;
+                color: #8C8C8C;
+                padding-left: 10px;
+                margin-top: 20px;
+                background:#dfdfdf;
+                font-size: 14px;
+                &__error {
+                    color: red;
+                    font-size: 10px;
+                }
+            }
+            &__email-error, &__name-error, &__surname-error, &__password-error {
+                border: 1px solid red;
+            }
+            &__confirm {
+                border: none;
+                background: url(@static/images/registerPage/button.svg);
+                background-size: cover;
+                background-position: center;
+                line-height: 40px;
+                width: 80%;
+                color: black;
+                border-radius: 5px;
+                margin-top: 20px;
+            }
+            &__remember-me {
+                margin-top: 20px;
+            }
+            &__forgot-password {
+                position: absolute;
+                bottom: 65px;
+                right: 0;
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        }
+    }
+    &__sign-in, &__reset {
+        &__title {
+            margin-top: 30%;
+        }
+    }
+    @media (max-width: $desktopBreakPoint) {
+        &__represent-reset {
+            &__ultimate {
+                height: 15%;
+                margin: 60% auto;
+            }
+        }
+        &__represent {
+            &__ultimate {
+                height: 10%;
+                margin: 40% auto;
+            }
+        }
+        &__sign-up, &__sign-in, &__reset {
+            padding-left: 55px;
+            &__description {
+                margin-top: 30px;
+            }
+            &__title {
+                font-size: 40px;
+                margin-top: 60%;
+            }
+            &__sign-form {
+                width: 260px;
+                &__email, &__name, &__surname,
+                &__password, &__confirm {
+                    line-height: 30px;
+                }
+                &__remember-me {
+                    border-radius: 4px;
+                }
+                &__forgot-password {
+                    bottom: 52px;
+                    font-size: 14px;
+                }
+            }
+        }
+        &__sign-up {
+            &__title {
+                margin-top: 40%;
+            }
+        }
+    }
+    @media (max-width: $tabletBreakPoint) {
+        &__represent-reset {
+            &__ultimate {
+                height: 10%;
+                margin: 70% auto;
+            }
+        }
+        &__represent {
+            &__ultimate {
+                height: 12%;
+                margin: 70% auto;
+            }
+        }
+        &__sign-up, &__sign-in, &__reset {
+            padding-left: 25px;
+            &__go-back {
+                margin-top: 50%;
+            }
+            &__description {
+                margin-top: 30px;
+                &__title {
+                    font-size: 22px;
+                }
+                &__information {
+                    margin-top: 10px;
+                    font-size: 16px;
+                }
+            }
+            &__title {
+                font-size: 30px;
+                margin-top: 80%;
+            }
+            &__sign-form {
+                width: 240px;
+                &__email, &__name, &__surname,
+                &__password, &__confirm {
+                    margin-top: 10px;
+                    line-height: 24px;
+                    font-size: 12px;
+                }
+                &__forgot-password {
+                    bottom: 37px;
+                }
+            }
+        }
+        &__reset {
+            &__title {
+                margin-top: 30%;
+            }
+        }
+        &__sign-up {
+            &__title {
+                margin-top: 50%;
+            }
+        }
+    }
+    @media (max-width: $phoneBreakPoint) {
+        &__represent-reset {
+            &__ultimate {
+                height: 7%;
+                margin: 80% auto;
+            }
+        }
+        &__represent {
+            &__ultimate {
+                height: 6%;
+                margin: 80% auto;
+            }
+        }
+        &__sign-up, &__sign-in, &__reset {
+            padding-left: 10px;
+            &__title {
+                font-size: 20px;
+                margin-top: 80%;
+            }
+            &__description {
+                margin-top: 15px;
+                &__title {
+                    font-size: 16px;
+                    font-weight: 100;
+                }
+                &__information {
+                    font-size: 10px;
+                    width: 70%;
+                    color: #8C8C8C;
+                    &__sign {
+                        text-decoration: none;
+                        color: #3CCF56;
+                        cursor: pointer;
+                    }
+                }
+            }
+            &__go-back {
+                margin-top: 50%;
+                font-size: 16px;
+            }
+            &__sign-form {
+                width: 160px;
+                &__email, &__name, &__surname,
+                &__password, &__confirm {
+                    line-height: 20px;
+                    font-size: 10px;
+                }
+                &__remember-me {
+                    margin-top: 10px;
+                }
+                &__forgot-password {
+                    margin-top: 20px;
+                    font-size: 10px;
+                    float: right;
+                    text-decoration: none;
+                }
+            }
+        }
+        &__reset {
+            &__title {
+                margin-top: 40%;
+            }
+        }
+        &__sign-up {
+            &__title {
+                margin-top: 70%;
+            }
+        }
+    }
+    @media (max-width: $phoneBreakPoint - 150px) {
+        &__represent-reset {
+            &__ultimate {
+                height: 5%;
+                margin: 70% auto;
+            }
+        }
+        &__sign-up, &__sign-in, &__reset {
+            padding-left: 5px;
+            &__sign-form {
+                width: 120px;
+                &__email, &__name, &__surname,
+                &__password, &__confirm {
+                    padding-left: 5px;
+                    line-height: 18px;
+                    font-size: 8px;
+                }
+                &__remember-me {
+                    width: 8px;
+                    height: 8px;
+                }
+                &__forgot-password {
+                    font-size: 8px;
+                    bottom: 34px;
+                }
+            }
+        }
+    }
+}

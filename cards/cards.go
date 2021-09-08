@@ -16,9 +16,6 @@ var ErrNoCard = errs.Class("card does not exist")
 // ErrCards indicated that there was an error in service.
 var ErrCards = errs.Class("cards service error")
 
-// ErrInvalidFilter indicated that filter does not valid.
-var ErrInvalidFilter = errs.Class("invalid filter")
-
 // DB is exposing access to cards db.
 //
 // architecture: DB
@@ -29,7 +26,7 @@ type DB interface {
 	Get(ctx context.Context, id uuid.UUID) (Card, error)
 	// List returns all cards from the data base.
 	List(ctx context.Context) ([]Card, error)
-	// ListWithFilters returns all cards from the data base with filters.
+	// ListWithFilters returns cards from the data base with filters.
 	ListWithFilters(ctx context.Context, filters []Filters) ([]Card, error)
 	// ListByPlayerName returns cards from DB by player name.
 	ListByPlayerName(ctx context.Context, filters Filters) ([]Card, error)
@@ -122,6 +119,19 @@ const (
 	// QualityDiamond indicates that card quality is diamond.
 	QualityDiamond Quality = "diamond"
 )
+
+// QualityToValue describes quality-to-value ratio.
+var QualityToValue = map[Quality]int{
+	QualityWood:    0,
+	QualitySilver:  1,
+	QualityGold:    2,
+	QualityDiamond: 3,
+}
+
+// GetValueOfQuality returns value of card by key.
+func (quality Quality) GetValueOfQuality() int {
+	return QualityToValue[quality]
+}
 
 // PictureType defines the list of possible card picture types.
 var PictureType = map[int]string{

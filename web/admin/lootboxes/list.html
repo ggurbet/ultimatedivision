@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal | Lootboxes</title>
+</head>
+<body>
+<table style="width:100%">
+    <thead>
+    <tr>
+        <th>User ID</th>
+        <th>Lootbox ID</th>
+        <th>Lootbox Type</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    {{range .}}
+    <tr>
+        <td>
+            {{.UserID}}
+        </td>
+        <td>
+            {{.LootBoxID}}
+        </td>
+        <td>
+            {{.Type}}
+        </td>
+        <td>
+            <a href="/lootboxes/open/{{.UserID}}/{{.LootBoxID}}">Open</a>
+        </td>
+    </tr>
+    {{end}}
+</table>
+</body>
+</html>

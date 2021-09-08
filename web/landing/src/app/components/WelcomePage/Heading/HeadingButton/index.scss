@@ -1,0 +1,10 @@
+@import '/src/index.scss';
+@import 'aos/dist/aos.css';
+
+.heading-join-wrapper {
+    text-align: center;
+    margin-top: 50px;
+    &__confirm {
+        @extend %button
+    }
+}

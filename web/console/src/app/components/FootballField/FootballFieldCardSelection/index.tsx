@@ -4,16 +4,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { addCard, cardSelectionVisibility } from '@/app/store/actions/footballField';
 
+import { useClub } from '@/app/hooks/club';
+
 import { FilterField } from
     '@components/FootballField/FootballFieldCardSelection/FilterField';
 import { PlayerCard } from '@components/common/PlayerCard';
-
-import './index.scss';
 import { Paginator } from '@components/common/Paginator';
 import { Card } from '@/card';
 
+
+import './index.scss';
+
 export const FootballFieldCardSelection = () => {
-    const cards = useSelector((state: RootState) => state.cardsReducer.cards);
+    const cards = useClub();
     const dispatch = useDispatch();
     const fieldSetup = useSelector((state: RootState) => state.fieldReducer);
 

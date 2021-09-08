@@ -78,7 +78,7 @@ func TestUsers(t *testing.T) {
 		})
 
 		t.Run("update", func(t *testing.T) {
-			err := repository.Update(ctx, int(users.StatusSuspended), user1.ID)
+			err := repository.Update(ctx, users.StatusSuspended, user1.ID)
 			require.NoError(t, err)
 
 			userFromDB, err := repository.Get(ctx, user1.ID)

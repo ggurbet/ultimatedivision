@@ -7,8 +7,11 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/lootboxes"
 )
@@ -38,7 +41,6 @@ func NewLootBoxes(log logger.Logger, lootBoxes *lootboxes.Service) *LootBoxes {
 // Create is an endpoint that creates new lootbox for user.
 func (controller *LootBoxes) Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
 	ctx := r.Context()
 
 	var lootBox lootboxes.LootBox
@@ -48,10 +50,21 @@ func (controller *LootBoxes) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := controller.lootBoxes.Create(ctx, lootBox)
+	claims, err := auth.GetClaims(ctx)
 	if err != nil {
-		controller.log.Error("could not create lootbox for user", ErrLootBoxes.Wrap(err))
+		controller.serveError(w, http.StatusUnauthorized, ErrLootBoxes.Wrap(err))
+		return
+	}
+
+	userLootBox, err := controller.lootBoxes.Create(ctx, lootBox.Type, claims.UserID)
+	if err != nil {
+		controller.log.Error("could not create loot box for user", ErrLootBoxes.Wrap(err))
 		controller.serveError(w, http.StatusInternalServerError, ErrLootBoxes.Wrap(err))
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(userLootBox); err != nil {
+		controller.log.Error("could not response with json", ErrLootBoxes.Wrap(err))
 		return
 	}
 }
@@ -59,25 +72,35 @@ func (controller *LootBoxes) Create(w http.ResponseWriter, r *http.Request) {
 // Open is an endpoint that opens user lootbox.
 func (controller *LootBoxes) Open(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
 	ctx := r.Context()
 
-	var lootBox lootboxes.LootBox
-
-	if err := json.NewDecoder(r.Body).Decode(&lootBox); err != nil {
-		controller.serveError(w, http.StatusBadRequest, ErrLootBoxes.Wrap(err))
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusUnauthorized, ErrLootBoxes.Wrap(err))
 		return
 	}
 
-	cards, err := controller.lootBoxes.Open(ctx, lootBox)
+	params := mux.Vars(r)
+	lootboxID, err := uuid.Parse(params["id"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrLootBoxes.New("lootbox id is missing or invalid"))
+		return
+	}
+
+	cards, err := controller.lootBoxes.Open(ctx, claims.UserID, lootboxID)
 	if err != nil {
 		controller.log.Error("could not open loot box", ErrLootBoxes.Wrap(err))
-		controller.serveError(w, http.StatusInternalServerError, ErrLootBoxes.Wrap(err))
+		switch {
+		case lootboxes.ErrNoLootBox.Has(err):
+			controller.serveError(w, http.StatusNotFound, ErrLootBoxes.Wrap(err))
+		default:
+			controller.serveError(w, http.StatusInternalServerError, ErrLootBoxes.Wrap(err))
+		}
 		return
 	}
 
 	if err = json.NewEncoder(w).Encode(cards); err != nil {
-		controller.log.Error("could not encode cards", ErrLootBoxes.Wrap(err))
+		controller.log.Error("could not encode lootbox cards", ErrLootBoxes.Wrap(err))
 		return
 	}
 }

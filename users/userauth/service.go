@@ -67,7 +67,7 @@ func (service *Service) Token(ctx context.Context, email string, password string
 	}
 
 	claims := auth.Claims{
-		ID:        user.ID,
+		UserID:    user.ID,
 		Email:     user.Email,
 		ExpiresAt: time.Now().Add(TokenExpirationTime),
 	}
@@ -81,13 +81,8 @@ func (service *Service) Token(ctx context.Context, email string, password string
 }
 
 // Authorize validates token from context and returns authorized Authorization.
-func (service *Service) Authorize(ctx context.Context) (_ auth.Claims, err error) {
-	tokenS, ok := auth.GetToken(ctx)
-	if !ok {
-		return auth.Claims{}, ErrUnauthenticated.Wrap(err)
-	}
-
-	token, err := auth.FromBase64URLString(string(tokenS))
+func (service *Service) Authorize(ctx context.Context, tokenS string) (_ auth.Claims, err error) {
+	token, err := auth.FromBase64URLString(tokenS)
 	if err != nil {
 		return auth.Claims{}, Error.Wrap(err)
 	}
@@ -187,7 +182,7 @@ func (service *Service) Register(ctx context.Context, email, password, nickName,
 		return Error.Wrap(err)
 	}
 
-	// launch a goroutine that sends the email verification.
+	// TODO: launch a goroutine that sends the email verification.
 	// go func() {
 	// 	err = service.emailService.SendVerificationEmail(user.Email, token)
 	// 	if err != nil {
@@ -200,7 +195,6 @@ func (service *Service) Register(ctx context.Context, email, password, nickName,
 
 // ConfirmUserEmail - parse token and confirm User.
 func (service *Service) ConfirmUserEmail(ctx context.Context, activationToken string) error {
-	status := int(users.StatusActive)
 	token, err := auth.FromBase64URLString(activationToken)
 	if err != nil {
 		return Error.Wrap(err)
@@ -224,7 +218,7 @@ func (service *Service) ConfirmUserEmail(ctx context.Context, activationToken st
 		return ErrPermission.Wrap(err)
 	}
 
-	return Error.Wrap(service.users.Update(ctx, status, user.ID))
+	return Error.Wrap(service.users.Update(ctx, users.StatusActive, user.ID))
 }
 
 // ChangePassword - change users password.

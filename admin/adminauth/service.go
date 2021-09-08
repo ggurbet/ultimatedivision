@@ -57,7 +57,7 @@ func (service *Service) Token(ctx context.Context, email string, password string
 	}
 
 	claims := auth.Claims{
-		ID:        admin.ID,
+		UserID:    admin.ID,
 		Email:     admin.Email,
 		ExpiresAt: time.Now().Add(TokenExpirationTime),
 	}
@@ -71,13 +71,8 @@ func (service *Service) Token(ctx context.Context, email string, password string
 }
 
 // Authorize validates token from context and returns authorized Authorization.
-func (service *Service) Authorize(ctx context.Context) (_ auth.Claims, err error) {
-	tokenS, ok := auth.GetToken(ctx)
-	if !ok {
-		return auth.Claims{}, ErrUnauthenticated.Wrap(err)
-	}
-
-	token, err := auth.FromBase64URLString(string(tokenS))
+func (service *Service) Authorize(ctx context.Context, tokenS string) (_ auth.Claims, err error) {
+	token, err := auth.FromBase64URLString(tokenS)
 	if err != nil {
 		return auth.Claims{}, Error.Wrap(err)
 	}

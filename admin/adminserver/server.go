@@ -10,17 +10,19 @@ import (
 	"net"
 	"net/http"
 	"path/filepath"
-	"ultimatedivision/admin/adminauth"
 
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 	"golang.org/x/sync/errgroup"
 
+	"ultimatedivision/admin/adminauth"
 	"ultimatedivision/admin/admins"
 	"ultimatedivision/admin/adminserver/controllers"
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/lootboxes"
+	"ultimatedivision/marketplace"
 	"ultimatedivision/users"
 )
 
@@ -54,17 +56,19 @@ type Server struct {
 	cookieAuth  *auth.CookieAuth
 
 	templates struct {
-		admin controllers.AdminTemplates
-		user  controllers.UserTemplates
-		card  controllers.CardTemplates
-		auth  controllers.AuthTemplates
+		admin       controllers.AdminTemplates
+		user        controllers.UserTemplates
+		card        controllers.CardTemplates
+		auth        controllers.AuthTemplates
+		lootbox     controllers.LootBoxesTemplates
+		marketplace controllers.MarketplaceTemplates
 	}
 
 	cards.PercentageQualities
 }
 
 // NewServer is a constructor for admin web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities) (*Server, error) {
+func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities, marketplace *marketplace.Service, lootboxes *lootboxes.Service) (*Server, error) {
 	server := &Server{
 		log:    log,
 		config: config,
@@ -87,14 +91,14 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	router.HandleFunc("/logout", authController.Logout).Methods(http.MethodPost)
 
 	adminsRouter := router.PathPrefix("/admins").Subrouter().StrictSlash(true)
-	// managersRouter.Use(server.withAuth) // TODO: implement cookie auth and auth service.
+	adminsRouter.Use(server.withAuth)
 	adminsController := controllers.NewAdmins(log, admins, server.templates.admin)
 	adminsRouter.HandleFunc("", adminsController.List).Methods(http.MethodGet)
 	adminsRouter.HandleFunc("/create", adminsController.Create).Methods(http.MethodGet, http.MethodPost)
 	adminsRouter.HandleFunc("/update/{id}", adminsController.Update).Methods(http.MethodGet, http.MethodPost)
 
 	userRouter := router.PathPrefix("/users").Subrouter().StrictSlash(true)
-	// userRouter.Use(server.withAuth) // TODO: implement cookie auth and auth service.
+	userRouter.Use(server.withAuth)
 	userController := controllers.NewUsers(log, users, server.templates.user)
 	userRouter.HandleFunc("", userController.List).Methods(http.MethodGet)
 	userRouter.HandleFunc("/create", userController.Create).Methods(http.MethodGet, http.MethodPost)
@@ -105,8 +109,23 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	cardsRouter.Use(server.withAuth)
 	cardsController := controllers.NewCards(log, cards, server.templates.card, percentageQualities)
 	cardsRouter.HandleFunc("", cardsController.List).Methods(http.MethodGet)
-	cardsRouter.HandleFunc("/create/{userID}", cardsController.Create).Methods(http.MethodGet)
+	cardsRouter.HandleFunc("/create/{userId}", cardsController.Create).Methods(http.MethodGet)
 	cardsRouter.HandleFunc("/delete/{id}", cardsController.Delete).Methods(http.MethodGet)
+
+	marketplaceRouter := router.PathPrefix("/marketplace").Subrouter().StrictSlash(true)
+	marketplaceRouter.Use(server.withAuth)
+	marketplaceController := controllers.NewMarketplace(log, marketplace, cards, users, server.templates.marketplace)
+	marketplaceRouter.HandleFunc("", marketplaceController.ListActiveLots).Methods(http.MethodGet)
+	marketplaceRouter.HandleFunc("/get/{id}", marketplaceController.GetLotByID).Methods(http.MethodGet)
+	marketplaceRouter.HandleFunc("/create", marketplaceController.CreateLot).Methods(http.MethodGet, http.MethodPost)
+	marketplaceRouter.HandleFunc("/bet/{id}", marketplaceController.PlaceBetLot).Methods(http.MethodGet, http.MethodPost)
+
+	lootBoxesRouter := router.PathPrefix("/lootboxes").Subrouter().StrictSlash(true)
+	lootBoxesRouter.Use(server.withAuth)
+	lootBoxesController := controllers.NewLootBoxes(log, lootboxes, server.templates.lootbox)
+	lootBoxesRouter.HandleFunc("", lootBoxesController.List).Methods(http.MethodGet)
+	lootBoxesRouter.HandleFunc("/create/{id}", lootBoxesController.Create).Methods(http.MethodGet, http.MethodPost)
+	lootBoxesRouter.HandleFunc("/open/{userID}/{lootboxID}", lootBoxesController.Open).Methods(http.MethodGet)
 
 	server.server = http.Server{
 		Handler: router,
@@ -174,7 +193,40 @@ func (server *Server) initializeTemplates() (err error) {
 		return err
 	}
 
+	server.templates.marketplace.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "marketplace", "list.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.marketplace.Get, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "marketplace", "get.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.marketplace.Create, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "marketplace", "create.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.marketplace.Bet, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "marketplace", "bet.html"))
+	if err != nil {
+		return err
+	}
+
 	server.templates.auth.Login, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "auth", "login.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.lootbox.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "lootboxes", "list.html"))
+	if err != nil {
+		return err
+	}
+	server.templates.lootbox.Create, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "lootboxes", "create.html"))
+	if err != nil {
+		return err
+	}
+	server.templates.lootbox.ListCards, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "lootboxes", "listCards.html"))
 	if err != nil {
 		return err
 	}
@@ -193,9 +245,7 @@ func (server *Server) withAuth(handler http.Handler) http.Handler {
 				controllers.Redirect(w, r, "/login/", "GET")
 			}
 
-			ctx = auth.SetToken(ctx, []byte(token))
-
-			claims, err := server.authService.Authorize(ctx)
+			claims, err := server.authService.Authorize(ctx, token)
 			if err != nil {
 				controllers.Redirect(w, r, "/login/", "GET")
 			}

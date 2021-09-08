@@ -1,16 +1,15 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-/* eslint-disable */
 import diamond from '@static/img/MarketPlacePage/marketPlaceCardsGroup/diamond2.svg';
 import gold from '@static/img/MarketPlacePage/marketPlaceCardsGroup/gold2.svg';
 import silver from '@static/img/MarketPlacePage/marketPlaceCardsGroup/silver2.svg';
 import wood from '@static/img/MarketPlacePage/marketPlaceCardsGroup/wood2.svg';
 
-import diamondShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/diamondShadow.svg'
-import goldShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/goldShadow.svg'
-import silverShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/silverShadow.svg'
-import woodShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/woodShadow.svg'
+import diamondShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/diamondShadow.svg';
+import goldShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/goldShadow.svg';
+import silverShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/silverShadow.svg';
+import woodShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/woodShadow.svg';
 
 import currentBid
     from '@static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/bid.svg';
@@ -28,17 +27,30 @@ import priceIcon
 import checked from '@static/img/FootballerCardPage/checked.svg';
 import star from '@static/img/FootballerCardPage/star.svg';
 
+
+/** class for our getters to get label and value while mapping */
+export class CardField {
+    /** label and value for mapping */
+    constructor(
+        public label: string,
+        public value: string | number,
+    ) { }
+}
+
+/* eslint-disable */
 /** player stats implementation */
 export class CardStats {
     /** main stat with substats */
     constructor(
         public title: string = '',
         public abbreviated: string = '',
-        public fields: CardStatsField[] = []
+        public fields: CardField[] = []
     ) { }
-    public average: number = this.fields
-        .map(item => item.value)
-        .reduce((prev, current) => prev + current) / this.fields.length;
+    get average() {
+        return Math.round(this.fields
+            .map(item => +item.value)
+            .reduce((prev, current) => prev + current) / this.fields.length);
+    }
     /** abbreviated title of card stat name */
     get abbr(): string {
         return this.title.slice(0, 3);
@@ -47,11 +59,11 @@ export class CardStats {
     get color(): string {
         const STATISTIC_UPPER_BOUND = 90;
         const STATISTIC_LOWER_BOUND = 50;
-
+​
         const STATISTIC_UPPER_BOUND_COLOR = '#3CCF5D';
         const STATISTIC_MEDIUM_BOUND_COLOR = '#E8EC16';
         const STATISTIC_LOWER_BOUND_COLOR = '#FF4200';
-
+​
         switch (true) {
             case this.average >= STATISTIC_UPPER_BOUND:
                 return STATISTIC_UPPER_BOUND_COLOR;
@@ -62,244 +74,314 @@ export class CardStats {
         }
     }
 }
-
-/** Main Player information implementation */
-export class CardMainInfo {
-    /** main card datas */
-    constructor(
-        public lastName: string,
-        public price: number,
-        public playerFace: string,
-        public priceIcon: string,
-        public priceGoldIcon: string,
-        public confirmIcon: string,
-        public bgType: number,
-    ) { }
-    /** backgroundtype picture that depend on quality */
-    get backgroundType() {
-        const qualities = [
-            diamond, gold, silver, wood
-        ];
-        let background = qualities[this.bgType];
-        return background;
-    };
-    get shadowType() {
-        const qualities = [
-            diamondShadow, goldShadow, silverShadow, woodShadow
-        ];
-        let shadow = qualities[this.bgType];
-        return shadow;
-    };
-    /** get image with price status depend on price status */
-    get priceStatus() {
-        const statuses = [
-            currentBid, minimumPrice, purchased, currentBid
-        ];
-        let status = statuses[this.bgType];
-        return status;
-    };
+​
+export interface CardInterface {
+    id: string,
+    playerName: string,
+    quality: string,
+    pictureType: number,
+    height: number,
+    weight: number,
+    skinColor: number,
+    hairStyle: number,
+    hairColor: number,
+    accessories: number[],
+    dominantFoot: string,
+    isTatoos: boolean,
+    status: number,
+    type: string,
+    userId: string,
+    tactics: number,
+    positioning: number,
+    composure: number,
+    aggression: number,
+    vision: number,
+    awareness: number,
+    crosses: number,
+    physique: number,
+    acceleration: number,
+    runningSpeed: number,
+    reactionSpeed: number,
+    agility: number,
+    stamina: number,
+    strength: number,
+    jumping: number,
+    balance: number,
+    technique: number,
+    dribbling: number,
+    ballControl: number,
+    weakFoot: number,
+    skillMoves: number,
+    finesse: number,
+    curve: number,
+    volleys: number,
+    shortPassing: number,
+    longPassing: number,
+    forwardPass: number,
+    offense: number,
+    finishingAbility: number,
+    shotPower: number,
+    accuracy: number,
+    distance: number,
+    penalty: number,
+    freeKicks: number,
+    corners: number,
+    headingAccuracy: number,
+    defence: number,
+    offsideTrap: number,
+    sliding: number,
+    tackles: number,
+    ballFocus: number,
+    interceptions: number,
+    vigilance: number,
+    goalkeeping: number,
+    reflexes: number,
+    diving: number,
+    handling: number,
+    sweeping: number,
+    throwing: number
 }
-
-/** implementation field that uses in CardStats class */
-export class CardStatsField {
-    /** subStat: label(name) and depend value */
+​
+/** Card base implementation */
+export class Card {
+    id: string = '';
+    playerName: string = '';
+    quality: string = '';
+    pictureType: number = 0;
+    height: number = 0;
+    weight: number = 0;
+    skinColor: number = 0;
+    hairStyle: number = 0;
+    hairColor: number = 0;
+    accessories: number[] = [];
+    dominantFoot: string = '';
+    isTatoos: boolean = false;
+    status: number = 0;
+    type: string = '';
+    userId: string = '';
+    tactics: number = 0;
+    positioning: number = 0;
+    composure: number = 0;
+    aggression: number = 0;
+    vision: number = 0;
+    awareness: number = 0;
+    crosses: number = 0;
+    physique: number = 0;
+    acceleration: number = 0;
+    runningSpeed: number = 0;
+    reactionSpeed: number = 0;
+    agility: number = 0;
+    stamina: number = 0;
+    strength: number = 0;
+    jumping: number = 0;
+    balance: number = 0;
+    technique: number = 0;
+    dribbling: number = 0;
+    ballControl: number = 0;
+    weakFoot: number = 0;
+    skillMoves: number = 0;
+    finesse: number = 0;
+    curve: number = 0;
+    volleys: number = 0;
+    shortPassing: number = 0;
+    longPassing: number = 0;
+    forwardPass: number = 0;
+    offense: number = 0;
+    finishingAbility: number = 0;
+    shotPower: number = 0;
+    accuracy: number = 0;
+    distance: number = 0;
+    penalty: number = 0;
+    freeKicks: number = 0;
+    corners: number = 0;
+    headingAccuracy: number = 0;
+    defence: number = 0;
+    offsideTrap: number = 0;
+    sliding: number = 0;
+    tackles: number = 0;
+    ballFocus: number = 0;
+    interceptions: number = 0;
+    vigilance: number = 0;
+    goalkeeping: number = 0;
+    reflexes: number = 0;
+    diving: number = 0;
+    handling: number = 0;
+    sweeping: number = 0;
+    throwing: number = 0;
+    /** Card fields */
     constructor(
-        public label: string = '',
-        public value: number = 0
-    ) { }
-}
-
-/** implementation that uses in overall info*/
-export class CardInfoField {
-    /** overall label name, depend value and depend icon */
-    constructor(
-        public label: string = '',
-        public value: string = '',
-        public icon?: string
-    ) { }
-}
-
-/** price information implementation */
-export class CardPriceField {
-    /** price and depend value */
-    constructor(
-        public label: string = '',
-        public value: number | string
-    ) { }
-}
-
-/** price ID implementation */
-export class CardPriceId {
-    /** label(id) and depend value */
-    constructor(
-        public label: string = '',
-        public value: number | string
-    ) { }
-}
-
-/** another price information implementation */
-export class CardPricePRP {
-    /** label(prp) and depend value */
-    constructor(
-        public label: string = '',
-        public value: number = 0
-    ) { }
-}
-
-/** base price class */
-export class CardPrice {
-    /** price datas */
-    constructor(
-        public id: CardPriceField,
-        public price: CardPriceField,
-        public prp: CardPricePRP,
-        public updated: CardPriceField,
-        public pr: CardPriceField,
-    ) { }
-    /** get stat giagram color depend on price value  */
-    get color() {
+        card: Partial<CardInterface> = {}
+    ) {
+        Object.assign(this, card);
+    }
+​
+    /** returns background type and shadow type according to quality */
+    get style() {
+​
+        switch (this.quality) {
+            case 'wood':
+                return {
+                    background: wood,
+                    shadow: woodShadow,
+                };
+            case 'silver':
+                return {
+                    background: silver,
+                    shadow: silverShadow,
+                };
+            case 'gold':
+                return {
+                    background: gold,
+                    shadow: goldShadow,
+                };
+            case 'diamond':
+                return {
+                    background: diamond,
+                    shadow: diamondShadow,
+                };
+        };
+    }
+    /** will be replaced by backend face implementation */
+    get face() {
+        return playerFace
+    }
+​
+    /**TODO: for testing, will be replaced */
+    get cardPrice() {
+        const prp = 75;
+        const pr = 'PR: 1,142,000 - 15,000,000';
+        const updated = 16;
+        const price = '10,868,000';
+        /** get stat giagram color depend on price value  */
         const PRICE_UPPER_BOUND = 80;
         const PRICE_MEDIUM_BOUND = 70;
         const PRICE_LOWER_BOUND = 50;
-
+​
         const PRICE_UPPER_BOUND_COLOR = '#1898D7';
         const PRICE_MEDIUM_BOUND_COLOR = '#3CCF5D';
         const PRICE_LOWER_BOUND_COLOR = '#E86C27';
         const PRICE_DEFAULT_BOUND_COLOR = '#FF4200';
+        let color: string;
+​
         switch (true) {
-            case this.prp.value >= PRICE_UPPER_BOUND:
-                return PRICE_UPPER_BOUND_COLOR;
-            case this.prp.value >= PRICE_MEDIUM_BOUND:
-                return PRICE_MEDIUM_BOUND_COLOR;
-            case this.prp.value >= PRICE_LOWER_BOUND:
-                return PRICE_LOWER_BOUND_COLOR;
+            case prp >= PRICE_UPPER_BOUND:
+                color = PRICE_UPPER_BOUND_COLOR;
+                break;
+            case prp >= PRICE_MEDIUM_BOUND:
+                color = PRICE_MEDIUM_BOUND_COLOR;
+                break;
+            case prp >= PRICE_LOWER_BOUND:
+                color = PRICE_LOWER_BOUND_COLOR;
+                break;
             default:
-                return PRICE_DEFAULT_BOUND_COLOR;
+                color = PRICE_DEFAULT_BOUND_COLOR;
+        }
+​
+        return {
+            prp,
+            color,
+            pr,
+            updated,
+            price
         }
     }
-}
-
-/** base diagram of player stats implementation */
-export class Diagram {
-    /** player stats datas */
-    constructor(
-        public id: string,
-        public name: string,
-        public min: number,
-        public max: number,
-        public value: number,
-    ) { }
-}
-
-/** football field implementation  */
-export class FotballFieldInformationLine {
-    /** football field datas */
-    constructor(
-        public id: string = '',
-        public title: string = '',
-        public options: string[] = []
-    ) { }
-}
-
-/** Card base implementation */
-export class Card {
-    /** constructor has private bgType for test */
-    constructor(private bgType: number) { }
-    mainInfo = new CardMainInfo(
-        'Ronalculus',
-        1000000,
-        playerFace,
-        priceIcon,
-        priceGoldIcon,
-        confirmIcon,
-        this.bgType,
-    )
-    overalInfo = [
-        new CardInfoField('name', 'Albert Ronalculus'),
-        new CardInfoField('nation', 'Portugal 🇵🇹'),
-        new CardInfoField('skills', '5', star),
-        new CardInfoField('weak foot', '5', star),
-        new CardInfoField('intl. rep', '5', star),
-        new CardInfoField('foot', 'right'),
-        new CardInfoField('height', '187'),
-        new CardInfoField('nation', '87'),
-        new CardInfoField('revision', 'rare'),
-        new CardInfoField('def. wr', 'low'),
-        new CardInfoField('arr. wr', 'high'),
-        new CardInfoField('added on', '2020-09-10'),
-        new CardInfoField('origin', 'na'),
-        new CardInfoField('r. Face', 'low'),
-        new CardInfoField('b. type', '', checked),
-        new CardInfoField('age', '36 years old')
-    ]
-    stats = [
-        new CardStats('tactics', 'tac', [
-            new CardStatsField('positioning', 100),
-            new CardStatsField('composure', 95,),
-            new CardStatsField('aggression', 98),
-            new CardStatsField('vision', 98),
-            new CardStatsField('awareness', 99),
-            new CardStatsField('crosses', 98),
-        ]),
-        new CardStats('physique', 'phy', [
-            new CardStatsField('acceleration', 26),
-            new CardStatsField('running speed', 25),
-            new CardStatsField('reaction speed', 45),
-            new CardStatsField('agility', 31),
-            new CardStatsField('stamina', 40),
-            new CardStatsField('strength', 35),
-            new CardStatsField('jumping', 28),
-            new CardStatsField('balance', 42),
-        ]),
-        new CardStats('technique', 'tec', [
-            new CardStatsField('dribbing', 26),
-            new CardStatsField('ball fontrol', 26),
-            new CardStatsField('weak foot', 26),
-            new CardStatsField('skill moves', 26),
-            new CardStatsField('finesse', 26),
-            new CardStatsField('curve', 26),
-            new CardStatsField('volleys', 26),
-            new CardStatsField('short passing', 26),
-            new CardStatsField('long passing', 26),
-            new CardStatsField('forward pass', 26),
-        ]),
-        new CardStats('offence', 'off', [
-            new CardStatsField('finishing ability', 42),
-            new CardStatsField('shot power', 42),
-            new CardStatsField('accuracy', 42),
-            new CardStatsField('distance', 42),
-            new CardStatsField('penalty', 42),
-            new CardStatsField('free Kicks', 42),
-            new CardStatsField('corners', 42),
-            new CardStatsField('heading accuracy', 42),
-        ]),
-        new CardStats('defence', 'def', [
-            new CardStatsField('offside trap', 74),
-            new CardStatsField('tackles', 74),
-            new CardStatsField('ball focus', 74),
-            new CardStatsField('interceptions', 74),
-            new CardStatsField('vigilance', 74),
-        ]),
-        new CardStats('goalkeeping', 'gk', [
-            new CardStatsField('diving', 84),
-            new CardStatsField('handling', 84),
-            new CardStatsField('sweeping', 84),
-            new CardStatsField('throwing', 84),
-        ])
-    ]
-    price = new CardPrice(
-        new CardPriceId('id', 1),
-        new CardPriceField('price', '11,400,00'),
-        new CardPricePRP('prp', 75),
-        new CardPriceField('updated', 16),
-        new CardPriceField('pr', '1,142,000 - 15,000,000'),
-    )
-    diagram = [
-        new Diagram('1', 'physical', 100, 800, 688),
-        new Diagram('2', 'mental', 100, 800, 688),
-        new Diagram('3', 'skill', 100, 800, 688),
-        new Diagram('4', 'chem. style', 100, 800, 688),
-        new Diagram('5', 'base stats', 100, 800, 688),
-        new Diagram('6', 'in game stats', 100, 800, 688),
-    ]
-}
+​
+    /** Using in footballerCard in info block */
+    get infoBlock() {
+        return [
+            new CardField('name', this.playerName),
+            // TODO: at this momenty nation does not exist
+            new CardField('nation', 'this.nation'),
+            new CardField('skills', '5'),
+            new CardField('weak foot', this.weakFoot),
+            new CardField('intl. rep', '5'),
+            new CardField('foot', this.dominantFoot),
+            new CardField('height', this.height),
+            new CardField('nation', this.weight),
+            // TODO: at this momenty revision does not exist or it is designer mistake or it is quality
+            new CardField('revision', 'rare'),
+            // TODO: create method to convert attack and defence values into this scale
+            new CardField('def. wr', 'low'),
+            new CardField('arr. wr', 'high'),
+            // next fields does not exist in card at this moment
+            new CardField('added on', '2020-09-10'),
+            new CardField('origin', 'na'),
+            new CardField('r. Face', 'low'),
+            new CardField('b. type', ''),
+            new CardField('age', '36 years old'),
+        ];
+    }
+​
+    /** Using in diagramm area in footballerCard */
+    get diagramArea() {
+        // TODO: need to get real min and max values to convert into diagram value
+        // TODO: this fields does not exist
+        return [
+            new CardField('physical', 688),
+            new CardField('mental', 688),
+            new CardField('skill', 688),
+            new CardField('cham. style', 688),
+            new CardField('base stats', 688),
+            new CardField('in game stats', 688),
+        ];
+    }
+​
+    /** returns fields for card stats area in footballerCard */
+    get statsArea() {
+        return [
+            new CardStats('tactics', 'tac', [
+                new CardField('positioning', this.positioning),
+                new CardField('composure', this.composure,),
+                new CardField('aggression', this.aggression),
+                new CardField('vision', this.vision),
+                new CardField('awareness', this.awareness),
+                new CardField('crosses', this.crosses),
+            ]),
+            new CardStats('physique', 'phy', [
+                new CardField('acceleration', this.acceleration),
+                new CardField('running speed', this.runningSpeed),
+                new CardField('reaction speed', this.reactionSpeed),
+                new CardField('agility', this.agility),
+                new CardField('stamina', this.stamina),
+                new CardField('strength', this.strength),
+                new CardField('jumping', this.jumping),
+                new CardField('balance', this.jumping),
+            ]),
+            new CardStats('technique', 'tec', [
+                new CardField('dribbing', this.dribbling),
+                new CardField('ball fontrol', this.ballControl),
+                new CardField('weak foot', this.weakFoot),
+                new CardField('skill moves', this.skillMoves),
+                new CardField('finesse', this.finesse),
+                new CardField('curve', this.curve),
+                new CardField('volleys', this.volleys),
+                new CardField('short passing', this.shortPassing),
+                new CardField('long passing', this.longPassing),
+                new CardField('forward pass', this.forwardPass),
+            ]),
+            new CardStats('offence', 'off', [
+                new CardField('finishing ability', this.finishingAbility),
+                new CardField('shot power', this.shotPower),
+                new CardField('accuracy', this.accuracy),
+                new CardField('distance', this.distance),
+                new CardField('penalty', this.penalty),
+                new CardField('free Kicks', this.freeKicks),
+                new CardField('corners', this.corners),
+                new CardField('heading accuracy', this.headingAccuracy),
+            ]),
+            new CardStats('defence', 'def', [
+                new CardField('offside trap', this.offsideTrap),
+                new CardField('tackles', this.tackles),
+                new CardField('ball focus', this.ballFocus),
+                new CardField('interceptions', this.interceptions),
+                new CardField('vigilance', this.vigilance),
+            ]),
+            new CardStats('goalkeeping', 'gk', [
+                new CardField('diving', this.diving),
+                new CardField('handling', this.handling),
+                new CardField('sweeping', this.sweeping),
+                new CardField('throwing', this.throwing),
+            ]),
+        ];
+    }
+};

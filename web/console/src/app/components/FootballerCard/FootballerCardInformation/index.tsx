@@ -6,7 +6,7 @@ import { Card } from '@/card';
 import './index.scss';
 
 export const FootballerCardInformation: React.FC<{ card: Card }> = ({ card }) => {
-    const overalInfo = card.overalInfo;
+    const overalInfo = card.infoBlock;
 
     return (
         <div className="footballer-card-information">
@@ -18,11 +18,11 @@ export const FootballerCardInformation: React.FC<{ card: Card }> = ({ card }) =>
                     <div className="footballer-card-information__item-value">
                         <>
                             {item.value}
-                            <img
+                            {/* <img
                                 className="footballer-card-information__item-icon"
                                 src={item.icon}
                                 alt={item.icon && 'item icon'}
-                            />
+                            /> */}
                         </>
                     </div>
                 </div>,

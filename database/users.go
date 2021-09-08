@@ -124,7 +124,7 @@ func (usersDB *usersDB) Delete(ctx context.Context, id uuid.UUID) error {
 }
 
 // Update updates a status in the database.
-func (usersDB *usersDB) Update(ctx context.Context, status int, id uuid.UUID) error {
+func (usersDB *usersDB) Update(ctx context.Context, status users.Status, id uuid.UUID) error {
 	_, err := usersDB.conn.QueryContext(ctx, "UPDATE users SET status=$1 WHERE id=$2", status, id)
 	if err != nil {
 		return ErrUsers.Wrap(err)

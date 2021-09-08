@@ -11,7 +11,7 @@ export class HttpClient {
      * @param path
      * @param body serialized JSON
      */
-    public async post(path: string, body: string | null): Promise<Response> {
+    public async post(path: string, body?: string): Promise<Response> {
         return await this.do('POST', path, body);
     }
 
@@ -20,7 +20,7 @@ export class HttpClient {
      * @param path
      * @param body serialized JSON
      */
-    public async patch(path: string, body: string | null): Promise<Response> {
+    public async patch(path: string, body?: string): Promise<Response> {
         return await this.do('PATCH', path, body);
     }
 
@@ -30,7 +30,7 @@ export class HttpClient {
      * @param body serialized JSON
      * @param _auth indicates if authentication is needed
      */
-    public async put(path: string, body: string | null, _auth = true): Promise<Response> {
+    public async put(path: string, body?: string, _auth = true): Promise<Response> {
         return await this.do('PUT', path, body);
     }
 
@@ -40,7 +40,7 @@ export class HttpClient {
      * @param _auth indicates if authentication is needed
      */
     public async get(path: string, _auth = true): Promise<Response> {
-        return await this.do('GET', path, null);
+        return await this.do('GET', path);
     }
 
     /**
@@ -48,9 +48,11 @@ export class HttpClient {
      * @param path
      * @param _auth indicates if authentication is needed
      */
-    public async delete(path: string, _auth = true): Promise<Response> {
-        return await this.do('DELETE', path, null);
-    }
+    /** TODO: DELETE method will be reworked after back-end remarks.
+     * Right now needs body here. */
+    public async delete(path: string, body?: string, _auth = true): Promise<Response> {
+        return await this.do('DELETE', path, body);
+    };
 
     /**
      * do sends an HTTP request and returns an HTTP response as configured on the client.
@@ -59,7 +61,7 @@ export class HttpClient {
      * @param body serialized JSON
      */
     /* eslint-disable-next-line */
-    private async do(method: string, path: string, body: string | null): Promise<Response> {
+    private async do(method: string, path: string, body?: string): Promise<Response> {
         const request: RequestInit = {
             method: method,
             body: body,
@@ -70,5 +72,5 @@ export class HttpClient {
         };
 
         return await fetch(path, request);
-    }
-}
+    };
+};

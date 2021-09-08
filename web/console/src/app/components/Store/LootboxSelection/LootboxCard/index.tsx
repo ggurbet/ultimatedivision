@@ -2,7 +2,11 @@
 // See LICENSE for copying information.
 
 import { Dispatch, SetStateAction } from 'react';
+import { useDispatch } from 'react-redux';
+
 import { LootboxStats } from '@/app/types/lootBox';
+
+import { openLootbox } from '@/app/store/actions/lootboxes';
 
 
 import wood from '@static/img/StorePage/BoxCard/wood.svg';
@@ -15,6 +19,7 @@ import { LootboxCardQuality } from './LootboxCardQuality';
 import './index.scss';
 
 export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch<SetStateAction<boolean>> }> = ({ data, handleOpening }) => {
+    const dispatch = useDispatch();
     const qualities = [
         {
             name: 'Wood',
@@ -36,9 +41,7 @@ export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch
 
     const handleAnimation = () => {
         handleOpening(true);
-        // setTimeout(() =>{
-        //     handleOpening(false)
-        // }, 7000)
+        dispatch(openLootbox({ uuid: data.id, type: data.type }));
     };
 
     return (
@@ -49,7 +52,7 @@ export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch
                         className="box-card__icon"
                         style={{ backgroundImage: `url(${data.icon})` }}
                     />
-                    <h2 className="box-card__title">{data.title}</h2>
+                    <h2 className="box-card__title">{data.type === 'Regular Box' ? 'Regular Box': 'Cool box' }</h2>
                     <div className="box-card__quantity">
                         <span className="box-card__quantity-label">Cards</span>
                         <span className="box-card__quantity-value">{data.quantity}</span>

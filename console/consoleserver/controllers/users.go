@@ -9,6 +9,7 @@ import (
 
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/users"
 	"ultimatedivision/users/userauth"
@@ -41,7 +42,13 @@ func (controller *Users) GetProfile(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 
-	profile, err := controller.users.GetProfile(ctx)
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusUnauthorized, ErrClubs.Wrap(err))
+		return
+	}
+
+	profile, err := controller.users.GetProfile(ctx, claims.UserID)
 	if err != nil {
 		controller.serveError(w, http.StatusInternalServerError, userauth.ErrUnauthenticated.Wrap(err))
 		return
