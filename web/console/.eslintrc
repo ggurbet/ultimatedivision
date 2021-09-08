@@ -14,6 +14,8 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": ["error"],
         "require-jsdoc": [
             2,
             {
@@ -187,7 +189,6 @@
         "yoda": "error",
         "no-proto": "error",
         "no-return-assign": "error",
-        "no-shadow": "error",
         "no-undef-init": "error",
         "no-use-before-define": "error",
         "max-depth": [
