@@ -23,36 +23,36 @@ export const fieldReducer = (cardState = FieldSetup, action: any = {}) => {
     const cards = cardState.cards;
 
     switch (action.type) {
-        case FORMATION:
-            options.formation = action.formation;
-            break;
-        case SELECTION_VISIBILITY:
-            options.showCardSeletion = action.isVisible;
-            break;
-        case CARD_POSITION:
-            options.chosedCard = action.index;
-            break;
-        case ADD_CARD:
-            cards[action.fieldCard.index].card =
+    case FORMATION:
+        options.formation = action.formation;
+        break;
+    case SELECTION_VISIBILITY:
+        options.showCardSeletion = action.isVisible;
+        break;
+    case CARD_POSITION:
+        options.chosedCard = action.index;
+        break;
+    case ADD_CARD:
+        cards[action.fieldCard.index].card =
                 action.fieldCard.card;
-            break;
-        case REMOVE_CARD:
-            cards[action.index].card = null;
-            break;
-        case DRAG_START:
-            options.dragStart = action.index;
-            break;
-        case DRAG_TARGET:
-            options.dragTarget = action.index;
-            break;
-        case EXCHANGE_CARDS:
-            const prevCard = cards[action.position.previous];
-            cards[action.position.previous] =
+        break;
+    case REMOVE_CARD:
+        cards[action.index].card = null;
+        break;
+    case DRAG_START:
+        options.dragStart = action.index;
+        break;
+    case DRAG_TARGET:
+        options.dragTarget = action.index;
+        break;
+    case EXCHANGE_CARDS:
+        const prevCard = cards[action.position.previous];
+        cards[action.position.previous] =
                 cards[action.position.current];
-            cards[action.position.current] = prevCard;
-            break;
-        default:
-            break;
+        cards[action.position.current] = prevCard;
+        break;
+    default:
+        break;
     }
 
     return { ...cardState };

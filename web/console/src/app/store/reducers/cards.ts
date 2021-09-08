@@ -22,14 +22,14 @@ export const cardSetup = new CardSetup(cardService, [], []);
 
 export const cardsReducer = (cardState = cardSetup, action: any = {}) => {
     switch (action.type) {
-        case GET_USER_CARDS:
-            cardState.club = action.cards;
-            break;
-        case GET_SELLING_CARDS:
-            cardState.marketplace = action.cards;
-            break;
-        default:
-            break;
+    case GET_USER_CARDS:
+        cardState.club = action.cards;
+        break;
+    case GET_SELLING_CARDS:
+        cardState.marketplace = action.cards;
+        break;
+    default:
+        break;
     }
 
     return { ...cardState };

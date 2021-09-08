@@ -5,10 +5,10 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { LootboxStats } from '@/app/types/lootBox';
 
-import { LootboxCard } from './LootboxCard';
 
 import box from '@static/img/StorePage/BoxCard/box.svg';
 import coolBox from '@static/img/StorePage/BoxCard/coolBox.svg';
+import { LootboxCard } from './LootboxCard';
 
 import './index.scss';
 
@@ -29,7 +29,7 @@ export const LootboxSelection: React.FC<{ handleOpening: Dispatch<SetStateAction
         new LootboxStats(
             '2',
             coolBox,
-            'Cool Box',
+            'UD Release Celebration Box',
             COOL_BOX_CARDS_QUANTITY,
             // eslint-disable-next-line
             [70, 20, 8, 2],

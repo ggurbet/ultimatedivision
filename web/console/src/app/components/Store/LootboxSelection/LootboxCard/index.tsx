@@ -8,13 +8,13 @@ import { LootboxStats } from '@/app/types/lootBox';
 
 import { openLootbox } from '@/app/store/actions/lootboxes';
 
-import { LootboxCardQuality } from './LootboxCardQuality';
 
 import wood from '@static/img/StorePage/BoxCard/wood.svg';
 import silver from '@static/img/StorePage/BoxCard/silver.svg';
 import gold from '@static/img/StorePage/BoxCard/gold.svg';
 import diamond from '@static/img/StorePage/BoxCard/diamond.svg';
 import coin from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';
+import { LootboxCardQuality } from './LootboxCardQuality';
 
 import './index.scss';
 
@@ -41,7 +41,7 @@ export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch
 
     const handleAnimation = () => {
         handleOpening(true);
-        dispatch(openLootbox({ uuid: data.id, name: data.title }));
+        dispatch(openLootbox({ uuid: data.id, type: data.type }));
     };
 
     return (
@@ -52,7 +52,7 @@ export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch
                         className="box-card__icon"
                         style={{ backgroundImage: `url(${data.icon})` }}
                     />
-                    <h2 className="box-card__title">{data.title}</h2>
+                    <h2 className="box-card__title">{data.type === 'Regular Box' ? 'Regular Box': 'Cool box' }</h2>
                     <div className="box-card__quantity">
                         <span className="box-card__quantity-label">Cards</span>
                         <span className="box-card__quantity-value">{data.quantity}</span>

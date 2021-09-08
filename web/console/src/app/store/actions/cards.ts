@@ -23,13 +23,13 @@ const client = new CardClient();
 const service = new CardService(client);
 
 /** thunk for creating user cards list */
-export const userCards = () => async function (dispatch: Dispatch) {
+export const userCards = () => async function(dispatch: Dispatch) {
     const response = await service.getUserCards();
     const cards = await response.json();
     dispatch(getUserCards(cards.map((card: Partial<CardInterface>) => new Card(card))));
 };
 /** thunk for creating user cards list */
-export const marketplaceCards = () => async function (dispatch: Dispatch) {
+export const marketplaceCards = () => async function(dispatch: Dispatch) {
     const response = await service.getSellingCards();
     const cards = await response.json();
     await dispatch(getSellingCards(cards.map((card: Partial<CardInterface>) => new Card(card))));
