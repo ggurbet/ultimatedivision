@@ -25,11 +25,13 @@ type DB interface {
 	// Get returns card by id from the data base.
 	Get(ctx context.Context, id uuid.UUID) (Card, error)
 	// List returns all cards from the data base.
-	List(ctx context.Context) ([]Card, error)
-	// ListWithFilters returns cards from the data base with filters.
-	ListWithFilters(ctx context.Context, filters []Filters) ([]Card, error)
+	List(ctx context.Context, cursor Cursor) (Page, error)
+	// ListWithFilters returns all cards from the data base with filters.
+	ListWithFilters(ctx context.Context, filters []Filters, cursor Cursor) (Page, error)
 	// ListByPlayerName returns cards from DB by player name.
-	ListByPlayerName(ctx context.Context, filters Filters) ([]Card, error)
+	ListByPlayerName(ctx context.Context, filters Filters, cursor Cursor) (Page, error)
+	// TotalCount counts all the cards in the table.
+	TotalCount(ctx context.Context) (int, error)
 	// UpdateStatus updates status card in the database.
 	UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error
 	// UpdateUserID updates user id card in the database.
@@ -264,6 +266,8 @@ type Config struct {
 		Gold    int `json:"gold"`
 		Diamond int `json:"diamond"`
 	} `json:"tattoos"`
+
+	Cursor `json:"cursor"`
 }
 
 // PercentageQualities entity for probabilities generate cards.
@@ -272,4 +276,20 @@ type PercentageQualities struct {
 	Silver  int `json:"silver"`
 	Gold    int `json:"gold"`
 	Diamond int `json:"diamond"`
+}
+
+// Cursor holds operator cursor entity which is used to create listed page.
+type Cursor struct {
+	Limit int `json:"limit"`
+	Page  int `json:"page"`
+}
+
+// Page holds operator page entity which is used to show listed page of cards.
+type Page struct {
+	Cards       []Card `json:"cards"`
+	Offset      int    `json:"offset"`
+	Limit       int    `json:"limit"`
+	CurrentPage int    `json:"currentPage"`
+	PageCount   int    `json:"pageCount"`
+	TotalCount  int    `json:"totalCount"`
 }

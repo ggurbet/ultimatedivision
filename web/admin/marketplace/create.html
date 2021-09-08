@@ -24,7 +24,7 @@
                 <td>
                     <select size="3" name="itemId">
                         <option selected disabled>Select item</option>
-                        {{range .Cards}}
+                        {{range .Cards.Cards}}
                             <option value="{{.ID}}">{{.PlayerName}}</option>
                         {{end}}
                     </select>

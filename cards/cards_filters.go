@@ -146,9 +146,23 @@ const (
 // SliceFilters entity for slice filters.
 type SliceFilters []Filters
 
+// Pagination defines parameters of possible cards pagination.
+type Pagination string
+
+const (
+	// LimitPagination indicates the cards output limit parameter on the page.
+	LimitPagination Pagination = "limit"
+	// PagePagination indicates to the current output page for cards.
+	PagePagination Pagination = "page"
+)
+
 // DecodingURLParameters decodes url parameters to filters entity.
 func (filters *SliceFilters) DecodingURLParameters(urlQuery url.Values) error {
 	for key, value := range urlQuery {
+		if key == string(LimitPagination) || key == string(PagePagination) {
+			continue
+		}
+
 		filter := Filters{
 			Name:           "",
 			Value:          value[numberPositionOfURLParameter],

@@ -6,6 +6,7 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/zeebo/errs"
 
@@ -41,11 +42,31 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	w.Header().Set("Content-Type", "application/json")
 	var (
-		cardsList []cards.Card
-		err       error
-		filters   cards.SliceFilters
+		cardsListPage cards.Page
+		err           error
+		filters       cards.SliceFilters
+		limit, page   int
 	)
 	urlQuery := r.URL.Query()
+	limitQuery := urlQuery.Get("limit")
+	pageQuery := urlQuery.Get("page")
+
+	limit, err = strconv.Atoi(limitQuery)
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrCards.Wrap(err))
+		return
+	}
+
+	page, err = strconv.Atoi(pageQuery)
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrCards.Wrap(err))
+		return
+	}
+
+	cursor := cards.Cursor{
+		Limit: limit,
+		Page:  page,
+	}
 	playerName := urlQuery.Get(string(cards.FilterPlayerName))
 
 	if playerName == "" {
@@ -53,9 +74,9 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 			controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
 		}
 		if len(filters) > 0 {
-			cardsList, err = controller.cards.ListWithFilters(ctx, filters)
+			cardsListPage, err = controller.cards.ListWithFilters(ctx, filters, cursor)
 		} else {
-			cardsList, err = controller.cards.List(ctx)
+			cardsListPage, err = controller.cards.List(ctx, cursor)
 		}
 	} else {
 		filter := cards.Filters{
@@ -63,7 +84,7 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 			Value:          playerName,
 			SearchOperator: sqlsearchoperators.LIKE,
 		}
-		cardsList, err = controller.cards.ListByPlayerName(ctx, filter)
+		cardsListPage, err = controller.cards.ListByPlayerName(ctx, filter, cursor)
 	}
 	if err != nil {
 		controller.log.Error("could not get cards list", ErrCards.Wrap(err))
@@ -76,7 +97,7 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = json.NewEncoder(w).Encode(cardsList); err != nil {
+	if err = json.NewEncoder(w).Encode(cardsListPage); err != nil {
 		controller.log.Error("failed to write json response", ErrCards.Wrap(err))
 		return
 	}

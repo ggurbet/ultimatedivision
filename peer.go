@@ -188,6 +188,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 				Skills:              config.Cards.Skills,
 				RangeValueForSkills: config.Cards.RangeValueForSkills,
 				Tattoos:             config.Cards.Tattoos,
+				Cursor:              config.Cards.Cursor,
 			},
 		)
 	}

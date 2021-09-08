@@ -171,7 +171,7 @@ type ResponseLot struct {
 
 // ResponseCreateLot entity describes the values required to response for create lot in admin.
 type ResponseCreateLot struct {
-	Cards []cards.Card
+	Cards cards.Page
 	Users []users.User
 }
 

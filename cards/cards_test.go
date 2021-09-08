@@ -199,6 +199,11 @@ func TestCards(t *testing.T) {
 		SearchOperator: sqlsearchoperators.LIKE,
 	}
 
+	cursor1 := cards.Cursor{
+		Limit: 2,
+		Page:  1,
+	}
+
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repositoryCards := db.Cards()
 		repositoryUsers := db.Users()
@@ -230,11 +235,11 @@ func TestCards(t *testing.T) {
 			err = repositoryCards.Create(ctx, card2)
 			require.NoError(t, err)
 
-			allCards, err := repositoryCards.List(ctx)
+			allCards, err := repositoryCards.List(ctx, cursor1)
 			assert.NoError(t, err)
-			assert.Equal(t, len(allCards), 2)
-			compareCards(t, card1, allCards[0])
-			compareCards(t, card2, allCards[1])
+			assert.Equal(t, len(allCards.Cards), 2)
+			compareCards(t, card1, allCards.Cards[0])
+			compareCards(t, card2, allCards.Cards[1])
 		})
 
 		t.Run("list with filters", func(t *testing.T) {
@@ -246,10 +251,10 @@ func TestCards(t *testing.T) {
 				assert.NoError(t, err)
 			}
 
-			allCards, err := repositoryCards.ListWithFilters(ctx, filters)
+			allCards, err := repositoryCards.ListWithFilters(ctx, filters, cursor1)
 			assert.NoError(t, err)
-			assert.Equal(t, len(allCards), 1)
-			compareCards(t, card1, allCards[0])
+			assert.Equal(t, len(allCards.Cards), 1)
+			compareCards(t, card1, allCards.Cards[0])
 		})
 
 		t.Run("list by player name", func(t *testing.T) {
@@ -260,10 +265,16 @@ func TestCards(t *testing.T) {
 				assert.NoError(t, err)
 			}
 
-			allCards, err := repositoryCards.ListByPlayerName(ctx, filter3)
+			allCards, err := repositoryCards.ListByPlayerName(ctx, filter3, cursor1)
 			assert.NoError(t, err)
-			assert.Equal(t, len(allCards), 1)
-			compareCards(t, card1, allCards[0])
+			assert.Equal(t, len(allCards.Cards), 1)
+			compareCards(t, card1, allCards.Cards[0])
+		})
+
+		t.Run("total count", func(t *testing.T) {
+			count, err := repositoryCards.TotalCount(ctx)
+			assert.NoError(t, err)
+			assert.Equal(t, count, 2)
 		})
 
 		t.Run("build where string", func(t *testing.T) {
@@ -301,11 +312,11 @@ func TestCards(t *testing.T) {
 			err := repositoryCards.UpdateStatus(ctx, card1.ID, card1.Status)
 			require.NoError(t, err)
 
-			allCards, err := repositoryCards.List(ctx)
+			allCards, err := repositoryCards.List(ctx, cursor1)
 			assert.NoError(t, err)
-			assert.Equal(t, len(allCards), 2)
-			compareCards(t, card1, allCards[1])
-			compareCards(t, card2, allCards[0])
+			assert.Equal(t, len(allCards.Cards), 2)
+			compareCards(t, card1, allCards.Cards[1])
+			compareCards(t, card2, allCards.Cards[0])
 		})
 
 		t.Run("update user id", func(t *testing.T) {
@@ -322,10 +333,10 @@ func TestCards(t *testing.T) {
 			err := repositoryCards.Delete(ctx, card1.ID)
 			require.NoError(t, err)
 
-			allCards, err := repositoryCards.List(ctx)
+			allCards, err := repositoryCards.List(ctx, cursor1)
 			assert.NoError(t, err)
-			assert.Equal(t, len(allCards), 1)
-			compareCards(t, card2, allCards[0])
+			assert.Equal(t, len(allCards.Cards), 1)
+			compareCards(t, card2, allCards.Cards[0])
 		})
 	})
 }
