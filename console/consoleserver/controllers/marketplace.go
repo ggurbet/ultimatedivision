@@ -6,6 +6,7 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -109,7 +110,19 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	responseLot := marketplace.ResponseLot{
+	getLot := struct {
+		ID           uuid.UUID          `json:"id"`
+		ItemID       uuid.UUID          `json:"itemId"`
+		Type         marketplace.Type   `json:"type"`
+		Status       marketplace.Status `json:"status"`
+		StartPrice   float64            `json:"startPrice"`
+		MaxPrice     float64            `json:"maxPrice"`
+		CurrentPrice float64            `json:"currentPrice"`
+		StartTime    time.Time          `json:"startTime"`
+		EndTime      time.Time          `json:"endTime"`
+		Period       marketplace.Period `json:"period"`
+		Card         cards.Card         `json:"card"`
+	}{
 		ID:           lot.ID,
 		ItemID:       lot.ItemID,
 		Type:         lot.Type,
@@ -120,9 +133,10 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 		StartTime:    lot.StartTime,
 		EndTime:      lot.EndTime,
 		Period:       lot.Period,
+		Card:         lot.Card,
 	}
 
-	if err = json.NewEncoder(w).Encode(responseLot); err != nil {
+	if err = json.NewEncoder(w).Encode(getLot); err != nil {
 		controller.log.Error("failed to write json response", ErrMarketplace.Wrap(err))
 		return
 	}
