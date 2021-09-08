@@ -1,0 +1,27 @@
+@import '/src/index.scss';
+@import 'aos/dist/aos.css';
+
+.authors-heading {
+    &__information {
+        margin: auto;
+        text-align: center;
+        width: 80%;
+        font-size: 80px;
+        color: white;
+        transition: font-size 0.3s;
+    }
+    &__information-modificator {
+        color: #3CCF5D;
+        text-decoration: none;
+        transition: text-shadow 0.3s;
+        &:hover {
+            text-shadow: 0 0 10px #3CCF5D;
+        }
+    }
+
+    @media (max-width: $phoneBreakPoint) {
+        &__information {
+            font-size: 40px;
+        }
+    }
+}
