@@ -12,6 +12,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
+	"ultimatedivision/internal/pagination"
 )
 
 // Service is handling cards related logic.
@@ -226,7 +228,7 @@ func (service *Service) Get(ctx context.Context, cardID uuid.UUID) (Card, error)
 }
 
 // List returns all cards from DB.
-func (service *Service) List(ctx context.Context, cursor Cursor) (Page, error) {
+func (service *Service) List(ctx context.Context, cursor pagination.Cursor) (Page, error) {
 	if cursor.Limit <= 0 {
 		cursor.Limit = service.config.Cursor.Limit
 	}
@@ -239,7 +241,7 @@ func (service *Service) List(ctx context.Context, cursor Cursor) (Page, error) {
 }
 
 // ListWithFilters returns all cards from DB, taking the necessary filters.
-func (service *Service) ListWithFilters(ctx context.Context, filters []Filters, cursor Cursor) (Page, error) {
+func (service *Service) ListWithFilters(ctx context.Context, filters []Filters, cursor pagination.Cursor) (Page, error) {
 	var cardsListPage Page
 
 	for _, v := range filters {
@@ -260,8 +262,20 @@ func (service *Service) ListWithFilters(ctx context.Context, filters []Filters, 
 	return cardsListPage, ErrCards.Wrap(err)
 }
 
+// ListCardIDsWithFiltersWhereActiveLot returns card ids where active lots from DB, taking the necessary filters.
+func (service *Service) ListCardIDsWithFiltersWhereActiveLot(ctx context.Context, filters []Filters) ([]uuid.UUID, error) {
+	for _, v := range filters {
+		err := v.Validate()
+		if err != nil {
+			return nil, err
+		}
+	}
+	cardsList, err := service.cards.ListCardIDsWithFiltersWhereActiveLot(ctx, filters)
+	return cardsList, ErrCards.Wrap(err)
+}
+
 // ListByPlayerName returns cards from DB by player name.
-func (service *Service) ListByPlayerName(ctx context.Context, filter Filters, cursor Cursor) (Page, error) {
+func (service *Service) ListByPlayerName(ctx context.Context, filter Filters, cursor pagination.Cursor) (Page, error) {
 	var cardsListPage Page
 	strings.ToValidUTF8(filter.Value, "")
 
@@ -280,6 +294,19 @@ func (service *Service) ListByPlayerName(ctx context.Context, filter Filters, cu
 
 	cardsListPage, err = service.cards.ListByPlayerName(ctx, filter, cursor)
 	return cardsListPage, ErrCards.Wrap(err)
+}
+
+// ListCardIDsByPlayerNameWhereActiveLot returns card ids where active lot from DB by player name.
+func (service *Service) ListCardIDsByPlayerNameWhereActiveLot(ctx context.Context, filter Filters) ([]uuid.UUID, error) {
+	strings.ToValidUTF8(filter.Value, "")
+
+	// TODO: add best check
+	_, err := strconv.Atoi(filter.Value)
+	if err == nil {
+		return nil, ErrInvalidFilter.New("%s %s", filter.Value, err)
+	}
+	cardIdsList, err := service.cards.ListCardIDsByPlayerNameWhereActiveLot(ctx, filter)
+	return cardIdsList, ErrCards.Wrap(err)
 }
 
 // UpdateStatus updates card status.

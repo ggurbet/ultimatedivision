@@ -233,6 +233,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 
 	{ // marketplace setup
 		peer.Marketplace.Service = marketplace.NewService(
+			config.Marketplace.Config,
 			peer.Database.Marketplace(),
 			peer.Users.Service,
 			peer.Cards.Service,
