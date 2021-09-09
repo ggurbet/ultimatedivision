@@ -7,7 +7,7 @@ import { LootboxTypes } from '@/app/types/lootBox';
 export class Lootbox {
     /** receives base params: id and type */
     constructor(
-        public uuid: string,
+        public id: string,
         public type: LootboxTypes,
     ) { };
 };

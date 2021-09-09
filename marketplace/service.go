@@ -107,13 +107,13 @@ func (service *Service) ListActiveLotsWithFilters(ctx context.Context, filters [
 		}
 	}
 
-	cards, err := service.cards.ListWithFilters(ctx, filters)
+	cardsListPage, err := service.cards.ListWithFilters(ctx, filters, cards.Cursor{})
 	if err != nil {
 		return nil, ErrMarketplace.Wrap(err)
 	}
 
 	var cardIds []uuid.UUID
-	for _, v := range cards {
+	for _, v := range cardsListPage.Cards {
 		cardIds = append(cardIds, v.ID)
 	}
 
@@ -131,13 +131,13 @@ func (service *Service) ListActiveLotsByPlayerName(ctx context.Context, filter c
 		return nil, ErrMarketplace.Wrap(cards.ErrInvalidFilter.New("%s %s", filter.Value, err))
 	}
 
-	cards, err := service.cards.ListByPlayerName(ctx, filter)
+	cardsListPage, err := service.cards.ListByPlayerName(ctx, filter, cards.Cursor{})
 	if err != nil {
 		return nil, ErrMarketplace.Wrap(err)
 	}
 
 	var cardIds []uuid.UUID
-	for _, v := range cards {
+	for _, v := range cardsListPage.Cards {
 		cardIds = append(cardIds, v.ID)
 	}
 

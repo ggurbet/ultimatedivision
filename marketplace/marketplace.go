@@ -46,18 +46,19 @@ type DB interface {
 
 // Lot describes lot entity.
 type Lot struct {
-	ID           uuid.UUID `json:"id"`
-	ItemID       uuid.UUID `json:"itemId"`
-	Type         Type      `json:"type"`
-	UserID       uuid.UUID `json:"userId"`
-	ShopperID    uuid.UUID `json:"shopperId"`
-	Status       Status    `json:"status"`
-	StartPrice   float64   `json:"startPrice"`
-	MaxPrice     float64   `json:"maxPrice"`
-	CurrentPrice float64   `json:"currentPrice"`
-	StartTime    time.Time `json:"startTime"`
-	EndTime      time.Time `json:"endTime"`
-	Period       Period    `json:"period"`
+	ID           uuid.UUID  `json:"id"`
+	ItemID       uuid.UUID  `json:"itemId"`
+	Type         Type       `json:"type"`
+	UserID       uuid.UUID  `json:"userId"`
+	ShopperID    uuid.UUID  `json:"shopperId"`
+	Status       Status     `json:"status"`
+	StartPrice   float64    `json:"startPrice"`
+	MaxPrice     float64    `json:"maxPrice"`
+	CurrentPrice float64    `json:"currentPrice"`
+	StartTime    time.Time  `json:"startTime"`
+	EndTime      time.Time  `json:"endTime"`
+	Period       Period     `json:"period"`
+	Card         cards.Card `json:"card"`
 }
 
 // Type defines the list of possible lot types.
@@ -155,23 +156,9 @@ func (betLot BetLot) ValidateBetLot() error {
 	return nil
 }
 
-// ResponseLot entity describes the values required to response for get lot by id.
-type ResponseLot struct {
-	ID           uuid.UUID `json:"id"`
-	ItemID       uuid.UUID `json:"itemId"`
-	Type         Type      `json:"type"`
-	Status       Status    `json:"status"`
-	StartPrice   float64   `json:"startPrice"`
-	MaxPrice     float64   `json:"maxPrice"`
-	CurrentPrice float64   `json:"currentPrice"`
-	StartTime    time.Time `json:"startTime"`
-	EndTime      time.Time `json:"endTime"`
-	Period       Period    `json:"period"`
-}
-
 // ResponseCreateLot entity describes the values required to response for create lot in admin.
 type ResponseCreateLot struct {
-	Cards []cards.Card
+	Cards cards.Page
 	Users []users.User
 }
 

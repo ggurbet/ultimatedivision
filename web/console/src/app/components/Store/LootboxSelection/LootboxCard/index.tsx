@@ -41,7 +41,7 @@ export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch
 
     const handleAnimation = () => {
         handleOpening(true);
-        dispatch(openLootbox({ uuid: data.id, type: data.type }));
+        dispatch(openLootbox({ id: data.id, type: data.type }));
     };
 
     return (

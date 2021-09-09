@@ -1,10 +1,11 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { Lootbox } from '@/lootbox';
-
 /** Lootbox types */
-export type LootboxTypes = 'Regular Box' | 'UD Release Celebration Box';
+export enum LootboxTypes {
+    'Regular Box' = 'Regular Box',
+    'Cool box' = 'UD Release Celebration Box'
+};
 
 /** Class for lootBox Cards in store */
 export class LootboxStats {
