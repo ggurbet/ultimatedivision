@@ -7,7 +7,7 @@ export enum LootboxTypes {
     'Cool box' = 'UD Release Celebration Box'
 };
 
-/** Class for lootBox Cards in store */
+/** Class for lootbox Cards in store */
 export class LootboxStats {
     /** LootboxStats implementation */
     constructor(

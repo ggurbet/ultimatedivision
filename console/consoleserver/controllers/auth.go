@@ -109,7 +109,7 @@ func (auth *Auth) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	authToken, err := auth.userAuth.Token(ctx, request.Email, request.Password)
+	authToken, err := auth.userAuth.LoginToken(ctx, request.Email, request.Password)
 	if err != nil {
 		auth.log.Error("could not get auth token", AuthError.Wrap(err))
 		switch {
@@ -172,6 +172,104 @@ func (auth *Auth) ChangePassword(w http.ResponseWriter, r *http.Request) {
 		default:
 			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
 		}
+
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode("success"); err != nil {
+		auth.log.Error("failed to write json response", ErrUsers.Wrap(err))
+		return
+	}
+}
+
+// ResetPasswordSendEmail send email with token about reset users password.
+func (auth *Auth) ResetPasswordSendEmail(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	var err error
+	var request users.CreateUserFields
+
+	if err = json.NewDecoder(r.Body).Decode(&request); err != nil {
+		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
+		return
+	}
+
+	err = auth.userAuth.ResetPasswordSendEmail(ctx, request.Email)
+	if err != nil {
+		auth.log.Error("Unable to change password", AuthError.Wrap(err))
+		switch {
+		case users.ErrNoUser.Has(err):
+			auth.serveError(w, http.StatusNotFound, AuthError.Wrap(err))
+		default:
+			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		}
+
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode("success"); err != nil {
+		auth.log.Error("failed to write json response", ErrUsers.Wrap(err))
+		return
+	}
+}
+
+// CheckAuthToken checks auth token and sets auth cookie in browser for change users password.
+func (auth *Auth) CheckAuthToken(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	params := mux.Vars(r)
+	preAuthToken := params["token"]
+	if preAuthToken == "" {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("Unable to reset password. Missing token"))
+		return
+	}
+
+	err := auth.userAuth.CheckAuthToken(ctx, preAuthToken)
+	if err != nil {
+		auth.log.Error("Unable to check auth token", AuthError.Wrap(err))
+		switch {
+		case users.ErrNoUser.Has(err):
+			auth.serveError(w, http.StatusNotFound, AuthError.Wrap(err))
+		case userauth.ErrUnauthenticated.Has(err):
+			auth.serveError(w, http.StatusUnauthorized, AuthError.Wrap(err))
+		default:
+			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		}
+
+		return
+	}
+
+	auth.cookie.SetTokenCookie(w, preAuthToken)
+}
+
+// ResetPassword reset password and change users password.
+func (auth *Auth) ResetPassword(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	var err error
+	var request users.Password
+
+	if err = json.NewDecoder(r.Body).Decode(&request); err != nil {
+		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
+		return
+	}
+
+	err = auth.userAuth.ResetPassword(ctx, request.NewPassword)
+	if err != nil {
+		auth.log.Error("Unable to recovery password", AuthError.Wrap(err))
+		switch {
+		case users.ErrNoUser.Has(err):
+			auth.serveError(w, http.StatusNotFound, AuthError.Wrap(err))
+		case userauth.ErrUnauthenticated.Has(err):
+			auth.serveError(w, http.StatusUnauthorized, AuthError.Wrap(err))
+		default:
+			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		}
+
+		return
 	}
 
 	if err = json.NewEncoder(w).Encode("success"); err != nil {
