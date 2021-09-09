@@ -69,7 +69,11 @@ const SignUp: React.FC = () => {
     const handleSubmit = (e: any) => {
         e.preventDefault();
 
-        validateForm() && dispatch(registerUser({
+        if (!validateForm()) {
+            return;
+        };
+
+        dispatch(registerUser({
             email,
             password,
             nickName,

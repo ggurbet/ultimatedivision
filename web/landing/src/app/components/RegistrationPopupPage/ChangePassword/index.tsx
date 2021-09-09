@@ -26,7 +26,6 @@ export const ChangePassword: React.FC<{ handleSignIn: any }> = ({
     const [newPassword, setNewPassword] = useState('');
     const [newPasswordError, setNewPasswordError]
         = useState<SetStateAction<null | string>>(null);
-    const [isRedirected, setIsRedirected] = useState(false);
     /** checks if values does't valid then set an error messages */
     const validateForm: () => boolean = () => {
         let isValidForm = true;
@@ -48,11 +47,11 @@ export const ChangePassword: React.FC<{ handleSignIn: any }> = ({
     const handleSubmit = (e: any) => {
         e.preventDefault();
 
-        if (validateForm() && dispatch(changeUserPassword(password, newPassword))) {
-            setIsRedirected(true);
+        if (!validateForm()) {
+            return;
         };
 
-        isRedirected && browserHistory.push('/marketplace');
+        dispatch(changeUserPassword(password, newPassword));
     };
     /** user datas for registration */
     const resetPasswordDatas = [

@@ -3,6 +3,7 @@
 
 import { SetStateAction, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 
 import { loginUser } from '@/app/store/actions/users';
 
@@ -46,7 +47,12 @@ export const SignIn: React.FC<{
     const handleSubmit = (e: any) => {
         e.preventDefault();
 
-        validateForm() && dispatch(loginUser(email, password));
+
+        if (!validateForm()) {
+            return;
+        };
+
+        dispatch(loginUser(email, password));
     };
     /** user datas for registration */
     const signInDatas = [
