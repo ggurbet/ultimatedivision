@@ -3,7 +3,7 @@
 
 import { Dispatch, SetStateAction } from 'react';
 
-import { LootboxStats, LootboxTypes } from '@/app/types/lootBox';
+import { LootboxStats, LootboxTypes } from '@/app/types/lootbox';
 
 
 import box from '@static/img/StorePage/BoxCard/box.svg';

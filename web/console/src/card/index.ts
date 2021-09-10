@@ -59,11 +59,11 @@ export class CardStats {
     get color(): string {
         const STATISTIC_UPPER_BOUND = 90;
         const STATISTIC_LOWER_BOUND = 50;
-​
+
         const STATISTIC_UPPER_BOUND_COLOR = '#3CCF5D';
         const STATISTIC_MEDIUM_BOUND_COLOR = '#E8EC16';
         const STATISTIC_LOWER_BOUND_COLOR = '#FF4200';
-​
+
         switch (true) {
             case this.average >= STATISTIC_UPPER_BOUND:
                 return STATISTIC_UPPER_BOUND_COLOR;
@@ -74,7 +74,7 @@ export class CardStats {
         }
     }
 }
-​
+
 export interface CardInterface {
     id: string,
     playerName: string,
@@ -87,7 +87,7 @@ export interface CardInterface {
     hairColor: number,
     accessories: number[],
     dominantFoot: string,
-    isTatoos: boolean,
+    isTattoos: boolean,
     status: number,
     type: string,
     userId: string,
@@ -141,7 +141,7 @@ export interface CardInterface {
     sweeping: number,
     throwing: number
 }
-​
+
 /** Card base implementation */
 export class Card {
     id: string = '';
@@ -155,7 +155,7 @@ export class Card {
     hairColor: number = 0;
     accessories: number[] = [];
     dominantFoot: string = '';
-    isTatoos: boolean = false;
+    isTattoos: boolean = false;
     status: number = 0;
     type: string = '';
     userId: string = '';
@@ -214,10 +214,10 @@ export class Card {
     ) {
         Object.assign(this, card);
     }
-​
+
     /** returns background type and shadow type according to quality */
     get style() {
-​
+
         switch (this.quality) {
             case 'wood':
                 return {
@@ -245,7 +245,7 @@ export class Card {
     get face() {
         return playerFace
     }
-​
+
     /**TODO: for testing, will be replaced */
     get cardPrice() {
         const prp = 75;
@@ -256,13 +256,13 @@ export class Card {
         const PRICE_UPPER_BOUND = 80;
         const PRICE_MEDIUM_BOUND = 70;
         const PRICE_LOWER_BOUND = 50;
-​
+
         const PRICE_UPPER_BOUND_COLOR = '#1898D7';
         const PRICE_MEDIUM_BOUND_COLOR = '#3CCF5D';
         const PRICE_LOWER_BOUND_COLOR = '#E86C27';
         const PRICE_DEFAULT_BOUND_COLOR = '#FF4200';
         let color: string;
-​
+
         switch (true) {
             case prp >= PRICE_UPPER_BOUND:
                 color = PRICE_UPPER_BOUND_COLOR;
@@ -276,7 +276,7 @@ export class Card {
             default:
                 color = PRICE_DEFAULT_BOUND_COLOR;
         }
-​
+
         return {
             prp,
             color,
@@ -285,7 +285,7 @@ export class Card {
             price
         }
     }
-​
+
     /** Using in footballerCard in info block */
     get infoBlock() {
         return [
@@ -311,7 +311,7 @@ export class Card {
             new CardField('age', '36 years old'),
         ];
     }
-​
+
     /** Using in diagramm area in footballerCard */
     get diagramArea() {
         // TODO: need to get real min and max values to convert into diagram value
@@ -325,7 +325,7 @@ export class Card {
             new CardField('in game stats', 688),
         ];
     }
-​
+
     /** returns fields for card stats area in footballerCard */
     get statsArea() {
         return [
@@ -385,3 +385,53 @@ export class Card {
         ];
     }
 };
+
+
+/** lotData from marketplace */
+export interface MarketplaceLot {
+    id: string,
+    itemId: string,
+    type: string,
+    userId: string,
+    shopperId: string,
+    status: string,
+    startPrice: number,
+    maxPrice: number,
+    currentPrice: number,
+    startTime: string,
+    endTime: string,
+    period: number,
+    card: Card
+}
+
+/** data for creating marketplace lot */
+export class CreatedLot {
+    constructor(
+        public itemId: string,
+        public startPrice: number,
+        public maxPrice: number,
+        public period: number,
+    ) { }
+}
+
+export interface MarkeplaceResponse {
+    lots: MarketplaceLot[],
+    page: {
+        offset: number,
+        limit: number,
+        currentPage: number,
+        pageCount: number,
+        totalCount: number
+    }
+}
+
+export interface CardsResponse {
+    cards: CardInterface[],
+    page: {
+        offset: number,
+        limit: number,
+        currentPage: number,
+        pageCount: number,
+        totalCount: number
+    }
+}
