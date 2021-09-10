@@ -33,6 +33,7 @@ func NewChore(log logger.Logger, config Config, marketplace DB, users *users.Ser
 	return &Chore{
 		log: log,
 		service: NewService(
+			config,
 			marketplace,
 			users,
 			cards,

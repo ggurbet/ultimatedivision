@@ -65,3 +65,16 @@ func (service *Service) SendVerificationEmail(email, token string) error {
 
 	return service.sender.SendEmail(&verificationMessage)
 }
+
+// SendResetPasswordEmail is used to send email with verification link.
+func (service *Service) SendResetPasswordEmail(email, token string) error {
+	var verificationMessage mail.Message
+
+	verificationMessage.To = []mail.Address{{Address: email, Name: "Verify"}}
+	verificationMessage.Date = time.Now().UTC()
+	verificationMessage.PlainText = fmt.Sprintf("%s/%s", service.config.Domain, token)
+	verificationMessage.Subject = "reset your password"
+	verificationMessage.From = mail.Address{Address: service.config.From}
+
+	return service.sender.SendEmail(&verificationMessage)
+}

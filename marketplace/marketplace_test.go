@@ -15,6 +15,7 @@ import (
 	"ultimatedivision"
 	"ultimatedivision/cards"
 	"ultimatedivision/database/dbtesting"
+	"ultimatedivision/internal/pagination"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/users"
 )
@@ -205,6 +206,11 @@ func TestMarketplace(t *testing.T) {
 		Throwing:         49,
 	}
 
+	cursor1 := pagination.Cursor{
+		Limit: 2,
+		Page:  1,
+	}
+
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repositoryMarketplace := db.Marketplace()
 		repositoryCards := db.Cards()
@@ -247,10 +253,10 @@ func TestMarketplace(t *testing.T) {
 			err = repositoryMarketplace.CreateLot(ctx, lot2)
 			require.NoError(t, err)
 
-			activeLots, err := repositoryMarketplace.ListActiveLots(ctx)
+			activeLots, err := repositoryMarketplace.ListActiveLots(ctx, cursor1)
 			assert.NoError(t, err)
-			assert.Equal(t, len(activeLots), 1)
-			compareLot(t, lot2, activeLots[0])
+			assert.Equal(t, len(activeLots.Lots), 1)
+			compareLot(t, lot2, activeLots.Lots[0])
 		})
 
 		t.Run("list active by item id", func(t *testing.T) {
@@ -258,10 +264,10 @@ func TestMarketplace(t *testing.T) {
 			cardsIds = append(cardsIds, card1.ID)
 			cardsIds = append(cardsIds, card2.ID)
 
-			activeLots, err := repositoryMarketplace.ListActiveLotsByItemID(ctx, cardsIds)
+			activeLots, err := repositoryMarketplace.ListActiveLotsByItemID(ctx, cardsIds, cursor1)
 			assert.NoError(t, err)
-			assert.Equal(t, len(activeLots), 1)
-			compareLot(t, lot2, activeLots[0])
+			assert.Equal(t, len(activeLots.Lots), 1)
+			compareLot(t, lot2, activeLots.Lots[0])
 		})
 
 		t.Run("list expired lot", func(t *testing.T) {

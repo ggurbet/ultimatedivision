@@ -67,7 +67,11 @@ export const SignUp: React.FC<{ handleSignUp: any }> = ({
     const handleSubmit = (e: any) => {
         e.preventDefault();
 
-        validateForm() && dispatch(registerUser({
+        if (!validateForm()) {
+            return;
+        };
+
+        dispatch(registerUser({
             email,
             password,
             nickName,

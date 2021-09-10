@@ -153,6 +153,29 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		Database: db,
 	}
 
+	{ // email setup
+		from, err := mail.ParseAddress(config.Console.Emails.From)
+		if err != nil {
+			logger.Error("email address is not valid", err)
+			return nil, err
+		}
+
+		sender := mail2.SMTPSender{
+			ServerAddress: config.Console.Emails.SMTPServerAddress,
+			From:          *from,
+			Auth: mail2.LoginAuth{
+				Username: config.Console.Emails.PlainLogin,
+				Password: config.Console.Emails.PlainPassword,
+			},
+		}
+
+		peer.Console.EmailService = emails.NewService(
+			logger,
+			&sender,
+			config.Console.Emails,
+		)
+	}
+
 	{ // users setup
 		peer.Users.Service = users.NewService(
 			peer.Database.Users(),
@@ -210,6 +233,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 
 	{ // marketplace setup
 		peer.Marketplace.Service = marketplace.NewService(
+			config.Marketplace.Config,
 			peer.Database.Marketplace(),
 			peer.Users.Service,
 			peer.Cards.Service,
@@ -263,27 +287,6 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Clubs.Service,
 			peer.Users.Auth,
 			peer.Users.Service,
-		)
-
-		from, err := mail.ParseAddress(config.Console.Emails.From)
-		if err != nil {
-			logger.Error("email address is not valid", err)
-			return nil, err
-		}
-
-		sender := mail2.SMTPSender{
-			ServerAddress: config.Console.Emails.SMTPServerAddress,
-			From:          *from,
-			Auth: mail2.LoginAuth{
-				Username: config.Console.Emails.PlainLogin,
-				Password: config.Console.Emails.PlainPassword,
-			},
-		}
-
-		peer.Console.EmailService = emails.NewService(
-			logger,
-			&sender,
-			config.Console.Emails,
 		)
 	}
 

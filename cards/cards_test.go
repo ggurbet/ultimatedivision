@@ -18,6 +18,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/database"
 	"ultimatedivision/database/dbtesting"
+	"ultimatedivision/internal/pagination"
 	"ultimatedivision/pkg/sqlsearchoperators"
 	"ultimatedivision/users"
 )
@@ -199,7 +200,7 @@ func TestCards(t *testing.T) {
 		SearchOperator: sqlsearchoperators.LIKE,
 	}
 
-	cursor1 := cards.Cursor{
+	cursor1 := pagination.Cursor{
 		Limit: 2,
 		Page:  1,
 	}
@@ -269,12 +270,6 @@ func TestCards(t *testing.T) {
 			assert.NoError(t, err)
 			assert.Equal(t, len(allCards.Cards), 1)
 			compareCards(t, card1, allCards.Cards[0])
-		})
-
-		t.Run("total count", func(t *testing.T) {
-			count, err := repositoryCards.TotalCount(ctx)
-			assert.NoError(t, err)
-			assert.Equal(t, count, 2)
 		})
 
 		t.Run("build where string", func(t *testing.T) {

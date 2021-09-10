@@ -21,6 +21,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/internal/templatefuncs"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/users"
@@ -188,7 +189,13 @@ func (server *Server) initializeTemplates() (err error) {
 		return err
 	}
 
-	server.templates.card.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "cards", "list.html"))
+	server.templates.card.List, err = template.New("list.html").Funcs(template.FuncMap{
+		"Iter": templatefuncs.Iter,
+		"Inc":  templatefuncs.Inc,
+		"Dec":  templatefuncs.Dec,
+	}).ParseFiles(
+		filepath.Join(server.config.StaticDir, "cards", "list.html"),
+		filepath.Join(server.config.StaticDir, "pagination", "pagination.html"))
 	if err != nil {
 		return err
 	}
