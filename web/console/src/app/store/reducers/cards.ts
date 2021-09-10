@@ -4,14 +4,14 @@
 import { GET_SELLING_CARDS, GET_USER_CARDS } from '@/app/store/actions/cards';
 import { CardService } from '@/card/service';
 import { CardClient } from '@/api/cards';
-import { Card } from '@/card';
+import { Card, MarketplaceLot } from '@/card';
 
 /** class for data from backent (test) */
 class CardSetup {
     /** class implementation */
     constructor(
         public cardService: CardService,
-        public marketplace: Card[],
+        public marketplace: MarketplaceLot[],
         public club: Card[],
     ) { };
 };

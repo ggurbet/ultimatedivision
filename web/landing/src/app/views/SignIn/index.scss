@@ -12,6 +12,10 @@
         &__ultimate {
             margin: 40% auto;
         }
+        &__ultimate-recover {
+            margin: 30% auto;
+            height: 40%;
+        }
     }
     &__represent {
         display: block;
@@ -26,7 +30,7 @@
             margin: 10% auto;
         }
     }
-    &__sign-up, &__sign-in, &__reset {
+    &__sign-up, &__sign-in, &__reset, &__recover {
         float: right;
         width: 50%;;
         height: 100vh;
@@ -120,15 +124,19 @@
             }
         }
     }
-    &__sign-in, &__reset {
+    &__sign-in, &__reset, &__recover {
         &__title {
             margin-top: 30%;
         }
     }
     @media (max-width: $desktopBreakPoint) {
-        &__represent-reset {
+        &__represent-reset, &__represent-recover {
             &__ultimate {
                 height: 15%;
+                margin: 60% auto;
+            }
+            &__ultimate-recover {
+                height: 35%;
                 margin: 60% auto;
             }
         }
@@ -138,7 +146,7 @@
                 margin: 40% auto;
             }
         }
-        &__sign-up, &__sign-in, &__reset {
+        &__sign-up, &__sign-in, &__reset, &__recover {
             padding-left: 55px;
             &__description {
                 margin-top: 30px;
@@ -169,9 +177,12 @@
         }
     }
     @media (max-width: $tabletBreakPoint) {
-        &__represent-reset {
+        &__represent-reset, &__represent-recover {
             &__ultimate {
                 height: 10%;
+                margin: 70% auto;
+            }
+            &__ultimate-recover {
                 margin: 70% auto;
             }
         }
@@ -181,7 +192,7 @@
                 margin: 70% auto;
             }
         }
-        &__sign-up, &__sign-in, &__reset {
+        &__sign-up, &__sign-in, &__reset, &__recover {
             padding-left: 25px;
             &__go-back {
                 margin-top: 50%;
@@ -213,7 +224,7 @@
                 }
             }
         }
-        &__reset {
+        &__reset, &__recover {
             &__title {
                 margin-top: 30%;
             }
@@ -225,9 +236,13 @@
         }
     }
     @media (max-width: $phoneBreakPoint) {
-        &__represent-reset {
+        &__represent-reset, &__represent-recover {
             &__ultimate {
                 height: 7%;
+                margin: 80% auto;
+            }
+            &__ultimate-recover {
+                height: 25%;
                 margin: 80% auto;
             }
         }
@@ -237,7 +252,7 @@
                 margin: 80% auto;
             }
         }
-        &__sign-up, &__sign-in, &__reset {
+        &__sign-up, &__sign-in, &__reset, &__recover {
             padding-left: 10px;
             &__title {
                 font-size: 20px;
@@ -282,7 +297,7 @@
                 }
             }
         }
-        &__reset {
+        &__reset, &__recover {
             &__title {
                 margin-top: 40%;
             }
@@ -294,13 +309,16 @@
         }
     }
     @media (max-width: $phoneBreakPoint - 150px) {
-        &__represent-reset {
+        &__represent-reset, &__represent-recover {
             &__ultimate {
                 height: 5%;
                 margin: 70% auto;
             }
+            &__ultimate-recover {
+                margin: 70% auto;
+            }
         }
-        &__sign-up, &__sign-in, &__reset {
+        &__sign-up, &__sign-in, &__reset, &__recover {
             padding-left: 5px;
             &__sign-form {
                 width: 120px;

@@ -13,8 +13,7 @@ import { RouteConfig } from '@/app/router';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { sellCard } from '@/app/store/actions/cards';
-
-import { Card } from '@/card';
+import { Card, CreatedLot } from '@/card';
 
 import './index.scss';
 
@@ -30,7 +29,11 @@ export const MyCard: React.FC<{ card: Card }> = ({ card }) => {
     const handleSelling = (e: any) => {
         e.stopPropagation();
         e.nativeEvent.stopImmediatePropagation();
-        dispatch(sellCard(card.id));
+        /** TODO: create interface for adding selling parameters */
+        /* eslint-disable */
+        dispatch(sellCard(new CreatedLot(card.id, 200, 200, 1)));
+        /* eslint-enable */
+        changeControlVisibility(false);
     };
 
     return (

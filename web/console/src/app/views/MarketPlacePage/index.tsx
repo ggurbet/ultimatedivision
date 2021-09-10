@@ -10,7 +10,7 @@ import { useMarketplace } from '@/app/hooks/marketplace';
 
 const MarketPlace: React.FC = () => {
     /** TODO: decide use custom hook or directly dispatch thunk into useEffect*/
-    const cards = useMarketplace();
+    const lots = useMarketplace();
 
     return (
         <section className="marketplace">
@@ -18,10 +18,10 @@ const MarketPlace: React.FC = () => {
                 title="MARKETPLACE"
             />
             <MarketPlaceCardsGroup
-                cards={cards}
+                lots={lots}
             />
             <Paginator
-                itemCount={cards.length} />
+                itemCount={lots.length} />
         </section>
     );
 };

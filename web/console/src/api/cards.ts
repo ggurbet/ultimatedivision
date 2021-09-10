@@ -2,6 +2,7 @@
 // See LICENSE for copying information.
 
 import { APIClient } from '@/api/index';
+import { CreatedLot } from '@/card';
 
 /** ClubClient base implementation */
 export class CardClient extends APIClient {
@@ -13,8 +14,8 @@ export class CardClient extends APIClient {
         return await this.http.get(`${this.ROOT_PATH}/cards`);
     }
     /** method post for implementing buying cards */
-    public async sellCard(id: string): Promise<Response> {
-        return await this.http.post(`${this.ROOT_PATH}/marketplace/bet`, id);
+    public async sellCard(lot: CreatedLot): Promise<Response> {
+        return await this.http.post(`${this.ROOT_PATH}/marketplace`, JSON.stringify(lot));
     }
     /** method calls get method from APIClient */
     public async getSellingCards(): Promise<Response> {

@@ -4,7 +4,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { LootboxStats } from '@/app/types/lootBox';
+import { LootboxStats } from '@/app/types/lootbox';
 
 import { openLootbox } from '@/app/store/actions/lootboxes';
 
@@ -39,9 +39,10 @@ export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch
         },
     ];
 
-    const handleAnimation = () => {
+    const  handleAnimation = async() => {
+        await dispatch(openLootbox({ id: data.id, type: data.type }));
         handleOpening(true);
-        dispatch(openLootbox({ id: data.id, type: data.type }));
+        // TODO: need add id lootbox from BD after be create endpoint fetch lootboxex.
     };
 
     return (
