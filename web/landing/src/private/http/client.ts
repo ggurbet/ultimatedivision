@@ -25,7 +25,7 @@ export class HttpClient {
         return await this.do('POST', path, body);
     };
     public async get(path: string): Promise<Response> {
-        return await this.do('GET', path, '');
+        return await this.do('GET', path, null);
     };
     public async put(path: string, body: string | null) {
         return await this.do('PUT', path, '');
