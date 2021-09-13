@@ -101,7 +101,9 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	profileRouter.HandleFunc("", userController.GetProfile).Methods(http.MethodGet)
 
 	cardsRouter := apiRouter.PathPrefix("/cards").Subrouter()
-	cardsRouter.Handle("", server.withAuth(http.HandlerFunc(cardsController.List))).Methods(http.MethodGet)
+	cardsRouter.Use(server.withAuth)
+	cardsRouter.HandleFunc("", cardsController.List).Methods(http.MethodGet)
+	cardsRouter.HandleFunc("/{id}", cardsController.Get).Methods(http.MethodGet)
 
 	clubsRouter := apiRouter.PathPrefix("/clubs").Subrouter()
 	clubsRouter.Use(server.withAuth)
