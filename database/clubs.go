@@ -153,9 +153,9 @@ func (clubsDB *clubsDB) ListSquadCards(ctx context.Context, squadID uuid.UUID) (
 func (clubsDB *clubsDB) UpdateTacticFormationCaptain(ctx context.Context, squad clubs.Squad) error {
 	query := `UPDATE squads
 			  SET tactic = $1, formation = $2, captain_id = $3
-  			  WHERE id = $3`
+  			  WHERE id = $4`
 
-	_, err := clubsDB.conn.ExecContext(ctx, query, squad.Tactic, squad.Formation, squad.ID)
+	_, err := clubsDB.conn.ExecContext(ctx, query, squad.Tactic, squad.Formation, squad.CaptainID, squad.ID)
 
 	return ErrSquad.Wrap(err)
 }

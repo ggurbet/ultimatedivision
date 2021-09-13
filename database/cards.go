@@ -250,6 +250,50 @@ func (cardsDB *cardsDB) List(ctx context.Context, cursor pagination.Cursor) (car
 	return cardsListPage, ErrCard.Wrap(err)
 }
 
+// ListByUserID returns all users cards from the database.
+func (cardsDB *cardsDB) ListByUserID(ctx context.Context, id uuid.UUID) ([]cards.Card, error) {
+	query := `SELECT ` + allFields + ` FROM cards WHERE user_id = $1`
+
+	rows, err := cardsDB.conn.QueryContext(ctx, query, id)
+	if err != nil {
+		return nil, ErrCard.Wrap(err)
+	}
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	var userCards []cards.Card
+	for rows.Next() {
+		var card cards.Card
+		if err = rows.Scan(
+			&card.ID, &card.PlayerName, &card.Quality, &card.PictureType, &card.Height, &card.Weight, &card.SkinColor, &card.HairStyle,
+			&card.HairColor, &card.DominantFoot, &card.IsTattoos, &card.Status, &card.Type, &card.UserID, &card.Tactics, &card.Positioning,
+			&card.Composure, &card.Aggression, &card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration,
+			&card.RunningSpeed, &card.ReactionSpeed, &card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique,
+			&card.Dribbling, &card.BallControl, &card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing,
+			&card.LongPassing, &card.ForwardPass, &card.Offense, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance,
+			&card.Penalty, &card.FreeKicks, &card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles,
+			&card.BallFocus, &card.Interceptions, &card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping,
+			&card.Throwing,
+		); err != nil {
+			return nil, cards.ErrNoCard.Wrap(err)
+		}
+
+		accessoryIds, err := listAccessoryIdsByCardID(ctx, cardsDB, card.ID)
+		if err != nil {
+			return nil, ErrCard.Wrap(err)
+		}
+		card.Accessories = accessoryIds
+
+		userCards = append(userCards, card)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, ErrCard.Wrap(err)
+	}
+
+	return userCards, nil
+}
+
 // ListWithFilters returns cards from DB, taking the necessary filters.
 func (cardsDB *cardsDB) ListWithFilters(ctx context.Context, filters []cards.Filters, cursor pagination.Cursor) (cards.Page, error) {
 	var cardsListPage cards.Page

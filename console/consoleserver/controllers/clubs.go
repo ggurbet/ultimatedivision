@@ -106,9 +106,22 @@ func (controller *Clubs) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	squad, squadCards, err := controller.clubs.GetSquad(ctx, club.ID)
+	squad, err := controller.clubs.GetSquad(ctx, club.ID)
 	if err != nil {
-		controller.log.Error("could not get squad and squad cards", ErrClubs.Wrap(err))
+		controller.log.Error("could not get squad", ErrClubs.Wrap(err))
+
+		if clubs.ErrNoSquad.Has(err) {
+			controller.serveError(w, http.StatusNotFound, ErrClubs.Wrap(err))
+			return
+		}
+
+		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
+		return
+	}
+
+	squadCards, err := controller.clubs.GetSquadCards(ctx, squad.ID)
+	if err != nil {
+		controller.log.Error("could not get squad cards", ErrClubs.Wrap(err))
 
 		if clubs.ErrNoSquad.Has(err) {
 			controller.serveError(w, http.StatusNotFound, ErrClubs.Wrap(err))
