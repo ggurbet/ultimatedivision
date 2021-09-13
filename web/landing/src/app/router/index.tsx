@@ -8,6 +8,7 @@ const WelcomePage = React.lazy(() => import('@components/WelcomePage'));
 const SignIn = React.lazy(() => import('@/app/views/SignIn'));
 const SignUp = React.lazy(() => import('@/app/views/SignUp'));
 const ChangePassword = React.lazy(() => import('@/app/views/ChangePassword'));
+const ConfirmEmail = React.lazy(() => import('@/app/views/ConfirmEmail'));
 const RecoverPassword = React.lazy(() => import('@/app/views/RecoverPassword'));
 
 export interface RouteItem {
@@ -71,6 +72,11 @@ export class RouteConfig {
         ChangePassword,
         true
     );
+    public static ConfirmEmail: ComponentRoutes = new ComponentRoutes(
+        '/email/confirm/',
+        ConfirmEmail,
+        true,
+    );
     public static RecoverPassword: ComponentRoutes = new ComponentRoutes(
         '/recover-password/:token',
         RecoverPassword,
@@ -81,6 +87,7 @@ export class RouteConfig {
         RouteConfig.SignIn,
         RouteConfig.SignUp,
         RouteConfig.ResetPassword,
+        RouteConfig.ConfirmEmail,
         RouteConfig.RecoverPassword,
     ];
 };

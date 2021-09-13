@@ -3,7 +3,6 @@
 
 import { SetStateAction, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
 
 import { loginUser } from '@/app/store/actions/users';
 
@@ -46,7 +45,6 @@ export const SignIn: React.FC<{
     /** user data that will send to server */
     const handleSubmit = (e: any) => {
         e.preventDefault();
-
 
         if (!validateForm()) {
             return;

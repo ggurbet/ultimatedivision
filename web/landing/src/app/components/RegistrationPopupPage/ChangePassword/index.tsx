@@ -18,7 +18,6 @@ export const ChangePassword: React.FC<{ handleSignIn: any }> = ({
     handleSignIn
 }) => {
     const dispatch = useDispatch();
-    const browserHistory = useHistory();
     /** controlled values for form inputs */
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError]

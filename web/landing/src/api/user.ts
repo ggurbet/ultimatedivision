@@ -38,5 +38,15 @@ export class UserClient extends APIClient {
             await this.handleError(response);
         };
     };
-    /** TODO: confirm email by token */
+    /** confirm user email implementation */
+    public async confirmEmail(token: string | null): Promise<Response> {
+        const path = `${this.ROOT_PATH}/email/confirm/${token}`;
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        };
+
+        return response;
+    };
 };

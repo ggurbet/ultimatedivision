@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Portal | Clubs</title>
+</head>
+<body>
+<nav>
+  <div>
+    <ul>
+      <li><a href="/clubs/create/{{.OwnerID}}">Create club</a></li>
+    </ul>
+  </div>
+</nav>
+<table style="width:100%">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Owner ID</th>
+    <th>Name</th>
+    <th>Created At</th>
+    <th>Operations</th>
+  </tr>
+  </thead>
+  <tr>
+    <td>
+      {{.ID}}
+    </td>
+    <td>
+      {{.OwnerID}}
+    </td>
+    <td>
+      {{.Name}}
+    </td>
+    <td>
+      {{.CreatedAt}}
+    </td>
+    <td>
+      <a href = "/clubs/{{.ID}}/squad">Get squad</a>
+      <a href = "/clubs/{{.ID}}/squad/create">Create squad</a>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

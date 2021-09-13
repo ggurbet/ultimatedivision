@@ -19,6 +19,7 @@ import (
 	"ultimatedivision/admin/admins"
 	"ultimatedivision/admin/adminserver/controllers"
 	"ultimatedivision/cards"
+	"ultimatedivision/clubs"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/templatefuncs"
@@ -63,13 +64,14 @@ type Server struct {
 		auth        controllers.AuthTemplates
 		lootbox     controllers.LootBoxesTemplates
 		marketplace controllers.MarketplaceTemplates
+		clubs       controllers.ClubsTemplates
 	}
 
 	cards.PercentageQualities
 }
 
 // NewServer is a constructor for admin web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities, marketplace *marketplace.Service, lootboxes *lootboxes.Service) (*Server, error) {
+func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities, marketplace *marketplace.Service, lootboxes *lootboxes.Service, clubs *clubs.Service) (*Server, error) {
 	server := &Server{
 		log:    log,
 		config: config,
@@ -127,6 +129,19 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	lootBoxesRouter.HandleFunc("", lootBoxesController.List).Methods(http.MethodGet)
 	lootBoxesRouter.HandleFunc("/create/{id}", lootBoxesController.Create).Methods(http.MethodGet, http.MethodPost)
 	lootBoxesRouter.HandleFunc("/open/{userID}/{lootboxID}", lootBoxesController.Open).Methods(http.MethodGet)
+
+	clubsRouter := router.PathPrefix("/clubs").Subrouter().StrictSlash(true)
+	clubsRouter.Use(server.withAuth)
+	clubsController := controllers.NewClubs(log, clubs, server.templates.clubs)
+	clubsRouter.HandleFunc("/create/{userId}", clubsController.Create).Methods(http.MethodGet)
+	clubsRouter.HandleFunc("/{userId}", clubsController.Get).Methods(http.MethodGet)
+	clubsRouter.HandleFunc("/{clubId}/squad/create", clubsController.CreateSquad).Methods(http.MethodGet)
+	clubsRouter.HandleFunc("/{clubId}/squad", clubsController.GetSquad).Methods(http.MethodGet)
+	clubsRouter.HandleFunc("/{clubId}/squad/{squadId}/update", clubsController.UpdateSquad).Methods(http.MethodGet, http.MethodPost)
+	clubsRouter.HandleFunc("/squad/{squadId}", clubsController.ListSquadCards).Methods(http.MethodGet)
+	clubsRouter.HandleFunc("/squad/{squadId}/squad-cards", clubsController.Add).Methods(http.MethodGet, http.MethodPost)
+	clubsRouter.HandleFunc("/squad/{squadId}/squad-cards/{cardId}/update", clubsController.UpdateCardPosition).Methods(http.MethodGet, http.MethodPost)
+	clubsRouter.HandleFunc("/squad/{squadId}/squad-cards/{cardId}", clubsController.DeleteCard).Methods(http.MethodGet)
 
 	server.server = http.Server{
 		Handler: router,
@@ -234,6 +249,31 @@ func (server *Server) initializeTemplates() (err error) {
 		return err
 	}
 	server.templates.lootbox.ListCards, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "lootboxes", "listCards.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.clubs.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "clubs", "list.html"))
+	if err != nil {
+		return err
+	}
+	server.templates.clubs.ListSquads, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "clubs", "listSquad.html"))
+	if err != nil {
+		return err
+	}
+	server.templates.clubs.ListSquadCards, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "clubs", "listSquadCards.html"))
+	if err != nil {
+		return err
+	}
+	server.templates.clubs.AddCard, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "clubs", "addCard.html"))
+	if err != nil {
+		return err
+	}
+	server.templates.clubs.UpdateSquad, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "clubs", "updateSquad.html"))
+	if err != nil {
+		return err
+	}
+	server.templates.clubs.UpdateCardPosition, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "clubs", "updateCardPosition.html"))
 	if err != nil {
 		return err
 	}
