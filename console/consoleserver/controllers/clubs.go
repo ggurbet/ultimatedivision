@@ -49,9 +49,14 @@ func (controller *Clubs) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = controller.clubs.Create(ctx, claims.UserID)
+	id, err := controller.clubs.Create(ctx, claims.UserID)
 	if err != nil {
 		controller.log.Error("could not create club", ErrClubs.Wrap(err))
+		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(&id); err != nil {
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
 		return
 	}
@@ -74,9 +79,14 @@ func (controller *Clubs) CreateSquad(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = controller.clubs.CreateSquad(ctx, id)
+	squadID, err := controller.clubs.CreateSquad(ctx, id)
 	if err != nil {
 		controller.log.Error("could not create club", ErrClubs.Wrap(err))
+		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(&squadID); err != nil {
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
 		return
 	}

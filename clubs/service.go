@@ -33,10 +33,10 @@ func NewService(clubs DB, users *users.Service) *Service {
 }
 
 // Create creates clubs.
-func (service *Service) Create(ctx context.Context, userID uuid.UUID) error {
+func (service *Service) Create(ctx context.Context, userID uuid.UUID) (uuid.UUID, error) {
 	nickname, err := service.users.GetNickNameByID(ctx, userID)
 	if err != nil {
-		return ErrClubs.Wrap(err)
+		return uuid.New(), ErrClubs.Wrap(err)
 	}
 
 	newClub := Club{
@@ -46,17 +46,21 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID) error {
 		CreatedAt: time.Now().UTC(),
 	}
 
-	return ErrClubs.Wrap(service.clubs.Create(ctx, newClub))
+	clubID, err := service.clubs.Create(ctx, newClub)
+
+	return clubID, ErrClubs.Wrap(err)
 }
 
 // CreateSquad creates new squad for club.
-func (service *Service) CreateSquad(ctx context.Context, clubID uuid.UUID) error {
+func (service *Service) CreateSquad(ctx context.Context, clubID uuid.UUID) (uuid.UUID, error) {
 	newSquad := Squad{
 		ID:     uuid.New(),
 		ClubID: clubID,
 	}
 
-	return ErrClubs.Wrap(service.clubs.CreateSquad(ctx, newSquad))
+	squadID, err := service.clubs.CreateSquad(ctx, newSquad)
+
+	return squadID, ErrClubs.Wrap(err)
 }
 
 // Add add new card to the squad of the club.

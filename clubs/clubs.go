@@ -22,9 +22,9 @@ var ErrNoSquad = errs.Class("squad does not exist")
 // architecture: DB
 type DB interface {
 	// Create creates club in the database.
-	Create(ctx context.Context, club Club) error
+	Create(ctx context.Context, club Club) (uuid.UUID, error)
 	// CreateSquad creates squad for clubs in the database.
-	CreateSquad(ctx context.Context, squad Squad) error
+	CreateSquad(ctx context.Context, squad Squad) (uuid.UUID, error)
 	// GetByUserID returns club owned by the user.
 	GetByUserID(ctx context.Context, userID uuid.UUID) (Club, error)
 	// GetSquad returns squad.

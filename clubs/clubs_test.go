@@ -81,14 +81,15 @@ func TestTeam(t *testing.T) {
 			err := repositoryUsers.Create(ctx, testUser)
 			require.NoError(t, err)
 
-			err = repositoryClubs.Create(ctx, testClub)
+			clubsID, err := repositoryClubs.Create(ctx, testClub)
 			require.NoError(t, err)
-
+			assert.Equal(t, clubsID, testClub.ID)
 		})
 
 		t.Run("Create squad", func(t *testing.T) {
-			err := repositoryClubs.CreateSquad(ctx, testSquad)
+			squadID, err := repositoryClubs.CreateSquad(ctx, testSquad)
 			require.NoError(t, err)
+			assert.Equal(t, squadID, testSquad.ID)
 		})
 
 		t.Run("Get club", func(t *testing.T) {
