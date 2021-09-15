@@ -32,9 +32,9 @@
                 <th>Period</th>
             </tr>
         </thead>
-        {{range .}}
+        {{range .Lots}}
         <tr>
-            <td>{{.ID}}</td>
+            <td><a href="/marketplace/get/{{.ID}}">{{.ID}}</a></td>
             <td>{{.ItemID}}</td>
             <td>{{.Type}}</td>
             <td>{{.UserID}}</td>
@@ -50,6 +50,7 @@
         </tr>
         {{end}}
     </table>
+    {{template "pagination" .}}
 </body>
 </html>
 
@@ -83,5 +84,25 @@
     }
     th {
         text-align: left;
+    }
+
+    /* Pagination links */
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+    }
+
+    /* Style the active/current link */
+    .pagination a.active {
+        background-color: dodgerblue;
+        color: white;
+    }
+
+    /* Add a grey background color on mouse-over */
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
     }
 </style>

@@ -215,7 +215,13 @@ func (server *Server) initializeTemplates() (err error) {
 		return err
 	}
 
-	server.templates.marketplace.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "marketplace", "list.html"))
+	server.templates.marketplace.List, err = template.New("list.html").Funcs(template.FuncMap{
+		"Iter": templatefuncs.Iter,
+		"Inc":  templatefuncs.Inc,
+		"Dec":  templatefuncs.Dec,
+	}).ParseFiles(
+		filepath.Join(server.config.StaticDir, "marketplace", "list.html"),
+		filepath.Join(server.config.StaticDir, "pagination", "pagination.html"))
 	if err != nil {
 		return err
 	}
