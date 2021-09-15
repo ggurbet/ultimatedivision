@@ -10,11 +10,15 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/pagination"
 	"ultimatedivision/users"
 )
+
+// ErrMarketplace indicated that there was an error in service.
+var ErrMarketplace = errs.Class("marketplace service error")
 
 // Service is handling marketplace related logic.
 //

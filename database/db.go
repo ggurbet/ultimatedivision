@@ -16,6 +16,7 @@ import (
 	"ultimatedivision/clubs"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
+	"ultimatedivision/queue"
 	"ultimatedivision/users"
 )
 
@@ -175,6 +176,10 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             start_time    TIMESTAMP WITH TIME ZONE                                        NOT NULL,
             end_time      TIMESTAMP WITH TIME ZONE                                        NOT NULL,
             period        INTEGER                                                         NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS places (
+            user_id BYTEA   PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+            status  VARCHAR                                                    NOT NULL
         );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)
@@ -218,4 +223,9 @@ func (db *database) LootBoxes() lootboxes.DB {
 // Marketplace provided access to accounts db.
 func (db *database) Marketplace() marketplace.DB {
 	return &marketplaceDB{conn: db.conn}
+}
+
+// Queue provided access to accounts db.
+func (db *database) Queue() queue.DB {
+	return &queueDB{conn: db.conn}
 }

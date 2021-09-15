@@ -18,9 +18,6 @@ import (
 // ErrNoLot indicated that lot does not exist.
 var ErrNoLot = errs.Class("lot does not exist")
 
-// ErrMarketplace indicated that there was an error in service.
-var ErrMarketplace = errs.Class("marketplace service error")
-
 // DB is exposing access to lots db.
 //
 // architecture: DB
