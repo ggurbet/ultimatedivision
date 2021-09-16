@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useSelector } from 'react-redux';
+import { filteredCards } from '@/app/store/actions/cards';
 
 import { useClub } from '@/app/hooks/club';
 
@@ -19,6 +19,7 @@ const Club: React.FC = () => {
         <section className="club">
             <FilterField
                 title="My cards"
+                thunk={filteredCards}
             />
             <ClubCardsArea
                 cards={cards}
