@@ -49,4 +49,26 @@ export class UserClient extends APIClient {
 
         return response;
     };
+    /** check user auth token */
+    public async checkToken(token: string | null): Promise<Response> {
+        const path = `${this.ROOT_PATH}/reset-password/${token}`;
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        };
+
+        return response;
+    };
+    /** recover user password */
+    public async recoverPassword(newPassword: string): Promise<Response> {
+        const path = `${this.ROOT_PATH}/reset-password`;
+        const response = await this.http.patch(path, JSON.stringify({ newPassword }));
+
+        if (!response.ok) {
+            await this.handleError(response);
+        };
+
+        return response;
+    };
 };

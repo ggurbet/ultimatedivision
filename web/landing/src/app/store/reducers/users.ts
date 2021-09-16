@@ -4,7 +4,12 @@
 import { UserClient } from '@/api/user';
 import { UserService } from '@/user/service';
 
-import { CHANGE_PASSWORD, CONFIRM_EMAIL, LOGIN } from '../actions/users';
+import {
+    CHANGE_PASSWORD,
+    CONFIRM_EMAIL,
+    LOGIN,
+    RECOVER_PASSWORD
+} from '../actions/users';
 
 /** implementation of user state */
 export class UsersState {
@@ -38,6 +43,9 @@ export const usersReducer = (
             break;
         case CONFIRM_EMAIL:
             user.status = action.token;
+            break;
+        case RECOVER_PASSWORD:
+            user.password = action.password;
             break;
         default:
             break;

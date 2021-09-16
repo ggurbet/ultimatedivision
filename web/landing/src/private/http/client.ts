@@ -33,4 +33,7 @@ export class HttpClient {
     public async delete(path: string): Promise<Response> {
         return await this.do('DELETE', path, '');
     };
+    public async patch(path: string, body: string): Promise<Response> {
+        return await this.do('PATCH', path, body);
+    }
 };

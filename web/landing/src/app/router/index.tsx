@@ -78,7 +78,7 @@ export class RouteConfig {
         true,
     );
     public static RecoverPassword: ComponentRoutes = new ComponentRoutes(
-        '/recover-password/:token',
+        '/recover-password',
         RecoverPassword,
         true,
     );
