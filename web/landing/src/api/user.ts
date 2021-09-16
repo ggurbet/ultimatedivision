@@ -38,27 +38,23 @@ export class UserClient extends APIClient {
             await this.handleError(response);
         };
     };
-    /** confirm user email implementation */
-    public async confirmEmail(token: string | null): Promise<Response> {
+    /** check user email token */
+    public async checkEmailToken(token: string | null): Promise<void> {
         const path = `${this.ROOT_PATH}/email/confirm/${token}`;
         const response = await this.http.get(path);
 
         if (!response.ok) {
             await this.handleError(response);
         };
-
-        return response;
     };
-    /** check user auth token */
-    public async checkToken(token: string | null): Promise<Response> {
+    /** check user recover token */
+    public async checkRecoverToken(token: string | null): Promise<void> {
         const path = `${this.ROOT_PATH}/reset-password/${token}`;
         const response = await this.http.get(path);
 
         if (!response.ok) {
             await this.handleError(response);
         };
-
-        return response;
     };
     /** recover user password */
     public async recoverPassword(newPassword: string): Promise<Response> {

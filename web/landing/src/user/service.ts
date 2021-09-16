@@ -22,16 +22,16 @@ export class UserService {
     public async changePassword(password: string, newPassword: string): Promise<void> {
         return await this.users.changePassword(password, newPassword);
     };
-    /** handles user email confirmation */
-    public async confirmEmail(token: string | null): Promise<Response> {
-        return await this.users.confirmEmail(token);
+    /** handles user check email token */
+    public async checkEmailToken(token: string | null): Promise<void> {
+        await this.users.checkEmailToken(token);
     };
-    /** handles user check token */
-    public async checkToken(token: string | null): Promise<Response> {
-        return await this.users.checkToken(token);
+    /** handles user check recover token */
+    public async checkRecoverToken(token: string | null): Promise<void> {
+        await this.users.checkRecoverToken(token);
     };
     /** handles user recover password */
-    public async recoverPassword(password: string): Promise<Response> {
-        return await this.users.recoverPassword(password);
+    public async recoverPassword(password: string): Promise<void> {
+        await this.users.recoverPassword(password);
     };
 };

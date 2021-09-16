@@ -13,7 +13,6 @@ import { UserService } from '@/user/service';
 export const REGISTER = 'REGISTER';
 export const LOGIN = 'LOGIN';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
-export const CONFIRM_EMAIL = 'CONFIRM_EMAIL';
 export const RECOVER_PASSWORD = 'RECOVER_PASSWORD';
 /** implement registration of new user */
 export const register = (user: User) => ({
@@ -35,11 +34,6 @@ export const changePassword = (password: string, newPassword: string) => ({
         password,
         newPassword,
     }
-});
-/** user email confirm */
-export const confirmEmail = (token: string | null) => ({
-    type: CONFIRM_EMAIL,
-    token,
 });
 /** recover user password */
 export const recoverPassword = (password: string) => ({
@@ -94,25 +88,13 @@ export const changeUserPassword = (password: string, newPassword: string) =>
         };
     };
 
-/** thunk that implements user email confirm */
-export const confirmUserEmail = (token: string | null) =>
-    async function (dispatch: Dispatch) {
-        try {
-            await users.confirmEmail(token);
-            dispatch(confirmEmail(token));
-        } catch (error: any) {
-            /** TODO: rework catching errros */
-            /* eslint-disable */
-            console.log(error.message);
-        }
-    };
-
 /** thunk that implements user reset password */
 export const recoverUserPassword = (password: string) =>
     async function (dispatch: Dispatch) {
         try {
             await users.recoverPassword(password);
             dispatch(recoverPassword(password));
+            location.pathname = RouteConfig.SignIn.path;
         } catch (error: any) {
             /** TODO: rework catching errros */
             /* eslint-disable */

@@ -73,7 +73,7 @@ export class RouteConfig {
         true
     );
     public static ConfirmEmail: ComponentRoutes = new ComponentRoutes(
-        '/email/confirm/',
+        '/email/confirm',
         ConfirmEmail,
         true,
     );

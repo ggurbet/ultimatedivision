@@ -6,7 +6,6 @@ import { UserService } from '@/user/service';
 
 import {
     CHANGE_PASSWORD,
-    CONFIRM_EMAIL,
     LOGIN,
     RECOVER_PASSWORD
 } from '../actions/users';
@@ -17,7 +16,6 @@ export class UsersState {
     public user = {
         email: '',
         password: '',
-        status: null,
     };
     public constructor(userService: UserService) {
         this.userService = userService;
@@ -40,9 +38,6 @@ export const usersReducer = (
             break;
         case CHANGE_PASSWORD:
             user.password = action.passwords.newPassword;
-            break;
-        case CONFIRM_EMAIL:
-            user.status = action.token;
             break;
         case RECOVER_PASSWORD:
             user.password = action.password;
