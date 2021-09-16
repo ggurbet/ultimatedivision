@@ -14,7 +14,7 @@ export const getUserCards = (cards: Card[]) => ({
     type: GET_USER_CARDS,
     cards,
 });
-export const getSellingCards = (cards: Partial<MarketplaceLot>[]) => ({
+export const getSellingCards = (cards: Array<Partial<MarketplaceLot>>) => ({
     type: GET_SELLING_CARDS,
     cards,
 });

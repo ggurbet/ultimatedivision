@@ -8,15 +8,15 @@ import { useSelector } from 'react-redux';
 
 import { MyCard } from '@/app/components/Club/ClubCardsArea/MyCard';
 
-import boxBody from '@static/img/StorePage/BoxContent/boxBody.svg';
+import { boxStyle } from '@/app/utils/lootboxStyle';
+
 import boxLight from '@static/img/StorePage/BoxContent/boxLight.svg';
 import ribbons from '@static/img/StorePage/BoxContent/ribbons.svg';
 import './index.scss';
 
 export const LootboxKeeping: React.FC<{ handleOpening: Dispatch<SetStateAction<boolean>> }> = ({ handleOpening }) => {
-    // TODO: replace by backend data
-    /* eslint-disable-next-line */
-    const cards = useSelector((state: RootState) => state.cardsReducer.club.slice(0, 5));
+    const cards = useSelector((state: RootState) => state.lootboxReducer.lootbox);
+    const box = boxStyle(cards.length);
 
     return (
         <div className="box-keeping">
@@ -47,7 +47,11 @@ export const LootboxKeeping: React.FC<{ handleOpening: Dispatch<SetStateAction<b
                     alt="ribbons"
                     className="box-keeping__ribbons"
                 />
-                <img src={boxBody} alt="box" />
+                <img
+                    className="box-keeping__box-body"
+                    src={box.body}
+                    alt="box"
+                />
             </div>
         </div>
     );

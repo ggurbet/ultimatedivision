@@ -56,7 +56,11 @@
         right: 0;
         margin: 0 auto;
     }
+    &__box-body {
+        width: 540px;
+    }
     &__box-cover {
+        width: 540px;
         animation: opening 3s 1s 1 normal forwards;
         transform: scale(1.05);
         @keyframes opening {

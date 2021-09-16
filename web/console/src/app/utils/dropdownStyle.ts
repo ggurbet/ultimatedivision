@@ -1,5 +1,4 @@
-// Copyright (C) 2021 Creditor Corp. Group.
-// See LICENSE for copying information.
+
 
 /** class for changing dropdown visibility according to component state */
 export class DropdownStyle {
