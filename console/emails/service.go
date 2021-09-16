@@ -56,10 +56,11 @@ func NewService(log logger.Logger, sender mail.Sender, config Config) *Service {
 // SendVerificationEmail is used to send email with verification link.
 func (service *Service) SendVerificationEmail(email, token string) error {
 	var verificationMessage mail.Message
+	url := "email/confirm"
 
 	verificationMessage.To = []mail.Address{{Address: email, Name: "Verify"}}
 	verificationMessage.Date = time.Now().UTC()
-	verificationMessage.PlainText = fmt.Sprintf("%s/%s", service.config.Domain, token)
+	verificationMessage.PlainText = fmt.Sprintf("%s/%s/%s", service.config.Domain, url, token)
 	verificationMessage.Subject = "confirm your email"
 	verificationMessage.From = mail.Address{Address: service.config.From}
 
@@ -69,10 +70,11 @@ func (service *Service) SendVerificationEmail(email, token string) error {
 // SendResetPasswordEmail is used to send email with verification link.
 func (service *Service) SendResetPasswordEmail(email, token string) error {
 	var verificationMessage mail.Message
+	url := "reset-password"
 
 	verificationMessage.To = []mail.Address{{Address: email, Name: "Verify"}}
 	verificationMessage.Date = time.Now().UTC()
-	verificationMessage.PlainText = fmt.Sprintf("%s/%s", service.config.Domain, token)
+	verificationMessage.PlainText = fmt.Sprintf("%s/%s/%s", service.config.Domain, url, token)
 	verificationMessage.Subject = "reset your password"
 	verificationMessage.From = mail.Address{Address: service.config.From}
 

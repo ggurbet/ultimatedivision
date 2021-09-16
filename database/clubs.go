@@ -31,25 +31,30 @@ type clubsDB struct {
 }
 
 // Create creates empty club in the db.
-func (clubsDB *clubsDB) Create(ctx context.Context, club clubs.Club) error {
+func (clubsDB *clubsDB) Create(ctx context.Context, club clubs.Club) (uuid.UUID, error) {
 	query := `INSERT INTO clubs(id, owner_id, club_name, created_at)
-              VALUES($1,$2,$3,$4)`
+              VALUES($1,$2,$3,$4)
+              RETURNING id`
 
-	_, err := clubsDB.conn.ExecContext(ctx, query,
-		club.ID, club.OwnerID, club.Name, club.CreatedAt)
+	var clubID uuid.UUID
+	err := clubsDB.conn.QueryRowContext(ctx, query,
+		club.ID, club.OwnerID, club.Name, club.CreatedAt).Scan(&clubID)
 
-	return ErrClubs.Wrap(err)
+	return clubID, ErrClubs.Wrap(err)
 }
 
 // CreateSquad creates squad for clubs in the database.
-func (clubsDB *clubsDB) CreateSquad(ctx context.Context, squad clubs.Squad) error {
+func (clubsDB *clubsDB) CreateSquad(ctx context.Context, squad clubs.Squad) (uuid.UUID, error) {
 	query := `INSERT INTO squads(id, squad_name, club_id, tactic, formation,captain_id)
-              VALUES($1,$2,$3,$4,$5,$6)`
+              VALUES($1,$2,$3,$4,$5,$6)
+              RETURNING id`
 
-	_, err := clubsDB.conn.ExecContext(ctx, query,
-		squad.ID, squad.Name, squad.ClubID, squad.Tactic, squad.Formation, squad.CaptainID)
+	var squadID uuid.UUID
 
-	return ErrClubs.Wrap(err)
+	err := clubsDB.conn.QueryRowContext(ctx, query,
+		squad.ID, squad.Name, squad.ClubID, squad.Tactic, squad.Formation, squad.CaptainID).Scan(&squadID)
+
+	return squadID, ErrClubs.Wrap(err)
 }
 
 // AddSquadCard inserts card to club.

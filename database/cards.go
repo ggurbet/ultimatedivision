@@ -600,28 +600,24 @@ func BuildWhereClauseDependsOnPlayerNameCards(filter cards.Filters) (string, []s
 
 // UpdateStatus updates status card in the database.
 func (cardsDB *cardsDB) UpdateStatus(ctx context.Context, id uuid.UUID, status cards.Status) error {
-	_, err := cardsDB.conn.QueryContext(ctx, "UPDATE cards SET status=$1 WHERE id=$2", status, id)
+	_, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET status=$1 WHERE id=$2", status, id)
 	return ErrCard.Wrap(err)
 }
 
 // UpdateUserID updates user id card in the database.
 func (cardsDB *cardsDB) UpdateUserID(ctx context.Context, id, userID uuid.UUID) error {
-	_, err := cardsDB.conn.QueryContext(ctx, "UPDATE cards SET user_id=$1 WHERE id=$2", userID, id)
+	_, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET user_id=$1 WHERE id=$2", userID, id)
 	return ErrCard.Wrap(err)
 }
 
-// Delete deletes record card in the data base.
+// Delete deletes record card in the database.
 func (cardsDB *cardsDB) Delete(ctx context.Context, id uuid.UUID) error {
 	query :=
 		`DELETE FROM
             cards
         WHERE 
-            id = $1
-        `
-	_, err := cardsDB.conn.ExecContext(ctx, query, id)
-	if err != nil {
-		return ErrCard.Wrap(err)
-	}
+            id = $1`
 
-	return nil
+	_, err := cardsDB.conn.ExecContext(ctx, query, id)
+	return ErrCard.Wrap(err)
 }

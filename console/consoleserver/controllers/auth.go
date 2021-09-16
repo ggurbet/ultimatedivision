@@ -188,14 +188,14 @@ func (auth *Auth) ResetPasswordSendEmail(w http.ResponseWriter, r *http.Request)
 	ctx := r.Context()
 
 	var err error
-	var request users.CreateUserFields
-
-	if err = json.NewDecoder(r.Body).Decode(&request); err != nil {
-		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
+	params := mux.Vars(r)
+	userEmail := params["email"]
+	if userEmail == "" {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("Unable to reset password. Missing email"))
 		return
 	}
 
-	err = auth.userAuth.ResetPasswordSendEmail(ctx, request.Email)
+	err = auth.userAuth.ResetPasswordSendEmail(ctx, userEmail)
 	if err != nil {
 		auth.log.Error("Unable to change password", AuthError.Wrap(err))
 		switch {

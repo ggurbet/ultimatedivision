@@ -12,9 +12,13 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/zeebo/errs"
 
 	"ultimatedivision/internal/pagination"
 )
+
+// ErrCards indicated that there was an error in service.
+var ErrCards = errs.Class("cards service error")
 
 // Service is handling cards related logic.
 //
@@ -32,7 +36,7 @@ func NewService(cards DB, config Config) *Service {
 	}
 }
 
-// Create add card in DB.
+// Create adds card in DB.
 func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentageQualities []int) (Card, error) {
 	qualities := map[string]int{
 		"wood":    percentageQualities[0],
@@ -309,23 +313,23 @@ func (service *Service) ListCardIDsByPlayerNameWhereActiveLot(ctx context.Contex
 	return cardIdsList, ErrCards.Wrap(err)
 }
 
-// ListByUserID returns all users cards.
+// ListByUserID returns all user`s cards in database.
 func (service *Service) ListByUserID(ctx context.Context, userID uuid.UUID) ([]Card, error) {
 	userCards, err := service.cards.ListByUserID(ctx, userID)
 	return userCards, ErrCards.Wrap(err)
 }
 
-// UpdateStatus updates card status.
+// UpdateStatus updates status of card in database.
 func (service *Service) UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error {
 	return ErrCards.Wrap(service.cards.UpdateStatus(ctx, id, status))
 }
 
-// UpdateUserID updates card status.
+// UpdateUserID updates user's id for card in database.
 func (service *Service) UpdateUserID(ctx context.Context, id, userID uuid.UUID) error {
 	return ErrCards.Wrap(service.cards.UpdateUserID(ctx, id, userID))
 }
 
-// Delete destroy card in DB.
+// Delete deletes card record in database.
 func (service *Service) Delete(ctx context.Context, cardID uuid.UUID) error {
 	return ErrCards.Wrap(service.cards.Delete(ctx, cardID))
 }
