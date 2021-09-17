@@ -65,6 +65,7 @@ const RecoverPassword: React.FC = () => {
             setConfirmedPasswordError('Passwords does not match, please try again');
             isValidForm = false;
         }
+
         return isValidForm;
     };
 

@@ -1,0 +1,11 @@
+@import '/src/index.scss';
+
+.ultimatedivision-mint-btn {
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(95.3deg, rgba(0, 0, 0, 0.2) 4.05%, rgba(0, 0, 0, 0) 87.48%), #0DF55C;
+
+    &__text {
+        padding: 5px;
+    }
+}
