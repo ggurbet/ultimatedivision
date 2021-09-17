@@ -1,4 +1,4 @@
-@import '@/index.scss';
+@import "@/index.scss";
 
 .footballer-card-stats {
     width: 100%;
@@ -9,13 +9,16 @@
     row-gap: 120px;
     column-gap: 40px;
     justify-content: center;
-    &::after {
+
+    &:after {
         @extend %pseudoelementsInFootballerCard;
+
         bottom: 0;
     }
-    &::before {
-        @extend %pseudoelementsInFootballerCard;
-        bottom: 50%;
 
+    &:before {
+        @extend %pseudoelementsInFootballerCard;
+
+        bottom: 50%;
     }
 }

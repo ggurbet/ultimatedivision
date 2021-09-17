@@ -1,5 +1,5 @@
-@import '/src/index.scss';
-@import 'aos/dist/aos.css';
+@import "/src/index.scss";
+@import "aos/dist/aos.css";
 
 .roadmap-point {
     position: absolute;
@@ -24,12 +24,14 @@
 }
 
 @media (max-width: $tabletBreakPoint) {
+
     .roadmap-point {
         left: 90px;
     }
 }
 
 @media (max-width: $phoneBreakPoint) {
+
     .roadmap-point {
         max-width: 120px;
         top: 35%;
@@ -48,17 +50,18 @@
     }
 }
 
-[data-aos='zoom-in-right-custom'] {
-    transform: translate3d(-100px, 0, 0) scale(.6);
-    @media (max-width: $tabletBreakPoint)  {
-        transform: translate3d(100px, 0, 0) scale(.6);
-    }
+[data-aos="zoom-in-right-custom"] {
+    transform: translate3d(-100px, 0, 0) scale(0.6);
 
+    @media (max-width: $tabletBreakPoint) {
+        transform: translate3d(100px, 0, 0) scale(0.6);
+    }
 }
 
-[data-aos='fade-right-custom'] {
+[data-aos="fade-right-custom"] {
     transform: translate3d(-100px, 0, 0);
-    @media (max-width: $tabletBreakPoint)  {
-        transform: translate3d(100px, 0, 0) scale(.6);
+
+    @media (max-width: $tabletBreakPoint) {
+        transform: translate3d(100px, 0, 0) scale(0.6);
     }
 }

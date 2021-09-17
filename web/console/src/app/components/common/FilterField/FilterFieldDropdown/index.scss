@@ -1,19 +1,22 @@
-@import '@/index.scss';
+@import "@/index.scss";
 
 .filter-item {
     color: white;
     list-style: none;
     cursor: pointer;
     position: relative;
+
     &__title {
-        font-family: 'Montserrat', sans-serif;
+        font-family: "Montserrat", sans-serif;
         font-size: 14px;
         color: white;
     }
+
     &__picture {
         margin-left: 5px;
         vertical-align: middle;
     }
+
     &__dropdown {
         position: absolute;
         top: 30px;
@@ -22,8 +25,9 @@
         z-index: 4;
         border-radius: 5px;
         background-color: $highlightBackground;
-        &::before {
-            content: '';
+
+        &:before {
+            content: "";
             height: 20px;
             width: 20px;
             position: absolute;
@@ -32,7 +36,6 @@
             border-radius: 3px;
             background-color: $highlightBackground;
             transform: rotate(45deg);
-
         }
     }
 }

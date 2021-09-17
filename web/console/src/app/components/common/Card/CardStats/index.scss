@@ -1,23 +1,26 @@
-@import '@/index.scss';
+@import "@/index.scss";
 
 .footballer-card-stats-item {
     width: 200px;
     display: flex;
     flex-direction: column;
     gap: 8px;
+
     &__heading {
         display: flex;
         justify-content: space-between;
         font-size: 24px;
         margin-bottom: 40px;
     }
+
     &__diagram {
         position: relative;
         width: 100%;
         height: 2px;
-        background-color: #5758A0;
+        background-color: #5758a0;
         bottom: 19px;
     }
+
     &__diagram-value {
         position: absolute;
         z-index: 2;
@@ -25,15 +28,18 @@
         top: 0;
         left: 0;
     }
+
     &__row {
         display: flex;
         justify-content: space-between;
     }
+
     &__row-name {
-        font-family: "Montserrat";
+        font-family: "Montserrat", sans-serif;
         text-transform: capitalize;
         color: $textColor;
     }
+
     .bar {
         position: absolute;
         left: 0;

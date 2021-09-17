@@ -1,22 +1,22 @@
-@import '/src/index.scss';
-@import 'aos/dist/aos.css';
+@import "/src/index.scss";
+@import "aos/dist/aos.css";
 
 .projects {
-    background-image: url('@static/images/Projects/projectsWallpaper.png');
+    background-image: url("@static/images/Projects/projectsWallpaper.png");
     background-size: cover;
     color: white;
     overflow-x: hidden;
 
     &__wrapper {
         padding: 120px 30px;
-    };
+    }
 
     &__title {
         font-size: 80px;
         margin: 100px auto;
         max-width: 1268px;
         text-align: center;
-    };
+    }
 
     &__area {
         flex-wrap: wrap;
@@ -30,6 +30,7 @@
 }
 
 @media (max-width: $tabletBreakPoint + 20px) {
+
     .projects {
 
         &__area {
@@ -39,6 +40,7 @@
 }
 
 @media (max-width: $phoneBreakPoint) {
+
     .projects {
 
         &__title {
@@ -46,4 +48,3 @@
         }
     }
 }
-

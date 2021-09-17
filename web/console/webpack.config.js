@@ -3,6 +3,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const StylelintPlugin = require('stylelint-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -29,7 +30,7 @@ module.exports = {
             filename: '[name].css',
             chunkFilename: '[id].css',
         }),
-
+        new StylelintPlugin({fix:true})
     ],
     devServer: {
         port: 3001,

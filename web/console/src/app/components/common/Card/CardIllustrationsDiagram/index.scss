@@ -4,15 +4,18 @@
 .footballer-card-illustrations-diagram {
     width: 100px;
     height: 100px;
+
     &__values-area {
         display: flex;
         justify-content: space-between;
     }
+
     &__value {
         position: relative;
         bottom: 25px;
         font-size: 18px;
     }
+
     &__min,
     &__max {
         font-size: 12px;

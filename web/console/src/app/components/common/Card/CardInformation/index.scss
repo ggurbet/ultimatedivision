@@ -1,4 +1,4 @@
-@import '@/index.scss';
+@import "@/index.scss";
 
 .footballer-card-information {
     width: 85%;
@@ -7,12 +7,14 @@
     display: grid;
     column-gap: 105px;
     row-gap: 40px;
-    padding :40px 0 0 40px;
-    font-family: "Montserrat";
+    padding: 40px 0 0 40px;
+    font-family: "Montserrat", sans-serif;
+
     &__item-title {
         font-size: 16px;
         text-transform: uppercase;
     }
+
     &__item-value {
         margin-top: 8px;
         font-size: 14px;
@@ -20,6 +22,7 @@
         color: $textColor;
         text-transform: capitalize;
     }
+
     &__item-icon {
         margin-left: 5px;
     }

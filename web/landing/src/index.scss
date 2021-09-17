@@ -1,11 +1,11 @@
-@import '@static/styles/reset';
-@import '@static/styles/variables';
-@import '@static/styles/extends';
-@import '@static/styles/mixins';
+@import "@static/styles/reset";
+@import "@static/styles/variables";
+@import "@static/styles/extends";
+@import "@static/styles/mixins";
 
 @font-face {
     font-family: "BebasNeue";
-    src: url('@static/fonts/BebasNeue-Regular.ttf');
+    src: url("@static/fonts/BebasNeue-Regular.ttf");
     font-style: normal;
     font-weight: lighter;
 }
@@ -18,5 +18,5 @@
 }
 
 html {
-    font-family: "BebasNeue";
+    font-family: "BebasNeue", sans-serif;
 }

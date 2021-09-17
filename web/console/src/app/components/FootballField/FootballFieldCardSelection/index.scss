@@ -1,5 +1,6 @@
 .card-selection {
     padding: 40px 0;
+
     &__list {
         width: 80%;
         max-width: 1380px;
@@ -15,6 +16,7 @@
         grid-template-columns: repeat(6, 1fr);
         row-gap: 20px;
     }
+
     &__card {
         text-decoration: none;
         width: 178px;
@@ -23,16 +25,18 @@
         border-radius: 10px;
         box-shadow: white;
         padding-bottom: 40px;
-        margin: 100px 15px 0px;
+        margin: 100px 15px 0;
         cursor: pointer;
+
         &__background-type {
             z-index: 1;
             position: absolute;
-            margin-left: 0px;
+            margin-left: 0;
             width: 192px;
             left: -8px;
             top: -30px;
         }
+
         &__face-picture {
             z-index: 2;
             position: absolute;
@@ -40,24 +44,28 @@
             margin-top: 20px;
             height: 110px;
         }
+
         &__price-gold {
             z-index: 3;
             position: absolute;
             bottom: 110px;
             right: 20px;
         }
+
         &__confirm-icon {
             z-index: 3;
             position: absolute;
             top: 0;
             right: 25px;
         }
+
         &__list {
             margin-top: 140px;
             margin-left: 50px;
             display: grid;
             grid-column-gap: 20px;
             grid-template-columns: 30px 30px;
+
             &__item {
                 color: rgb(87, 86, 86);
                 list-style: none;
@@ -65,24 +73,29 @@
                 font-size: 13px;
             }
         }
+
         &__price {
             margin-top: 100px;
             text-align: center;
             position: relative;
+
             &__picture {
                 margin-right: 8px;
                 vertical-align: middle;
             }
+
             &__current {
                 color: white;
                 font-size: 24px;
             }
+
             &__status {
                 position: absolute;
                 top: 50px;
                 left: 26px;
             }
         }
+
         &__name {
             color: rgb(87, 86, 86);
             text-align: center;

@@ -1,9 +1,9 @@
-@import '/src/index.scss';
-@import 'aos/dist/aos.css';
+@import "/src/index.scss";
+@import "aos/dist/aos.css";
 
 .roadmap {
     padding: 100px;
-    background-image: url('@static/images/roadmap/background.png');
+    background-image: url("@static/images/roadmap/background.png");
     background-position: center;
     background-size: cover;
     color: white;
@@ -13,7 +13,7 @@
 
     &__road {
         width: 9px;
-        margin:  0 auto;
+        margin: 0 auto;
         position: relative;
         display: flex;
         padding-bottom: 100px;
@@ -26,7 +26,6 @@
     }
 
     &__footbal-player-img,
-
     &__ball-img {
         display: none;
         position: absolute;
@@ -43,31 +42,35 @@
     }
 
     .roadmap-circle {
+
         &:nth-of-type(even) {
+
             .roadmap-circle__pseudo-element {
                 left: 105%;
             }
+
             .roadmap-point {
                 left: 90px;
             }
-
         }
+
         &:nth-of-type(odd) {
+
             .roadmap-circle__pseudo-element {
                 right: 105%;
             }
+
             .roadmap-point {
                 right: 35px;
             }
         }
-
     }
 }
 
 @media (max-width: $tabletBreakPoint) {
 
     .roadmap {
-        background: radial-gradient(476.74% 104.69% at 50% 38.49%, #25528B 0%, #0D1840 100%);
+        background: radial-gradient(476.74% 104.69% at 50% 38.49%, #25528b 0%, #0d1840 100%);
 
         &__road {
             margin: 0;
@@ -78,8 +81,11 @@
             display: block;
         }
     }
+
     .roadmap-circle {
+
         &:nth-of-type(odd) {
+
             .roadmap-circle__pseudo-element {
                 right: unset;
                 left: 105%;
@@ -87,5 +93,3 @@
         }
     }
 }
-
-

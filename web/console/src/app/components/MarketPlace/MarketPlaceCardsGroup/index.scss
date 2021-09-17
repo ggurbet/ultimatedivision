@@ -1,12 +1,13 @@
 //Copyright (C) 2021 Creditor Corp. Group.
 //See LICENSE for copying information.
 
-@import '@/index.scss';
+@import "@/index.scss";
 
 .marketplace-cards {
     position: relative;
     display: flex;
     justify-content: center;
+
     &__wrapper {
         min-height: 45vh;
         padding: 20px;

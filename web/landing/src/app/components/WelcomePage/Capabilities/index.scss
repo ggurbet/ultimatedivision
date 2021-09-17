@@ -1,7 +1,7 @@
-@import '/src/index.scss';
+@import "/src/index.scss";
 
 .group-capabilities {
-    background-image: url('@static/images/capabilitiesPage/background/jared-arango.png');
+    background-image: url("@static/images/capabilitiesPage/background/jared-arango.png");
     background-color: black;
     background-size: cover;
     display: flex;
@@ -9,6 +9,7 @@
     padding-top: 120px;
     padding-bottom: 120px;
     overflow-x: hidden;
+
     @media (max-width: $tabletBreakPoint) {
         padding: 60px 20px;
     }

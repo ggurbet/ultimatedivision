@@ -1,7 +1,7 @@
 //Copyright (C) 2021 Creditor Corp. Group.
 //See LICENSE for copying information.
 
-@import '@/index.scss';
+@import "@/index.scss";
 
 .filter-field {
     margin-top: 50px;
@@ -14,20 +14,23 @@
         font-weight: 100;
         position: relative;
     }
+
     &__wrapper {
         position: relative;
-        &::before {
+
+        &:before {
             position: absolute;
-            content: '';
+            content: "";
             top: 0;
             left: 0;
             width: 80vw;
             height: 2px;
             background: $marketPlaceBorderColor;
         }
-        &::after {
+
+        &:after {
             position: absolute;
-            content: '';
+            content: "";
             bottom: 0;
             right: 0;
             width: 80vw;
@@ -35,8 +38,9 @@
             background: $marketPlaceBorderColor;
         }
     }
+
     &__list {
-        background-image: url('@/app/static/img/FilterField/filterShape.svg');
+        background-image: url("@/app/static/img/FilterField/filterShape.svg");
         background-size: 100% 100%;
         background-repeat: no-repeat;
         display: flex;
@@ -46,19 +50,23 @@
         list-style: none;
         justify-content: space-around;
         align-items: center;
+
         &__item {
+
             &:first-child {
                 min-width: 160px;
             }
+
             &__search {
                 background-color: transparent;
                 border: none;
                 width: 150px;
                 padding: 5px 10px;
                 color: white;
-                margin:  0 5px;
+                margin: 0 5px;
                 border-radius: 20px;
                 outline: none;
+
                 &::placeholder {
                     color: rgb(189, 189, 189);
                     font-size: 14px;
@@ -66,14 +74,17 @@
             }
         }
     }
-
 }
 
 @media (max-width: $desktopBreakPoint) {
+
     .filter-field {
+
         &__list {
+
             &__item {
                 font-size: 13px;
+
                 &__picture {
                     margin-left: 2px;
                     vertical-align: middle;

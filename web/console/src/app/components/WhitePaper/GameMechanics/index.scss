@@ -1,14 +1,17 @@
 .game-mechanics {
+
     &__title {
         font-size: 40px;
         margin-bottom: 40px;
     }
+
     &__subtitle {
         font-size: 32px;
         margin-bottom: 24px;
     }
+
     &__description {
-        font-family: 'Montserrat';
+        font-family: "Montserrat", sans-serif;
         margin-bottom: 60px;
     }
 }
