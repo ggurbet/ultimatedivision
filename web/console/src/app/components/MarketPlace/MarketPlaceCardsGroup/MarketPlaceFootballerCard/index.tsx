@@ -3,28 +3,22 @@
 
 import { PlayerCard } from '@components/common/PlayerCard';
 
-import { RouteConfig } from '@/app/router';
 import { Link } from 'react-router-dom';
 
-import { Card } from '@/card';
+import { MarketplaceLot } from '@/card';
 
 import './index.scss';
 
-export const MarketPlaceFootballerCard: React.FC<{ card: Card; place?: string }> = ({ card }) =>
+export const MarketPlaceFootballerCard: React.FC<{ lot: MarketplaceLot; place?: string }> = ({ lot }) =>
     <div
         className="marketplace-playerCard"
     >
         <Link
             className="marketplace-playerCard__link"
-            to={{
-                pathname: RouteConfig.FootballerCard.path,
-                state: {
-                    card,
-                },
-            }}
+            to={`/lot/${lot.id}`}
         >
             <PlayerCard
-                card={card}
+                card={lot.card}
                 parentClassName={'marketplace-playerCard'}
             />
             <div className="marketplace-playerCard__price">

@@ -1,8 +1,8 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { FootballerCardIllustrationsDiagramsArea } from '@components/FootballerCard/FootballerCardIllustrationsDiagramsArea';
-import { FootballerCardIllustrationsRadar } from '@components/FootballerCard/FootballerCardIllustrationsRadar';
+import { FootballerCardIllustrationsDiagramsArea } from '@/app/components/common/Card/CardIllustrationsDiagramsArea';
+import { FootballerCardIllustrationsRadar } from '@/app/components/common/Card/CardIllustrationsRadar';
 
 import { Card } from '@/card';
 import { PlayerCard } from '@components/common/PlayerCard';

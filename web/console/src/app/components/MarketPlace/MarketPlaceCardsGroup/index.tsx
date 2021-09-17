@@ -10,7 +10,7 @@ export const MarketPlaceCardsGroup: React.FC<{ lots: MarketplaceLot[] }> = ({ lo
     <div className="marketplace-cards">
         <div className="marketplace-cards__wrapper">
             {lots.map((lot, index) =>
-                <MarketPlaceFootballerCard card={lot.card} key={index} />
+                <MarketPlaceFootballerCard lot={lot} key={index} />
             )}
         </div>
     </div>;

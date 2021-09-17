@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import { CardClient } from '@/api/cards';
-import { Card, CardInterface, CardsResponse, CreatedLot, MarkeplaceResponse } from '@/card';
+import { CardsResponse, CreatedLot, MarkeplaceResponse } from '@/card';
 
 /**
  * exposes all bandwidth related logic
@@ -13,6 +13,11 @@ export class CardService {
     public constructor(club: CardClient) {
         this.card = club;
     }
+    /** getting lot by id */
+    public async getCardById(id: string): Promise<Response> {
+        return await this.card.getCardById(id);
+    }
+
     /** get filtered cards from api */
     public async getFilteredCards(filterParam: string) {
         const response = await this.card.getFilteredCards(filterParam);
@@ -25,9 +30,14 @@ export class CardService {
 
         return await response.json();
     }
-    /** sell card */
-    public async sellCard(lot: CreatedLot): Promise<Response> {
-        return await this.card.sellCard(lot);
+    /** create lot */
+    public async createLot(lot: CreatedLot): Promise<Response> {
+        return await this.card.createLot(lot);
+    }
+
+    /** getting lot by id */
+    public async getLotById(id: string): Promise<Response> {
+        return await this.card.getLotById(id);
     }
     /** get lots from api */
     public async getLots(): Promise<MarkeplaceResponse> {

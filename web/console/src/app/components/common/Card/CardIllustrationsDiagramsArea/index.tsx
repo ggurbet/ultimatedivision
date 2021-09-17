@@ -3,7 +3,7 @@
 
 
 import { FootballerCardIllustrationsDiagram }
-    from '@components/FootballerCard/FootballerCardIllustrationsDiagram';
+    from '@/app/components/common/Card/CardIllustrationsDiagram';
 
 import { Card } from '@/card';
 

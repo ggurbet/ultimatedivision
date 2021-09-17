@@ -10,15 +10,14 @@ import { RootState } from '@/app/store';
 import currency from '@static/img/FootballerCardPage/currency.svg';
 
 import './index.scss';
+import { Card } from '@/card';
 
-export const FootballerCardPrice: React.FC = () => {
+export const FootballerCardPrice: React.FC<{card: Card}> = ({ card }) => {
     const FIRST_CARD_INDEX = 0;
     const FULL_VALUE_STATISTIC_SCALE = 100;
 
-    const priceData = useSelector((state: RootState) =>
-    /** TODO: replace by backend data */
-        state.cardsReducer.club[FIRST_CARD_INDEX].cardPrice);
-        // @ts-ignore
+    const priceData = card.cardPrice;
+    // @ts-ignore
     const prpValue: number = priceData.prp;
 
     return (

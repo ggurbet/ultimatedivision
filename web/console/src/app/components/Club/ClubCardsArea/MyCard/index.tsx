@@ -8,11 +8,10 @@ import confirmIcon from '@static/img/MarketPlacePage/MyCard/ok.svg';
 import priceGoldIcon from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';
 
 import { Link } from 'react-router-dom';
-import { RouteConfig } from '@/app/router';
 
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { sellCard } from '@/app/store/actions/cards';
+import { createLot, openUserCard } from '@/app/store/actions/cards';
 import { Card, CreatedLot } from '@/card';
 
 import './index.scss';
@@ -31,7 +30,7 @@ export const MyCard: React.FC<{ card: Card }> = ({ card }) => {
         e.nativeEvent.stopImmediatePropagation();
         /** TODO: create interface for adding selling parameters */
         /* eslint-disable */
-        dispatch(sellCard(new CreatedLot(card.id, 200, 200, 1)));
+        dispatch(createLot(new CreatedLot(card.id, 200, 200, 1)));
         /* eslint-enable */
         changeControlVisibility(false);
     };
@@ -43,12 +42,7 @@ export const MyCard: React.FC<{ card: Card }> = ({ card }) => {
         >
             <Link
                 className="club-card__link"
-                to={{
-                    pathname: RouteConfig.FootballerCard.path,
-                    state: {
-                        card,
-                    },
-                }}
+                to={`/card/${card.id}`}
             >
                 <img
                     className="club-card__confirm-icon"

@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import { FootballerCardStats }
-    from '@components/FootballerCard/FootballerCardStats';
+    from '@/app/components/common/Card/CardStats';
 
 import { Card } from '@/card';
 
