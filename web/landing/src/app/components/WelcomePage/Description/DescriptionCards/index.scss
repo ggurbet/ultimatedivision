@@ -1,4 +1,4 @@
-@import '@/index.scss';
+@import "@/index.scss";
 
 .description-cards {
     max-width: 1280px;
@@ -7,19 +7,23 @@
     display: flex;
     align-items: center;
     overflow-x: hidden;
+
     &__text-area {
         padding-left: 50px;
         width: 50%;
     }
+
     &__title {
         color: $highlightColor;
         font-size: 36px;
         margin-bottom: 40px;
     }
+
     &__card {
         width: 100%;
         transition: all 0.3s;
     }
+
     &__wrapper {
         position: absolute;
         right: 0;
@@ -28,8 +32,11 @@
         overflow: hidden;
     }
 }
+
 @media (max-width: $tabletBreakPoint) {
+
     .description-cards {
+
         &__card {
             transform: translateX(50px);
         }
@@ -37,15 +44,19 @@
 }
 
 @media (max-width: $phoneBreakPoint) {
+
     .description-cards {
         flex-direction: column;
+
         &__text-area {
             padding: 0 30px;
             width: 100%;
         }
+
         &__text {
             display: none;
         }
+
         &__wrapper {
             width: 100%;
             position: relative;

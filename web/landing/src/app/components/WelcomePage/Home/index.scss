@@ -1,4 +1,4 @@
-@import '/src/index.scss';
+@import "/src/index.scss";
 
 .ultimatedivision-home {
     width: 100%;
@@ -16,35 +16,35 @@
         .ultimatedivision-home__text-left {
             display: flex;
             flex-direction: column;
-            
+
             .value {
                 margin: 212px auto auto 72px;
                 padding: 5px;
-                font-family: 'Russo One';
+                font-family: "Russo One";
                 font-style: normal;
                 font-weight: normal;
                 font-size: 120px;
                 line-height: 145px;
                 color: $home-text-value;
             }
-    
+
             .title {
                 width: 639px;
                 margin: 12px auto auto 72px;
                 padding: 5px;
-                font-family: 'Montserrat';
+                font-family: "Montserrat";
                 font-style: normal;
                 font-weight: 600;
                 font-size: 48px;
                 line-height: 59px;
                 color: $home-text;
             }
-    
+
             .description {
                 width: 584px;
                 margin: 34px auto auto 72px;
                 padding: 5px;
-                font-family: 'Rubik';
+                font-family: "Rubik";
                 font-style: normal;
                 font-weight: normal;
                 font-size: 18px;

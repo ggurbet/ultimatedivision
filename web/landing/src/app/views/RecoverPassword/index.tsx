@@ -14,7 +14,7 @@ import { recoverUserPassword } from '@/app/store/actions/users';
 
 import { UserDataArea } from '@components/common/UserDataArea';
 
-import ultimate from '@static/img/registerPage/ultimate.svg';
+import ultimate from '@static/images/registerPage/ultimate.svg';
 
 import './index.scss';
 

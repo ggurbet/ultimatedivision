@@ -1,9 +1,10 @@
-@import '/src/index.scss';
+@import "/src/index.scss";
 
 .launch-roadmap {
     display: flex;
     flex-direction: column;
     background: #202552;
+
     &__title {
         font-size: 64px;
         text-align: center;
@@ -12,12 +13,14 @@
     }
 
     @media (max-width: $desktopBreakPoint) {
+
         &__title {
             font-size: 42px;
         }
     }
 
     @media (max-width: $phoneBreakPoint) {
+
         &__title {
             font-size: 36px;
         }

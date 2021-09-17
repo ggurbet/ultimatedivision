@@ -12,7 +12,28 @@
 
 @font-face {
     font-family: "Thorletto";
-    src: url('@static/fonts/Thorletto.ttf');
+    src: url("@static/fonts/Thorletto.ttf");
+    font-style: normal;
+    font-weight: lighter;
+}
+
+@font-face {
+    font-family: "Russo One";
+    src: url("@static/fonts/RussoOne-Regular.ttf");
+    font-style: normal;
+    font-weight: lighter;
+}
+
+@font-face {
+    font-family: "Hanson";
+    src: url("@static/fonts/Hanson-Bold.ttf");
+    font-style: normal;
+    font-weight: lighter;
+}
+
+@font-face {
+    font-family: "Hanson";
+    src: url("@static/fonts/Rubik-Regular.ttf");
     font-style: normal;
     font-weight: lighter;
 }
