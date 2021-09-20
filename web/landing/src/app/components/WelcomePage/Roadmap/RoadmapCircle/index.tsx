@@ -13,7 +13,6 @@ import './index.scss';
 export const RoadmapCircle: React.FC<{
     item: {
         date: string,
-        title: string,
         points: string[],
         done: boolean,
         id: number,
@@ -28,10 +27,6 @@ export const RoadmapCircle: React.FC<{
     return (
         <div
             className="roadmap-circle"
-            style={
-                item.done
-                    ? { backgroundImage: `url(${doneImg})` }
-                    : { background: '#1E4175' }}
         >
             <RoadmapPoint
                 key={item.id}

@@ -3,66 +3,27 @@
 
 .roadmap-circle {
     position: relative;
-    width: 35px;
-    height: 35px;
-    border: 5px solid $highlightColor;
+    width: 15px;
+    height: 15px;
+    border: 1px solid transparent;
     border-radius: 50%;
+    background: $roadmapHighlightColor;
     background-position: center;
     background-size: 130%;
-    margin-bottom: 130px;
-
-    &__pseudo-element {
-        height: 1px;
-        background-color: $highlightColor;
-        position: absolute;
-        top: 50%;
-    }
+    margin-right: 300px;
 }
 
 @media (max-width: $tabletBreakPoint) {
 
     .roadmap-circle {
-        margin-bottom: 200px;
-
-        &:nth-child(even),
-        &:nth-child(odd) {
-
-            &:before {
-                right: 0;
-                left: 100%;
-                width: 60px;
-            }
-        }
+        margin-right: 0;
+        margin-top: 250px;
     }
 }
 
 @media (max-width: $phoneBreakPoint) {
 
     .roadmap-circle {
-        margin-bottom: 130px;
-    }
-}
-
-[data-aos="showLeft"] {
-    width: 0;
-
-    &.aos-animate {
-        width: 200px;
-    }
-
-    @media (max-width: $tabletBreakPoint) {
-        width: 0;
-
-        &.aos-animate {
-            width: 50px;
-        }
-    }
-}
-
-[data-aos="showRight"] {
-    width: 0;
-
-    &.aos-animate {
-        width: 50px;
+        margin-top: 300px;
     }
 }

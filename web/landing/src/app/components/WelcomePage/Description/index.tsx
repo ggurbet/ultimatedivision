@@ -10,9 +10,27 @@ import './index.scss';
 export const Description = () => {
     return (
         <section className="description">
-            <DescriptionAbout />
-            <DescriptionCards />
-            <DescriptionPay />
+            <div className="description__wrapper"
+                data-aos="fade-right"
+                data-aos-duration="600"
+                data-aos-easing="ease-in-out-cubic"
+            >
+                <DescriptionAbout />
+            </div>
+            <div className="description__wrapper"
+                data-aos="fade-left"
+                data-aos-duration="600"
+                data-aos-easing="ease-in-out-cubic"
+            >
+                <DescriptionCards />
+            </div>
+            <div className="description__wrapper"
+                data-aos="fade-right"
+                data-aos-duration="600"
+                data-aos-easing="ease-in-out-cubic"
+            >
+                <DescriptionPay />
+            </div>
         </section>
     );
 };

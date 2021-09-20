@@ -7,9 +7,6 @@ import Aos from 'aos';
 
 import { RoadmapCircle } from '@components/WelcomePage/Roadmap/RoadmapCircle';
 
-import footballPlayer from '@static/images/roadmap/footballPlayer.png';
-import ball from '@static/images/roadmap/footballPlayer.png';
-
 import './index.scss';
 
 export const Roadmap: React.FC = () => {
@@ -22,55 +19,32 @@ export const Roadmap: React.FC = () => {
     const dataList = [
         {
             id: 1,
-            date: '01.07.2021',
-            title: 'Whitepaper and project preparation',
-            points: [],
+            date: '2021 Q4',
+            points: [
+                'Ultimate Division Metaverse MVP launch',
+                'Play to Earn mechanics available to players',
+                'UDT (Ultimate Division Token) introduced'
+            ],
             done: true,
         },
         {
             id: 2,
-            date: '01.09.2021',
-            title: 'MVP launch',
+            date: '2022 Q1',
             points: [
-                'Smart contracts',
-                'NFT assets',
-                'Marketplace',
-                'Player Boxes',
-                'Player Cards',
+                'Game in full swing',
+                'Management roles available',
+                'Club owners can tokenize their clubs and sell shares to other players',
+                'UD partnership with Top-5 Leagues',
             ],
             done: false,
         },
         {
             id: 3,
-            date: '01.11.2021',
-            title: 'Football Clubs',
+            date: '2022 Q2',
             points: [
-                'FC Management',
-                'Squad building',
-                'Strategies',
-                'Player-to-player contracts',
-            ],
-            done: false,
-        },
-        {
-            id: 4,
-            date: '01.12.2021',
-            title: 'Gameplay and Leagues',
-            points: [
-                'P2P gameplay',
-                'Division placement and progression',
-                'Weekly Rewards'
-            ],
-            done: false,
-        },
-        {
-            id: 5,
-            date: '01.02.2022',
-            title: 'Club Roles and more P2E',
-            points: [
-                'Managers',
-                'In-game coaches',
-                'Smart-contract club management',
+                'Advanced gameplay introduced',
+                'Local competitions launched',
+                'DAO governance adopted',
             ],
             done: false,
         },
@@ -78,16 +52,9 @@ export const Roadmap: React.FC = () => {
 
     return (
         <section className="roadmap">
-            <img
-                className="roadmap__footbal-player-img"
-                src={footballPlayer}
-                alt="football player"
-            />
-            <img
-                className="roadmap__ball-img"
-                src={ball}
-                alt="ball"
-            />
+            <h2 className="roadmap__title">
+                Development Roadmap
+            </h2>
             <div
                 className="roadmap__road"
                 data-aos="zoom-out-down">

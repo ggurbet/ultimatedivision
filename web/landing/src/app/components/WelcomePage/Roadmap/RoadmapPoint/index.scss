@@ -1,57 +1,87 @@
-@import "/src/index.scss";
+@import "@/index.scss";
 @import "aos/dist/aos.css";
 
 .roadmap-point {
     position: absolute;
     width: 260px;
-    top: 15%;
 
     &__date {
+        position: absolute;
+        font-size: 50px;
+        top: -100px;
         margin-bottom: 15px;
-        color: $highlightColor;
-        transition: font-size 0.3s;
-    }
-
-    &__title {
-        font-size: 36px;
-        margin-bottom: 15px;
+        color: $roadmapHighlightColor;
         transition: font-size 0.3s;
     }
 
     &__list {
-        transition: font-size 0.3s;
+        margin-top: 60px;
+        list-style: none;
+    }
+
+    &__item {
+        font-size: 18px;
+        margin-bottom: 15px;
+
+        &:before {
+            content: "\2022";
+            color: $roadmapHighlightColor;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
     }
 }
 
 @media (max-width: $tabletBreakPoint) {
 
     .roadmap-point {
-        left: 90px;
+
+        &__date {
+            top: -30px;
+        }
+
+        &__item {
+
+            &:before {
+                display: none;
+            }
+        }
     }
 }
 
-@media (max-width: $phoneBreakPoint) {
+@media (max-width: $tabletBreakPoint) {
 
     .roadmap-point {
-        max-width: 120px;
-        top: 35%;
 
-        &__title {
-            font-size: 18px;
-        }
+        &__item {
 
-        &__list {
-            font-size: 12px;
-        }
-
-        &__date {
-            font-size: 10px;
+            &:before {
+                display: inline-block;
+            }
         }
     }
 }
 
 [data-aos="zoom-in-right-custom"] {
-    transform: translate3d(-100px, 0, 0) scale(0.6);
+    @media (max-width: $tabletBreakPoint) {
+        transform: translate3d(-100px, 0, 0) scale(0.6);
+    }
+
+    @media (max-width: $phoneBreakPoint) {
+        transform: translate3d(100px, 0, 0) scale(0.6);
+    }
+}
+
+[data-aos="zoom-in-left-custom"] {
+    @media (max-width: $tabletBreakPoint) {
+        transform: translate3d(100px, 0, 0) scale(0.6);
+    }
+
+    @media (max-width: $phoneBreakPoint) {
+        transform: translate3d(100px, 0, 0) scale(0.6);
+    }
 
     @media (max-width: $tabletBreakPoint) {
         transform: translate3d(100px, 0, 0) scale(0.6);
