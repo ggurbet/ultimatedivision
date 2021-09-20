@@ -1,0 +1,195 @@
+@import '@static/styles/reset';
+@import '@static/styles/variables';
+
+.metaverse {
+    width: 100%;
+    height: 1287px;
+    background: $metaverve-bg-color;
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 1440px;
+        margin: auto;
+
+        .metaverse__title {
+            margin-top: 147px;
+            padding: 5px;
+            font-family: 'Hanson';
+            font-style: normal;
+            font-weight: bold;
+            font-size: 64px;
+            line-height: 67px;
+            text-align: center;
+            color: $metaverve-title;
+        }
+
+        .metaverse__subtitle {
+            padding: 5px;
+            font-family: 'Hanson';
+            font-style: normal;
+            font-weight: bold;
+            font-size: 48px;
+            line-height: 67px;
+            text-align: center;
+            color: $metaverve-text;
+        }
+
+        .metaverse__cards {
+            position: relative;
+            height: 750.89px;
+
+            .left-card {
+                position: absolute;
+                margin: 104px 779px 0px 187px;
+            }
+
+            .right-card {
+                position: absolute;
+                margin: 104px 233.55px 0px 779px;
+            }
+
+            .center-card {
+                position: absolute;
+                z-index: 2;
+                margin: -85px 368px 0 383.74px;
+            }
+        }
+
+        .metaverse__sold-scale {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1276px;
+            height: 55px;
+            margin: auto;
+            background-image: url('../../../static/images/metaverse/sold-progress-scale-1440.png');
+
+            &-text {
+                position: absolute;
+                font-family: 'Roboto';
+                font-style: normal;
+                font-weight: 300;
+                font-size: 24px;
+                line-height: 28px;
+                color: $metaverve-text;
+            }
+        }
+
+        .ultimatedivision-mint-btn {
+            width: 268px;
+            height: 72px;
+            margin: 43px auto auto auto;
+        }
+    }
+}
+
+@media screen and (max-width: 834px) {
+    .metaverse {
+        height: 898px;
+    
+        .wrapper {
+            width: 834px;
+    
+            .metaverse__title {
+                margin-top: 97px;
+                padding: 5px 5px 0 5px;
+                font-size: 42px;
+                line-height: 44px;
+            }
+    
+            .metaverse__subtitle {
+                padding: 0 5px 5px 5px;
+                font-size: 26px;
+                line-height: 44px;
+            }
+    
+            .metaverse__cards {
+                height: 462.09px;
+                width: 100%;
+    
+                .left-card {
+                    margin: 93.88px 437.98px 0px 122.28px;
+                }
+    
+                .right-card {
+                    margin: 96.99px 122.83px 0px 464.25px;
+                }
+    
+                .center-card {
+                    margin: -10px 200.73px 0px 235.92px;
+                }
+            }
+    
+            .metaverse__sold-scale {
+                width: 760px;
+                height: 55px;
+                margin: auto;
+                background-image: url('../../../static/images/metaverse/sold-progress-scale-834.png');
+
+                &-text {
+                    font-size: 24px;
+                    line-height: 28px;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 414px) {
+    .metaverse {
+        height: 769px;
+    
+        .wrapper {
+            width: 414px;
+    
+            .metaverse__title {
+                margin-top: 82px;
+                font-size: 32px;
+                line-height: 33px;
+            }
+    
+            .metaverse__subtitle {
+                font-size: 16px;
+                line-height: 33px;
+            }
+    
+            .metaverse__cards {
+                width: 100%;
+                height: 276.26px;
+                margin-top: 58px;
+    
+                .left-card {
+                    margin: 62px 218.55px 0px 31.8px;
+                }
+    
+                .right-card {
+                    margin: 63.86px 30.24px 0px 236.19px;
+                }
+    
+                .center-card {
+                    margin: 0px 76.8px 0 99.73px;
+                }
+            }
+    
+            .metaverse__sold-scale {
+                width: 354px;
+                height: 55px;
+                margin-top: 29px;
+                background-image: url('../../../static/images/metaverse/sold-progress-scale-414.png');
+
+                &-text {
+                    font-size: 24px;
+                    line-height: 28px;
+                }
+            }
+    
+            .ultimatedivision-mint-btn {
+                width: 352px;
+                height: 72px;
+                margin: 28px auto auto auto;
+            }
+        }
+    }
+}
