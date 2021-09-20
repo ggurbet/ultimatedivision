@@ -1,0 +1,143 @@
+@import "/src/index.scss";
+
+.launch-date {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 5%;
+    position: relative;
+    background: #001236;
+
+    &__represent {
+
+        &__ball {
+            transition: all, 0.3s;
+            height: 110%;
+            left: 50px;
+            position: absolute;
+            animation: bounce 5s ease-in-out both infinite;
+
+            @keyframes bounce {
+
+                0% {
+                    transform: translateY(-40px);
+                }
+
+                50% {
+                    transform: translateY(20px);
+                }
+
+                100% {
+                    transform: translateY(-40px);
+                }
+            }
+        }
+    }
+
+    &__information {
+        width: 60%;
+        display: block;
+
+        &__subtitle {
+            margin-top: 10%;
+            color: white;
+            font-size: 28px;
+        }
+
+        &__title {
+            margin-top: 5%;
+            font-size: 56px;
+            color: $highlightColor;
+        }
+
+        &__remind {
+            display: inline-block;
+            margin: 5% auto;
+            height: 72px;
+            line-height: 72px;
+            width: 270px;
+            font-size: 26px;
+            text-align: center;
+            vertical-align: middle;
+            background: $highlightColor;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    }
+
+    @media (max-width: $desktopBreakPoint) {
+
+        &__represent {
+
+            &__ball {
+                top: -10px;
+            }
+        }
+
+        &__information {
+
+            &__subtitle {
+                font-size: 24px;
+            }
+
+            &__title {
+                font-size: 42px;
+            }
+
+            &__remind {
+                height: 48px;
+                line-height: 48px;
+                font-size: 20px;
+                width: 150px;
+            }
+        }
+    }
+
+    @media (max-width: $tabletBreakPoint) {
+
+        &__information {
+
+            &__subtitle {
+                font-size: 22px;
+                margin-left: 20px;
+            }
+
+            &__title {
+                font-size: 36px;
+                margin-left: 20px;
+            }
+
+            &__remind {
+                margin-left: 20px;
+                height: 36px;
+                line-height: 36px;
+                font-size: 18px;
+                width: 120px;
+            }
+        }
+    }
+
+    @media (max-width: $phoneBreakPoint) {
+        overflow: hidden;
+
+        &__represent {
+
+            &__ball {
+                top: 40px;
+                height: 80%;
+                right: -80px;
+                left: unset;
+            }
+        }
+
+        &__information {
+            width: 100%;
+            z-index: 2;
+
+            &__remind {
+                width: 180px;
+            }
+        }
+    }
+}

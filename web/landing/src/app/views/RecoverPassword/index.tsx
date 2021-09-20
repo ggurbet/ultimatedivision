@@ -18,7 +18,6 @@ import ultimate from '@static/images/registerPage/ultimate.svg';
 
 import './index.scss';
 
-
 const RecoverPassword: React.FC = () => {
     useEffect(() => {
         checkRecoverToken();

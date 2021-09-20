@@ -17,7 +17,7 @@ export const Navbar: React.FC = () => {
                     <img src={NavBarLogo} alt="Ultimate-division logo"></img>
                 </picture>
                 <ul className="ultimatedivision-navbar__items">
-                    {navBarItems.map((item, index) => 
+                    {navBarItems.map((item, index) =>
                         <li key={index} className="ultimatedivision-navbar__item">
                             <a
                                 href="/"

@@ -27,7 +27,7 @@ module.exports = {
         }),
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin(),
-        new StylelintPlugin({fix:true})
+        new StylelintPlugin({ fix: true })
     ],
     devServer: {
         port: 3000,
