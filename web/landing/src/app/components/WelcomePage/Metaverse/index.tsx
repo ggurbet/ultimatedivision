@@ -14,7 +14,7 @@ import './index.scss';
 
 export const Metaverse: React.FC = () => {
     return (
-        <section className="metaverse">
+        <section className="metaverse" id="metaverse">
             <div className="wrapper">
                 <span className="metaverse__title">Ultimate Divison</span>
                 <span className="metaverse__subtitle">Football Metaverse</span>
