@@ -1,12 +1,14 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
-import React from 'react';
+import React, { useState } from 'react';
 import NavBarLogo from '@static/images/navbar/navbar-logo.png';
+import { Cross, DropdownNavBar } from '@static/images/navbar/svg'
 
 import './index.scss';
 import { MintButton } from '@components/common/MintButton';
 
 export const Navbar: React.FC = () => {
+    const [dropdownMenu, setDropdownMenu] = useState<boolean>(false)
 
     const navBarItems: Array<string> = ['Home', 'Metaverse', 'About', 'Cards', 'Roadmap'];
 
@@ -16,13 +18,15 @@ export const Navbar: React.FC = () => {
                 <picture className="ultimatedivision-navbar__logo">
                     <img src={NavBarLogo} alt="Ultimate-division logo"></img>
                 </picture>
-                <ul className="ultimatedivision-navbar__items">
-                    {navBarItems.map((item, index) =>
+                <div className="ultimatedivision-navbar__dropdown" onClick={() => setDropdownMenu(!dropdownMenu)}>
+                    {dropdownMenu ? <Cross/> : <DropdownNavBar />}
+                </div>
+                <ul className={`ultimatedivision-navbar__items${dropdownMenu ? '-active' : ''}`}>
+                    {navBarItems.map((item, index) => 
                         <li key={index} className="ultimatedivision-navbar__item">
                             <a
-                                href="/"
-                                className={`ultimatedivision-navbar__item__
-                                ${item.toLocaleLowerCase()}`}
+                                href={`#${item.toLowerCase()}`}
+                                className="ultimatedivision-navbar__item"
                             >
                                 {item}
                             </a>

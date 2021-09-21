@@ -7,7 +7,7 @@ import './index.scss';
 
 export const DescriptionCards = () => {
     return (
-        <div className="description-cards">
+        <div className="description-cards" id="cards">
             <div className="description-cards__text-area">
                 <h2 className="description-cards__title">
                     The Player Cards - Become UD Founder

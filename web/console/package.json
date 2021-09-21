@@ -53,6 +53,7 @@
         "@types/react-router-dom": "5.1.7",
         "@types/redux": "3.6.0",
         "@types/redux-thunk": "2.1.0",
+        "@typescript-eslint/eslint-plugin": "4.31.1",
         "@typescript-eslint/eslint-plugin-tslint": "4.28.3",
         "clean-webpack-plugin": "4.0.0-alpha.0",
         "css-loader": "6.2.0",

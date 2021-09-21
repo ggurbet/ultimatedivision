@@ -1,14 +1,14 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 import React from 'react';
-import PlayerIllustration from '@static/images/navbar/Player-Illustration.png';
+import PlayerIllustration from '@static/images/home/Player-Illustration.png';
 
 import './index.scss';
 
 export const Home: React.FC = () => {
 
     return (
-        <section className="ultimatedivision-home">
+        <section className="ultimatedivision-home" id="home">
             <div className="wrapper">
                 <div className="ultimatedivision-home__text-left">
                     <span className="value">10 000</span>

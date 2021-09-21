@@ -1,4 +1,4 @@
-@import '@/index.scss';
+@import "@/index.scss";
 
 .lot {
     width: 100%;
@@ -8,6 +8,7 @@
     justify-content: center;
     font-weight: lighter;
     color: white;
+
     &__wrapper {
         display: flex;
         margin: 0 auto;
@@ -17,14 +18,16 @@
         background: linear-gradient(180deg, rgba(36, 36, 62, 0.496) 0%, rgba(31, 31, 52, 0.8) 100%),
             radial-gradient(170.68% 341.01% at 97.11% 95.96%, rgba(46, 46, 80, 0) 0%, rgba(99, 62, 146, 0.9) 100%),
             radial-gradient(130.06% 157.22% at 46.4% 72.11%, rgba(46, 46, 80, 0) 0%, rgba(57, 89, 137, 0.9) 100%),
-            radial-gradient(158.27% 83.8% at 50% 50%, #2E2E50 0%, #3B3B68 100%);
+            radial-gradient(158.27% 83.8% at 50% 50%, #2e2e50 0%, #3b3b68 100%);
     }
+
     &__border {
         max-width: 1704px;
         background: linear-gradient(0deg, rgb(40, 40, 70), rgb(89, 89, 148));
         padding: 2px;
         border-radius: 10px;
     }
+
     &__name-wrapper {
         position: absolute;
         display: flex;
@@ -36,13 +39,15 @@
         left: 0;
         right: 0;
         margin: 0 auto;
-        background-image: url('@static/img/FootballerCardPage/title.png');
+        background-image: url("@static/img/FootballerCardPage/title.png");
         background-size: contain;
         background-position: center;
     }
+
     &__name {
         font-weight: lighter;
     }
+
     &__stats-area {
         width: 75%;
         height: 100%;

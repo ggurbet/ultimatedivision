@@ -81,6 +81,15 @@
             width: 268px;
             height: 72px;
             margin: 43px auto auto auto;
+
+            &__text {
+                font-family: "Hanson", sans-serif;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 24px;
+                line-height: 25px;
+                color: $metaverve-text;
+            }
         }
     }
 }

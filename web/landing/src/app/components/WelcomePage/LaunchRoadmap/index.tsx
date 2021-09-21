@@ -42,7 +42,7 @@ export const LaunchRoadmap: React.FC = () => {
         },
     ];
 
-    return <div className="launch-roadmap">
+    return <div className="launch-roadmap" id="roadmap">
         <h1 className="launch-roadmap__title">
             Launch Roadmap
         </h1>

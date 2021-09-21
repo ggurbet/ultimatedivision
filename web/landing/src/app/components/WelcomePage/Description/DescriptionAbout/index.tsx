@@ -8,7 +8,7 @@ import cardStats from '@static/images/Description/cardStats.svg';
 
 export const DescriptionAbout = () => {
     return (
-        <div className="description-about">
+        <div className="description-about" id="about">
             <div className="description-about__image-area">
                 <img
                     src={field}

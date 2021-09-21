@@ -11,6 +11,7 @@ import CardRightMedium from '@static/images/metaverse/card-right-834.png';
 import CardRightSmall from '@static/images/metaverse/card-right-414.png';
 
 import './index.scss';
+import { MintButton } from '@components/common/MintButton';
 
 export const Metaverse: React.FC = () => {
     return (
@@ -41,8 +42,7 @@ export const Metaverse: React.FC = () => {
                 <div className="metaverse__sold-scale">
                     <span className="metaverse__sold-scale-text">Cards Sold 0/10000</span>
                 </div>
-                {/**TODO: Need merge with PR #194 */}
-                {/* <MintButton text="Mint"/> */}
+                <MintButton text="MINT"/>
             </div>
         </section>
     );
