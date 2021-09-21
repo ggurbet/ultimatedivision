@@ -9,9 +9,9 @@ import { CardsResponse, CreatedLot, MarkeplaceResponse } from '@/card';
  */
 export class CardService {
     protected readonly card: CardClient;
-    /** sets ClubClient into club field */
-    public constructor(club: CardClient) {
-        this.card = club;
+    /** sets CardClient into card field */
+    public constructor(card: CardClient) {
+        this.card = card;
     }
     /** getting lot by id */
     public async getCardById(id: string): Promise<Response> {
