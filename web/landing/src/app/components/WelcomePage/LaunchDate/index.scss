@@ -39,18 +39,21 @@
         display: block;
 
         &__subtitle {
+            font-family: "Rubik";
             margin-top: 10%;
             color: white;
             font-size: 28px;
         }
 
         &__title {
+            font-family: "Russo One";
             margin-top: 5%;
             font-size: 56px;
             color: $highlightColor;
         }
 
         &__remind {
+            font-family: "Hanson";
             display: inline-block;
             margin: 5% auto;
             height: 72px;
@@ -61,7 +64,6 @@
             vertical-align: middle;
             background: $highlightColor;
             color: white;
-            border-radius: 5px;
             cursor: pointer;
         }
     }

@@ -1,4 +1,4 @@
-@import '/src/index.scss';
+@import "/src/index.scss";
 
 .launch-date-modal {
     position: fixed;
@@ -19,8 +19,8 @@
         text-align: center;
         top: 35%;
         left: 50%;
-        transform: translate(-50%,-50%);
-        background: url(@static/images/headingPage/play.png);
+        transform: translate(-50%, -50%);
+        background: url("@static/images/headingPage/play.png");
         background-position: center;
         background-size: cover;
         background-color: #000108;
@@ -30,6 +30,7 @@
     }
 
     &__description {
+        font-family: "Russo One";
         margin-top: 5%;
         max-width: 80%;
         text-align: left;
@@ -43,6 +44,7 @@
         left: 70%;
         top: 5%;
         cursor: pointer;
+
         &__text {
             color: grey;
             font-size: 80px;
@@ -54,23 +56,21 @@
         flex-direction: column;
         position: relative;
 
-        &__send, &__send-error {
+        &__send,
+        &__send-error {
             width: 70%;
             border: none;
-            border-radius: 5px;
             line-height: 40px;
             padding-left: 20px;
             margin-top: 7.5%;
             outline: none;
             cursor: pointer;
 
-            &:focus {
-                box-shadow: 0px 0px 10px white;
-            }
-
             &__error {
+                width: 70%;
                 color: red;
                 font-size: 20px;
+                text-align: right;
             }
         }
 
@@ -79,12 +79,12 @@
         }
 
         &__confirm {
+            font-family: "Hanson";
             z-index: 1;
             font-size: 18px;
             text-align: center;
             border: none;
             width: 30%;
-            border-radius: 5px;
             line-height: 40px;
             margin-top: 10%;
             color: white;
@@ -99,6 +99,7 @@
     }
 
     @media (max-width: $desktopBreakPoint) {
+
         &__window {
             width: 60%;
         }
@@ -108,7 +109,9 @@
             top: 12.5%;
         }
     }
+
     @media (max-width: $tabletBreakPoint) {
+
         &__window {
             width: 60%;
             padding-bottom: 5%;
@@ -119,9 +122,16 @@
         }
 
         &__notification {
-            &__send, &__send-error {
+
+            &__send,
+            &__send-error {
                 width: 75%;
                 line-height: 32px;
+
+                &__error {
+                    width: 75%;
+                    font-size: 16px;
+                }
             }
 
             &__confirm {
@@ -135,7 +145,9 @@
             font-size: 50px;
         }
     }
+
     @media (max-width: $phoneBreakPoint) {
+
         &__window {
             width: 70%;
         }
@@ -145,10 +157,17 @@
         }
 
         &__notification {
-            &__send {
+
+            &__send,
+            &__send-error {
                 width: 70%;
                 padding-left: 5px;
                 font-size: 12px;
+
+                &__error {
+                    width: 70%;
+                    font-size: 12px;
+                }
             }
 
             &__confirm {
@@ -158,6 +177,7 @@
     }
 
     @media (max-width: $phoneBreakPoint - 200px) {
+
         &__window {
             top: 40%;
             width: 80%;
@@ -170,8 +190,14 @@
         }
 
         &__notification {
-            &__send {
+
+            &__send,
+            &__send-error {
                 width: 95%;
+
+                &__error {
+                    width: 95%;
+                }
             }
 
             &__confirm {
@@ -187,6 +213,7 @@
     }
 
     @media (max-width: $phoneBreakPoint - 280px) {
+
         &__window {
             top: 50%;
             width: 80%;
