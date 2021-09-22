@@ -5,7 +5,7 @@ export function DropdownNavBar () {
             <rect y="10" width="33" height="5" fill="#00FFA3"/>
             <rect y="20" width="33" height="5" fill="#00FFA3"/>
         </svg>
-    )
+    );
 }
 
 export function Cross () {
@@ -14,5 +14,5 @@ export function Cross () {
             <rect x="32.7266" y="3.63672" width="3.63636" height="40.9091" transform="rotate(45 32.7266 3.63672)" fill="#5CFF94"/>
             <rect x="35.4541" y="32.7275" width="3.63636" height="40.9091" transform="rotate(135 35.4541 32.7275)" fill="#5CFF94"/>
         </svg>
-    )
+    );
 }

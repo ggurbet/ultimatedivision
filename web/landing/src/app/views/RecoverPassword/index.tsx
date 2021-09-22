@@ -22,14 +22,16 @@ const RecoverPassword: React.FC = () => {
     useEffect(() => {
         checkRecoverToken();
     }, []);
+
     const dispatch = useDispatch();
     const token = useQueryToken();
 
-    const [errorMessage, setErrorMessage] =
-        useState<SetStateAction<null | string>>(null);
+    const [errorMessage, setErrorMessage]
+        = useState<SetStateAction<null | string>>(null);
 
     const userClient = new UserClient();
     const users = new UserService(userClient);
+
     /** catches error if token is not valid */
     async function checkRecoverToken() {
         try {
@@ -39,6 +41,7 @@ const RecoverPassword: React.FC = () => {
             setErrorMessage('Cannot get access');
         };
     };
+
     /** controlled values for form inputs */
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError]
@@ -102,7 +105,7 @@ const RecoverPassword: React.FC = () => {
     ];
 
     if (errorMessage) {
-        return <h1>{errorMessage}</h1>
+        return <h1>{errorMessage}</h1>;
     };
 
     return (

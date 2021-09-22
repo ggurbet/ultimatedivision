@@ -2,13 +2,13 @@
 // See LICENSE for copying information.
 import React, { useState } from 'react';
 import NavBarLogo from '@static/images/navbar/navbar-logo.png';
-import { Cross, DropdownNavBar } from '@static/images/navbar/svg'
+import { Cross, DropdownNavBar } from '@static/images/navbar/svg';
 
 import './index.scss';
 import { MintButton } from '@components/common/MintButton';
 
 export const Navbar: React.FC = () => {
-    const [dropdownMenu, setDropdownMenu] = useState<boolean>(false)
+    const [dropdownMenu, setDropdownMenu] = useState<boolean>(false);
 
     const navBarItems: Array<string> = ['Home', 'Metaverse', 'About', 'Cards', 'Roadmap'];
 

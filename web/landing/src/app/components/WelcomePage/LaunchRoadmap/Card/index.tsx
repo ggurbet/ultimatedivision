@@ -19,6 +19,7 @@ export const Card: React.FC<{
     const UPPER_BREAKPOINT = 100 - LOWER_BREAKPOINT;
     const LOWER_BREAKPOINT_COLOR = '#37FB63';
     const UPPER_BREAKPOINT_COLOR = '#323c92';
+
     return (
         <div className="card">
             <h1 className="card__title">
@@ -37,20 +38,20 @@ export const Card: React.FC<{
                     }],
                     hoverOffset: 16,
                 }}
-                    options={{
-                        plugins: {
-                            tooltip: {
-                                backgroundColor: 'transparent',
-                                displayColors: false,
-                                padding: {
-                                    left: 135,
-                                    right: 355,
-                                    top: 270,
-                                    bottom: 280,
-                                },
+                options={{
+                    plugins: {
+                        tooltip: {
+                            backgroundColor: 'transparent',
+                            displayColors: false,
+                            padding: {
+                                left: 135,
+                                right: 355,
+                                top: 270,
+                                bottom: 280,
                             },
                         },
-                    }}
+                    },
+                }}
                 />
                 <p className="card__diagram__value">
                     {card.value}%
@@ -70,5 +71,5 @@ export const Card: React.FC<{
                 </p>
             </div>
         </div>
-    )
+    );
 };

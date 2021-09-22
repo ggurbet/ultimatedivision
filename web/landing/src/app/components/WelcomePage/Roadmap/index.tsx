@@ -5,9 +5,10 @@ import React, { useEffect } from 'react';
 
 import Aos from 'aos';
 
-import { RoadmapCircle } from '@components/WelcomePage/Roadmap/RoadmapCircle';
+import footer from '@static/images/roadmap/bottom.svg';
 
 import './index.scss';
+import { RoadmapPoint } from './RoadmapPoint';
 
 export const Roadmap: React.FC = () => {
     useEffect(() => {
@@ -59,10 +60,15 @@ export const Roadmap: React.FC = () => {
                 className="roadmap__road"
                 data-aos="zoom-out-down">
                 {dataList.map((item) => (
-                    <RoadmapCircle
+                    <RoadmapPoint
                         key={item.id} item={item} />
                 ))}
             </div>
+            <img
+                className="roadmap__bottom"
+                src={footer}
+                alt="bottom texture"
+            />
         </section>
     );
 };

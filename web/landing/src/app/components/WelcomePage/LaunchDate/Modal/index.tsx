@@ -13,11 +13,12 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
     handleModal
 }) => {
     const [email, setEmail] = useState('');
-    const [emailError, setEmailError] =
-        useState<SetStateAction<null | string>>(null);
+    const [emailError, setEmailError]
+        = useState<SetStateAction<null | string>>(null);
     /** checks if value does't valid then set an error message */
     const validateForm: () => boolean = () => {
         let isValidForm = true;
+
         if (!Validator.email(email)) {
             setEmailError('Email is not valid');
             isValidForm = false;

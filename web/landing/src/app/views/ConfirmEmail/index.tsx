@@ -14,17 +14,20 @@ const ConfirmEmail: React.FC = () => {
     useEffect(() => {
         checkEmailToken();
     }, []);
+
     const token = useQueryToken();
 
-    const [errorMessage, setErrorMessage] =
-        useState<SetStateAction<null | string>>(null);
+    const [errorMessage, setErrorMessage]
+        = useState<SetStateAction<null | string>>(null);
 
     const userClient = new UserClient();
     const users = new UserService(userClient);
+
     /** catches error if token is not valid */
     async function checkEmailToken() {
         try {
             await users.checkEmailToken(token);
+
             await setTimeout(() => {
                 location.pathname = RouteConfig.SignIn.path;
             }, 3000);
@@ -35,7 +38,7 @@ const ConfirmEmail: React.FC = () => {
     };
 
     if (errorMessage) {
-        return <h1>{errorMessage}</h1>
+        return <h1>{errorMessage}</h1>;
     };
 
     return <div>

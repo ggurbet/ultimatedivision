@@ -1,10 +1,10 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useState, useEffect } from "react";
-import Aos from "aos";
+import { useState, useEffect } from 'react';
+import Aos from 'aos';
 
-import { Modal } from "./Modal";
+import { Modal } from './Modal';
 
 import ball from '@static/images/headingPage/ball.png';
 
@@ -16,6 +16,7 @@ export const LaunchDate: React.FC = () => {
             duration: 500,
         });
     });
+
     const [isShowModal, setIsShowModal] = useState(false);
 
     const handleModal = () => setIsShowModal(prev => !prev);
@@ -57,5 +58,5 @@ export const LaunchDate: React.FC = () => {
             </section>
             {isShowModal && <Modal handleModal={handleModal} />}
         </>
-    )
+    );
 };

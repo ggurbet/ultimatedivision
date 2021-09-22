@@ -2,20 +2,50 @@
 @import "aos/dist/aos.css";
 
 .roadmap-point {
-    position: absolute;
-    width: 260px;
+    position: relative;
+    left: -20px;
+    width: 400px;
+    height: 500px;
+    padding: 55px 40px;
+    background: linear-gradient(180deg, #3b4eb0 0%, rgba(59, 78, 176, 0) 100%);
+
+    &:before {
+        content: url("@static/images/roadmap/ball.svg");
+        position: absolute;
+        top: 148px;
+        left: 25px;
+    }
+
+    &:after {
+        content: "";
+        position: absolute;
+        width: 82%;
+        top: 158px;
+        left: 80px;
+        height: 5px;
+        z-index: 5;
+        background-color: $roadmapHighlightColor;
+    }
+
+    &:nth-child(3) {
+
+        &:after {
+            width: 100vw;
+            background: linear-gradient(90deg, rgba(0, 255, 162, 0.891) 0%, rgba(0, 255, 163, 0) 135.85%);
+        }
+    }
 
     &__date {
-        position: absolute;
+        position: relative;
         font-size: 50px;
-        top: -100px;
+        top: 0;
         margin-bottom: 15px;
-        color: $roadmapHighlightColor;
+        font-family: "Russo One";
         transition: font-size 0.3s;
     }
 
     &__list {
-        margin-top: 60px;
+        margin-top: 100px;
         list-style: none;
     }
 
@@ -34,32 +64,49 @@
     }
 }
 
-@media (max-width: $tabletBreakPoint) {
+@media (max-width: $desktopBreakPoint) {
 
     .roadmap-point {
+        height: 360px;
+        width: 100%;
 
-        &__date {
-            top: -30px;
+        &:after {
+            display: none;
         }
 
-        &__item {
+        &:before {
+            top: 70px;
+        }
 
-            &:before {
-                display: none;
-            }
+        &__date {
+            top: 12px;
+            left: 30px;
+            font-size: 28px;
+        }
+
+        &__list {
+            margin-top: 50px;
         }
     }
 }
 
-@media (max-width: $tabletBreakPoint) {
+@media (max-width: $desktopBreakPoint) {
 
     .roadmap-point {
+        padding: 55px 15px 55px 40px;
 
-        &__item {
+        &:after {
+            display: none;
+        }
 
-            &:before {
-                display: inline-block;
-            }
+        &:before {
+            top: 70px;
+        }
+
+        &__date {
+            top: 12px;
+            left: 30px;
+            font-size: 28px;
         }
     }
 }

@@ -2,11 +2,13 @@
 @import "aos/dist/aos.css";
 
 .roadmap {
-    padding: 100px;
+    padding: 100px 50px;
     background: #2c3c8f;
     color: white;
     min-height: 1200px;
     overflow-x: hidden;
+    position: relative;
+    transition: all 0.3s;
 
     &__title {
         color: $roadmapHighlightColor;
@@ -16,16 +18,38 @@
     }
 
     &__road {
-        margin: 0 auto;
-        position: relative;
-        height: 5px;
-        width: 120%;
         display: flex;
         justify-content: left;
         align-items: center;
-        border-top-left-radius: 10%;
-        border-top-right-radius: 10%;
-        background: linear-gradient(0deg, $roadmapHighlightColor 0%, rgba(0, 255, 163, 0) 135.85%);
+        gap: 30px;
+    }
+
+    &__bottom {
+        position: absolute;
+        width: 100vw;
+        left: 0;
+        bottom: 0;
+    }
+}
+
+@media (max-width: $desktopBreakPoint) {
+
+    .roadmap {
+
+        &__road {
+            margin-left: 40px;
+            flex-direction: column;
+            align-items: flex-start;
+
+            &:before {
+                content: "";
+                height: 100%;
+                position: absolute;
+                left: -25px;
+                width: 5px;
+                background: linear-gradient(90deg, #00ffa3 0%, #00ffa3 135.85%);
+            }
+        }
     }
 }
 
@@ -36,56 +60,16 @@
         &__title {
             margin-bottom: 100px;
         }
-
-        &__road {
-            justify-content: flex-end;
-            flex-direction: column;
-            width: 5px;
-            height: 800px;
-            margin-bottom: 200px;
-
-            .roadmap-circle {
-
-                &:nth-child(2n - 1) {
-
-                    .roadmap-point {
-                        left: -250px;
-                    }
-                }
-
-                &:nth-child(2n) {
-
-                    .roadmap-point {
-                        right: -300px;
-                    }
-                }
-            }
-        }
     }
 }
 
 @media (max-width: $phoneBreakPoint) {
 
     .roadmap {
+        padding: 100px 20px;
 
         &__title {
             margin-bottom: 80px;
-        }
-
-        &__road {
-            right: 150px;
-            height: 950px;
-
-            .roadmap-circle {
-
-                &:nth-child(1n) {
-
-                    .roadmap-point {
-                        left: unset;
-                        right: -300px;
-                    }
-                }
-            }
         }
     }
 }

@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useLocation } from "react-router";
+import { useLocation } from 'react-router';
 
 export const useQueryToken = () => {
     const useQuery = () => {
