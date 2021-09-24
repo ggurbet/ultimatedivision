@@ -4,6 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const StylelintPlugin = require('stylelint-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -22,10 +23,11 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Ultimate Division',
             template: './public/index.html',
-            favicon: './src/app/static/images/favicon.jpg'
+            favicon: './src/app/static/images/favicon.ico',
         }),
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin(),
+        new StylelintPlugin({ fix: true })
     ],
     devServer: {
         port: 3000,
@@ -47,14 +49,6 @@ module.exports = {
         ],
         modules: ['node_modules']
     },
-    optimization: {
-        splitChunks: {
-            chunks: 'all',
-        },
-        minimizer: [
-            new CssMinimizerPlugin(),
-        ],
-    },
     module: {
         rules: [
             {
@@ -68,6 +62,7 @@ module.exports = {
             },
             {
                 test: /\.(s[c]ss|css)$/,
+                exclude: /(node_modules)/,
                 use: [
                     //for dev style-loader, for production
                     // MiniCssExtractPlugin.loader

@@ -4,7 +4,7 @@
 import React, { LazyExoticComponent } from 'react';
 import { Switch } from 'react-router-dom';
 
-const WelcomePage = React.lazy(() => import('@components/WelcomePage'));
+const Main = React.lazy(() => import('@/app/views/Main'));
 const SignIn = React.lazy(() => import('@/app/views/SignIn'));
 const SignUp = React.lazy(() => import('@/app/views/SignUp'));
 const ChangePassword = React.lazy(() => import('@/app/views/ChangePassword'));
@@ -54,7 +54,7 @@ export class ComponentRoutes implements RouteItem {
 export class RouteConfig {
     public static WelcomePage: ComponentRoutes = new ComponentRoutes(
         '/',
-        WelcomePage,
+        Main,
         true,
     );
     public static SignIn: ComponentRoutes = new ComponentRoutes(
@@ -73,12 +73,12 @@ export class RouteConfig {
         true
     );
     public static ConfirmEmail: ComponentRoutes = new ComponentRoutes(
-        '/email/confirm/',
+        '/email/confirm',
         ConfirmEmail,
         true,
     );
     public static RecoverPassword: ComponentRoutes = new ComponentRoutes(
-        '/recover-password/:token',
+        '/recover-password',
         RecoverPassword,
         true,
     );

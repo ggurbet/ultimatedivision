@@ -1,33 +1,40 @@
-@import '@/index.scss';
+@import "@/index.scss";
 
 .box-card-quality {
     margin-bottom: 5px;
+
     &__diagram {
         border-radius: 5px;
-        background: #5758A0;
+        background: #5758a0;
     }
+
     &__diagram-value {
         height: 2px;
         background-color: $cardHighlightColor;
         border-radius: 5px;
     }
+
     &__wrapper {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
-    &__label{
+
+    &__label {
         display: flex;
         align-items: center;
     }
+
     &__icon {
         margin: 8px;
     }
+
     &__text,
     &__value {
         font-size: 24px;
     }
+
     &__value {
-        color:  $cardHighlightColor;
+        color: $cardHighlightColor;
     }
 }

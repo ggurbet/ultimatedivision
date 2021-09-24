@@ -13,7 +13,7 @@ export function App() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             {/** TODO: LoadingPage */}
-            <BrowserRouter basename="/ud">
+            <BrowserRouter basename="/">
                 <Navbar />
                 <AboutMenu />
                 <Routes />

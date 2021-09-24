@@ -7,16 +7,14 @@ import Aos from 'aos';
 import './index.scss';
 
 export const RoadmapPoint: React.FC<{
-    date: string,
-    title: string,
-    points: string[],
-    id: number,
-    done: boolean
+    item: {
+        date: string,
+        points: string[],
+        id: number,
+        done: boolean
+    }
 }> = ({
-    date,
-    title,
-    points,
-    id
+    item
 }) => {
     useEffect(() => {
         Aos.init({
@@ -26,32 +24,20 @@ export const RoadmapPoint: React.FC<{
 
     return (
         <div
-            data-aos={id % 2 === 0 ? 'zoom-in-left' : 'zoom-in-right-custom'}
-            data-aos-delay={200 * id}
+            className="roadmap-point"
+            data-aos={item.id % 2 === 0 ? 'zoom-in-left-custom' : 'zoom-in-right-custom'}
+            data-aos-delay={200 * item.id}
             data-aos-duration="600"
             data-aos-easing="ease-in-out-cubic"
-            className="roadmap-point"
         >
             <p className="roadmap-point__date">
-                {date}
+                {item.date}
             </p>
-            <h2 className="roadmap-point__title">
-                {title}
-            </h2>
             <ul className="roadmap-point__list">
-                {points.map((point) => (
-                    <li data-aos={
-                        id % 2 === 0 ? 'fade-left' : 'fade-right-custom'
-                    }
-                    data-aos-easing="ease-in-out-cubic"
-                    data-aos-duration="700"
-                    data-aos-delay={
-                        points.length > 2
-                            ? 250 * (points.indexOf(point) + 1)
-                            : 500 * (points.indexOf(point) + 1)
-                    }
-                    className="roadmap-point__item"
-                    key={points.indexOf(point)}
+                {item.points.map((point, index) => (
+                    <li
+                        className="roadmap-point__item"
+                        key={index}
                     >
                         {point}
                     </li>

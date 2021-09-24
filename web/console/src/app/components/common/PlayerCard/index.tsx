@@ -24,18 +24,9 @@ export const PlayerCard: React.FC<{ card: Card; parentClassName: string }> = ({
             alt="Player face"
             draggable={false}
         />
-        <Link
-            to={{
-                pathname: RouteConfig.FootballerCard.path,
-                state: {
-                    card,
-                },
-            }}
-        >
-            <span className={`${parentClassName}__name`}>
-                {card.playerName}
-            </span>
-        </Link>
+        <span className={`${parentClassName}__name`}>
+            {card.playerName}
+        </span>
         <ul className={`${parentClassName}__list`}>
             {card.statsArea.map(
                 (property, index) =>
@@ -44,11 +35,12 @@ export const PlayerCard: React.FC<{ card: Card; parentClassName: string }> = ({
                         key={index}>
                         {
                             /**
-                                * get only average value of player's game property
-                                */
+                                    * get only average value of player's game property
+                                    */
                             `${property.abbreviated} ${property.average} `
                         }
                     </li>,
             )}
         </ul>
     </>;
+

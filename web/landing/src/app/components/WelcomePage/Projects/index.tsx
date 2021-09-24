@@ -19,7 +19,13 @@ import bloom from '@static/images/Projects/bloom.png';
 import './index.scss';
 
 export const Projects: React.FC = () => {
-    const logoList = [
+    useEffect(() => {
+        Aos.init({
+            duration: 1500
+        });
+    }, []);
+
+    const logos = [
         consensys,
         nem,
         storj,
@@ -30,37 +36,34 @@ export const Projects: React.FC = () => {
         bloom,
     ];
 
-    useEffect(() => {
-        Aos.init({
-            duration: 1500
-        });
-    }, []);
-
     return (
         <section className="projects">
-            <div className="projects__wrapper">
-                <h2 className="projects__title" data-aos="fade-left">
-                    The game was created by a team involved in the development
-                    of well-know crypto projects
-                </h2>
-                <div className="projects__area">
-                    {logoList.map((logo) => (
+            <h2 className="projects__title" data-aos="fade-left">
+                The game was created by a team involved in the development
+                of well-know crypto projects
+            </h2>
+            <div className="projects__area">
+                {logos.map((logo, index) => (
+                    <div
+                        data-aos={
+                            dataAosLogoAnimation(index)
+                        }
+                        data-aos-delay={
+                            aosDelayLogoAnimation(index)
+                        }
+                        data-aos-duration={500}
+                        data-aos-easing="ease-in-out-cubic"
+                        className="projects__area__item"
+                    >
                         <img
-                            key={logoList.indexOf(logo)}
+                            className="projects__area__item__logo"
+                            key={index}
                             src={logo}
                             alt="logo"
-                            className="projects__area-item"
-                            data-aos={
-                                dataAosLogoAnimation(logoList.indexOf(logo))
-                            }
-                            data-aos-delay={
-                                aosDelayLogoAnimation(logoList.indexOf(logo))
-                            }
-                            data-aos-duration={500}
-                            data-aos-easing="ease-in-out-cubic"
                         />
-                    ))}
-                </div>
+                    </div>
+
+                ))}
             </div>
         </section>
     );

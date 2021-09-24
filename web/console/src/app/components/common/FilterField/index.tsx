@@ -17,9 +17,13 @@ import parametres
     from '@static/img/FilterField/parametres.svg';
 
 import './index.scss';
+import { AnyAction, Dispatch } from 'redux';
 import { FilterFieldDropdown } from './FilterFieldDropdown';
 
-export const FilterField: React.FC<{ title: string }> = ({ title }) => {
+export const FilterField: React.FC<{
+    title: string;
+    thunk: (lowRange: string, topRange: string) => (dispatch: Dispatch<AnyAction>) => Promise<void>;
+}> = ({ title, thunk }) => {
     const [searchData, setSearchData] = useState('');
 
     /** Class for each filter field item */

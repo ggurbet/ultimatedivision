@@ -2,11 +2,12 @@
 // See LICENSE for copying information.
 
 import { lazy } from 'react';
-import { Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 const MarketPlace = lazy(() => import('@/app/views/MarketPlacePage'));
 const Club = lazy(() => import('@/app/views/ClubPage'));
-const FootballerCard = lazy(() => import('@/app/views/FootballerCardPage'));
+const Card = lazy(() => import('@/app/views/CardPage'));
+const Lot = lazy(() => import('@/app/views/LotPage'));
 const FootballField = lazy(() => import('@/app/views/FootballFieldPage'));
 const WhitePaper = lazy(() => import('@/app/views/WhitePaperPage'));
 const Tokenomics = lazy(() => import('@/app/views/TokenomicsPage'));
@@ -44,16 +45,6 @@ export class ComponentRoutes {
     }
 };
 
-/** interfafe fot AboutPage subroutes */
-interface RouteItem {
-    path: string;
-    component: React.FC<any>;
-    exact: boolean;
-    children?: ComponentRoutes[];
-    with?: (child: ComponentRoutes, parrent: ComponentRoutes) => ComponentRoutes;
-    addChildren?: (children: ComponentRoutes[]) => ComponentRoutes;
-}
-
 /** Route config implementation */
 export class RouteConfig {
     public static MarketPlace: ComponentRoutes = new ComponentRoutes(
@@ -61,10 +52,15 @@ export class RouteConfig {
         MarketPlace,
         true,
     );
-    public static FootballerCard: ComponentRoutes = new ComponentRoutes(
-        '/card',
-        FootballerCard,
+    public static Lot: ComponentRoutes = new ComponentRoutes(
+        '/lot/:id',
+        Lot,
         true,
+    );
+    public static Card: ComponentRoutes = new ComponentRoutes(
+        '/card/:id',
+        Card,
+        false,
     );
     public static FootballField: ComponentRoutes = new ComponentRoutes(
         '/field',
@@ -141,7 +137,8 @@ export class RouteConfig {
         RouteConfig.FootballField,
         RouteConfig.MarketPlace,
         RouteConfig.Club,
-        RouteConfig.FootballerCard,
+        RouteConfig.Card,
+        RouteConfig.Lot,
         RouteConfig.Store,
         RouteConfig.Whitepaper.addChildren([
             RouteConfig.Summary,
@@ -158,11 +155,6 @@ export class RouteConfig {
     ];
 };
 
-export const Route: React.FC<RouteItem> = ({
-    component: Component,
-    ...children
-}) => <Component {...children} />;
-
 export const Routes = () =>
     <Switch>
         {RouteConfig.routes.map((route, index) =>
@@ -171,7 +163,6 @@ export const Routes = () =>
                 path={route.path}
                 component={route.component}
                 exact={route.exact}
-                children={route.children}
             />
         )}
     </Switch>;

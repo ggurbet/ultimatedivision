@@ -22,10 +22,10 @@ const service = new LootboxService(client);
 export const openLootbox = (lootbox: Lootbox) => async function(dispatch: Dispatch) {
     try {
         const opennedLootbox = await service.buy(lootbox);
-        dispatch(buyLootbox(opennedLootbox));
+        dispatch(buyLootbox(opennedLootbox.map(card => new Card(card))));
     }
-    catch(e: any) {
+    catch (error: any) {
         /* eslint-disable */
-        console.log(e.message);
+        console.log(error.message);
     }
 };

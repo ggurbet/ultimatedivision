@@ -1,15 +1,25 @@
-@import '@/index.scss';
+@import "@/index.scss";
 
 .box-animation {
     padding-top: 280px;
     display: flex;
+
     &__box-wrapper {
         width: 100%;
         position: relative;
         left: 0;
         right: 0;
         margin: 0 auto;
+        animation: boxHiding 5s 3s 1 normal forwards;
+
+        @keyframes boxHiding {
+
+            to {
+                transform: translateY(400px);
+            }
+        }
     }
+
     &__box-cover,
     &__box-body,
     &__ribbons {
@@ -18,14 +28,7 @@
         right: 0;
         margin: 0 auto;
     }
-    &__box-wrapper {
-        animation: boxHiding 5s 3s 1 normal forwards;
-        @keyframes boxHiding {
-            to {
-                transform: translateY(400px);
-            }
-        }
-    }
+
     &__light {
         position: absolute;
         top: -60px;
@@ -35,45 +38,58 @@
         display: flex;
         opacity: 0;
         animation: light 2s 1.5s 1 normal forwards;
+
         @keyframes light {
+
             from {
                 transform: scale(0.8);
                 opacity: 0;
             }
+
             to {
                 transform: scale(1);
                 opacity: 1;
             }
         }
     }
-    &__ribbons {
-        opacity: 0;
-        animation: light 3s 4s 1 normal forwards;
-    }
 
     &__ribbons {
         left: 0;
         right: 0;
         margin: 0 auto;
+        opacity: 0;
+        animation: light 3s 4s 1 normal forwards;
     }
+
+    &__box-body {
+        width: 540px;
+    }
+
     &__box-cover {
+        width: 540px;
         animation: opening 3s 1s 1 normal forwards;
         transform: scale(1.05);
+
         @keyframes opening {
+
             0% {
                 transform: scale(1.05) translate(0 0);
             }
+
             10% {
                 transform: scale(1.05) translateY(-20px);
             }
+
             50% {
                 transform: scale(1.05) translateX(250px);
             }
+
             100% {
                 transform: scale(1.05) translateY(250px) translateX(300px);
             }
         }
     }
+
     &__card-wrapper {
         width: 300px;
         position: absolute;
@@ -81,28 +97,31 @@
         right: 0;
         margin: 0 auto;
         opacity: 0;
-        background: url('@static/img/StorePage/BoxContent/3.svg');
+        background: url("@static/img/StorePage/BoxContent/3.svg");
         background-size: contain;
         background-position: center;
         transform: scale(0);
         animation: cardShowing 4s 3s 1 normal forwards ease-in-out;
+
         @keyframes cardShowing {
+
             0% {
                 opacity: 0;
             }
+
             100% {
                 transform: scale(1.7) translateY(-100px);
                 opacity: 1;
             }
         }
     }
+
     &__card-wrapper-backlight {
         display: flex;
         justify-content: center;
         width: 100%;
-        background-image: url('@static/img/StorePage/BoxContent/backLight.svg');
+        background-image: url("@static/img/StorePage/BoxContent/backLight.svg");
         background-size: cover;
         background-position: center;
-
     }
 }

@@ -1,0 +1,42 @@
+@import "@/index.scss";
+
+.description-pay {
+    max-width: 1280px;
+    margin: 100px auto;
+    padding: 10px 50px;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+
+    &__radar {
+        width: 40%;
+        margin-right: 100px;
+    }
+
+    &__title {
+        font-size: 36px;
+        color: $highlightColor;
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .description-pay {
+        flex-direction: column;
+
+        &__radar {
+            width: 100%;
+            margin: 0;
+        }
+
+        &__title {
+            position: absolute;
+            top: -60px;
+        }
+
+        &__text {
+            margin-top: 40px;
+        }
+    }
+}
