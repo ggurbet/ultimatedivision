@@ -149,11 +149,19 @@
     @media (max-width: $phoneBreakPoint) {
 
         &__window {
+            top: 10%;
             width: 70%;
         }
 
         &__close {
             top: 3%;
+            margin-top: -7%;
+
+            p {
+                width: 32px;
+                height: 32px;
+                color: #ffff;
+            }
         }
 
         &__notification {
@@ -185,8 +193,9 @@
         }
 
         &__close {
-            top: unset;
-            bottom: 80%;
+            width: 32px;
+            height: 32px;
+            top: 5%;
         }
 
         &__notification {

@@ -53,12 +53,6 @@ export const Footer: React.FC = () => {
                     </a>
                     <a
                         className="footer__link"
-                        href="https://ultimatedivision.com/ud/tokenomics/udt-spending"
-                    >
-                        Tokenomics
-                    </a>
-                    <a
-                        className="footer__link"
                         href="https://ultimatedivision.com/ud/whitepaper/summary"
                     >
                         FAQ

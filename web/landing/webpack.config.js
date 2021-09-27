@@ -32,7 +32,7 @@ module.exports = {
     devServer: {
         port: 3000,
         open: true,
-        historyApiFallback: true
+        historyApiFallback: true 
     },
     resolve: {
         alias: {

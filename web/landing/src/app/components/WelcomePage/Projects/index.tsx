@@ -45,6 +45,7 @@ export const Projects: React.FC = () => {
             <div className="projects__area">
                 {logos.map((logo, index) => (
                     <div
+                        key={index}
                         data-aos={
                             dataAosLogoAnimation(index)
                         }

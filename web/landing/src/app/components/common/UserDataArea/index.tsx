@@ -27,7 +27,7 @@ export const UserDataArea: React.FC<{
             placeholder={placeHolder}
             onChange={(e) => {
                 handleChange(e.target.value);
-                clearError(null);
+                clearError(null); 
             }}
             type={type}
         />

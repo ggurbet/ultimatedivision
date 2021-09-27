@@ -12,7 +12,11 @@ export const MintButton: React.FC<MintButtonProps> = (
     { text }) => {
 
     return (
-        <button className="ultimatedivision-mint-btn">
+        <button className="ultimatedivision-mint-btn" 
+            data-aos="fade-right"
+            data-aos-duration="600"
+            data-aos-easing="ease-in-out-cubic"
+        >
             <span className="ultimatedivision-mint-btn__text">{text}</span>
         </button>
     );
