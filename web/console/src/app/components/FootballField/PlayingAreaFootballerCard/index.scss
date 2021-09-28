@@ -38,14 +38,14 @@
         left: 0;
         right: 0;
         margin: 0 auto;
-        top: 26px;
+        top: 23px;
         width: 60%;
     }
 
     &__list {
         margin: 0 auto;
         width: 70%;
-        margin-top: 96px;
+        margin-top: 90px;
         display: grid;
         padding-left: 4px;
         grid-column-gap: 0;
@@ -57,7 +57,7 @@
             width: 25px;
             color: rgb(87, 86, 86);
             z-index: 2;
-            font-size: 11px;
+            font-size: 10px;
         }
     }
 
@@ -67,7 +67,7 @@
         width: 100%;
         font-size: 10px;
         z-index: 2;
-        margin-top: 18px;
+        margin-top: 14px;
         position: absolute;
     }
 

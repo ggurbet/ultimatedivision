@@ -1,6 +1,6 @@
 @import "@/index.scss";
 
-.football-field-information {
+.football-field-controls-area {
     margin-left: 20px;
     background: $highlightBackground;
     width: 25%;
@@ -18,7 +18,7 @@
     }
 }
 
-.football-field-information-option {
+.football-field-control {
 
     &:last-child {
         border: none;

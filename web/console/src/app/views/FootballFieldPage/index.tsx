@@ -10,14 +10,16 @@ import { FootballFieldPlayingArea } from
     '@components/FootballField/FotballFieldPlayingArea';
 
 import { RootState } from '@/app/store';
-import { removeCard } from '@/app/store/actions/footballField';
+import { getClub, removeCard } from '@/app/store/actions/club';
 
 import './index.scss';
 
 const FootballField: React.FC = () => {
     const dispatch = useDispatch();
-    const fieldSetup = useSelector((state: RootState) => state.fieldReducer.options);
-    const cardSelectionVisibility = useSelector((state: RootState) => state.fieldReducer.options.showCardSeletion);
+    dispatch(getClub());
+    const fieldSetup = useSelector((state: RootState) => state.clubReducer.options);
+    const cardSelectionVisibility = useSelector((state: RootState) => state.clubReducer.options.showCardSeletion);
+
 
     /** prevent default user agent action */
     function dragOverHandler(e: DragEvent<HTMLDivElement>) {

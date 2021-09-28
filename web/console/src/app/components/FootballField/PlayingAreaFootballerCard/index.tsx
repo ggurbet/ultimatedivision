@@ -1,12 +1,13 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
+
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { PlayerCard } from '@components/common/PlayerCard';
 
 import { Card } from '@/card';
-import { removeCard } from '@/app/store/actions/footballField';
+import { removeCard } from '@/app/store/actions/club';
 
 import './index.scss';
 

@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
-import { addCard, cardSelectionVisibility } from '@/app/store/actions/footballField';
+import { addCard, cardSelectionVisibility } from '@/app/store/actions/club';
 
 
 import { FilterField } from
@@ -17,7 +17,7 @@ import './index.scss';
 export const FootballFieldCardSelection = () => {
     const { cards } = useSelector((state: RootState) => state.cardsReducer.cards);
     const dispatch = useDispatch();
-    const fieldSetup = useSelector((state: RootState) => state.fieldReducer);
+    const fieldSetup = useSelector((state: RootState) => state.clubReducer);
 
     const Y_SCROLL_POINT = 200;
     const X_SCROLL_POINT = 0;
