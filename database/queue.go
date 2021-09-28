@@ -84,22 +84,19 @@ func (queueDB *queueDB) ListPaginated(ctx context.Context, cursor pagination.Cur
 		err = errs.Combine(err, rows.Close())
 	}()
 
-	Places := []queue.Place{}
+	places := []queue.Place{}
 	for rows.Next() {
-		Place := queue.Place{}
-		if err = rows.Scan(&Place.UserID, &Place.Status); err != nil {
-			if errors.Is(err, sql.ErrNoRows) {
-				return placesListPage, queue.ErrNoPlace.Wrap(err)
-			}
+		place := queue.Place{}
+		if err = rows.Scan(&place.UserID, &place.Status); err != nil {
 			return placesListPage, ErrQueue.Wrap(err)
 		}
-		Places = append(Places, Place)
+		places = append(places, place)
 	}
 	if err = rows.Err(); err != nil {
 		return placesListPage, ErrQueue.Wrap(err)
 	}
 
-	placesListPage, err = queueDB.listPaginated(ctx, cursor, Places)
+	placesListPage, err = queueDB.listPaginated(ctx, cursor, places)
 	return placesListPage, ErrQueue.Wrap(err)
 }
 

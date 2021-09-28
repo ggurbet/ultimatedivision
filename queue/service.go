@@ -39,6 +39,9 @@ func (service *Service) Create(ctx context.Context, place Place) error {
 	if _, err := service.users.Get(ctx, place.UserID); err != nil {
 		return ErrQueue.Wrap(err)
 	}
+	if place, err := service.Get(ctx, place.UserID); err == nil {
+		return ErrQueue.New("the user " + string(place.Status) + " now")
+	}
 	return ErrQueue.Wrap(service.queues.Create(ctx, place))
 }
 

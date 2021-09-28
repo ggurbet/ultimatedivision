@@ -167,7 +167,7 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 	}
 }
 
-// CreateLot is an endpoint that returns lot by id.
+// CreateLot is an endpoint that creates lot.
 func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	w.Header().Set("Content-Type", "application/json")

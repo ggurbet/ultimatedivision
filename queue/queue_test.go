@@ -51,7 +51,7 @@ func TestQueues(t *testing.T) {
 
 	queuePlace2 := queue.Place{
 		UserID: user2.ID,
-		Status: queue.StatusGames,
+		Status: queue.StatusPlays,
 	}
 
 	cursor1 := pagination.Cursor{
@@ -96,7 +96,7 @@ func TestQueues(t *testing.T) {
 		})
 
 		t.Run("update status", func(t *testing.T) {
-			queuePlace1.Status = queue.StatusGames
+			queuePlace1.Status = queue.StatusPlays
 			err := repositoryQueue.UpdateStatus(ctx, queuePlace1.UserID, queuePlace1.Status)
 			require.NoError(t, err)
 
