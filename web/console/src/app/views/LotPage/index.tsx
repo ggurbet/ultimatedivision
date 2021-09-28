@@ -2,12 +2,12 @@
 // See LICENSE for copying information.
 
 import { useEffect } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/app/store';
-import { openMarketplaceCard } from '@/app/store/actions/cards';
-
 import { useParams } from 'react-router-dom';
+
+import { RootState } from '@/app/store';
+import { openMarketplaceCard } from '@/app/store/actions/marketplace';
+
 
 import { FootballerCardIllustrations } from '@/app/components/common/Card/CardIllustrations';
 import { FootballerCardPrice } from '@/app/components/common/Card/CardPrice';

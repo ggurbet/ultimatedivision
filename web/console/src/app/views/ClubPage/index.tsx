@@ -1,9 +1,10 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { filteredCards } from '@/app/store/actions/cards';
+import { useSelector } from 'react-redux';
 
-import { useClub } from '@/app/hooks/club';
+import { filteredCards } from '@/app/store/actions/cards';
+import { RootState } from '@/app/store';
 
 import { ClubCardsArea } from '@components/Club/ClubCardsArea';
 import { FilterField } from '@components/common/FilterField';
@@ -12,8 +13,7 @@ import { Paginator } from '@components/common/Paginator';
 import './index.scss';
 
 const Club: React.FC = () => {
-    /** TODO: decide use custom hook or directly dispatch thunk into useEffect*/
-    const cards = useClub();
+    const { cards } = useSelector((state: RootState) => state.cardsReducer.cards);
 
     return (
         <section className="club">

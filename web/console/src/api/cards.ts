@@ -1,39 +1,60 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import { Card, Cards } from '@/card';
+
 import { APIClient } from '@/api/index';
-import { CreatedLot } from '@/card';
+
+import { Pagination } from '@/app/types/pagination';
 
 /** CardClient base implementation */
 export class CardClient extends APIClient {
-    private readonly ROOT_PATH: string = '/api/v0';
+    private readonly ROOT_PATH: string = '/api/v0/cards';
 
     /** method calls get method from APIClient */
-    public async getCards(): Promise<Response> {
-        return await this.http.get(`${this.ROOT_PATH}/cards`);
-    }
+    public async list({ selectedPage, limit }: Pagination): Promise<Cards> {
+        const path = `${this.ROOT_PATH}?page=${selectedPage}&limit=${limit}`;
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        };
+
+        const cardsJSON = await response.json();
+
+        return new Cards(
+            cardsJSON.cards.map((card: Partial<Card>) => new Card(card)),
+            cardsJSON.page,
+        );
+    };
     /** method calls get method from APIClient */
-    public async getCardById(id: string): Promise<Response> {
-        return await this.http.get(`${this.ROOT_PATH}/cards/${id}`);
-    }
+    public async getCardById(id: string): Promise<Card> {
+        const path = `${this.ROOT_PATH}/${id}`;
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        };
+
+        const cardJSON = await response.json();
+        const card = cardJSON.card;
+
+        return new Card(card);
+    };
     /** method returns filtered card list */
-    public async getFilteredCards(filterParam: string): Promise<Response> {
-        return await this.http.get(`${this.ROOT_PATH}/cards/?${filterParam}`);
-    }
-    /** method post for implementing buying cards */
-    public async createLot(lot: CreatedLot): Promise<Response> {
-        return await this.http.post(`${this.ROOT_PATH}/marketplace`, JSON.stringify(lot));
-    }
-    /** method calls get method from APIClient */
-    public async getLots(): Promise<Response> {
-        return await this.http.get(`${this.ROOT_PATH}/marketplace`);
-    }
-    /** method calls get method from APIClient */
-    public async getLotById(id: string): Promise<Response> {
-        return await this.http.get(`${this.ROOT_PATH}/marketplace/${id}`);
-    }
-    /** method returns filtered lot list */
-    public async getFilteredLots(filterParam: string): Promise<Response> {
-        return await this.http.get(`${this.ROOT_PATH}/lots/?${filterParam}`);
-    }
-}
+    public async filteredList(filterParam: string): Promise<Cards> {
+        const path = `${this.ROOT_PATH}/?${filterParam}`;
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        };
+
+        const cardsJSON = await response.json();
+
+        return new Cards(
+            cardsJSON.cards.map((card: Partial<Card>) => new Card(card)),
+            cardsJSON.page,
+        );
+    };
+};

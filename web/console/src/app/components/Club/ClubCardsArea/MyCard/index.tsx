@@ -1,5 +1,13 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import { Card } from '@/card';
+
+import { createLot } from '@/app/store/actions/marketplace';
+import { CreatedLot } from '@/app/types/marketplace';
 
 import { PlayerCard } from '@components/common/PlayerCard';
 
@@ -7,12 +15,6 @@ import { PlayerCard } from '@components/common/PlayerCard';
 import confirmIcon from '@static/img/MarketPlacePage/MyCard/ok.svg';
 import priceGoldIcon from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';
 
-import { Link } from 'react-router-dom';
-
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { createLot, openUserCard } from '@/app/store/actions/cards';
-import { Card, CreatedLot } from '@/card';
 
 import './index.scss';
 

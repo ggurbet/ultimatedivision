@@ -75,7 +75,7 @@ export class CardStats {
     }
 }
 
-export interface CardInterface {
+export interface ICard {
     id: string,
     playerName: string,
     quality: string,
@@ -210,7 +210,7 @@ export class Card {
     throwing: number = 0;
     /** Card fields */
     constructor(
-        card: Partial<CardInterface> = {}
+        card: Partial<ICard> = {}
     ) {
         Object.assign(this, card);
     }
@@ -385,53 +385,17 @@ export class Card {
         ];
     }
 };
-
-
-/** lotData from marketplace */
-export interface MarketplaceLot {
-    id: string,
-    itemId: string,
-    type: string,
-    userId: string,
-    shopperId: string,
-    status: string,
-    startPrice: number,
-    maxPrice: number,
-    currentPrice: number,
-    startTime: string,
-    endTime: string,
-    period: number,
-    card: Card
-}
-
-/** data for creating marketplace lot */
-export class CreatedLot {
+/** Cards domain entity */
+export class Cards {
+    /** default Cards initial values */
     constructor(
-        public itemId: string,
-        public startPrice: number,
-        public maxPrice: number,
-        public period: number,
-    ) { }
-}
-
-export interface MarkeplaceResponse {
-    lots: MarketplaceLot[],
-    page: {
-        offset: number,
-        limit: number,
-        currentPage: number,
-        pageCount: number,
-        totalCount: number
-    }
-}
-
-export interface CardsResponse {
-    cards: CardInterface[],
-    page: {
-        offset: number,
-        limit: number,
-        currentPage: number,
-        pageCount: number,
-        totalCount: number
-    }
-}
+        public cards: Card[],
+        public page: {
+            offset: number,
+            limit: number,
+            currentPage: number,
+            pageCount: number,
+            totalCount: number
+        },
+    ) { };
+};
