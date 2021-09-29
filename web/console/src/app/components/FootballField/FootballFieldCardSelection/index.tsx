@@ -14,8 +14,10 @@ import { Card } from '@/card';
 
 
 import './index.scss';
+import { Squad } from '@/club';
 
 export const FootballFieldCardSelection = () => {
+    const squad  = useSelector((state: RootState) => state.clubReducer.squad)
     const { cards, page } = useSelector((state: RootState) => state.cardsReducer.cardsPage);
     const dispatch = useDispatch();
     const fieldSetup = useSelector((state: RootState) => state.clubReducer);
@@ -25,8 +27,8 @@ export const FootballFieldCardSelection = () => {
     const DELAY = 10;
 
     /** Add card to field, and hide card selection component */
-    function handleClick(card: Card, index: number) {
-        dispatch(addCard(card, index));
+    function handleClick(squad: Squad, cardId: string, position: number) {
+        dispatch(addCard({squad, cardId, position}));
         dispatch(cardSelectionVisibility(false));
         setTimeout(() => {
             window.scroll(X_SCROLL_POINT, Y_SCROLL_POINT);
@@ -41,7 +43,7 @@ export const FootballFieldCardSelection = () => {
                     <div
                         key={index}
                         className="card-selection__card"
-                        onClick={() => handleClick(card, fieldSetup.options.chosedCard)}
+                        onClick={() => handleClick(squad, card.id, fieldSetup.options.chosedCard)}
                     >
                         <PlayerCard
                             card={card}

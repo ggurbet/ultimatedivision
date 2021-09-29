@@ -2,9 +2,7 @@
 // See LICENSE for copying information.
 
 import { ClubClient } from '@/api/club';
-import { Formations } from '@/app/types/club';
-import { Card } from '@/card';
-import { Club } from '@/club';
+import { Formations, FormationsType, Tactic, TacticsType, Club, Squad } from '@/club';
 import { ClubService } from '@/club/service';
 import { Dispatch } from 'redux';
 
@@ -26,29 +24,14 @@ const DEFAULT_CARD_INDEX = null;
 const client = new ClubClient();
 const service = new ClubService(client);
 
-export const createClub = (club: Club) => ({
+export const setClub = (club: Club) => ({
     type: CREATE_CLUB,
     club,
-});
-
-/** Chose type of cards positioning on football field */
-export const setFormation = (formation: number) => ({
-    type: FORMATION,
-    formation: Formations[formation],
 });
 
 export const cardSelectionVisibility = (isVisible: boolean) => ({
     type: SELECTION_VISIBILITY,
     isVisible,
-});
-
-/** Adding into cardList in reducer */
-export const addCard = (card: Card, index: number) => ({
-    type: ADD_CARD,
-    fieldCard: {
-        card,
-        index,
-    },
 });
 
 export const removeCard = (index: dragParamType = DEFAULT_CARD_INDEX) => ({
@@ -80,32 +63,46 @@ export const exchangeCards = (previous: dragParamType, current: dragParamType) =
     },
 });
 
-export const setTactic = (tactic: string) => ({
-    type: TACTICS,
-    tactic,
-});
-
-export const setCaptain = (captain: string) => ({
-    type: CAPTAIN,
-    captain,
-});
-
 
 // Thunks
 
-export const getClub = () => async function(dispatch: Dispatch) {
+export const getClub = () => async function (dispatch: Dispatch) {
     try {
         const club = await service.getClub();
-        dispatch(createClub(club));
+        dispatch(setClub(club));
     } catch (error: any) {
         try {
             const clubId = await service.createClub();
             const squadId = await service.createSquad(clubId);
             const club = await service.getClub();
-            dispatch(createClub(club));
+            dispatch(setClub(club));
         } catch (error: any) {
             /* eslint-disable */
             console.log(error.message);
         }
     }
 };
+
+
+export const setFormation = (squad: Squad, formation: FormationsType) => async function (dispatch: Dispatch) {
+    await service.updateSquad({ ...squad, formation: Formations[formation] });
+    const club = await service.getClub();
+    dispatch(setClub(club));
+}
+export const setCaptain = (squad: Squad, captainId: string) => async function (dispatch: Dispatch) {
+    await service.updateSquad({ ...squad, captainId });
+    const club = await service.getClub();
+    dispatch(setClub(club));
+}
+export const setTactic = (squad: Squad, tactic: TacticsType) => async function (dispatch: Dispatch) {
+    await service.updateSquad({ ...squad, tactic: Tactic[tactic] });
+    const club = await service.getClub();
+    dispatch(setClub(club));
+}
+
+export const addCard = ({ squad, cardId, position }: { squad: Squad, cardId: string, position: number }) => async function (dispatch: Dispatch) {
+    await service.addCard({ squad, cardId, position })
+    const club = await service.getClub();
+    dispatch(setClub(club))
+}
+

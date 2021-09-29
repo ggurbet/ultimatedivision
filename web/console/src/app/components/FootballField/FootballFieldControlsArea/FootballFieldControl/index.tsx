@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { FieldControl } from '@/app/types/club';
 
@@ -11,8 +11,10 @@ import { DropdownStyle } from '@/app/utils/dropdownStyle';
 import triangle from '@static/img/FootballFieldPage/triangle.svg';
 
 import './index.scss';
+import { RootState } from '@/app/store';
 
 export const FootballFieldControl: React.FC<{ props: FieldControl }> = ({ props }) => {
+    const squad = useSelector((state: RootState) => state.clubReducer.squad)
     const [optionVisibility, changeVisibility] = useState(false);
     const optionStyle = new DropdownStyle(optionVisibility);
 
@@ -44,7 +46,7 @@ export const FootballFieldControl: React.FC<{ props: FieldControl }> = ({ props 
                     <li
                         key={index}
                         className="football-field-control__item"
-                        onClick={() => dispatch(props.action(item))}
+                        onClick={() => dispatch(props.action(squad ,item))}
                     >
                         {item}
                     </li>
