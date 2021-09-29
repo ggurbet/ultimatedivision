@@ -309,6 +309,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Clubs.Service,
 			peer.Users.Auth,
 			peer.Users.Service,
+			peer.Queue.Service,
 		)
 	}
 

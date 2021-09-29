@@ -17,29 +17,49 @@ export const Metaverse: React.FC = () => {
     return (
         <section className="metaverse" id="metaverse">
             <div className="wrapper">
-                <span className="metaverse__title">Ultimate Divison</span>
-                <span className="metaverse__subtitle">Football Metaverse</span>
-                <div className="metaverse__cards">
+                <span className="metaverse__title"
+                        data-aos="fade-right"
+                        data-aos-duration="600"
+                        data-aos-easing="ease-in-out-cubic"
+                    >
+                        Ultimate Divison
+                    </span>
+                    <span className="metaverse__subtitle" 
+                        data-aos="fade-right"
+                        data-aos-duration="600"
+                        data-aos-easing="ease-in-out-cubic"
+                    >
+                        Football Metaverse
+                    </span>
+                    <div className="metaverse__cards" 
+                        data-aos="fade-right"
+                        data-aos-duration="600"
+                        data-aos-easing="ease-in-out-cubic"
+                    >
                     <picture className="left-card">
-                        <source media="(max-width: 414px)" srcSet={CardLeftSmall} />
-                        <source media="(max-width: 834px)" srcSet={CardLeftMedium} />
+                        <source media="(max-width: 600px)" srcSet={CardLeftSmall} />
+                        <source media="(max-width: 800px)" srcSet={CardLeftMedium} />
                         <source media="(min-width: 1440px)" srcSet={CardLeft}/>
                         <img src={CardLeft} alt="Left player"></img>
                     </picture>
                     <picture className="center-card">
-                        <source media="(max-width: 414px)" srcSet={CardCenterSmall} />
-                        <source media="(max-width: 834px)" srcSet={CardCenterMedium} />
+                        <source media="(max-width: 600px)" srcSet={CardCenterSmall} />
+                        <source media="(max-width: 800px)" srcSet={CardCenterMedium} />
                         <source media="(min-width: 1440px)" srcSet={CardCenter}/>
                         <img src={CardCenter} alt="Main player"></img>
                     </picture>
                     <picture className="right-card">
-                        <source media="(max-width: 414px)" srcSet={CardRightSmall} />
-                        <source media="(max-width: 834px)" srcSet={CardRightMedium} />
+                        <source media="(max-width: 600px)" srcSet={CardRightSmall} />
+                        <source media="(max-width: 800px)" srcSet={CardRightMedium} />
                         <source media="(min-width: 1440px)" srcSet={CardRight}/>    
                         <img src={CardRight} alt="Right player"></img>
                     </picture>
                 </div>
-                <div className="metaverse__sold-scale">
+                <div className="metaverse__sold-scale" 
+                    data-aos="fade-left"
+                    data-aos-duration="600"
+                    data-aos-easing="ease-in-out-cubic"
+                >
                     <span className="metaverse__sold-scale-text">Cards Sold 0/10000</span>
                 </div>
                 <MintButton text="MINT"/>

@@ -1,12 +1,13 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { FootballField } from '@/app/types/footballField';
+import { ClubState } from '@/club';
 
 import {
     ADD_CARD,
     CAPTAIN,
     CARD_POSITION,
+    CREATE_CLUB,
     DRAG_START,
     DRAG_TARGET,
     EXCHANGE_CARDS,
@@ -14,17 +15,23 @@ import {
     REMOVE_CARD,
     SELECTION_VISIBILITY,
     TACTICS,
-} from '@/app/store/actions/footballField';
+} from '@/app/store/actions/club';
 
-const FieldSetup = new FootballField();
+/** TODO: replace by initial object */
+const clubState = new ClubState();
 
-export const fieldReducer = (cardState = FieldSetup, action: any = {}) => {
-    const options = cardState.options;
-    const cards = cardState.cards;
+export const clubReducer = (state = clubState, action: any = {}) => {
+    const options = state.options;
+    const squad = state.squad;
+    const cards = state.squadCards;
 
     switch (action.type) {
+    case CREATE_CLUB:
+        state = Object.assign(clubState, action.club);
+        break;
+        // next cases will be replaced
     case FORMATION:
-        options.formation = action.formation;
+        squad.formation = action.formation;
         break;
     case SELECTION_VISIBILITY:
         options.showCardSeletion = action.isVisible;
@@ -33,11 +40,11 @@ export const fieldReducer = (cardState = FieldSetup, action: any = {}) => {
         options.chosedCard = action.index;
         break;
     case ADD_CARD:
-        cards[action.fieldCard.index].card =
-                action.fieldCard.card;
+        cards[action.fieldCard.index].cardId =
+                action.fieldCard.card.cardId;
         break;
     case REMOVE_CARD:
-        cards[action.index].card = null;
+        cards[action.index].cardId = '';
         break;
     case DRAG_START:
         options.dragStart = action.index;
@@ -55,5 +62,5 @@ export const fieldReducer = (cardState = FieldSetup, action: any = {}) => {
         break;
     }
 
-    return { ...cardState };
+    return state;
 };

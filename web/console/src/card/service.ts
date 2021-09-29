@@ -2,53 +2,32 @@
 // See LICENSE for copying information.
 
 import { CardClient } from '@/api/cards';
-import { CardsResponse, CreatedLot, MarkeplaceResponse } from '@/card';
+import { Pagination } from '@/app/types/pagination';
 
+import { Card, CardsPage } from '@/card';
 /**
  * exposes all bandwidth related logic
  */
 export class CardService {
     protected readonly card: CardClient;
+
     /** sets CardClient into card field */
     public constructor(card: CardClient) {
         this.card = card;
-    }
-    /** getting lot by id */
-    public async getCardById(id: string): Promise<Response> {
+    };
+
+    /** gets list of cards by user */
+    public async list({ selectedPage, limit }: Pagination): Promise<CardsPage> {
+        return await this.card.list({ selectedPage, limit });
+    };
+
+    /** gets card by id from list of cards */
+    public async getCardById(id: string): Promise<Card> {
         return await this.card.getCardById(id);
-    }
+    };
 
-    /** get filtered cards from api */
-    public async getFilteredCards(filterParam: string) {
-        const response = await this.card.getFilteredCards(filterParam);
-
-        return await response.json();
-    }
-    /** get user cards from api */
-    public async getCards(): Promise<CardsResponse> {
-        const response = await this.card.getCards();
-
-        return await response.json();
-    }
-    /** create lot */
-    public async createLot(lot: CreatedLot): Promise<Response> {
-        return await this.card.createLot(lot);
-    }
-
-    /** getting lot by id */
-    public async getLotById(id: string): Promise<Response> {
-        return await this.card.getLotById(id);
-    }
-    /** get lots from api */
-    public async getLots(): Promise<MarkeplaceResponse> {
-        const response = await this.card.getLots();
-
-        return await response.json();
-    }
-    /** get filtered lots from api */
-    public async getFilteredLots(filterParam: string) {
-        const response = await this.card.getFilteredLots(filterParam);
-
-        return await response.json();
-    }
-}
+    /** gets list of filtered cards */
+    public async filteredList(filterParam: string): Promise<CardsPage> {
+        return await this.card.filteredList(filterParam);
+    };
+};

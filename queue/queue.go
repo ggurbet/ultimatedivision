@@ -44,8 +44,8 @@ type Status string
 const (
 	// StatusSearches indicates that user in place searches game.
 	StatusSearches Status = "searches"
-	// StatusGames indicates that in place plays game.
-	StatusGames Status = "games"
+	// StatusPlays indicates that in place plays game.
+	StatusPlays Status = "plays"
 )
 
 // Config defines configuration for places.

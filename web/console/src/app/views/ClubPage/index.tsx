@@ -1,9 +1,10 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { filteredCards } from '@/app/store/actions/cards';
+import { useSelector } from 'react-redux';
 
-import { useClub } from '@/app/hooks/club';
+import { filteredCards, listOfCards } from '@/app/store/actions/cards';
+import { RootState } from '@/app/store';
 
 import { ClubCardsArea } from '@components/Club/ClubCardsArea';
 import { FilterField } from '@components/common/FilterField';
@@ -12,8 +13,7 @@ import { Paginator } from '@components/common/Paginator';
 import './index.scss';
 
 const Club: React.FC = () => {
-    /** TODO: decide use custom hook or directly dispatch thunk into useEffect*/
-    const cards = useClub();
+    const { page } = useSelector((state: RootState) => state.cardsReducer.cardsPage);
 
     return (
         <section className="club">
@@ -21,11 +21,12 @@ const Club: React.FC = () => {
                 title="My cards"
                 thunk={filteredCards}
             />
-            <ClubCardsArea
-                cards={cards}
-            />
+            <ClubCardsArea />
             <Paginator
-                itemCount={cards.length} />
+                getCardsOnPage={listOfCards}
+                pagesCount={page.pageCount}
+                selectedPage={page.currentPage}
+            />
         </section>
     );
 };

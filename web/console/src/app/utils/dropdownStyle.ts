@@ -6,10 +6,8 @@ export class DropdownStyle {
     /** property visibility  */
     constructor(
         public vilibility: boolean,
-        public height: number
     ) {
         this.vilibility = vilibility;
-        this.height = height;
     }
 
     /** triangle style */
@@ -18,6 +16,6 @@ export class DropdownStyle {
     }
     /** list height */
     get listHeight() {
-        return this.vilibility ? `${this.height}px` : '0';
+        return this.vilibility ? 'unset' : '0';
     }
 }

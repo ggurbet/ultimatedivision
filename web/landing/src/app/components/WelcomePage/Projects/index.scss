@@ -3,11 +3,11 @@
 
 .projects {
     background-color: #162574;
-    overflow-x: hidden;
+    overflow: hidden;
 
     &__title {
         color: white;
-        font-family: "Russo One";
+        font-family: "Russo One", sans-serif;
         font-size: 80px;
         margin: 100px auto;
         max-width: 1268px;

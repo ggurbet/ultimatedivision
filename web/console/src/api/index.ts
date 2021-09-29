@@ -57,7 +57,7 @@ export class APIClient {
      *
      * @private
      */
-    /* eslint-disable-next-line */
+    /* eslint-disable */
     protected async handleError(response: Response): Promise<void> {
 
         switch (response.status) {

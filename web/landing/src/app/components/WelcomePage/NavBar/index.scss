@@ -7,12 +7,13 @@
 
     .wrapper {
         display: flex;
-        width: 1440px;
+        width: 80%;
         height: 92px;
         margin: auto;
 
         .ultimatedivision-navbar__logo {
-            margin: 10px auto 25px 79px;
+            width: auto;
+            margin: 10px auto 25px 5%;
         }
 
         .ultimatedivision-navbar__dropdown {
@@ -24,13 +25,15 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
+            width: 50%;
             margin: auto;
 
             li {
                 list-style-type: none;
+                margin-right: 8%;
 
                 a {
-                    padding: 36px 71px 34px 0;
+                    padding: 2%;
                     text-decoration: none;
                     font-family: "Russo One", sans-serif;
                     font-style: normal;
@@ -50,7 +53,7 @@
         .ultimatedivision-mint-btn {
             width: 200px;
             height: 54px;
-            margin: auto 80px auto auto;
+            margin: auto 5% auto auto;
             background-image: url("data:image/svg+xml, %3Csvg width='200' height='54' viewBox='0 0 200 54' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='54' fill='%230DF55C'/%3E%3Crect width='200' height='54' fill='url(%23paint0_linear)' fill-opacity='0.2'/%3E%3Cpath d='M199 0H173.809L136.119 53.4627H162.096L199 0Z' fill='%2367FFB6'/%3E%3Cpath d='M53.2639 0H46.567L8.87732 53.4627H16.3594L53.2639 0Z' fill='%2367FFB6'/%3E%3Cdefs%3E%3ClinearGradient id='paint0_linear' x1='8.85245' y1='6.21328e-06' x2='171.959' y2='55.9918' gradientUnits='userSpaceOnUse'%3E%3Cstop/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
 
             &__text {
@@ -64,27 +67,75 @@
         }
 
         .ultimatedivision-mint-btn:hover {
-            background: linear-gradient(95.3deg, rgba(0, 0, 0, 0.2) 4.05%, rgba(0, 0, 0, 0) 87.48%), #0df55c;
+            background: linear-gradient(95.3deg, rgba(122, 71, 71, 0.2) 4.05%, rgba(0, 0, 0, 0) 87.48%), #0df55c;
         }
     }
 }
 
-@media screen and (max-width: 834px) {
+@media (max-width: $desktopBreakPoint) {
 
     .ultimatedivision-navbar {
 
         .wrapper {
+            width: 90%;
+
+            .ultimatedivision-navbar__logo {
+                margin: 10px auto 25px 5%;
+            }
+
+            .ultimatedivision-navbar__items {
+                width: 50%;
+
+                li {
+                    margin-right: 3%;
+
+                    a {
+                        font-size: 15px;
+                        line-height: 22px;
+                    }
+
+                    a:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+
+            .ultimatedivision-mint-btn {
+                width: 150px;
+                height: 54px;
+                margin: auto 5% auto auto;
+                background-image: url("data:image/svg+xml, %3Csvg width='200' height='54' viewBox='0 0 200 54' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='54' fill='%230DF55C'/%3E%3Crect width='200' height='54' fill='url(%23paint0_linear)' fill-opacity='0.2'/%3E%3Cpath d='M199 0H173.809L136.119 53.4627H162.096L199 0Z' fill='%2367FFB6'/%3E%3Cpath d='M53.2639 0H46.567L8.87732 53.4627H16.3594L53.2639 0Z' fill='%2367FFB6'/%3E%3Cdefs%3E%3ClinearGradient id='paint0_linear' x1='8.85245' y1='6.21328e-06' x2='171.959' y2='55.9918' gradientUnits='userSpaceOnUse'%3E%3Cstop/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
+
+                &__text {
+                    font-family: "Hanson", sans-serif;
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 17.8209px;
+                    line-height: 19px;
+                    color: $common-btn-text;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: $tabletBreakPoint) {
+
+    .ultimatedivision-navbar {
+
+        .wrapper {
+            width: 90%;
             position: relative;
-            width: 834px;
 
             .ultimatedivision-navbar__logo {
                 order: 1;
-                margin: auto;
+                margin: auto 0;
             }
 
             .ultimatedivision-navbar__dropdown {
+                z-index: 999999;
                 display: block;
-                margin: 34px auto 33px 38px;
+                margin: 34px auto 33px 5%;
                 cursor: pointer;
 
                 .cross-menu-svg {
@@ -99,18 +150,18 @@
 
             .ultimatedivision-navbar__items-active {
                 position: absolute;
-                z-index: 1;
+                z-index: 9999;
                 order: 0;
                 flex-direction: column;
-                width: 200px;
+                width: 100%;
                 height: 220px;
                 margin: 92px auto auto auto;
                 background-color: $navbar-backgrond-color;
 
                 li {
                     list-style-type: none;
-                    text-align: left;
-                    margin-left: 50px;
+                    text-align: center;
+                    margin-left: 0;
                     padding: 10px;
 
                     a {
@@ -150,12 +201,11 @@
     }
 }
 
-@media screen and (max-width: 414px) {
+@media (max-width: $phoneBreakPoint) {
 
     .ultimatedivision-navbar {
 
         .wrapper {
-            width: 834px;
 
             .ultimatedivision-navbar__logo {
                 order: 0;
@@ -163,10 +213,10 @@
             }
 
             .ultimatedivision-navbar__dropdown {
-                margin: 34px 30px auto 192px;
+                margin: 34px 5% auto auto;
 
                 .cross-menu-svg {
-                    margin: -10px 21px 0 auto;
+                    margin: -10px 5% 0 auto;
                 }
             }
 
@@ -181,7 +231,7 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                width: 414px;
+                width: 100%;
                 height: 736px;
                 margin: 70px auto auto auto;
 

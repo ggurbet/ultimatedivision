@@ -2,6 +2,7 @@
 // See LICENSE for copying information.
 
 import { ClubClient } from '@/api/club';
+import { Club } from '.';
 
 /**
  * exposes all bandwidth related logic
@@ -18,27 +19,29 @@ export class ClubService {
     public async createClub(): Promise<string> {
         return await this.club.createClub();
     };
+
     /** returning club with existing squads */
-    public async getClub(): Promise<string> {
+    public async getClub(): Promise<Club> {
         return await this.club.getClub();
     };
+
     /** creating squad in selected club */
     public async createSquad(clubId: string): Promise<string> {
         return await this.club.createSquad(clubId);
     };
 
     /** adding card to squad cards list */
-    public async addCard({ clubId, squadId, cardId, position }: { clubId: string, squadId: string, cardId: string, position: number }): Promise<Response> {
+    public async addCard({ clubId, squadId, cardId, position }: { clubId: string, squadId: string, cardId: string, position: number }): Promise<void> {
         return await this.club.addCard({ clubId, squadId, cardId, position });
     };
 
     /** change position of existing card */
-    public async changeCardPosition({ clubId, squadId, cardId, position }: { clubId: string, squadId: string, cardId: string, position: number }): Promise<Response> {
+    public async changeCardPosition({ clubId, squadId, cardId, position }: { clubId: string, squadId: string, cardId: string, position: number }): Promise<void> {
         return await this.club.changeCardPosition({ clubId, squadId, cardId, position });
     };
 
     /** delete card from squad cards list */
-    public async deleteCard({ clubId, squadId, cardId }: { clubId: string, squadId: string, cardId: string; }): Promise<Response> {
+    public async deleteCard({ clubId, squadId, cardId }: { clubId: string, squadId: string, cardId: string }): Promise<void> {
         return await this.club.deleteCard({ clubId, squadId, cardId });
     };
 };

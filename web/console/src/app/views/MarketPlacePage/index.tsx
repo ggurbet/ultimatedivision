@@ -1,9 +1,10 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { filteredLots } from '@/app/store/actions/cards';
+import { useSelector } from 'react-redux';
 
-import { useMarketplace } from '@/app/hooks/marketplace';
+import { RootState } from '@/app/store';
+import { filteredLots, listOfLots } from '@/app/store/actions/marketplace';
 
 import { MarketPlaceCardsGroup } from '@components/MarketPlace/MarketPlaceCardsGroup';
 import { FilterField } from '@components/common/FilterField';
@@ -12,8 +13,7 @@ import { Paginator } from '@components/common/Paginator';
 import './index.scss';
 
 const MarketPlace: React.FC = () => {
-    /** TODO: decide use custom hook or directly dispatch thunk into useEffect*/
-    const lots = useMarketplace();
+    const { lots, page } = useSelector((state: RootState) => state.marketplaceReducer.marketplacePage);
 
     return (
         <section className="marketplace">
@@ -21,11 +21,12 @@ const MarketPlace: React.FC = () => {
                 title="MARKETPLACE"
                 thunk={filteredLots}
             />
-            <MarketPlaceCardsGroup
-                lots={lots}
-            />
+            <MarketPlaceCardsGroup lots={lots} />
             <Paginator
-                itemCount={lots.length} />
+                getCardsOnPage={listOfLots}
+                pagesCount={page.pageCount}
+                selectedPage={page.currentPage}
+            />
         </section>
     );
 };

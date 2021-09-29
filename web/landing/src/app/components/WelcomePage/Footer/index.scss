@@ -8,7 +8,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        max-width: 800px;
+        width: 90%;
+        // max-width: 800px;
         padding: 40px 30px;
         margin: 0 auto;
     }
@@ -18,19 +19,23 @@
         display: flex;
         gap: 30px;
         text-transform: none;
+        margin-left: 5%;
     }
 
     &__link {
-        color: #999;
+        color: #fff;
         transition: color 0.3s;
+        text-decoration: none;
 
         &:hover {
+            text-decoration: underline;
             color: white;
         }
     }
 
     &__social {
         color: $highlightColor;
+        margin-right: 5%;
     }
 
     &__list {
@@ -60,6 +65,7 @@
     .footer {
 
         &__links {
+            margin: 0;
             justify-content: center;
         }
 

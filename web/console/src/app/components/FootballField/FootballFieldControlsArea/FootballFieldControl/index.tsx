@@ -4,8 +4,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { FootballFieldInformationLine } from '@/app/types/footballField';
-import { setTactic } from '@/app/store/actions/footballField';
+import { FieldControl } from '@/app/types/club';
 
 import { DropdownStyle } from '@/app/utils/dropdownStyle';
 
@@ -13,24 +12,23 @@ import triangle from '@static/img/FootballFieldPage/triangle.svg';
 
 import './index.scss';
 
-export const FootballFieldInformationTactic: React.FC<{ props: FootballFieldInformationLine }> = ({ props }) => {
+export const FootballFieldControl: React.FC<{ props: FieldControl }> = ({ props }) => {
     const [optionVisibility, changeVisibility] = useState(false);
-    const LIST_HEIGHT = 90;
-    const optionStyle = new DropdownStyle(optionVisibility, LIST_HEIGHT);
+    const optionStyle = new DropdownStyle(optionVisibility);
 
     const dispatch = useDispatch();
 
     return (
-        <div className="football-field-information-option">
+        <div className="football-field-control">
             <div
-                className="football-field-information-option__heading"
+                className="football-field-control__heading"
                 onClick={() => changeVisibility(prev => !prev)}
             >
-                <h4 className="football-field-information-option__title">
+                <h4 className="football-field-control__title">
                     {props.title}
                 </h4>
                 <img
-                    className="football-field-information-option__image"
+                    className="football-field-control__image"
                     src={triangle}
                     style={{ transform: optionStyle.triangleRotate }}
                     alt="triangle img"
@@ -39,17 +37,18 @@ export const FootballFieldInformationTactic: React.FC<{ props: FootballFieldInfo
             </div>
             <ul
                 style={{ height: optionStyle.listHeight }}
-                className="football-field-information-option__list"
-                id={props.id}
+                className="football-field-control__list"
+                id="0"
             >
                 {props.options.map((item, index) =>
                     <li
                         key={index}
-                        className="football-field-information-option__item"
-                        onClick={() => dispatch(setTactic)}
+                        className="football-field-control__item"
+                        onClick={() => dispatch(props.action(item))}
                     >
                         {item}
-                    </li>,
+                    </li>
+
                 )}
             </ul>
         </div>

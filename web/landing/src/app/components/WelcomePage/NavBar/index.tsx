@@ -16,7 +16,7 @@ export const Navbar: React.FC = () => {
         <div className="ultimatedivision-navbar">
             <div className="wrapper">
                 <picture className="ultimatedivision-navbar__logo">
-                    <img src={NavBarLogo} alt="Ultimate-division logo"></img>
+                    <a href="/"><img src={NavBarLogo} alt="Ultimate-division logo"></img></a>
                 </picture>
                 <div className="ultimatedivision-navbar__dropdown" onClick={() => setDropdownMenu(!dropdownMenu)}>
                     {dropdownMenu ? <Cross/> : <DropdownNavBar />}

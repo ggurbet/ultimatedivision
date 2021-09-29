@@ -1,17 +1,25 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
-/* eslint-disable */
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { PaginatorBlockPages } from '@components/common/Paginator/PaginatorBlockPages';
+
+import { Pagination } from '@/app/types/pagination';
 
 import next from '@static/img/UltimateDivisionPaginator/next.svg';
 import previous from '@static/img/UltimateDivisionPaginator/previous.svg';
-import { PaginatorBlockPages } from '@components/common/Paginator/PaginatorBlockPages';
 
 import './index.scss';
 
-export const Paginator: React.FC<{ itemCount: number }> = ({ itemCount }) => {
-    const FIRST_ITEM_PAGINATON = 1;
-    const [currentPage, setCurrentPage] = useState<number>(FIRST_ITEM_PAGINATON);
+export const Paginator: React.FC<{ getCardsOnPage: ({ selectedPage, limit }: Pagination) => void, pagesCount: number, selectedPage: number }> = ({
+    getCardsOnPage,
+    pagesCount,
+    selectedPage,
+}) => {
+    const dispatch = useDispatch();
+    const [currentPage, setCurrentPage] = useState<number>(selectedPage);
+
     /**
     * split the page into 3 blocks that can be needed
     * to separate page numbers
@@ -20,11 +28,7 @@ export const Paginator: React.FC<{ itemCount: number }> = ({ itemCount }) => {
     const [middleBlockPages, setMiddleBlockPages] = useState<number[]>([]);
     const [lastBlockPages, setLastBlockPages] = useState<number[]>([]);
 
-    useEffect(() => {
-        populatePages();
-    }, [currentPage]);
-
-    const CARDS_ON_PAGE: number = 8;
+    const CARDS_ON_PAGE: number = 24;
     const MAX_PAGES_PER_BLOCK: number = 5;
     const MAX_PAGES_OFF_BLOCKS: number = 10;
     const FIRST_PAGE_INDEX: number = 0;
@@ -33,10 +37,15 @@ export const Paginator: React.FC<{ itemCount: number }> = ({ itemCount }) => {
     const NEG_STEP_FROM_CURRENT_PAGE: number = -3;
     const POS_STEP_FROM_CURRENT_PAGE: number = 2;
 
+    /** dispatch getCardsOnPage thunk with parameters: page and default limit value */
+    async function getCards(selectedPage: number) {
+        await dispatch(getCardsOnPage({ selectedPage, limit: CARDS_ON_PAGE }));
+    };
+
     const pages: number[] = [];
-    for (let i = 1; i <= Math.ceil(itemCount / CARDS_ON_PAGE); i++) {
+    for (let i = 1; i <= Math.ceil(pagesCount); i++) {
         pages.push(i);
-    }
+    };
     /** set block pages depends on current page */
     const setBlocksIfCurrentInFirstBlock = () => {
         setFirstBlockPages(pages.slice(FIRST_PAGE_INDEX, MAX_PAGES_PER_BLOCK));
@@ -54,14 +63,14 @@ export const Paginator: React.FC<{ itemCount: number }> = ({ itemCount }) => {
         setLastBlockPages(pages.slice(-MAX_PAGES_PER_BLOCK));
     };
     /**
-    * Indicates visibility of dots after first pages block
+     * Indicates visibility of dots after first pages block
      */
     const isFirstDotsShown: boolean =
         middleBlockPages.length <= MAX_PAGES_PER_BLOCK
         && pages.length > MAX_PAGES_OFF_BLOCKS;
     /*
     * Indicates visibility of dots after middle pages block
-     */
+    */
     const isSecondDotsShown: boolean = !!middleBlockPages.length;
     /**
      * indicates in which block current page
@@ -72,6 +81,8 @@ export const Paginator: React.FC<{ itemCount: number }> = ({ itemCount }) => {
      * change page blocks reorganization depends
      * on current page
      */
+    const isOneBlockRequired: boolean = pages.length <= MAX_PAGES_OFF_BLOCKS;
+
     const reorganizePagesBlock = () => {
         if (isOneBlockRequired) {
             return;
@@ -94,7 +105,6 @@ export const Paginator: React.FC<{ itemCount: number }> = ({ itemCount }) => {
     * indicates if dots delimiter is needed
     * to separate page numbers
     */
-    const isOneBlockRequired: boolean = pages.length <= MAX_PAGES_OFF_BLOCKS;
     const populatePages = () => {
         if (!pages.length) {
             return;
@@ -108,6 +118,11 @@ export const Paginator: React.FC<{ itemCount: number }> = ({ itemCount }) => {
         }
         reorganizePagesBlock();
     };
+
+    useEffect(() => {
+        getCards(currentPage);
+        populatePages();
+    }, [currentPage, pagesCount]);
     /**
      * change current page and set pages block
      */

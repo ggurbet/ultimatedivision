@@ -1,15 +1,15 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
+import { Link } from 'react-router-dom';
+
+import { Lot } from '@/marketplace';
 
 import { PlayerCard } from '@components/common/PlayerCard';
 
-import { Link } from 'react-router-dom';
-
-import { MarketplaceLot } from '@/card';
 
 import './index.scss';
 
-export const MarketPlaceFootballerCard: React.FC<{ lot: MarketplaceLot; place?: string }> = ({ lot }) =>
+export const MarketPlaceFootballerCard: React.FC<{ lot: Lot; place?: string }> = ({ lot }) =>
     <div
         className="marketplace-playerCard"
     >
