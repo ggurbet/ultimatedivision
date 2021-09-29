@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { addCard, cardSelectionVisibility } from '@/app/store/actions/club';
 
+import { listOfCards } from '@/app/store/actions/cards';
 
 import { FilterField } from
     '@components/FootballField/FootballFieldCardSelection/FilterField';
@@ -15,7 +16,7 @@ import { Card } from '@/card';
 import './index.scss';
 
 export const FootballFieldCardSelection = () => {
-    const { cards } = useSelector((state: RootState) => state.cardsReducer.cards);
+    const { cards, page } = useSelector((state: RootState) => state.cardsReducer.cardsPage);
     const dispatch = useDispatch();
     const fieldSetup = useSelector((state: RootState) => state.clubReducer);
 
@@ -49,7 +50,11 @@ export const FootballFieldCardSelection = () => {
                     </div>,
                 )}
             </div>
-            <Paginator itemCount={cards.length} />
+            <Paginator
+                getCardsOnPage={listOfCards}
+                pagesCount={page.pageCount}
+                selectedPage={page.currentPage}
+            />
         </div>
     );
 };

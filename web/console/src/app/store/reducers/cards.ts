@@ -1,6 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
-import { Card, Cards } from '@/card';
+import { Card, CardsPage } from '@/card';
 
 import { GET_USER_CARDS, USER_CARD } from '@/app/store/actions/cards';
 
@@ -14,7 +14,7 @@ const CARDS_TOTAL_COUNT: number = 1;
 class CardsState {
     /** class implementation */
     constructor(
-        public cards: Cards,
+        public cardsPage: CardsPage,
         public openedCard: Card,
     ) { };
 };
@@ -27,22 +27,22 @@ const page = {
     totalCount: CARDS_TOTAL_COUNT,
 };
 
-const cards = new Cards([], page);
+const cardsPage = new CardsPage([], page);
 const openedCard = new Card();
 
-export const cardsReducer = (cardsState: CardsState = new CardsState(cards, openedCard), action: any = {}) => {
+export const cardsReducer = (cardsState: CardsState = new CardsState(cardsPage, openedCard), action: any = {}) => {
     switch (action.type) {
-    case GET_USER_CARDS:
-        return {
-            ...cardsState,
-            cards: action.cards,
-        };
-    case USER_CARD:
-        return {
-            ...cardsState,
-            openedCard: action.card,
-        };
-    default:
-        return cardsState;
+        case GET_USER_CARDS:
+            return {
+                ...cardsState,
+                cardsPage: action.cardsPage,
+            };
+        case USER_CARD:
+            return {
+                ...cardsState,
+                openedCard: action.card,
+            };
+        default:
+            return cardsState;
     };
 };

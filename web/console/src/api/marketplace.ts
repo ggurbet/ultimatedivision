@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 
-import { Lot, MarketPlace } from '@/marketplace';
+import { Lot, MarketPlacePage } from '@/marketplace';
 
 import { CreatedLot } from '@/app/types/marketplace';
 import { Pagination } from '@/app/types/pagination';
@@ -13,7 +13,7 @@ export class MarketplaceClient extends APIClient {
     private readonly ROOT_PATH: string = '/api/v0/marketplace';
 
     /** returns marketplace domain entity with list of lots*/
-    public async list({ selectedPage, limit }: Pagination): Promise<MarketPlace> {
+    public async list({ selectedPage, limit }: Pagination): Promise<MarketPlacePage> {
         const path = `${this.ROOT_PATH}?page=${selectedPage}&limit=${limit}`;
         const response = await this.http.get(path);
 
@@ -23,7 +23,7 @@ export class MarketplaceClient extends APIClient {
 
         const marketplaceJSON = await response.json();
 
-        return new MarketPlace(
+        return new MarketPlacePage(
             marketplaceJSON.lots.map((lot: Lot) => new Lot(
                 lot.id,
                 lot.itemId,
@@ -42,6 +42,7 @@ export class MarketplaceClient extends APIClient {
             marketplaceJSON.page,
         );
     };
+
     /** implements opening lot */
     public async getLotById(id: string): Promise<Lot> {
         const path = `${this.ROOT_PATH}/${id}`;
@@ -70,6 +71,7 @@ export class MarketplaceClient extends APIClient {
             lot.card,
         );
     };
+
     /** implements creating lot (selling card) */
     public async createLot(lot: CreatedLot): Promise<void> {
         const path = `${this.ROOT_PATH}`;
@@ -79,8 +81,9 @@ export class MarketplaceClient extends APIClient {
             await this.handleError(response);
         };
     };
+
     /** method returns filtered lot list */
-    public async filteredList(filterParam: string): Promise<MarketPlace> {
+    public async filteredList(filterParam: string): Promise<MarketPlacePage> {
         const path = `${this.ROOT_PATH}/lots/?${filterParam}`;
         const response = await this.http.get(path);
 
@@ -90,7 +93,7 @@ export class MarketplaceClient extends APIClient {
 
         const marketplaceJSON = await response.json();
 
-        return new MarketPlace(
+        return new MarketPlacePage(
             marketplaceJSON.lots.map((lot: Lot) => new Lot(
                 lot.id,
                 lot.itemId,

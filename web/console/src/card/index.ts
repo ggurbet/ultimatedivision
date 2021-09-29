@@ -386,7 +386,7 @@ export class Card {
     }
 };
 /** Cards domain entity */
-export class Cards {
+export class CardsPage {
     /** default Cards initial values */
     constructor(
         public cards: Card[],

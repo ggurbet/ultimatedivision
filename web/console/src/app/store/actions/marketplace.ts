@@ -8,7 +8,7 @@ import { MarketplaceClient } from '@/api/marketplace';
 import { Marketplaces } from '@/marketplace/service';
 
 import { Card } from '@/card';
-import { Lot, MarketPlace } from '@/marketplace';
+import { Lot, MarketPlacePage } from '@/marketplace';
 
 import { CreatedLot } from '@/app/types/marketplace';
 import { Pagination } from '@/app/types/pagination';
@@ -16,9 +16,9 @@ import { Pagination } from '@/app/types/pagination';
 export const GET_SELLING_CARDS = ' GET_SELLING_CARDS';
 export const MARKETPLACE_CARD = 'OPEN_MARKETPLACE_CARD';
 
-const getLots = (marketplace: MarketPlace) => ({
+const getLots = (marketplacePage: MarketPlacePage) => ({
     type: GET_SELLING_CARDS,
-    marketplace,
+    marketplacePage,
 });
 const marketplaceCard = (card: Card) => ({
     type: MARKETPLACE_CARD,

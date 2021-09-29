@@ -8,16 +8,16 @@ import { FootballFieldControlsArea } from '@/app/components/FootballField/Footba
 import { PlayingAreaFootballerCard } from '@components/FootballField/PlayingAreaFootballerCard';
 
 import { SquadCard } from '@/club';
+import { Card } from '@/card';
 
 import { RootState } from '@/app/store';
 import { cardSelectionVisibility, choosePosition, exchangeCards, removeCard, setDragStart, setDragTarget }
     from '@/app/store/actions/club';
 
 import './index.scss';
-import { Card } from '@/card';
 
 export const FootballFieldPlayingArea: React.FC = () => {
-    const cards = useSelector((state: RootState) => state.cardsReducer.cards);
+    const {cards} = useSelector((state: RootState) => state.cardsReducer.cardsPage);
     const formation = useSelector((state: RootState) => state.clubReducer.squad.formation);
     const dragStartIndex = useSelector((state: RootState) => state.clubReducer.options.dragStart);
 

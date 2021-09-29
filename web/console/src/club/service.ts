@@ -19,10 +19,12 @@ export class ClubService {
     public async createClub(): Promise<string> {
         return await this.club.createClub();
     };
+
     /** returning club with existing squads */
     public async getClub(): Promise<Club> {
         return await this.club.getClub();
     };
+
     /** creating squad in selected club */
     public async createSquad(clubId: string): Promise<string> {
         return await this.club.createSquad(clubId);

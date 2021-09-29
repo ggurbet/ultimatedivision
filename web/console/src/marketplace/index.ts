@@ -23,7 +23,7 @@ export class Lot {
     ) { };
 };
 /** base MarketPlace domain entity type implementation */
-export class MarketPlace {
+export class MarketPlacePage {
     /** default MarketPlace initial values */
     constructor(
         public lots: Lot[],
