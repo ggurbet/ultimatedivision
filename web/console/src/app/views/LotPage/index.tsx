@@ -18,29 +18,29 @@ import './index.scss';
 
 const Lot: React.FC = () => {
     const dispatch = useDispatch();
-    const cardData = useSelector((state: RootState) => state.cardsReducer.openedCard);
-    // @ts-ignore
-    const { id } = useParams();
+    const card = useSelector((state: RootState) => state.marketplaceReducer.openedCard);
+
+    const { id }: {id: string} = useParams();
 
     useEffect(() => {
         dispatch(openMarketplaceCard(id));
     }, []);
 
     return (
-        cardData &&
+        card &&
         <div className="lot">
             <div className="lot__border">
                 <div className="lot__wrapper">
                     <div className="lot__name-wrapper">
                         <h1 className="lot__name">
-                            {cardData.playerName}
+                            {card.playerName}
                         </h1>
                     </div>
-                    <FootballerCardIllustrations card={cardData} />
+                    <FootballerCardIllustrations card={card} />
                     <div className="lot__stats-area">
-                        <FootballerCardPrice card={cardData} />
-                        <FootballerCardStatsArea card={cardData} />
-                        <FootballerCardInformation card={cardData} />
+                        <FootballerCardPrice card={card} />
+                        <FootballerCardStatsArea card={card} />
+                        <FootballerCardInformation card={card} />
                     </div>
                 </div>
             </div>

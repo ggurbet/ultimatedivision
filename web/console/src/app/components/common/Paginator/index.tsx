@@ -19,7 +19,6 @@ export const Paginator: React.FC<{ getCardsOnPage: ({ selectedPage, limit }: Pag
 }) => {
     const dispatch = useDispatch();
     const [currentPage, setCurrentPage] = useState<number>(selectedPage);
-
     /**
     * split the page into 3 blocks that can be needed
     * to separate page numbers
