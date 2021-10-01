@@ -1,10 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { Link } from 'react-router-dom';
-
-import { RouteConfig } from '@/app/router';
-
 import { Card } from '@/card';
 
 export const PlayerCard: React.FC<{ card: Card; parentClassName: string }> = ({

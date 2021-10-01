@@ -39,6 +39,10 @@
         }
     }
 
+    &__use-filters {
+        display: none;
+    }
+
     &__list {
         background-image: url("@/app/static/img/FilterField/filterShape.svg");
         background-size: 100% 100%;
@@ -76,19 +80,64 @@
     }
 }
 
+@media (max-width: 1440px) {
+
+    .filter-field {
+
+        &__list {
+            padding: 15px 20px;
+            width: 96%;
+
+            &__item {
+                font-size: 13px;
+            }
+        }
+    }
+}
+
 @media (max-width: $desktopBreakPoint) {
 
     .filter-field {
 
         &__list {
+            background-image: none;
 
             &__item {
-                font-size: 13px;
+                display: none;
+            }
+        }
 
-                &__picture {
-                    margin-left: 2px;
-                    vertical-align: middle;
-                }
+        &__use-filters {
+            display: block;
+            position: absolute;
+            left: 10vw;
+
+            &__title {
+                display: inline-block;
+                height: 46px;
+                font-size: 24px;
+                color: white;
+                vertical-align: middle;
+                margin-left: 20px;
+            }
+        }
+
+        &__wrapper {
+
+            &:before {
+                top: -15px;
+                left: 10vw;
+                width: 80vw;
+                height: 2px;
+                background: $marketPlaceBorderColor;
+            }
+
+            &:after {
+                bottom: -15px;
+                right: 10vw;
+                width: 80vw;
+                height: 2px;
+                background: $marketPlaceBorderColor;
             }
         }
     }

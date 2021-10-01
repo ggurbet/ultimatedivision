@@ -39,3 +39,17 @@
         }
     }
 }
+
+@media (max-width: 1440px) {
+
+    .filter-item {
+
+        &__title {
+            font-size: 13px;
+        }
+
+        &__picture {
+            margin-left: 2px;
+        }
+    }
+}

@@ -15,6 +15,8 @@ import eye
     from '@static/img/FilterField/eye.svg';
 import parametres
     from '@static/img/FilterField/parametres.svg';
+import filters
+    from '@static/img/MarketPlacePage/filter_icon.svg'
 
 import './index.scss';
 import { AnyAction, Dispatch } from 'redux';
@@ -62,6 +64,16 @@ export const FilterField: React.FC<{
                 {title}
             </h1>
             <div className="filter-field__wrapper">
+                <div className="filter-field__use-filters">
+                    <img
+                        className="filter-field__use-filters__picture"
+                        src={filters}
+                        alt="use fitlers"
+                    />
+                    <span className="filter-field__use-filters__title">
+                        Use filters
+                    </span>
+                </div>
                 <ul className="filter-field__list">
                     <li className="filter-field__list__item">
                         <img
