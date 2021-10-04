@@ -147,7 +147,7 @@ const SignUp: React.FC = () => {
                         Hello!
                     </h2>
                     <p className="register__sign-up__description__information">
-                        Sign up to get access tp incredible
+                        Sign up to get access to incredible
                         emotions with Ultimate Division
                     </p>
                 </div>
@@ -181,7 +181,7 @@ const SignUp: React.FC = () => {
                             className="register__sign-up__description__information__sign"
                             to={RouteConfig.SignIn.path}
                         >
-                            sign in
+                            Sign in
                         </Link>
                     </p>
                 </div>

@@ -140,7 +140,7 @@ const SignIn: React.FC = () => {
                             className="register__sign-in__description__information__sign"
                             to={RouteConfig.SignUp.path}
                         >
-                            sign up
+                            Sign up
                         </Link>
                     </p>
                 </div>

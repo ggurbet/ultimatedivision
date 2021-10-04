@@ -49,20 +49,23 @@
             display: inline-block;
             margin-top: 10%;
             text-decoration: none;
-            color: #8c8c8c;
+            color: $signInMainTextColor;
             font-size: 20px;
             cursor: pointer;
+            font-family: "BebasNeue", sans-serif;
+            font-weight: bold;
 
             &__title {
                 text-decoration: none;
                 margin-left: 5px;
-                color: #8c8c8c;
+                color: $signInMainTextColor;
             }
         }
 
         &__title {
+            font-family: "BebasNeue", sans-serif;
+            font-weight: bold;
             margin-top: 20%;
-            font-weight: 100;
             font-size: 50px;
         }
 
@@ -75,13 +78,14 @@
             }
 
             &__information {
+                font-family: "Montserrat", sans-serif;
                 margin-top: 10px;
                 width: 60%;
-                color: #8c8c8c;
+                color: $signInMainTextColor;
 
                 &__sign {
                     text-decoration: none;
-                    color: #3ccf56;
+                    color: $highlightColor;
                     cursor: pointer;
                     margin-left: 5px;
                 }
@@ -103,18 +107,19 @@
             &__name-error,
             &__surname-error,
             &__password-error {
-                border: 1px solid #8c8c8c;
+                font-family: "Montserrat", sans-serif;
+                border: 1px solid $signInMainTextColor;
                 outline: none;
                 width: 100%;
                 line-height: 40px;
-                color: #8c8c8c;
+                color: $signInMainTextColor;
                 padding-left: 10px;
                 margin-top: 20px;
-                background: #dfdfdf;
+                background: $signInInputBackgroundColor;
                 font-size: 14px;
 
                 &__error {
-                    color: red;
+                    color: $signInErrorColor;
                     font-size: 10px;
                 }
             }
@@ -123,7 +128,7 @@
             &__name-error,
             &__surname-error,
             &__password-error {
-                border: 1px solid red;
+                border: 1px solid $signInErrorColor;
             }
 
             &__confirm {
@@ -136,6 +141,8 @@
                 color: black;
                 border-radius: 5px;
                 margin-top: 20px;
+                font-family: "BebasNeue", sans-serif;
+                font-weight: bold;
             }
 
             &__remember-me {
@@ -146,7 +153,7 @@
                 position: absolute;
                 bottom: 65px;
                 right: 0;
-                color: black;
+                color: $signInMainTextColor;
                 text-decoration: none;
                 cursor: pointer;
             }
@@ -161,8 +168,11 @@
             margin-top: 30%;
         }
     }
+}
 
-    @media (max-width: $desktopBreakPoint) {
+@media (max-width: $desktopBreakPoint) {
+
+    .register {
 
         &__represent-reset,
         &__represent-recover {
@@ -198,7 +208,6 @@
 
             &__title {
                 font-size: 40px;
-                margin-top: 60%;
             }
 
             &__sign-form {
@@ -226,12 +235,15 @@
         &__sign-up {
 
             &__title {
-                margin-top: 40%;
+                margin-top: 50px;
             }
         }
     }
+}
 
-    @media (max-width: $tabletBreakPoint) {
+@media (max-width: $tabletBreakPoint) {
+
+    .register {
 
         &__represent-reset,
         &__represent-recover {
@@ -316,11 +328,15 @@
             }
         }
     }
+}
 
-    @media (max-width: $phoneBreakPoint) {
+@media (max-width: $phoneBreakPoint) {
+
+    .register {
 
         &__represent-reset,
         &__represent-recover {
+            display: none;
 
             &__ultimate {
                 height: 7%;
@@ -334,6 +350,7 @@
         }
 
         &__represent {
+            display: none;
 
             &__ultimate {
                 height: 6%;
@@ -345,25 +362,27 @@
         &__sign-in,
         &__reset,
         &__recover {
-            padding-left: 10px;
+            width: 80%;
+            margin: auto;
+            padding: 0;
 
             &__title {
-                font-size: 20px;
-                margin-top: 80%;
+                font-size: 48px;
+                margin-top: 70px;
             }
 
             &__description {
                 margin-top: 15px;
 
                 &__title {
-                    font-size: 16px;
-                    font-weight: 100;
+                    font-size: 22px;
+                    margin-top: 35px;
                 }
 
                 &__information {
-                    font-size: 10px;
-                    width: 70%;
-                    color: #8c8c8c;
+                    font-size: 12px;
+                    width: 80%;
+                    color: $signInMainTextColor;
 
                     &__sign {
                         text-decoration: none;
@@ -379,15 +398,21 @@
             }
 
             &__sign-form {
-                width: 160px;
+                margin-top: 10px;
+                width: 100%;
 
                 &__email,
                 &__name,
                 &__surname,
                 &__password,
                 &__confirm {
-                    line-height: 20px;
-                    font-size: 10px;
+                    line-height: 40px;
+                    font-size: 14px;
+                    margin-top: 15px;
+                }
+
+                &__confirm {
+                    width: 100%;
                 }
 
                 &__remember-me {
@@ -403,64 +428,74 @@
             }
         }
 
-        &__reset,
-        &__recover {
+        &__sign-in {
+
+            &__description {
+
+                &__information {
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                }
+            }
 
             &__title {
-                margin-top: 40%;
+                margin-top: 90px;
             }
-        }
-
-        &__sign-up {
-
-            &__title {
-                margin-top: 70%;
-            }
-        }
-    }
-
-    @media (max-width: $phoneBreakPoint - 150px) {
-
-        &__represent-reset,
-        &__represent-recover {
-
-            &__ultimate {
-                height: 5%;
-                margin: 70% auto;
-            }
-
-            &__ultimate-recover {
-                margin: 70% auto;
-            }
-        }
-
-        &__sign-up,
-        &__sign-in,
-        &__reset,
-        &__recover {
-            padding-left: 5px;
 
             &__sign-form {
-                width: 120px;
 
                 &__email,
-                &__name,
-                &__surname,
                 &__password,
-                &__confirm {
-                    padding-left: 5px;
-                    line-height: 18px;
-                    font-size: 8px;
-                }
-
-                &__remember-me {
-                    width: 8px;
-                    height: 8px;
+                &__confirm,
+                &__email-error,
+                &__password-error {
+                    margin-top: 30px;
                 }
 
                 &__forgot-password {
-                    font-size: 8px;
-                    bottom: 34px;
+                    font-size: 12px;
+                    bottom: 75px;
+                }
+            }
+        }
+
+        &__reset {
+
+            &__go-back {
+                margin-top: 50px;
+            }
+
+            &__title {
+                font-size: 27px;
+                margin-top: 50px;
+            }
+
+            &__sign-form {
+                margin-top: 40px;
+
+                &__password,
+                &__password-error,
+                &__confirm {
+                    margin-top: 35px;
+                }
+            }
+        }
+
+        &__recover {
+
+            &__title {
+                margin-top: 120px;
+                font-size: 27px;
+            }
+
+            &__sign-form {
+                margin-top: 20px;
+
+                &__password,
+                &__password-error,
+                &__confirm {
+                    margin-top: 35px;
                 }
             }
         }

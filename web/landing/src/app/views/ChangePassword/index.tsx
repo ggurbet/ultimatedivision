@@ -58,7 +58,7 @@ const ChangePassword: React.FC = () => {
     const resetPasswordDatas = [
         {
             value: password,
-            placeHolder: 'Old Password',
+            placeHolder: 'Enter the old password',
             handleChange: setPassword,
             className: 'register__reset__sign-form__password',
             type: 'password',
@@ -67,7 +67,7 @@ const ChangePassword: React.FC = () => {
         },
         {
             value: newPassword,
-            placeHolder: 'New Password',
+            placeHolder: 'Enter a new password',
             handleChange: setNewPassword,
             className: 'register__reset__sign-form__password',
             type: 'password',
@@ -97,7 +97,7 @@ const ChangePassword: React.FC = () => {
                         GO BACK
                     </span>
                 </Link>
-                <h1 className="register__reset__title">CHANGE PASSWORD</h1>
+                <h1 className="register__reset__title">Change your password</h1>
                 <form
                     className="register__reset__sign-form"
                     onSubmit={handleSubmit}
