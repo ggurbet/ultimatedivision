@@ -17,7 +17,7 @@ import './index.scss';
 import { Squad } from '@/club';
 
 export const FootballFieldCardSelection = () => {
-    const squad  = useSelector((state: RootState) => state.clubReducer.squad)
+    const squad = useSelector((state: RootState) => state.clubReducer.squad);
     const { cards, page } = useSelector((state: RootState) => state.cardsReducer.cardsPage);
     const dispatch = useDispatch();
     const fieldSetup = useSelector((state: RootState) => state.clubReducer);
@@ -28,7 +28,7 @@ export const FootballFieldCardSelection = () => {
 
     /** Add card to field, and hide card selection component */
     function handleClick(squad: Squad, cardId: string, position: number) {
-        dispatch(addCard({squad, cardId, position}));
+        dispatch(addCard({ squad, cardId, position }));
         dispatch(cardSelectionVisibility(false));
         setTimeout(() => {
             window.scroll(X_SCROLL_POINT, Y_SCROLL_POINT);

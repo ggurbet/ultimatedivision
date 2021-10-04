@@ -1,10 +1,11 @@
 @import "@/index.scss";
 
 .footballer-card-stats-item {
-    width: 200px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    margin: 5% 0;
 
     &__heading {
         display: flex;
@@ -32,17 +33,57 @@
     &__row {
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
 
     &__row-name {
         font-family: "Montserrat", sans-serif;
         text-transform: capitalize;
         color: $textColor;
+        padding-right: 2px;
+    }
+
+    &__row-value {
+        padding-top: 2.5px;
     }
 
     .bar {
         position: absolute;
         left: 0;
         top: 0;
+    }
+}
+
+@media screen and (max-width: $tabletBreakPoint) {
+
+    .footballer-card-stats-item {
+
+        &__heading {
+            display: flex;
+            justify-content: space-between;
+            font-size: 22px;
+            margin-bottom: 40px;
+        }
+
+        &__row-name {
+            font-size: 10px;
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
+
+    .footballer-card-stats-item {
+        margin: 5% 0;
+
+        &__heading {
+            font-size: 24px;
+            line-height: 29px;
+        }
+
+        &__row-name {
+            font-size: 14px;
+            line-height: 17px;
+        }
     }
 }

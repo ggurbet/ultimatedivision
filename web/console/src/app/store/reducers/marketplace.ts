@@ -35,17 +35,17 @@ const openedCard = new Card();
 
 export const marketplaceReducer = (marketplaceState: MarketplaceState = new MarketplaceState(marketplacePage, openedCard), action: any = {}) => {
     switch (action.type) {
-        case GET_SELLING_CARDS:
-            return {
-                ...marketplaceState,
-                marketplacePage: action.marketplacePage,
-            };
-        case MARKETPLACE_CARD:
-            return {
-                ...marketplaceState,
-                openedCard: action.card,
-            };
-        default:
-            return marketplaceState;
+    case GET_SELLING_CARDS:
+        return {
+            ...marketplaceState,
+            marketplacePage: action.marketplacePage,
+        };
+    case MARKETPLACE_CARD:
+        return {
+            ...marketplaceState,
+            openedCard: action.card,
+        };
+    default:
+        return marketplaceState;
     }
 };

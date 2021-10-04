@@ -31,17 +31,17 @@ export class ClubService {
     };
 
     /** adding card to squad cards list */
-    public async addCard({ squad, cardId, position }: {squad: Squad, cardId: string, position: number }): Promise<void> {
+    public async addCard({ squad, cardId, position }: {squad: Squad; cardId: string; position: number }): Promise<void> {
         return await this.club.addCard({ squad, cardId, position });
     };
 
     /** change position of existing card */
-    public async changeCardPosition({ clubId, squadId, cardId, position }: { clubId: string, squadId: string, cardId: string, position: number }): Promise<void> {
+    public async changeCardPosition({ clubId, squadId, cardId, position }: { clubId: string; squadId: string; cardId: string; position: number }): Promise<void> {
         return await this.club.changeCardPosition({ clubId, squadId, cardId, position });
     };
 
     /** delete card from squad cards list */
-    public async deleteCard({ clubId, squadId, cardId }: { clubId: string, squadId: string, cardId: string }): Promise<void> {
+    public async deleteCard({ clubId, squadId, cardId }: { clubId: string; squadId: string; cardId: string }): Promise<void> {
         return await this.club.deleteCard({ clubId, squadId, cardId });
     };
 

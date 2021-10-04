@@ -14,7 +14,7 @@ import './index.scss';
 import { RootState } from '@/app/store';
 
 export const FootballFieldControl: React.FC<{ props: FieldControl }> = ({ props }) => {
-    const squad = useSelector((state: RootState) => state.clubReducer.squad)
+    const squad = useSelector((state: RootState) => state.clubReducer.squad);
     const [optionVisibility, changeVisibility] = useState(false);
     const optionStyle = new DropdownStyle(optionVisibility);
 
@@ -46,7 +46,7 @@ export const FootballFieldControl: React.FC<{ props: FieldControl }> = ({ props 
                     <li
                         key={index}
                         className="football-field-control__item"
-                        onClick={() => dispatch(props.action(squad ,item))}
+                        onClick={() => dispatch(props.action(squad, item))}
                     >
                         {item}
                     </li>

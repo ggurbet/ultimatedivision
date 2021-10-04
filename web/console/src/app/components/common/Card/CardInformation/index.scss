@@ -2,12 +2,13 @@
 
 .footballer-card-information {
     width: 85%;
-    margin: 0 auto;
+    height: 300px;
+    overflow: hidden;
     grid-template-columns: repeat(4, 1fr);
     display: grid;
-    column-gap: 105px;
-    row-gap: 40px;
-    padding: 40px 0 0 40px;
+    column-gap: 5%;
+    row-gap: 5%;
+    margin: 5% auto 5% 5%;
     font-family: "Montserrat", sans-serif;
 
     &__item-title {
@@ -25,5 +26,51 @@
 
     &__item-icon {
         margin-left: 5px;
+    }
+}
+
+@media screen and (min-width: $desktopBreakPoint) {
+
+    .footballer-card-information {
+        column-gap: 5%;
+        row-gap: 5%;
+        margin: 3% auto 5% 5%;
+    }
+}
+
+@media screen and (min-width: $tabletBreakPoint) {
+
+    .footballer-card-information {
+        margin: 5%;
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint + 100px) {
+
+    .footballer-card-information {
+        width: 90%;
+        height: 605px;
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 3%;
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
+
+    .footballer-card-information {
+        width: 90%;
+        height: 605px;
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 3%;
+
+        &__item-title {
+            font-size: 20px;
+            line-height: 24px;
+        }
+
+        &__item-value {
+            margin-right: 5px;
+            line-height: 17px;
+        }
     }
 }
