@@ -38,33 +38,36 @@ export const Projects: React.FC = () => {
 
     return (
         <section className="projects">
-            <h2 className="projects__title" data-aos="fade-left">
-                The game was created by a team involved in the development
-                of well-know crypto projects
-            </h2>
-            <div className="projects__area">
-                {logos.map((logo, index) => (
-                    <div
-                        key={index}
-                        data-aos={
-                            dataAosLogoAnimation(index)
-                        }
-                        data-aos-delay={
-                            aosDelayLogoAnimation(index)
-                        }
-                        data-aos-duration={500}
-                        data-aos-easing="ease-in-out-cubic"
-                        className="projects__area__item"
-                    >
-                        <img
-                            className="projects__area__item__logo"
-                            key={index}
-                            src={logo}
-                            alt="logo"
-                        />
-                    </div>
+            <div className="projects__wrapper">
 
-                ))}
+                <h2 className="projects__title" data-aos="fade-left">
+                    The game was created by a team involved in the development
+                    of well-know crypto projects
+                </h2>
+                <div className="projects__area">
+                    {logos.map((logo, index) => (
+                        <div
+                            key={index}
+                            data-aos={
+                                dataAosLogoAnimation(index)
+                            }
+                            data-aos-delay={
+                                aosDelayLogoAnimation(index)
+                            }
+                            data-aos-duration={500}
+                            data-aos-easing="ease-in-out-cubic"
+                            className="projects__area__item"
+                        >
+                            <img
+                                className="projects__area__item__logo"
+                                key={index}
+                                src={logo}
+                                alt="logo"
+                            />
+                        </div>
+
+                    ))}
+                </div>
             </div>
         </section>
     );

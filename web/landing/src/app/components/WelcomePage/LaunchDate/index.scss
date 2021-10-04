@@ -2,82 +2,78 @@
 @import "aos/dist/aos.css";
 
 .launch-date {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 0 5%;
-    position: relative;
     background: #001236;
-    overflow: hidden;
 
-    &__represent {
+    &__wrapper {
+        width: 100%;
+        max-width: 1440px;
+        position: relative;
+        margin: 0 auto;
+        display: flex;
+        padding: 0 70px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        &__ball {
-            transition: all, 0.3s;
-            height: 110%;
-            left: 50px;
-            position: absolute;
-            animation: bounce 5s ease-in-out both infinite;
+    &__ball {
+        width: 440px;
+        height: 440px;
+        position: relative;
+        animation: bounce 5s ease-in-out both infinite;
+        transition: all 0.3s linear;
 
-            @keyframes bounce {
+        @keyframes bounce {
 
-                0% {
-                    transform: translateY(-40px);
-                }
+            0% {
+                transform: translateY(-20px);
+            }
 
-                50% {
-                    transform: translateY(20px);
-                }
+            50% {
+                transform: translateY(20px);
+            }
 
-                100% {
-                    transform: translateY(-40px);
-                }
+            100% {
+                transform: translateY(-20px);
             }
         }
     }
 
     &__information {
-        width: 55%;
         display: block;
 
         &__subtitle {
             font-family: "Rubik";
-            margin-top: 10%;
             color: white;
             font-size: 28px;
         }
 
         &__title {
             font-family: "Russo One";
-            margin-top: 5%;
             font-size: 56px;
-            color: $highlightColor;
+            color: $roadmapHighlightColor;
+            letter-spacing: 2px;
+            font-weight: lighter;
         }
 
         &__remind {
-            font-family: "Hanson";
-            display: inline-block;
-            margin: 5% auto;
+            width: 290px;
             height: 72px;
-            line-height: 72px;
-            width: 270px;
+            font-family: "Hanson";
+            margin-top: 40px;
             font-size: 26px;
             text-align: center;
             vertical-align: middle;
             background: $highlightColor;
             color: white;
             cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
 
-    @media (max-width: $desktopBreakPoint) {
-
-        &__represent {
-
-            &__ball {
-                top: -10px;
-            }
-        }
+    @media (max-width: $desktopBreakPoint + 200px) {
 
         &__information {
 
@@ -90,59 +86,57 @@
             }
 
             &__remind {
-                height: 48px;
-                line-height: 48px;
                 font-size: 20px;
-                width: 200px;
+                padding: 15px 25px;
+                line-height: 48px;
             }
         }
     }
 
-    @media (max-width: $tabletBreakPoint) {
+    @media (max-width: $desktopBreakPoint) {
+
+        &__wrapper {
+            padding: 0 50px;
+        }
 
         &__information {
-            width: 47%;
 
             &__subtitle {
                 font-size: 22px;
-                margin-left: 20px;
             }
 
             &__title {
                 font-size: 36px;
-                margin-left: 20px;
             }
 
             &__remind {
-                margin-left: 20px;
-                height: 36px;
+                width: 156px;
+                height: 42px;
                 line-height: 36px;
-                font-size: 18px;
-                width: 180px;
+                font-size: 14px;
             }
+        }
+
+        &__ball {
+            width: 250px;
+            height: 250px;
         }
     }
 
-    @media (max-width: $phoneBreakPoint) {
+    @media (max-width: $tabletBreakPoint) {
         overflow: hidden;
 
-        &__represent {
-
-            &__ball {
-                top: 40px;
-                height: 80%;
-                right: -80px;
-                left: unset;
-            }
+        &__wrapper {
+            background-image: url("../../../static/images/headingPage/ball-mobile.svg");
+            background-position: 100% 50%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            min-height: 440px;
+            padding: 70px 30px;
         }
 
-        &__information {
-            width: 100%;
-            z-index: 2;
-
-            &__remind {
-                width: 180px;
-            }
+        &__ball {
+            display: none;
         }
     }
 }

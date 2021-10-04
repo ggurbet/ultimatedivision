@@ -40,7 +40,7 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
 
     const formValue = {
         value: email,
-        placeHolder: 'Email',
+        placeHolder: 'Your Email',
         handleChange: setEmail,
         className: 'launch-date-modal__notification__send',
         type: 'email',
@@ -49,15 +49,15 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
     };
 
     return <div className="launch-date-modal">
-        <a
-            onClick={handleModal}
-            className="launch-date-modal__close"
-        >
-            <p className="launch-date-modal__close__text">
-                &#215;
-            </p>
-        </a>
         <div className="launch-date-modal__window">
+            <a
+                onClick={handleModal}
+                className="launch-date-modal__close"
+            >
+                <p className="launch-date-modal__close__text">
+                    &#215;
+                </p>
+            </a>
             <h1 className="launch-date-modal__description">
                 Get notified on the launch
             </h1>
@@ -74,8 +74,7 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
                     />
                 </form>
             </div>
-            <div
-                className="launch-date-modal__wrapper"
+            <div className="launch-date-modal__wrapper"
             />
         </div>
     </div>;

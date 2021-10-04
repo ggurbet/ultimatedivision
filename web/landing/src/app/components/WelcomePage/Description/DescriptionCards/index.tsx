@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import cards from '@static/images/Description/cardsGroup.svg';
+import cards from '@static/images/Description/cardsGroup.png';
 
 import './index.scss';
 

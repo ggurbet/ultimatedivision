@@ -7,13 +7,14 @@
 
     .wrapper {
         display: flex;
-        width: 80%;
+        max-width: 1440px;
+        padding: 0 120px;
         height: 92px;
         margin: auto;
 
         .ultimatedivision-navbar__logo {
             width: auto;
-            margin: 10px auto 25px 5%;
+            margin: 10px auto 25px 0;
         }
 
         .ultimatedivision-navbar__dropdown {
@@ -77,10 +78,10 @@
     .ultimatedivision-navbar {
 
         .wrapper {
-            width: 90%;
+            padding: 0 50px;
 
             .ultimatedivision-navbar__logo {
-                margin: 10px auto 25px 5%;
+                margin: 10px auto 25px 0;
             }
 
             .ultimatedivision-navbar__items {
@@ -124,7 +125,6 @@
     .ultimatedivision-navbar {
 
         .wrapper {
-            width: 90%;
             position: relative;
 
             .ultimatedivision-navbar__logo {
@@ -135,7 +135,7 @@
             .ultimatedivision-navbar__dropdown {
                 z-index: 999999;
                 display: block;
-                margin: 34px auto 33px 5%;
+                margin: 34px auto 33px 0;
                 cursor: pointer;
 
                 .cross-menu-svg {

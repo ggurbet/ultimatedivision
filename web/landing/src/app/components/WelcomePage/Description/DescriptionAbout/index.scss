@@ -27,11 +27,15 @@
     }
 
     &__text {
+        font-family: "Roboto";
         margin-top: 40px;
+        font-size: 24px;
+        font-weight: bold;
     }
 
     &__title {
-        color: $highlightColor;
+        font-family: "Hanson";
+        color: $roadmapHighlightColor;
         font-size: 36px;
     }
 }
@@ -39,6 +43,7 @@
 @media (max-width: $desktopBreakPoint) {
 
     .description-about {
+        margin: 100px auto;
         padding: 10px 30px;
 
         &__image-area {
@@ -46,10 +51,22 @@
         }
 
         &__stats-image {
-            width: 50%;
+            width: 45%;
             right: -20%;
             bottom: unset;
             top: 300px;
+        }
+
+        &__text-area {
+            margin-left: 50px;
+        }
+
+        &__title {
+            font-size: 26px;
+        }
+
+        &__text {
+            font-size: 15px;
         }
     }
 }
@@ -78,18 +95,22 @@
         align-items: center;
 
         &__image-area {
-            width: 70%;
+            width: 80%;
+            position: relative;
+            top: 50px;
+            right: 30px;
+            margin-bottom: 60px;
         }
 
         &__stats-image {
-            width: 40%;
-            right: -15%;
-            top: unset;
+            width: 55%;
+            right: -25%;
+            top: 50%;
         }
 
         &__text-area {
             margin-left: 0;
-            margin-top: 40px;
+            margin-top: 100px;
         }
 
         &__mirrored {
@@ -98,7 +119,13 @@
 
         &__title {
             position: absolute;
-            top: -80px;
+            top: -30px;
+        }
+
+        &__text {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: justify;
         }
     }
 }

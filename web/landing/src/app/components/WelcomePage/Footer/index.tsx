@@ -4,10 +4,10 @@
 import React, { useEffect } from 'react';
 import Aos from 'aos';
 
-import facebook from '@static/images/Footer/facebook.png';
-import telegram from '@static/images/Footer/telegram.png';
-import twitter from '@static/images/Footer/twitter.png';
-import Subtract from '@static/images/Footer/subtract.png';
+import facebook from '@static/images/Footer/facebook.svg';
+import telegram from '@static/images/Footer/telegram.svg';
+import twitter from '@static/images/Footer/twitter.svg';
+import Subtract from '@static/images/Footer/Subtract.svg';
 
 import './index.scss';
 
@@ -59,7 +59,7 @@ export const Footer: React.FC = () => {
                     </a>
                 </div>
                 <div className="footer__social">
-                    <p>follow us on social media:</p>
+                    <p className="footer__text">follow us on social media:</p>
                     <ul className="footer__list">
                         {socialList.map((social) => (
                             <li

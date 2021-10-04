@@ -1,205 +1,180 @@
-@import "/src/index.scss";
+@import "@/index.scss";
 
-.ultimatedivision-home {
-    width: 100%;
-    height: 842px;
+.home {
     margin: 0;
     padding: 0;
     background: $home-background;
 
-    .wrapper {
+    &__wrapper {
+        overflow: hidden;
+        height: 880px;
+        position: relative;
         display: flex;
-        width: 80%;
-        margin: auto;
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 50px 120px;
+        transition: all 0.3s;
+    }
 
-        .ultimatedivision-home__text-left {
-            display: flex;
-            flex-direction: column;
+    &__text-area {
+        width: 60%;
+        margin-top: 120px;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s;
+    }
 
-            .value {
-                margin: 212px 5% auto 5%;
-                padding: 5px;
-                font-family: "Russo One", sans-serif;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 120px;
-                line-height: 145px;
-                color: $home-text-value;
-            }
+    &__value {
+        margin-bottom: 15px;
+        font-family: "Russo One", sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 120px;
+        line-height: 145px;
+        color: $home-text-value;
+        transition: all 0.3s;
+    }
 
-            .title {
-                width: 60%;
-                margin: 12px auto auto 5%;
-                padding: 5px;
-                font-family: "Montserrat", sans-serif;
-                font-style: normal;
-                font-weight: 600;
-                font-size: 48px;
-                line-height: 59px;
-                color: $home-text;
-            }
+    &__title {
+        font-family: "Montserrat", sans-serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 48px;
+        line-height: 59px;
+        color: $home-text;
+        transition: all 0.3s;
+    }
 
-            .description {
-                width: 50%;
-                margin: 34px auto auto 5%;
-                padding: 5px;
-                font-family: "Rubik", sans-serif;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 18px;
-                line-height: 21px;
-                color: $home-text;
-            }
+    &__description-mobile,
+    &__description {
+        width: 95%;
+        margin-top: 40px;
+        font-family: "Rubik", sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 21px;
+        color: $home-text;
+        transition: all 0.3s;
+    }
+
+    &__description-mobile {
+        display: none;
+    }
+
+    &__player-image {
+        width: 50%;
+        position: absolute;
+        right: 50px;
+        transition: all 0.3s;
+    }
+}
+
+@media (max-width: $desktopBreakPoint + 200px) {
+
+    .home {
+
+        &__wrapper {
+            height: 700px;
         }
 
-        .ultimatedivision-home__player-image {
-            width: auto;
-
-            img {
-                margin: 58px 5% auto auto;
-            }
+        &__player-image {
+            top: 70px;
         }
     }
 }
 
 @media (max-width: $desktopBreakPoint) {
 
-    .ultimatedivision-home {
-        height: 667.27px;
+    .home {
 
-        .wrapper {
-            width: 90%;
+        &__wrapper {
+            height: 600px;
+            padding: 50px;
+        }
 
-            .ultimatedivision-home__text-left {
-                width: 40%;
+        &__text-area {
+            width: 65%;
+            margin-top: 80px;
+        }
 
-                .value {
-                    width: 100%;
-                    margin: 195px auto auto 5%;
-                    font-size: 32px;
-                    line-height: 77px;
-                }
+        &__value {
+            font-size: 60px;
+            line-height: 77px;
+        }
 
-                .title {
-                    width: 100%;
-                    margin: 12px auto auto 5%;
-                    font-size: 36px;
-                    line-height: 44px;
-                }
+        &__title {
+            font-size: 36px;
+            line-height: 44px;
+        }
 
-                .description {
-                    width: 100%;
-                    margin: 19px auto auto 5%;
-                    font-size: 18px;
-                    line-height: 21px;
-                }
-            }
-
-            .ultimatedivision-home__player-image {
-                width: 354px;
-                height: 350px;
-                z-index: 1;
-                background-image: url("@static/images/home/Player illustration-414.png");
-                background-repeat: no-repeat;
-                margin: 141px 5% auto 5%;
-
-                img {
-                    display: none;
-                }
-            }
+        &__description {
+            font-size: 18px;
+            line-height: 21px;
         }
     }
 }
 
 @media (max-width: $tabletBreakPoint) {
 
-    .ultimatedivision-home {
-        height: 667.27px;
+    .home {
 
-        .wrapper {
-            width: 90%;
+        &__wrapper {
+            height: 550px;
+        }
 
-            .ultimatedivision-home__text-left {
-                width: 40%;
+        &__value {
+            font-size: 32px;
+            line-height: 77px;
+        }
+    }
+}
 
-                .value {
-                    width: 100%;
-                    margin: 195px auto auto 5%;
-                    font-size: 32px;
-                    line-height: 77px;
-                }
+@media (max-width: $tabletBreakPoint - 100px) {
 
-                .title {
-                    width: 100%;
-                    margin: 12px auto auto 5%;
-                    font-size: 36px;
-                    line-height: 44px;
-                }
+    .home {
 
-                .description {
-                    width: 100%;
-                    margin: 19px auto auto 5%;
-                    font-size: 18px;
-                    line-height: 21px;
-                }
-            }
-
-            .ultimatedivision-home__player-image {
-                width: 354px;
-                height: 350px;
-                z-index: 1;
-                background-image: url("@static/images/home/Player illustration-414.png");
-                background-repeat: no-repeat;
-                margin: 141px 5% auto 5%;
-
-                img {
-                    display: none;
-                }
-            }
+        &__text-area {
+            margin-top: 20px;
         }
     }
 }
 
 @media (max-width: $phoneBreakPoint) {
 
-    .ultimatedivision-home {
-        height: 852px;
+    .home {
 
-        .wrapper {
-            width: 90%;
+        &__wrapper {
             position: relative;
+            height: unset;
+            padding: 70px 30px;
+            flex-direction: column;
+        }
 
-            .ultimatedivision-home__text-left {
-                width: 90%;
+        &__text-area {
+            width: 100%;
+        }
 
-                .value {
-                    width: 90%;
-                    margin: 46px 5% auto 5%;
-                }
+        &__value {
+            font-size: 64px;
+        }
 
-                .title {
-                    width: 100%;
-                    margin: 26px 5% auto 5%;
-                }
+        &__description {
+            display: none;
+        }
 
-                .description {
-                    width: 90%;
-                    margin: 439px 5% auto 5%;
-                }
-            }
+        &__player-image {
+            top: unset;
+            right: unset;
+            margin-top: 40px;
+            position: relative;
+            width: 100%;
+        }
 
-            .ultimatedivision-home__player-image {
-                position: absolute;
-                width: 354px;
-                height: 350px;
-                z-index: 0;
-                background-image: url("@static/images/home/Player illustration-414.png");
-                margin: 265px 5% auto 0;
-
-                img {
-                    display: none;
-                }
-            }
+        &__description-mobile {
+            width: unset;
+            margin-top: 60px;
+            display: block;
         }
     }
 }

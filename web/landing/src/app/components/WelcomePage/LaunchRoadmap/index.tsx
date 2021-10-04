@@ -2,6 +2,10 @@
 // See LICENSE for copying information.
 
 import { Card } from './Card';
+import fifteen from '@static/images/launchRoadmap/15.svg';
+import fifty from '@static/images/launchRoadmap/50.svg';
+import eighty from '@static/images/launchRoadmap/80.svg';
+import hundred from '@static/images/launchRoadmap/100.svg';
 
 import './index.scss';
 
@@ -13,7 +17,7 @@ export const LaunchRoadmap: React.FC = () => {
             description: `15 unique items will enter the metaverse and drop from the sky.
             Will you be the lucky one to receive unique boots NFT
             which will guarantee bonuses in game?`,
-            value: 15,
+            image: fifteen,
         },
         {
             title: 'What’s inside?',
@@ -21,15 +25,15 @@ export const LaunchRoadmap: React.FC = () => {
             description: `20 mysterious lootboxes will be sent to lucky owners
             of UD founder player cards. You can sell it for a minimum listing price
             of 0.05 ETH or wait for the game launch to see what’s inside.`,
-            value: 50,
+            image: fifty,
         },
         {
             title: 'Team Spirit',
-            subTitle: '50 ETH have been deposited to the treasury',
+            subTitle: 'The Treasury now contains 10 ETH',
             description: `It’s almost time to get to the field.
             Get one of 20 founder kits for your club
             that your fans will absolutely love. `,
-            value: 80,
+            image: eighty,
         },
         {
             title: 'Game On',
@@ -38,16 +42,19 @@ export const LaunchRoadmap: React.FC = () => {
             competition will soon begin. Prepare your NFTs to become 1 of 10000 UD
             founders and join the game before anyone else. Will your club reach
             the top of Ultimate Division?`,
-            value: 100,
+            image: hundred,
         },
     ];
 
     return <div className="launch-roadmap" id="roadmap">
-        <h1 className="launch-roadmap__title">
-            Launch Roadmap
-        </h1>
-        {roadmap.map((card, index) => (
-            <Card card={card} key={index} />
-        ))}
+        <div className="launch-roadmap__wrapper">
+
+            <h1 className="launch-roadmap__title">
+                Launch Roadmap
+            </h1>
+            {roadmap.map((card, index) => (
+                <Card card={card} key={index} />
+            ))}
+        </div>
     </div>;
 };

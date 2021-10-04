@@ -20,19 +20,21 @@ export const UserDataArea: React.FC<{
     error,
     clearError,
 }) => {
-    return <>
-        <input
-            className={error ? `${className}-error` : className}
-            value={value}
-            placeholder={placeHolder}
-            onChange={(e) => {
-                handleChange(e.target.value);
-                clearError(null); 
-            }}
-            type={type}
-        />
-        {error && <label className={`${className}__error`} htmlFor={value}>
-            {error}
-        </label>}
-    </>;
+    return (
+        <div className={`${className}__ wrapper`}>
+            <input
+                className={error ? `${className}-error` : className}
+                value={value}
+                placeholder={placeHolder}
+                onChange={(e) => {
+                    handleChange(e.target.value);
+                    clearError(null);
+                }}
+                type={type}
+            />
+            {error && <label className={`${className}__error`} htmlFor={value}>
+                {error}
+            </label>}
+        </div>
+    );
 };

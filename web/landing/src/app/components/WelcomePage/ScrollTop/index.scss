@@ -3,11 +3,15 @@
 .scroll-to-top {
     width: auto;
     position: fixed;
-    bottom: 50px;
-    left: 85%;
+    bottom: 100px;
+    right: 10%;
     z-index: 6;
     opacity: 50%;
     cursor: pointer;
+
+    &__button {
+        width: 50px;
+    }
 }
 
 .scroll-to-top:hover {
@@ -21,18 +25,14 @@
     }
 }
 
-@media screen and (max-width: 800px) {
+@media (max-width: $phoneBreakPoint) {
 
     .scroll-to-top {
-        bottom: 30px;
-        left: 85%;
-    }
-}
+        right: 20px;
+        bottom: 60px;
 
-@media screen and (max-width: 600px) {
-
-    .scroll-to-top {
-        bottom: 20px;
-        left: 80%;
+        &__button {
+            width: 40px;
+        }
     }
 }

@@ -1,22 +1,29 @@
 @import "@/index.scss";
 
 .description-cards {
-    max-width: 1280px;
-    margin: 100px auto;
+    margin: 200px auto;
     min-height: 300px;
     display: flex;
     align-items: center;
-    overflow-x: hidden;
+    overflow: hidden;
+    transition: all 0.3s linear;
 
     &__text-area {
         padding-left: 50px;
-        width: 50%;
+        width: 55%;
+        font-family: "Roboto";
+        font-weight: bold;
     }
 
     &__title {
-        color: $highlightColor;
-        font-size: 36px;
+        color: $roadmapHighlightColor;
+        font-size: 43px;
         margin-bottom: 40px;
+        font-family: "Hanson";
+    }
+
+    &__text {
+        font-size: 24px;
     }
 
     &__card {
@@ -26,19 +33,33 @@
 
     &__wrapper {
         position: absolute;
-        right: 0;
-        width: 50%;
-        max-width: 450px;
+        right: -40px;
+        width: 60%;
+        max-width: 600px;
         overflow: hidden;
     }
 }
 
-@media (max-width: $tabletBreakPoint) {
+@media (max-width: $desktopBreakPoint + 100px) {
 
     .description-cards {
+        margin: 50px auto;
 
-        &__card {
-            transform: translateX(50px);
+        &__text-area {
+            width: 60%;
+        }
+
+        &__title {
+            font-size: 26px;
+        }
+
+        &__text {
+            width: 80%;
+            font-size: 15px;
+        }
+
+        &__wrapper {
+            width: 50%;
         }
     }
 }
@@ -57,10 +78,13 @@
             display: none;
         }
 
+        &__title {
+            margin-bottom: 0;
+        }
+
         &__wrapper {
-            width: 100%;
+            width: 110%;
             position: relative;
-            right: -50px;
         }
     }
 }
