@@ -40,12 +40,13 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
 
     const formValue = {
         value: email,
-        placeHolder: 'Your Email',
-        handleChange: setEmail,
+        placeHolder: 'Email',
+        onChange: setEmail,
         className: 'launch-date-modal__notification__send',
         type: 'email',
         error: emailError,
         clearError: setEmailError,
+        validate: Validator.email,
     };
 
     return <div className="launch-date-modal">

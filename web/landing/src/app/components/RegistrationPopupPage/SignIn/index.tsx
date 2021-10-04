@@ -57,20 +57,22 @@ export const SignIn: React.FC<{
         {
             value: email,
             placeHolder: 'E-mail',
-            handleChange: setEmail,
+            onChange: setEmail,
             className: 'register__sign-in__sign-form__email',
             type: 'email',
             error: emailError,
             clearError: setEmailError,
+            validate: Validator.email,
         },
         {
             value: password,
             placeHolder: 'Password',
-            handleChange: setPassword,
+            onChange: setPassword,
             className: 'register__sign-in__sign-form__password',
             type: 'password',
             error: passwordError,
             clearError: setPasswordError,
+            validate: Validator.password,
         },
         {
             value: 'Remember me',
@@ -80,6 +82,7 @@ export const SignIn: React.FC<{
             type: 'radio',
             error: null,
             clearError: null,
+            validate: () => false,
         },
     ];
 
@@ -102,11 +105,12 @@ export const SignIn: React.FC<{
                         <UserDataArea
                             value={data.value}
                             placeHolder={data.placeHolder}
-                            handleChange={data.handleChange}
+                            onChange={data.onChange}
                             className={data.className}
                             type={data.type}
                             error={data.error}
                             clearError={data.clearError}
+                            validate={data.validate}
                         />
                         <span
                             onClick={() => handleResetPassword()}
@@ -118,11 +122,12 @@ export const SignIn: React.FC<{
                         key={index}
                         value={data.value}
                         placeHolder={data.placeHolder}
-                        handleChange={data.handleChange}
+                        onChange={data.onChange}
                         className={data.className}
                         type={data.type}
                         error={data.error}
                         clearError={data.clearError}
+                        validate={data.validate}
                     />;
                 })}
                 <input

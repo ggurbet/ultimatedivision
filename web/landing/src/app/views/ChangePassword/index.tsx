@@ -19,7 +19,6 @@ import './index.scss';
 
 const ChangePassword: React.FC = () => {
     const dispatch = useDispatch();
-    const browserHistory = useHistory();
     /** controlled values for form inputs */
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError]
@@ -58,21 +57,23 @@ const ChangePassword: React.FC = () => {
     const resetPasswordDatas = [
         {
             value: password,
-            placeHolder: 'Enter the old password',
-            handleChange: setPassword,
+            placeHolder: 'Old Password',
+            onChange: setPassword,
             className: 'register__reset__sign-form__password',
             type: 'password',
             error: passwordError,
             clearError: setPasswordError,
+            validate: Validator.password,
         },
         {
             value: newPassword,
-            placeHolder: 'Enter a new password',
-            handleChange: setNewPassword,
+            placeHolder: 'New Password',
+            onChange: setNewPassword,
             className: 'register__reset__sign-form__password',
             type: 'password',
             error: newPasswordError,
             clearError: setNewPasswordError,
+            validate: Validator.password,
         },
     ];
 
@@ -107,11 +108,12 @@ const ChangePassword: React.FC = () => {
                             key={index}
                             value={data.value}
                             placeHolder={data.placeHolder}
-                            handleChange={data.handleChange}
+                            onChange={data.onChange}
                             className={data.className}
                             type={data.type}
                             error={data.error}
                             clearError={data.clearError}
+                            validate={data.validate}
                         />;
                     })}
                     <input

@@ -57,20 +57,22 @@ export const ChangePassword: React.FC<{ handleSignIn: any }> = ({
         {
             value: password,
             placeHolder: 'Old Password',
-            handleChange: setPassword,
+            onChange: setPassword,
             className: 'register__reset__sign-form__password',
             type: 'password',
             error: newPasswordError,
             clearError: setPasswordError,
+            validate: Validator.password,
         },
         {
             value: newPassword,
             placeHolder: 'New Password',
-            handleChange: setNewPassword,
+            onChange: setNewPassword,
             className: 'register__reset__sign-form__password',
             type: 'password',
             error: passwordError,
             clearError: setNewPasswordError,
+            validate: Validator.password,
         },
     ];
 
@@ -105,11 +107,12 @@ export const ChangePassword: React.FC<{ handleSignIn: any }> = ({
                             key={index}
                             value={data.value}
                             placeHolder={data.placeHolder}
-                            handleChange={data.handleChange}
+                            onChange={data.onChange}
                             className={data.className}
                             type={data.type}
                             error={data.error}
                             clearError={data.clearError}
+                            validate={data.validate}
                         />;
                     })}
                     <input

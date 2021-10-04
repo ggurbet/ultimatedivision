@@ -87,20 +87,22 @@ const RecoverPassword: React.FC = () => {
         {
             value: password,
             placeHolder: 'Enter a new password',
-            handleChange: setPassword,
+            onChange: setPassword,
             className: 'register__recover__sign-form__password',
             type: 'password',
             error: passwordError,
             clearError: setPasswordError,
+            validate: Validator.password,
         },
         {
             value: confirmedPassword,
             placeHolder: 'Enter a new password again',
-            handleChange: setConfirmedPassword,
+            onChange: setConfirmedPassword,
             className: 'register__recover__sign-form__password',
             type: 'password',
             error: confirmedPasswordError,
             clearError: setConfirmedPasswordError,
+            validate: Validator.password,
         },
     ];
 
@@ -128,11 +130,12 @@ const RecoverPassword: React.FC = () => {
                             key={index}
                             value={password.value}
                             placeHolder={password.placeHolder}
-                            handleChange={password.handleChange}
+                            onChange={password.onChange}
                             className={password.className}
                             type={password.type}
                             error={password.error}
                             clearError={password.clearError}
+                            validate={password.validate}
                         />;
                     })}
                     <input
