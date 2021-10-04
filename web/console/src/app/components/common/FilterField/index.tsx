@@ -16,7 +16,7 @@ import eye
 import parametres
     from '@static/img/FilterField/parametres.svg';
 import filters
-    from '@static/img/MarketPlacePage/filter_icon.svg'
+    from '@static/img/MarketPlacePage/filter_icon.svg';
 
 import './index.scss';
 import { AnyAction, Dispatch } from 'redux';

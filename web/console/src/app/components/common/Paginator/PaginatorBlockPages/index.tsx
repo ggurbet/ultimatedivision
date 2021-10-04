@@ -2,13 +2,14 @@
 // See LICENSE for copying information.
 
 export const PaginatorBlockPages: React.FC<{
-    blockPages: number[];
-    onPageChange: (type: string, pageNumber?: number) => void;
-}> = ({ blockPages, onPageChange }) =>
+    blockPages: number[],
+    onPageChange: (type: string, pageNumber?: number) => void,
+    currentPage: number,
+}> = ({ blockPages, onPageChange, currentPage }) =>
     <ul className="ultimatedivision-paginator__pages">
         {blockPages.map((page, index) =>
             <li
-                className="ultimatedivision-paginator__pages__item"
+                className={`ultimatedivision-paginator__pages__item${currentPage === page ? '-active' : ''}`}
                 key={index}
                 onClick={() => onPageChange('change page', page)}
             >
@@ -16,4 +17,3 @@ export const PaginatorBlockPages: React.FC<{
             </li>,
         )}
     </ul>;
-

@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import { ClubClient } from '@/api/club';
-import { Formations, FormationsType, Tactic, TacticsType, Club, Squad } from '@/club';
+import { Club, Formations, FormationsType, Squad, Tactic, TacticsType } from '@/club';
 import { ClubService } from '@/club/service';
 import { Dispatch } from 'redux';
 
@@ -66,7 +66,7 @@ export const exchangeCards = (previous: dragParamType, current: dragParamType) =
 
 // Thunks
 
-export const getClub = () => async function (dispatch: Dispatch) {
+export const getClub = () => async function(dispatch: Dispatch) {
     try {
         const club = await service.getClub();
         dispatch(setClub(club));
