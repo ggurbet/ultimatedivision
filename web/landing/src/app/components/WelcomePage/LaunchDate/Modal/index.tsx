@@ -66,7 +66,15 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
                     className="launch-date-modal__notification"
                     onSubmit={handleSubmit}
                 >
-                    <UserDataArea {...formValue} />
+                    <div className="launch-date-modal__input-wrapper">
+                        <label
+                            htmlFor={formValue.value}
+                            className="launch-date-modal__input-label"
+                        >
+                            Email
+                        </label>
+                        <UserDataArea {...formValue} />
+                    </div>
                     <input
                         value="SEND"
                         className="launch-date-modal__notification__confirm"
