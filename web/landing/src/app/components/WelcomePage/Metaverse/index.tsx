@@ -39,7 +39,7 @@ export const Metaverse: React.FC = () => {
                 >
                     <span className="metaverse__sold-scale__text">Cards Sold 0/10000</span>
                 </div>
-                <MintButton text="MINT" />
+                <MintButton />
             </div>
         </section>
     );
