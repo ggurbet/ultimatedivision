@@ -10,6 +10,8 @@ import { SignUp }
 import { SignIn }
     from '@components/RegistrationPopupPage/SignIn';
 
+import closeButton from '@static/images/registerPage/close.svg';
+
 import './index.scss';
 
 export const RegistrationPopup: React.FC<{ handlePopUp: any }> = ({
@@ -44,7 +46,10 @@ export const RegistrationPopup: React.FC<{ handlePopUp: any }> = ({
                 className="pop-up-registration__wrapper__close"
                 onClick={() => handlePopUp()}
             >
-                &#x2613;
+                <img
+                    src={closeButton}
+                    alt="close button"
+                />
             </div>
             {isShowPopUpSignIn && <SignIn
                 handleResetPassword={handleResetPassword}

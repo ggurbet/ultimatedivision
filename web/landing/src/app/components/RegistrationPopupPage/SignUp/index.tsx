@@ -150,7 +150,7 @@ export const SignUp: React.FC<{ handleSignUp: any }> = ({
                         Hello!
                     </h2>
                     <p className="register__sign-up__description__information">
-                        Sign up to get access tp incredible emotions
+                        Sign up to get access to incredible emotions
                         with Ultimate Division
                     </p>
                 </div>
@@ -186,7 +186,7 @@ export const SignUp: React.FC<{ handleSignUp: any }> = ({
                             className="register__sign-up__description__information__sign"
                             onClick={() => handleSignUp()}
                         >
-                            sign in
+                            Sign in
                         </span>
                     </p>
                 </div>

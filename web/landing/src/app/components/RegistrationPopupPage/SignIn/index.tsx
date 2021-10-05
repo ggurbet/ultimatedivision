@@ -10,6 +10,8 @@ import { Validator } from '@/user/validation';
 
 import { UserDataArea } from '@components/common/UserDataArea';
 
+import facebook from '@static/images/registerPage/facebook_logo.svg';
+import google from '@static/images/registerPage/google_logo.svg';
 import ultimate from '@static/images/registerPage/ultimate.svg';
 
 export const SignIn: React.FC<{
@@ -130,11 +132,26 @@ export const SignIn: React.FC<{
                         validate={data.validate}
                     />;
                 })}
-                <input
-                    className="register__sign-in__sign-form__confirm"
-                    value="SIGN IN"
-                    type="submit"
-                />
+                <div className="register__sign-in__sign-form__auth-internal">
+                    <input
+                        className="register__sign-in__sign-form__confirm"
+                        value="SIGN IN"
+                        type="submit"
+                    />
+                    or
+                    <div className="register__sign-in__sign-form__logos">
+                        <img
+                            src={google}
+                            alt="Google logo"
+                            className="register__sign-in__sign-form__logos__google"
+                        />
+                        <img
+                            src={facebook}
+                            alt="Facebook logo"
+                            className="register__sign-in__sign-form__logos__facebook"
+                        />
+                    </div>
+                </div>
             </form>
             <div className="register__sign-in__description">
                 <p className="register__sign-up__description__information">
@@ -143,7 +160,7 @@ export const SignIn: React.FC<{
                         className="register__sign-in__description__information__sign"
                         onClick={() => handleSignUp()}
                     >
-                        sign up
+                        Sign up
                     </span>
                 </p>
             </div>
