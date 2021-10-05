@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Queue</title>
+</head>
+<body>
+    <nav>
+        <div>
+            <ul>
+                <li><a href="/admins">Admins</a></li>
+                <li><a href="/users">Users</a></li>
+                <li><a href="/cards">Cards</a></li>
+                <li><a href="/marketplace">Marketplace</a></li>
+            </ul>
+        </div>
+    </nav>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <th>UserID</th>
+            </tr>
+        </thead>
+        {{range .}}
+        <tr>
+            <td><a href="/queue/{{.UserID}}"></a>{{.UserID}}</a></td>
+        </tr>
+        {{end}}
+    </table>
+</body>
+</html>
+
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333333;
+    }
+    li {
+        float: left;
+    }
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 16px;
+        text-decoration: none;
+    }
+    li a:hover {
+        background-color: #111111;
+    }
+    .validation-summary-errors ul {
+        background-color: white;
+    }
+    .validation-summary-errors li {
+        margin: 15px;
+        color: red;
+    }
+    th {
+        text-align: left;
+    }
+
+    /* Pagination links */
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+    }
+
+    /* Style the active/current link */
+    .pagination a.active {
+        background-color: dodgerblue;
+        color: white;
+    }
+
+    /* Add a grey background color on mouse-over */
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
+    }
+</style>

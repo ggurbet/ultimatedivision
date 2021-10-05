@@ -14,12 +14,11 @@ import (
 
 	"ultimatedivision"
 	"ultimatedivision/database/dbtesting"
-	"ultimatedivision/internal/pagination"
 	"ultimatedivision/queue"
 	"ultimatedivision/users"
 )
 
-func TestQueues(t *testing.T) {
+func TestQueue(t *testing.T) {
 	user1 := users.User{
 		ID:           uuid.New(),
 		Email:        "tarkovskynik@gmail.com",
@@ -44,82 +43,53 @@ func TestQueues(t *testing.T) {
 		CreatedAt:    time.Now(),
 	}
 
-	queuePlace1 := queue.Place{
-		UserID: user1.ID,
-		Status: queue.StatusSearches,
-	}
-
-	queuePlace2 := queue.Place{
-		UserID: user2.ID,
-		Status: queue.StatusPlays,
-	}
-
-	cursor1 := pagination.Cursor{
-		Limit: 2,
-		Page:  1,
-	}
+	queueClient1 := queue.Client{UserID: user1.ID, Conn: nil}
+	queueClient2 := queue.Client{UserID: user2.ID, Conn: nil}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repositoryQueue := db.Queue()
 		repositoryUsers := db.Users()
-		id := uuid.New()
+		userID := uuid.New()
+
 		t.Run("get sql no rows", func(t *testing.T) {
-			_, err := repositoryQueue.Get(ctx, id)
+			_, err := repositoryQueue.Get(userID)
 			require.Error(t, err)
-			assert.Equal(t, true, queue.ErrNoPlace.Has(err))
+			assert.Equal(t, true, queue.ErrNoClient.Has(err))
 		})
 
 		t.Run("get", func(t *testing.T) {
 			err := repositoryUsers.Create(ctx, user1)
 			require.NoError(t, err)
 
-			err = repositoryQueue.Create(ctx, queuePlace1)
-			require.NoError(t, err)
+			repositoryQueue.Create(queueClient1)
 
-			queueFromDB, err := repositoryQueue.Get(ctx, user1.ID)
+			queueFromDB, err := repositoryQueue.Get(user1.ID)
 			require.NoError(t, err)
-			compareQueues(t, queuePlace1, queueFromDB)
+			compareQueues(t, queueClient1, queueFromDB)
 		})
 
-		t.Run("list paginated", func(t *testing.T) {
+		t.Run("list", func(t *testing.T) {
 			err := repositoryUsers.Create(ctx, user2)
 			require.NoError(t, err)
 
-			err = repositoryQueue.Create(ctx, queuePlace2)
-			require.NoError(t, err)
+			repositoryQueue.Create(queueClient2)
 
-			queueList, err := repositoryQueue.ListPaginated(ctx, cursor1)
-			assert.NoError(t, err)
-			assert.Equal(t, len(queueList.Places), 2)
-			compareQueues(t, queuePlace1, queueList.Places[0])
-			compareQueues(t, queuePlace2, queueList.Places[1])
-		})
-
-		t.Run("update status", func(t *testing.T) {
-			queuePlace1.Status = queue.StatusPlays
-			err := repositoryQueue.UpdateStatus(ctx, queuePlace1.UserID, queuePlace1.Status)
-			require.NoError(t, err)
-
-			queueList, err := repositoryQueue.ListPaginated(ctx, cursor1)
-			assert.NoError(t, err)
-			assert.Equal(t, len(queueList.Places), 2)
-			compareQueues(t, queuePlace1, queueList.Places[1])
-			compareQueues(t, queuePlace2, queueList.Places[0])
+			queueList := repositoryQueue.List()
+			assert.Equal(t, len(queueList), 2)
+			compareQueues(t, queueClient1, queueList[0])
+			compareQueues(t, queueClient2, queueList[1])
 		})
 
 		t.Run("delete", func(t *testing.T) {
-			err := repositoryQueue.Delete(ctx, queuePlace1.UserID)
-			require.NoError(t, err)
+			repositoryQueue.Delete(queueClient1.UserID)
 
-			queueList, err := repositoryQueue.ListPaginated(ctx, cursor1)
-			assert.NoError(t, err)
-			assert.Equal(t, len(queueList.Places), 1)
-			compareQueues(t, queuePlace2, queueList.Places[0])
+			queueList := repositoryQueue.List()
+			assert.Equal(t, len(queueList), 1)
+			compareQueues(t, queueClient2, queueList[0])
 		})
 	})
 }
 
-func compareQueues(t *testing.T, queue1, queue2 queue.Place) {
+func compareQueues(t *testing.T, queue1, queue2 queue.Client) {
 	assert.Equal(t, queue1.UserID, queue2.UserID)
-	assert.Equal(t, queue1.Status, queue2.Status)
 }

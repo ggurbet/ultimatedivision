@@ -4,168 +4,57 @@
 package database
 
 import (
-	"context"
-	"database/sql"
-	"errors"
-
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/internal/pagination"
 	"ultimatedivision/queue"
 )
 
-// ensures that queueDB implements queue.DB.
-var _ queue.DB = (*queueDB)(nil)
+// ensures that queueHub implements queue.DB.
+var _ queue.DB = (*queueHub)(nil)
 
-// ErrQueue indicates that there was an error in the database.
+// ErrQueue indicates that there was an error in the hub.
 var ErrQueue = errs.Class("queues repository error")
 
-// queueDB provides access to queue database.
+// queueHub provides access to queue hub.
 //
-// architecture: Database
-type queueDB struct {
-	conn *sql.DB
+// architecture: Hub
+type queueHub struct {
+	hub *Hub
 }
 
-// Create adds place of queue in the database.
-func (queueDB *queueDB) Create(ctx context.Context, place queue.Place) error {
-	query :=
-		`INSERT INTO
-			places(user_id, status) 
-		VALUES
-			($1, $2)`
-
-	_, err := queueDB.conn.ExecContext(ctx, query, place.UserID, place.Status)
-	return ErrQueue.Wrap(err)
+// Create adds client in the hub of queue.
+func (queueHub *queueHub) Create(client queue.Client) {
+	queueHub.hub.Queue[client.UserID] = client.Conn
 }
 
-// Get returns place from the database.
-func (queueDB *queueDB) Get(ctx context.Context, id uuid.UUID) (queue.Place, error) {
-	place := queue.Place{}
-	query :=
-		`SELECT 
-			user_id, status
-		FROM 
-			places
-		WHERE 
-			user_id = $1`
-
-	err := queueDB.conn.QueryRowContext(ctx, query, id).Scan(&place.UserID, &place.Status)
-	switch {
-	case errors.Is(err, sql.ErrNoRows):
-		return place, queue.ErrNoPlace.Wrap(err)
-	case err != nil:
-		return place, ErrQueue.Wrap(err)
-	default:
-		return place, nil
+// Get returns client from the hub of queue.
+func (queueHub *queueHub) Get(userID uuid.UUID) (queue.Client, error) {
+	var client queue.Client
+	if _, ok := queueHub.hub.Queue[userID]; !ok {
+		return client, queue.ErrNoClient.New("not found user's websocket connection")
 	}
+	client = queue.Client{
+		UserID: userID,
+		Conn:   queueHub.hub.Queue[userID],
+	}
+	return client, nil
 }
 
-// ListPaginated returns places in page from the database.
-func (queueDB *queueDB) ListPaginated(ctx context.Context, cursor pagination.Cursor) (queue.Page, error) {
-	var placesListPage queue.Page
-	offset := (cursor.Page - 1) * cursor.Limit
-	query :=
-		`SELECT 
-			user_id, status 
-		FROM 
-			places 
-		LIMIT 
-			$1
-		OFFSET 
-			$2`
-
-	rows, err := queueDB.conn.QueryContext(ctx, query, cursor.Limit, offset)
-	if err != nil {
-		return placesListPage, ErrQueue.Wrap(err)
-	}
-	defer func() {
-		err = errs.Combine(err, rows.Close())
-	}()
-
-	places := []queue.Place{}
-	for rows.Next() {
-		place := queue.Place{}
-		if err = rows.Scan(&place.UserID, &place.Status); err != nil {
-			return placesListPage, ErrQueue.Wrap(err)
+// List returns clients from the hub of queue.
+func (queueHub *queueHub) List() []queue.Client {
+	clients := []queue.Client{}
+	for userID, conn := range queueHub.hub.Queue {
+		client := queue.Client{
+			UserID: userID,
+			Conn:   conn,
 		}
-		places = append(places, place)
+		clients = append(clients, client)
 	}
-	if err = rows.Err(); err != nil {
-		return placesListPage, ErrQueue.Wrap(err)
-	}
-
-	placesListPage, err = queueDB.listPaginated(ctx, cursor, places)
-	return placesListPage, ErrQueue.Wrap(err)
+	return clients
 }
 
-// listPaginated returns paginated list of places.
-func (queueDB *queueDB) listPaginated(ctx context.Context, cursor pagination.Cursor, queuesList []queue.Place) (queue.Page, error) {
-	var placesListPage queue.Page
-	offset := (cursor.Page - 1) * cursor.Limit
-
-	totalCount, err := queueDB.totalCount(ctx)
-	if err != nil {
-		return placesListPage, ErrQueue.Wrap(err)
-	}
-
-	pageCount := totalCount / cursor.Limit
-	if totalCount%cursor.Limit != 0 {
-		pageCount++
-	}
-
-	placesListPage = queue.Page{
-		Places: queuesList,
-		Page: pagination.Page{
-			Offset:      offset,
-			Limit:       cursor.Limit,
-			CurrentPage: cursor.Page,
-			PageCount:   pageCount,
-			TotalCount:  totalCount,
-		},
-	}
-	return placesListPage, nil
-}
-
-// totalCount counts all places in the table.
-func (queueDB *queueDB) totalCount(ctx context.Context) (int, error) {
-	var count int
-	query :=
-		`SELECT 
-			COUNT(*) 
-		FROM 
-			places`
-
-	err := queueDB.conn.QueryRowContext(ctx, query).Scan(&count)
-	if errors.Is(err, sql.ErrNoRows) {
-		return 0, queue.ErrNoPlace.Wrap(err)
-	}
-	return count, ErrQueue.Wrap(err)
-}
-
-// UpdateStatus updates status of place in the database.
-func (queueDB *queueDB) UpdateStatus(ctx context.Context, id uuid.UUID, status queue.Status) error {
-	query :=
-		`UPDATE
-			places 
-		SET 
-			status = $1 
-		WHERE 
-			user_id = $2`
-
-	_, err := queueDB.conn.ExecContext(ctx, query, status, id)
-	return ErrQueue.Wrap(err)
-}
-
-// Delete deletes record place in the database.
-func (queueDB *queueDB) Delete(ctx context.Context, id uuid.UUID) error {
-	query :=
-		`DELETE FROM
-			places
-		WHERE 
-			user_id = $1`
-
-	_, err := queueDB.conn.ExecContext(ctx, query, id)
-	return ErrQueue.Wrap(err)
+// Delete deletes record client in the hub of queue.
+func (queueHub *queueHub) Delete(userID uuid.UUID) {
+	delete(queueHub.hub.Queue, userID)
 }

@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	// ChoreError represents chore error type.
+	// ChoreError represents lot chore error type.
 	ChoreError = errs.Class("expiration lot chore error")
 )
 
@@ -46,6 +46,9 @@ func NewChore(log logger.Logger, config Config, marketplace DB, users *users.Ser
 func (chore *Chore) Run(ctx context.Context) (err error) {
 	return chore.Loop.Run(ctx, func(ctx context.Context) error {
 		lots, err := chore.service.ListExpiredLot(ctx)
+		if err != nil {
+			return ChoreError.Wrap(err)
+		}
 
 		// TODO: the transaction may be required for all operations.
 		for _, lot := range lots {

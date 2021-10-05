@@ -4,14 +4,21 @@
 package controllers
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/gorilla/websocket"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/queue"
+)
+
+const (
+	// ReadBufferSize is buffer sizes for read.
+	ReadBufferSize int = 1024
+	// WriteBufferSize is buffer sizes for write.
+	WriteBufferSize int = 1024
 )
 
 var (
@@ -35,41 +42,80 @@ func NewQueue(log logger.Logger, queue *queue.Service) *Queue {
 	return queueController
 }
 
-// Create is an endpoint that creates place.
+// Create is an endpoint that creates queue.
 func (controller *Queue) Create(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	w.Header().Set("Content-Type", "application/json")
+	var (
+		request queue.Request
+		err     error
+		conn    *websocket.Conn
+		claims  auth.Claims
+	)
 
-	claims, err := auth.GetClaims(ctx)
-	if err != nil {
-		controller.serveError(w, http.StatusUnauthorized, ErrQueue.Wrap(err))
+	ctx := r.Context()
+	upgrader := websocket.Upgrader{
+		ReadBufferSize:  ReadBufferSize,
+		WriteBufferSize: WriteBufferSize,
+	}
+	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
+
+	if conn, err = upgrader.Upgrade(w, r, nil); err != nil {
+		controller.log.Error("could not connect to websocket", ErrQueue.Wrap(err))
 		return
 	}
 
-	place := queue.Place{
-		UserID: claims.UserID,
-		Status: queue.StatusSearches,
+	if claims, err = auth.GetClaims(ctx); err != nil {
+		controller.serveError(conn, http.StatusUnauthorized, err.Error())
+		return
 	}
 
-	if err = controller.queue.Create(ctx, place); err != nil {
-		controller.log.Error("could not create place", ErrQueue.Wrap(err))
-		controller.serveError(w, http.StatusInternalServerError, ErrQueue.Wrap(err))
+	client := queue.Client{
+		UserID: claims.UserID,
+		Conn:   conn,
+	}
+
+	if err = client.Conn.ReadJSON(&request); err != nil {
+		controller.serveError(client.Conn, http.StatusBadRequest, err.Error())
+		controller.log.Error("could not read JSON from websocket", ErrQueue.Wrap(err))
+		return
+	}
+
+	switch request.Action {
+	case queue.ActionStartSearch:
+		if _, err = controller.queue.Get(client.UserID); err != nil {
+			if err = controller.queue.Create(ctx, client); err != nil {
+				controller.serveError(client.Conn, http.StatusInternalServerError, err.Error())
+				controller.log.Error("could not create user's queue", ErrQueue.Wrap(err))
+				return
+			}
+			controller.serveError(client.Conn, http.StatusOK, "you added!")
+			return
+		}
+		controller.serveError(client.Conn, http.StatusBadRequest, "you have already been added!")
+		return
+	case queue.ActionFinishSearch:
+		if _, err = controller.queue.Get(client.UserID); err == nil {
+			controller.queue.Finish(client.UserID)
+			defer func() {
+				controller.log.Error("could not close websocket", ErrQueue.Wrap(client.Conn.Close()))
+			}()
+
+			controller.serveError(client.Conn, http.StatusOK, "you leaved!")
+			return
+		}
+		controller.serveError(client.Conn, http.StatusBadRequest, "you don't have been added!")
+		return
+	default:
+		controller.serveError(client.Conn, http.StatusBadRequest, "wrong action")
+		controller.log.Error("wrong action", ErrQueue.Wrap(err))
 		return
 	}
 }
 
-// serveError replies to the request with specific code and error message.
-func (controller *Queue) serveError(w http.ResponseWriter, status int, err error) {
-	w.WriteHeader(status)
-
-	var response struct {
-		Error string `json:"error"`
-	}
-
-	response.Error = err.Error()
-
-	err = json.NewEncoder(w).Encode(response)
-	if err != nil {
-		controller.log.Error("failed to write json error response", ErrQueue.Wrap(err))
+// serveError replies to request with specific code and error.
+func (controller *Queue) serveError(w *websocket.Conn, status int, message string) {
+	response := queue.Response{Status: status, Message: message}
+	if err := w.WriteJSON(response); err != nil {
+		controller.log.Error("could not write to websocket", ErrQueue.Wrap(err))
+		return
 	}
 }

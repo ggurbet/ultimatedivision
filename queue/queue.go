@@ -4,58 +4,89 @@
 package queue
 
 import (
-	"context"
+	"net/http"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	"github.com/zeebo/errs"
-
-	"ultimatedivision/internal/pagination"
 )
 
-// ErrNoPlace indicated that place does not exist.
-var ErrNoPlace = errs.Class("place does not exist")
+// ErrNoClient indicated that client does not exist.
+var ErrNoClient = errs.Class("client does not exist")
 
-// DB is exposing access to queues database.
+// ErrRead indicates a read error.
+var ErrRead = errs.Class("error read from websocket")
+
+// ErrWrite indicates a write error.
+var ErrWrite = errs.Class("error write to websocket")
+
+// DB is exposing access to clients database.
 //
 // architecture: DB
 type DB interface {
-	// Create adds place in database.
-	Create(ctx context.Context, place Place) error
-	// Get returns place from database.
-	Get(ctx context.Context, id uuid.UUID) (Place, error)
-	// ListPaginated returns page of places from database.
-	ListPaginated(ctx context.Context, cursor pagination.Cursor) (Page, error)
-	// UpdateStatus updates status place in database.
-	UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error
-	// Delete deletes place record in database.
-	Delete(ctx context.Context, id uuid.UUID) error
+	// Create adds client in database.
+	Create(client Client)
+	// Get returns client from database.
+	Get(UserID uuid.UUID) (Client, error)
+	// List returns clients from database.
+	List() []Client
+	// Delete deletes client record in database.
+	Delete(UserID uuid.UUID)
 }
 
-// Place entity describes place of the queue.
-type Place struct {
-	UserID uuid.UUID `json:"userId"`
-	Status Status    `json:"status"`
+// Client entity describes the value of connect with the client.
+type Client struct {
+	UserID uuid.UUID
+	Conn   *websocket.Conn
 }
 
-// Status defines list of possible place statuses.
-type Status string
+// Request entity describes values sent by client.
+type Request struct {
+	Action Action `json:"action"`
+}
+
+// Action defines list of possible clients action.
+type Action string
 
 const (
-	// StatusSearches indicates that user in place searches game.
-	StatusSearches Status = "searches"
-	// StatusPlays indicates that in place plays game.
-	StatusPlays Status = "plays"
+	// ActionStartSearch indicates that the client starts the search.
+	ActionStartSearch Action = "startSearch"
+	// ActionFinishSearch indicates that the client finishes the search.
+	ActionFinishSearch Action = "finishSearch"
+	// ActionConfirm indicates that the client confirms the game.
+	ActionConfirm Action = "confirm"
+	// ActionReject indicates that the client rejects the game.
+	ActionReject Action = "reject"
 )
 
-// Config defines configuration for places.
-type Config struct {
-	PlaceRenewalInterval time.Duration     `json:"placeRenewalInterval"`
-	Cursor               pagination.Cursor `json:"cursor"`
+// Response entity describes values sent to user.
+type Response struct {
+	Status  int    `json:"status"`
+	Message string `json:"message"`
 }
 
-// Page holds place page entity which is used to show listed page of places.
-type Page struct {
-	Places []Place         `json:"place"`
-	Page   pagination.Page `json:"page"`
+// Config defines configuration for queue.
+type Config struct {
+	PlaceRenewalInterval time.Duration `json:"placeRenewalInterval"`
+}
+
+// ReadJSON reads request sent by client.
+func (client *Client) ReadJSON() (Request, error) {
+	var request Request
+	if err := client.Conn.ReadJSON(&request); err != nil {
+		if err = client.WriteJSON(http.StatusBadRequest, err.Error()); err != nil {
+			return request, ErrWrite.Wrap(ErrQueue.Wrap(err))
+		}
+		return request, ErrRead.Wrap(ErrQueue.Wrap(err))
+	}
+	return request, nil
+}
+
+// WriteJSON writes response to client.
+func (client *Client) WriteJSON(status int, message string) error {
+	if err := client.Conn.WriteJSON(Response{Status: status, Message: message}); err != nil {
+		return ErrWrite.Wrap(ErrQueue.Wrap(err))
+	}
+	return nil
 }

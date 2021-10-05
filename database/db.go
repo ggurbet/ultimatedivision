@@ -7,6 +7,8 @@ import (
 	"context"
 	"database/sql"
 
+	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	_ "github.com/lib/pq" // using postgres driver
 	"github.com/zeebo/errs"
 
@@ -44,6 +46,18 @@ func New(databaseURL string) (ultimatedivision.DB, error) {
 	}
 
 	return &database{conn: conn}, nil
+}
+
+// Hub entity describes hub of queue for clients.
+type Hub struct {
+	Queue map[uuid.UUID]*websocket.Conn
+}
+
+// NewHub is a constructor for hub entity.
+func NewHub() *Hub {
+	return &Hub{
+		Queue: make(map[uuid.UUID]*websocket.Conn),
+	}
 }
 
 // CreateSchema create schema for all tables and databases.
@@ -176,10 +190,6 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             start_time    TIMESTAMP WITH TIME ZONE                                        NOT NULL,
             end_time      TIMESTAMP WITH TIME ZONE                                        NOT NULL,
             period        INTEGER                                                         NOT NULL
-        );
-        CREATE TABLE IF NOT EXISTS places (
-            user_id BYTEA   PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-            status  VARCHAR                                                    NOT NULL
         );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)
@@ -227,5 +237,5 @@ func (db *database) Marketplace() marketplace.DB {
 
 // Queue provided access to accounts db.
 func (db *database) Queue() queue.DB {
-	return &queueDB{conn: db.conn}
+	return &queueHub{hub: NewHub()}
 }
