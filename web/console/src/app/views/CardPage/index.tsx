@@ -18,29 +18,29 @@ import './index.scss';
 
 const Card: React.FC = () => {
     const dispatch = useDispatch();
-    const cardData = useSelector((state: RootState) => state.cardsReducer.openedCard);
-    // @ts-ignore
-    const { id } = useParams();
+    const card = useSelector((state: RootState) => state.cardsReducer.openedCard);
+
+    const { id }: { id: string } = useParams();
 
     useEffect(() => {
         dispatch(openUserCard(id));
     }, []);
 
     return (
-        cardData &&
+        card &&
         <div className="card">
             <div className="card__border">
                 <div className="card__wrapper">
                     <div className="card__name-wrapper">
                         <h1 className="card__name">
-                            {cardData.playerName}
+                            {card.playerName}
                         </h1>
                     </div>
-                    <FootballerCardIllustrations card={cardData} />
+                    <FootballerCardIllustrations card={card} />
                     <div className="card__stats-area">
-                        <FootballerCardPrice card={cardData} />
-                        <FootballerCardStatsArea card={cardData} />
-                        <FootballerCardInformation card={cardData} />
+                        <FootballerCardPrice card={card} />
+                        <FootballerCardStatsArea card={card} />
+                        <FootballerCardInformation card={card} />
                     </div>
                 </div>
             </div>

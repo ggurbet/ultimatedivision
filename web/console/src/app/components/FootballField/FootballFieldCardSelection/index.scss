@@ -1,3 +1,5 @@
+@import "@/index.scss";
+
 .card-selection {
     padding: 40px 0;
 
@@ -104,6 +106,49 @@
             z-index: 2;
             margin-top: 5px;
             position: absolute;
+        }
+    }
+}
+
+@media (max-width: 1440px) {
+
+    .card-selection {
+
+        &__list {
+            grid-template-columns: repeat(5, 1fr);
+            column-gap: 5px;
+            padding: 0;
+        }
+    }
+}
+
+@media (max-width: $desktopBreakPoint) {
+
+    .card-selection {
+
+        &__list {
+            grid-template-columns: repeat(4, 1fr);
+            column-gap: 0;
+        }
+    }
+}
+
+@media (max-width: $tabletBreakPoint) {
+
+    .card-selection {
+
+        &__list {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .card-selection {
+
+        &__list {
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 }

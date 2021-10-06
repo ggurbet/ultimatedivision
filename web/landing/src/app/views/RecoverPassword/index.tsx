@@ -87,20 +87,22 @@ const RecoverPassword: React.FC = () => {
         {
             value: password,
             placeHolder: 'Enter a new password',
-            handleChange: setPassword,
+            onChange: setPassword,
             className: 'register__recover__sign-form__password',
             type: 'password',
             error: passwordError,
             clearError: setPasswordError,
+            validate: Validator.password,
         },
         {
             value: confirmedPassword,
             placeHolder: 'Enter a new password again',
-            handleChange: setConfirmedPassword,
+            onChange: setConfirmedPassword,
             className: 'register__recover__sign-form__password',
             type: 'password',
             error: confirmedPasswordError,
             clearError: setConfirmedPasswordError,
+            validate: Validator.password,
         },
     ];
 
@@ -114,11 +116,11 @@ const RecoverPassword: React.FC = () => {
                 <img
                     src={ultimate}
                     alt="utlimate division logo"
-                    className="register__represent-reset__ultimate-recover"
+                    className="register__represent-reset__ultimate"
                 />
             </div>
             <div className="register__recover">
-                <h1 className="register__recover__title">RECOVER PASSWORD</h1>
+                <h1 className="register__recover__title">Recover password</h1>
                 <form
                     className="register__recover__sign-form"
                     onSubmit={handleSubmit}
@@ -128,16 +130,17 @@ const RecoverPassword: React.FC = () => {
                             key={index}
                             value={password.value}
                             placeHolder={password.placeHolder}
-                            handleChange={password.handleChange}
+                            onChange={password.onChange}
                             className={password.className}
                             type={password.type}
                             error={password.error}
                             clearError={password.clearError}
+                            validate={password.validate}
                         />;
                     })}
                     <input
                         className="register__recover__sign-form__confirm"
-                        value="RECOVER PASSWORD"
+                        value="RECOVER YOUR PASSWORD"
                         type="submit"
                     />
                 </form>

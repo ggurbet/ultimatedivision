@@ -1,7 +1,9 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
+@import "@/index.scss";
 
 .footballer-card-illustrations-diagram {
+    max-width: 100px;
     width: 100px;
     height: 100px;
 
@@ -13,6 +15,7 @@
     &__value {
         position: relative;
         bottom: 25px;
+        left: 5px;
         font-size: 18px;
     }
 
@@ -20,5 +23,47 @@
     &__max {
         font-size: 12px;
         color: rgb(159, 159, 159);
+    }
+}
+
+@media screen and (max-width: $desktopBreakPoint) {
+
+    .footballer-card-illustrations-diagram {
+        width: 80px;
+        height: 80px;
+
+        &__value {
+            bottom: 15px;
+            left: 8px;
+            font-size: 14px;
+        }
+    }
+}
+
+@media screen and (max-width: $tabletBreakPoint) {
+
+    .footballer-card-illustrations-diagram {
+        width: 70px;
+        height: 70px;
+
+        &__value {
+            bottom: 12px;
+            left: 8px;
+            font-size: 12px;
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
+
+    .footballer-card-illustrations-diagram {
+        width: 80px;
+        height: 80px;
+
+        &__value {
+            bottom: 15px;
+            left: 8px;
+            font-size: 14px;
+        }
     }
 }

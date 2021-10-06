@@ -2,19 +2,29 @@
 @import "aos/dist/aos.css";
 
 .roadmap {
-    padding: 100px 50px;
     background: #2c3c8f;
     color: white;
-    min-height: 1200px;
-    overflow-x: hidden;
+    min-height: 1000px;
     position: relative;
-    transition: all 0.3s;
+    overflow: hidden;
+
+    &__wrapper {
+        position: relative;
+        padding: 100px 90px;
+        max-width: 1440px;
+        margin: 0 auto;
+        transition: all 0.3s;
+    }
 
     &__title {
+        margin-bottom: 100px;
         color: $roadmapHighlightColor;
-        font-size: 36px;
         text-align: center;
-        margin-bottom: 200px;
+        font-family: "Russo One";
+        font-style: normal;
+        font-weight: normal;
+        font-size: 43px;
+        line-height: 52px;
     }
 
     &__road {
@@ -24,17 +34,30 @@
         gap: 30px;
     }
 
-    &__bottom {
+    &__flag {
+        height: 273px;
         position: absolute;
-        width: 100vw;
-        left: 0;
-        bottom: 0;
+        right: 90px;
+        bottom: -120px;
+        transition: all 0.3s linear;
+    }
+
+    &__bottom {
+        height: 90px;
+        position: absolute;
+        width: 3000px;
+        left: -20px;
+        bottom: -40px;
     }
 }
 
 @media (max-width: $desktopBreakPoint) {
 
     .roadmap {
+
+        &__wrapper {
+            padding: 70px;
+        }
 
         &__road {
             margin-left: 40px;
@@ -50,12 +73,25 @@
                 background: linear-gradient(90deg, #00ffa3 0%, #00ffa3 135.85%);
             }
         }
+
+        &__flag {
+            height: 237px;
+            bottom: 0;
+        }
     }
 }
 
 @media (max-width: $tabletBreakPoint) {
 
     .roadmap {
+
+        &__wrapper {
+            padding: 70px 40px;
+        }
+
+        &__flag {
+            right: 50px;
+        }
 
         &__title {
             margin-bottom: 100px;
@@ -66,7 +102,14 @@
 @media (max-width: $phoneBreakPoint) {
 
     .roadmap {
-        padding: 100px 20px;
+
+        &__wrapper {
+            padding: 70px 20px;
+        }
+
+        &__flag {
+            right: 30px;
+        }
 
         &__title {
             margin-bottom: 80px;

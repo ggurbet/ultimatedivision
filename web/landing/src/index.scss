@@ -43,6 +43,19 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: "Roboto";
+    src: url("@static/fonts/Roboto-Regular.ttf");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Montserrat";
+    src: url("@static/fonts/Montserrat-Regular.ttf") format("truetype");
+}
+
 html {
     font-family: "BebasNeue", sans-serif;
 }

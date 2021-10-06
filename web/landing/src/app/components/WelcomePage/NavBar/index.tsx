@@ -16,23 +16,24 @@ export const Navbar: React.FC = () => {
         <div className="ultimatedivision-navbar">
             <div className="wrapper">
                 <picture className="ultimatedivision-navbar__logo">
-                    <a href="/"><img src={NavBarLogo} alt="Ultimate-division logo"></img></a>
+                    <a href="/landing"><img src={NavBarLogo} alt="Ultimate-division logo"></img></a>
                 </picture>
                 <div className="ultimatedivision-navbar__dropdown" onClick={() => setDropdownMenu(!dropdownMenu)}>
-                    {dropdownMenu ? <Cross/> : <DropdownNavBar />}
+                    {dropdownMenu ? <Cross /> : <DropdownNavBar />}
                 </div>
                 <ul className={`ultimatedivision-navbar__items${dropdownMenu ? '-active' : ''}`}>
-                    {navBarItems.map((item, index) => 
+                    {navBarItems.map((item, index) =>
                         <li key={index} className="ultimatedivision-navbar__item">
                             <a
                                 href={`#${item.toLowerCase()}`}
                                 className="ultimatedivision-navbar__item"
+                                onClick={() => setDropdownMenu(false)}
                             >
                                 {item}
                             </a>
                         </li>)}
                 </ul>
-                <MintButton text="MINT"/>
+                <MintButton />
             </div>
         </div>
     );

@@ -126,3 +126,71 @@
         position: absolute;
     }
 }
+
+@media (max-width: 1440px) {
+
+    .club-card {
+        margin: 70px 10px 0;
+    }
+}
+
+@media (max-width: $desktopBreakPoint) {
+
+    .club-card {
+        margin: 70px 5px 0;
+    }
+}
+
+@media (max-width: $phoneBreakPoint - 200px) {
+
+    .club-card {
+        width: 150px;
+        border-radius: 10px;
+        padding-bottom: 20px;
+
+        &__background-type {
+            position: absolute;
+            width: 108%;
+            left: -8px;
+            top: -30px;
+        }
+
+        &__face-picture {
+            margin-top: -7px;
+            margin-left: 18px;
+        }
+
+        &__price-gold {
+            bottom: 120px;
+        }
+
+        &__price {
+            margin-top: 80px;
+
+            &__current {
+                color: white;
+                font-size: 16px;
+            }
+
+            &__status {
+                top: 30px;
+                left: 11px;
+            }
+        }
+
+        &__list {
+            margin: 40px;
+            margin-top: 110px;
+            grid-column-gap: 15px;
+
+            &__item {
+                font-size: 12px;
+            }
+        }
+
+        &__name {
+            font-size: 14px;
+            margin-top: -10px;
+        }
+    }
+}

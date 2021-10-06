@@ -1,12 +1,12 @@
-@import "@/index.scss";
 @import "aos/dist/aos.css";
+@import "@/index.scss";
 
 .roadmap-point {
     position: relative;
     left: -20px;
-    width: 400px;
+    width: 415px;
     height: 500px;
-    padding: 55px 40px;
+    padding: 55px 20px 55px 30px;
     background: linear-gradient(180deg, #3b4eb0 0%, rgba(59, 78, 176, 0) 100%);
 
     &:before {
@@ -37,10 +37,10 @@
 
     &__date {
         position: relative;
-        font-size: 50px;
-        top: 0;
         margin-bottom: 15px;
         font-family: "Russo One";
+        font-size: 49.7679px;
+        line-height: 60px;
         transition: font-size 0.3s;
     }
 
@@ -50,8 +50,12 @@
     }
 
     &__item {
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: normal;
         font-size: 18px;
-        margin-bottom: 15px;
+        line-height: 21px;
+        margin-bottom: 25px;
 
         &:before {
             content: "\2022";
@@ -69,44 +73,54 @@
     .roadmap-point {
         height: 360px;
         width: 100%;
+        padding: 55px 20px;
 
         &:after {
             display: none;
         }
 
         &:before {
-            top: 70px;
+            left: 25px;
+            top: 55px;
         }
 
         &__date {
-            top: 12px;
-            left: 30px;
+            bottom: 16px;
+            left: 50px;
             font-size: 28px;
         }
 
         &__list {
-            margin-top: 50px;
+            margin-top: 0;
+            margin-left: 20px;
         }
     }
 }
 
-@media (max-width: $desktopBreakPoint) {
+@media (max-width: $phoneBreakPoint) {
 
     .roadmap-point {
-        padding: 55px 15px 55px 40px;
-
-        &:after {
-            display: none;
-        }
+        padding: 50px 10px 50px 20px;
+        width: 100%;
 
         &:before {
-            top: 70px;
+            left: 10px;
         }
 
         &__date {
-            top: 12px;
+            bottom: 11px;
             left: 30px;
-            font-size: 28px;
+        }
+
+        &__list {
+            margin-left: 8px;
+        }
+
+        &__item {
+            font-family: "Roboto";
+            font-size: 15px;
+            line-height: 18px;
+            text-align: left;
         }
     }
 }

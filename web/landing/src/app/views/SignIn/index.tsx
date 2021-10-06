@@ -13,6 +13,8 @@ import { loginUser } from '@/app/store/actions/users';
 
 import { UserDataArea } from '@components/common/UserDataArea';
 
+import facebook from '@static/images/registerPage/facebook_logo.svg';
+import google from '@static/images/registerPage/google_logo.svg'
 import ultimate from '@static/images/registerPage/ultimate.svg';
 
 import './index.scss';
@@ -58,29 +60,32 @@ const SignIn: React.FC = () => {
         {
             value: email,
             placeHolder: 'E-mail',
-            handleChange: setEmail,
+            onChange: setEmail,
             className: 'register__sign-in__sign-form__email',
             type: 'email',
             error: emailError,
             clearError: setEmailError,
+            validate: Validator.email,
         },
         {
             value: password,
             placeHolder: 'Password',
-            handleChange: setPassword,
+            onChange: setPassword,
             className: 'register__sign-in__sign-form__password',
             type: 'password',
             error: passwordError,
             clearError: setPasswordError,
+            validate: Validator.password,
         },
         {
             value: 'Remember me',
             placeHolder: '',
-            handleChange: handleIsRemember,
+            onChange: handleIsRemember,
             className: 'register__sign-in__sign-form__remember-me',
             type: 'radio',
             error: null,
             clearError: null,
+            validate: () => false,
         },
     ];
 
@@ -104,11 +109,12 @@ const SignIn: React.FC = () => {
                             <UserDataArea
                                 value={data.value}
                                 placeHolder={data.placeHolder}
-                                handleChange={data.handleChange}
+                                onChange={data.onChange}
                                 className={data.className}
                                 type={data.type}
                                 error={data.error}
                                 clearError={data.clearError}
+                                validate={data.validate}
                             />
                             <Link
                                 to={RouteConfig.ResetPassword.path}
@@ -120,18 +126,34 @@ const SignIn: React.FC = () => {
                             key={index}
                             value={data.value}
                             placeHolder={data.placeHolder}
-                            handleChange={data.handleChange}
+                            onChange={data.onChange}
                             className={data.className}
                             type={data.type}
                             error={data.error}
                             clearError={data.clearError}
+                            validate={data.validate}
                         />;
                     })}
-                    <input
-                        className="register__sign-in__sign-form__confirm"
-                        value="SIGN IN"
-                        type="submit"
-                    />
+                    <div className="register__sign-in__sign-form__auth-internal">
+                        <input
+                            className="register__sign-in__sign-form__confirm"
+                            value="SIGN IN"
+                            type="submit"
+                        />
+                        or
+                        <div className="register__sign-in__sign-form__logos">
+                            <img
+                                src={google}
+                                alt="Google logo"
+                                className="register__sign-in__sign-form__logos__google"
+                            />
+                            <img
+                                src={facebook}
+                                alt="Facebook logo"
+                                className="register__sign-in__sign-form__logos__facebook"
+                            />
+                        </div>
+                    </div>
                 </form>
                 <div className="register__sign-in__description">
                     <p className="register__sign-in__description__information">
@@ -140,7 +162,7 @@ const SignIn: React.FC = () => {
                             className="register__sign-in__description__information__sign"
                             to={RouteConfig.SignUp.path}
                         >
-                            sign up
+                            Sign up
                         </Link>
                     </p>
                 </div>

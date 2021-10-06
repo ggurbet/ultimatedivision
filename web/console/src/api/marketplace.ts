@@ -53,22 +53,21 @@ export class MarketplaceClient extends APIClient {
         };
 
         const lotJSON = await response.json();
-        const lot = lotJSON.lot;
 
         return new Lot(
-            lot.id,
-            lot.itemId,
-            lot.type,
-            lot.userId,
-            lot.shopperId,
-            lot.status,
-            lot.startPrice,
-            lot.maxPrice,
-            lot.currentPrice,
-            lot.startTime,
-            lot.endTime,
-            lot.period,
-            lot.card,
+            lotJSON.id,
+            lotJSON.itemId,
+            lotJSON.type,
+            lotJSON.userId,
+            lotJSON.shopperId,
+            lotJSON.status,
+            lotJSON.startPrice,
+            lotJSON.maxPrice,
+            lotJSON.currentPrice,
+            lotJSON.startTime,
+            lotJSON.endTime,
+            lotJSON.period,
+            lotJSON.card,
         );
     };
 

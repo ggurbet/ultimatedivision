@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 import Aos from 'aos';
 
 import footer from '@static/images/roadmap/bottom.svg';
+import flag from '@static/images/roadmap/flag.svg';
 
 import './index.scss';
 import { RoadmapPoint } from './RoadmapPoint';
@@ -53,16 +54,23 @@ export const Roadmap: React.FC = () => {
 
     return (
         <section className="roadmap">
-            <h2 className="roadmap__title">
-                Development Roadmap
-            </h2>
-            <div
-                className="roadmap__road"
-                data-aos="zoom-out-down">
-                {dataList.map((item) => (
-                    <RoadmapPoint
-                        key={item.id} item={item} />
-                ))}
+            <div className="roadmap__wrapper">
+                <h2 className="roadmap__title">
+                    Development Roadmap
+                </h2>
+                <div
+                    className="roadmap__road"
+                    data-aos="zoom-out-down">
+                    {dataList.map((item) => (
+                        <RoadmapPoint
+                            key={item.id} item={item} />
+                    ))}
+                </div>
+                <img
+                    className="roadmap__flag"
+                    src={flag}
+                    alt=""
+                />
             </div>
             <img
                 className="roadmap__bottom"

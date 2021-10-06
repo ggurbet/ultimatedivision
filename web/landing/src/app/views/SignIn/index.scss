@@ -43,31 +43,34 @@
         float: right;
         width: 50%;
         height: 100vh;
-        padding-left: 100px;
+        padding-left: 90px;
 
         &__go-back {
             display: inline-block;
             margin-top: 10%;
             text-decoration: none;
-            color: #8c8c8c;
+            color: $signInMainTextColor;
             font-size: 20px;
             cursor: pointer;
+            font-family: "BebasNeue", sans-serif;
+            font-weight: bold;
 
             &__title {
                 text-decoration: none;
                 margin-left: 5px;
-                color: #8c8c8c;
+                color: $signInMainTextColor;
             }
         }
 
         &__title {
+            font-family: "BebasNeue", sans-serif;
+            font-weight: bold;
             margin-top: 20%;
-            font-weight: 100;
             font-size: 50px;
         }
 
         &__description {
-            margin-top: 40px;
+            margin-top: 7%;
 
             &__title {
                 font-size: 27px;
@@ -75,21 +78,27 @@
             }
 
             &__information {
+                font-family: "Montserrat", sans-serif;
                 margin-top: 10px;
                 width: 60%;
-                color: #8c8c8c;
+                color: $signInMainTextColor;
 
                 &__sign {
                     text-decoration: none;
-                    color: #3ccf56;
+                    color: $highlightColor;
                     cursor: pointer;
                     margin-left: 5px;
+                }
+
+                &:nth-child(1) {
+                    display: block;
+                    width: 100%;
                 }
             }
         }
 
         &__sign-form {
-            width: 310px;
+            width: 340px;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -103,18 +112,21 @@
             &__name-error,
             &__surname-error,
             &__password-error {
-                border: 1px solid #8c8c8c;
+                font-family: "Montserrat", sans-serif;
+                border: 1px solid $signInMainTextColor;
                 outline: none;
                 width: 100%;
                 line-height: 40px;
-                color: #8c8c8c;
+                color: $signInMainTextColor;
                 padding-left: 10px;
                 margin-top: 20px;
-                background: #dfdfdf;
+                background: $signInInputBackgroundColor;
                 font-size: 14px;
+                background-repeat: no-repeat;
+                background-position: 97.5% 50%;
 
                 &__error {
-                    color: red;
+                    color: $signInErrorColor;
                     font-size: 10px;
                 }
             }
@@ -123,7 +135,7 @@
             &__name-error,
             &__surname-error,
             &__password-error {
-                border: 1px solid red;
+                border: 1px solid $signInErrorColor;
             }
 
             &__confirm {
@@ -132,10 +144,13 @@
                 background-size: cover;
                 background-position: center;
                 line-height: 40px;
-                width: 80%;
+                width: 65%;
                 color: black;
                 border-radius: 5px;
                 margin-top: 20px;
+                margin-right: 20px;
+                font-family: "BebasNeue", sans-serif;
+                font-weight: bold;
             }
 
             &__remember-me {
@@ -146,9 +161,24 @@
                 position: absolute;
                 bottom: 65px;
                 right: 0;
-                color: black;
+                color: $signInMainTextColor;
                 text-decoration: none;
                 cursor: pointer;
+            }
+
+            &__auth-internal {
+                color: $signInMainTextColor;
+            }
+
+            &__logos {
+                float: right;
+
+                &__google,
+                &__facebook {
+                    vertical-align: middle;
+                    margin-left: 15px;
+                    margin-top: 30px;
+                }
             }
         }
     }
@@ -161,8 +191,11 @@
             margin-top: 30%;
         }
     }
+}
 
-    @media (max-width: $desktopBreakPoint) {
+@media (max-width: $desktopBreakPoint) {
+
+    .register {
 
         &__represent-reset,
         &__represent-recover {
@@ -182,7 +215,7 @@
 
             &__ultimate {
                 height: 10%;
-                margin: 40% auto;
+                margin: 65% auto;
             }
         }
 
@@ -193,12 +226,15 @@
             padding-left: 55px;
 
             &__description {
-                margin-top: 30px;
+
+                &__information {
+                    width: 80%;
+                }
             }
 
             &__title {
+                margin-top: 50%;
                 font-size: 40px;
-                margin-top: 60%;
             }
 
             &__sign-form {
@@ -212,13 +248,35 @@
                     line-height: 30px;
                 }
 
+                &__confirm {
+                    width: 100%;
+                    margin-bottom: 10px;
+                }
+
                 &__remember-me {
                     border-radius: 4px;
                 }
 
                 &__forgot-password {
-                    bottom: 52px;
+                    bottom: 110px;
                     font-size: 14px;
+                }
+
+                &__auth-internal {
+                    text-align: center;
+                }
+
+                &__logos {
+                    float: unset;
+
+                    &__google,
+                    &__facebook {
+                        margin-top: 5px;
+                    }
+
+                    &__google {
+                        margin-left: 0;
+                    }
                 }
             }
         }
@@ -226,12 +284,15 @@
         &__sign-up {
 
             &__title {
-                margin-top: 40%;
+                margin-top: 15%;
             }
         }
     }
+}
 
-    @media (max-width: $tabletBreakPoint) {
+@media (max-width: $tabletBreakPoint) {
+
+    .register {
 
         &__represent-reset,
         &__represent-recover {
@@ -265,7 +326,6 @@
             }
 
             &__description {
-                margin-top: 30px;
 
                 &__title {
                     font-size: 22px;
@@ -296,7 +356,7 @@
                 }
 
                 &__forgot-password {
-                    bottom: 37px;
+                    bottom: 95px;
                 }
             }
         }
@@ -312,15 +372,19 @@
         &__sign-up {
 
             &__title {
-                margin-top: 50%;
+                margin-top: 25%;
             }
         }
     }
+}
 
-    @media (max-width: $phoneBreakPoint) {
+@media (max-width: $phoneBreakPoint) {
+
+    .register {
 
         &__represent-reset,
         &__represent-recover {
+            display: none;
 
             &__ultimate {
                 height: 7%;
@@ -334,6 +398,7 @@
         }
 
         &__represent {
+            display: none;
 
             &__ultimate {
                 height: 6%;
@@ -345,25 +410,26 @@
         &__sign-in,
         &__reset,
         &__recover {
-            padding-left: 10px;
+            width: 80%;
+            margin: auto;
+            padding: 0;
 
             &__title {
-                font-size: 20px;
-                margin-top: 80%;
+                font-size: 48px;
+                margin-top: 60px;
             }
 
             &__description {
-                margin-top: 15px;
 
                 &__title {
-                    font-size: 16px;
-                    font-weight: 100;
+                    font-size: 22px;
+                    margin-top: 35px;
                 }
 
                 &__information {
-                    font-size: 10px;
-                    width: 70%;
-                    color: #8c8c8c;
+                    font-size: 12px;
+                    width: 80%;
+                    color: $signInMainTextColor;
 
                     &__sign {
                         text-decoration: none;
@@ -379,15 +445,22 @@
             }
 
             &__sign-form {
-                width: 160px;
+                margin-top: 10px;
+                width: 100%;
 
                 &__email,
                 &__name,
                 &__surname,
                 &__password,
                 &__confirm {
-                    line-height: 20px;
-                    font-size: 10px;
+                    line-height: 40px;
+                    font-size: 14px;
+                    margin-top: 30px;
+                }
+
+                &__confirm {
+                    width: 100%;
+                    margin-bottom: 20px;
                 }
 
                 &__remember-me {
@@ -396,71 +469,106 @@
 
                 &__forgot-password {
                     margin-top: 20px;
-                    font-size: 10px;
                     float: right;
                     text-decoration: none;
+                    font-size: 12px;
+                    bottom: 140px;
                 }
-            }
-        }
-
-        &__reset,
-        &__recover {
-
-            &__title {
-                margin-top: 40%;
             }
         }
 
         &__sign-up {
 
             &__title {
-                margin-top: 70%;
+                margin-top: 5px;
             }
-        }
-    }
-
-    @media (max-width: $phoneBreakPoint - 150px) {
-
-        &__represent-reset,
-        &__represent-recover {
-
-            &__ultimate {
-                height: 5%;
-                margin: 70% auto;
-            }
-
-            &__ultimate-recover {
-                margin: 70% auto;
-            }
-        }
-
-        &__sign-up,
-        &__sign-in,
-        &__reset,
-        &__recover {
-            padding-left: 5px;
 
             &__sign-form {
-                width: 120px;
 
                 &__email,
                 &__name,
                 &__surname,
                 &__password,
                 &__confirm {
-                    padding-left: 5px;
-                    line-height: 18px;
-                    font-size: 8px;
+                    margin-top: 20px;
                 }
+            }
+        }
 
-                &__remember-me {
-                    width: 8px;
-                    height: 8px;
+        &__sign-in,
+        &__sign-up {
+
+            &__description {
+
+                &__information:nth-child(1) {
+                    text-align: center;
                 }
+            }
+        }
 
-                &__forgot-password {
-                    font-size: 8px;
-                    bottom: 34px;
+        &__sign-in {
+
+            &__title {
+                margin-top: 100px;
+            }
+        }
+
+        &__reset {
+
+            &__go-back {
+                margin-top: 50px;
+            }
+
+            &__title {
+                font-size: 27px;
+                margin-top: 50px;
+            }
+
+            &__sign-form {
+                margin-top: 40px;
+
+                &__password,
+                &__password-error,
+                &__confirm {
+                    margin-top: 35px;
+                }
+            }
+        }
+
+        &__recover {
+
+            &__title {
+                margin-top: 120px;
+                font-size: 27px;
+            }
+
+            &__sign-form {
+                margin-top: 20px;
+
+                &__password,
+                &__password-error,
+                &__confirm {
+                    margin-top: 35px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint - 240px) {
+
+    .register {
+
+        &__sign-up {
+
+            &__sign-form {
+
+                &__email,
+                &__name,
+                &__surname,
+                &__password,
+                &__confirm {
+                    margin-top: 7.5px;
                 }
             }
         }

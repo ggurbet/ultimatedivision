@@ -15,49 +15,67 @@
 
     &__wrapper {
         position: absolute;
-        top: 150px;
+        top: 30px;
         background-color: white;
-        height: 80vh;
+        height: 100%;
+        width: 1024px;
         overflow: hidden;
+        max-height: 760px;
 
         &__close {
+            line-height: 20px;
             position: absolute;
             right: 10px;
             top: 10px;
             cursor: pointer;
         }
     }
+}
 
-    @media (max-width: $desktopBreakPoint) {
+@media (max-width: $desktopBreakPoint) {
+
+    .pop-up-registration {
 
         &__wrapper {
+            max-height: 580px;
             width: 80%;
-            top: 100px;
+            top: 10px;
+            height: 100%;
         }
     }
+}
 
-    @media (max-width: $tabletBreakPoint) {
+@media (max-width: $tabletBreakPoint) {
+
+    .pop-up-registration {
 
         &__wrapper {
+            max-height: 620px;
             width: 90%;
             top: 100px;
         }
     }
+}
 
-    @media (max-width: $phoneBreakPoint) {
+@media (max-width: $phoneBreakPoint) {
+
+    .pop-up-registration {
 
         &__wrapper {
-            height: 60vh;
-            width: 80%;
-            top: 100px;
+            width: 90%;
+            top: 30px;
         }
     }
+}
 
-    @media (max-width: $phoneBreakPoint - 150px) {
+@media (max-width: $phoneBreakPoint - 240px) {
+
+    .pop-up-registration {
 
         &__wrapper {
-            top: 50px;
-            height: 50vh;
+            width: 90%;
+            top: 20px;
+            max-height: 530px;
         }
     }
 }

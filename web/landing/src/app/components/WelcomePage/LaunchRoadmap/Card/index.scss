@@ -1,90 +1,79 @@
 @import "/src/index.scss";
 
 .card {
-    display: block;
-    margin: 2% auto;
+    width: 100%;
+    display: flex;
+    position: relative;
+    margin: 0 auto 40px;
+    padding: 70px 90px;
+    justify-content: space-between;
+    align-items: center;
     background: #19215e;
     border: 1px solid #3f4ba7;
-    width: 80%;
-    justify-content: space-between;
-    padding: 5%;
-    float: left;
+
+    &__text-area {
+        width: 70%;
+    }
 
     &__title {
         font-family: "Thorletto", sans-serif;
         font-size: 36px;
-        text-align: left;
-        color: $highlightColor;
+        color: $roadmapHighlightColor;
+        font-weight: 400;
+        line-height: 115px;
+        margin-bottom: 36px;
     }
 
     &__description {
-        margin-top: 5%;
-        width: 40%;
+        max-width: 500px;
         font-size: 24px;
+        line-height: 28px;
+        font-weight: bold;
+        font-family: "Roboto";
         text-align: left;
         color: white;
+        margin-bottom: 80px;
     }
 
     &__box {
         margin-top: 5%;
         display: flex;
+        align-items: center;
         flex-direction: row;
 
         &__subtitle {
             font-family: "Russo One";
             margin-left: 5%;
-            margin-top: 2.5%;
             font-size: 24px;
-            color: $highlightColor;
-        }
-    }
-
-    &__diagram {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        float: right;
-        height: 260px;
-        width: 260px;
-        cursor: pointer;
-        position: relative;
-
-        &__value {
-            font-family: "Rubik";
-            font-size: 42px;
-            color: white;
-            position: absolute;
-            top: 110px;
+            color: $roadmapHighlightColor;
         }
     }
 
     @media (max-width: $desktopBreakPoint) {
+        padding: 65px 50px;
+        align-items: flex-start;
 
         &__title {
-            font-size: 32px;
+            margin-bottom: 12px;
+            font-size: 36px;
         }
 
         &__description {
-            width: 70%;
             font-size: 20px;
+            margin-bottom: 50px;
+            width: 85%;
         }
 
         &__box {
 
             &__subtitle {
-                margin-top: 5%;
                 font-size: 18px;
             }
         }
 
-        &__diagram {
+        &__image {
             height: 160px;
             width: 160px;
-
-            &__value {
-                font-size: 28px;
-                top: 68px;
-            }
         }
     }
 
@@ -101,39 +90,53 @@
         &__box {
 
             &__subtitle {
-                margin-top: 7.5%;
                 font-size: 16px;
-            }
-        }
-
-        &__diagram {
-            height: 140px;
-            width: 140px;
-
-            &__value {
-                font-size: 24px;
-                top: 63px;
             }
         }
     }
 
     @media (max-width: $phoneBreakPoint) {
-        display: flex;
+        padding: 43px 20px;
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
 
+        &__text-area {
+            width: 100%;
+        }
+
+        &__title {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 200px;
+        }
+
+        &__description {
+            width: 100%;
+            font-size: 18px;
+        }
+
         &__box {
-            margin-top: 5%;
 
             &__present {
-                width: 15%;
+                width: 35px;
             }
 
             &__subtitle {
-                margin-top: 5%;
-                font-size: 14px;
+                font-size: 12px;
             }
+        }
+
+        &__image {
+            position: absolute;
+            top: 160px;
+        }
+    }
+
+    @media (max-width: $phoneBreakPoint - 200px) {
+
+        &__title {
+            font-size: 18px;
         }
     }
 }

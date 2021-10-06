@@ -75,7 +75,7 @@
             "all"
         ],
         "no-shadow": [
-            "error",
+            "warn",
             {
                 "builtinGlobals": true,
                 "hoist": "all",

@@ -12,9 +12,11 @@ import { Description } from '@components/WelcomePage/Description';
 import { Metaverse } from '@components/WelcomePage/Metaverse';
 import { Authors } from '@components/WelcomePage/Authors';
 
+import './index.scss';
+
 const Main: React.FC = () => {
     return (
-        <>
+        <main className="main">
             <Navbar />
             <Home />
             <LaunchDate />
@@ -25,7 +27,7 @@ const Main: React.FC = () => {
             <Projects />
             <Authors />
             <Footer />
-        </>
+        </main>
     );
 };
 

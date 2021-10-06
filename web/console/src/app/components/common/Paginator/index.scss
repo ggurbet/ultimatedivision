@@ -17,10 +17,10 @@
     }
 
     &__previous,
-    &__next {
+    &__previous-not-active,
+    &__next,
+    &__next-not-active {
         display: flex;
-        color: white;
-        cursor: pointer;
         margin: auto;
 
         &__title {
@@ -31,28 +31,110 @@
         }
     }
 
+    &__previous,
+    &__next {
+        cursor: pointer;
+        color: $paginatorActivePageColor;
+    }
+
+    &__previous-not-active,
+    &__next-not-active {
+        cursor: not-allowed;
+        color: $paginatorNotActivePageColor;
+    }
+
     &__pages {
         display: flex;
         flex-direction: row;
 
-        &__item {
+        &__item,
+        &__item-active {
             list-style-type: none;
-            background-color: $cardHighlightColor;
-            color: $mainBackground;
-            border-radius: 15px;
             padding: 5px 10px;
             margin-left: 20px;
             font-size: 13px;
             cursor: pointer;
+            color: $paginatorActivePageColor;
+        }
 
-            &:hover {
-                color: white;
-            }
+        &__item-active {
+            background-color: $cardHighlightColor;
+            color: $mainBackground;
+            border-radius: 15px;
         }
 
         &__dots {
-            color: white;
+            color: $paginatorActivePageColor;
             margin-left: 20px;
+        }
+    }
+}
+
+@media (max-width: $desktopBreakPoint) {
+
+    .ultimatedivision-paginator {
+
+        &__previous,
+        &__previous-not-active,
+        &__next,
+        &__next-not-active {
+
+            &__title {
+                display: none;
+            }
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .ultimatedivision-paginator {
+
+        &__previous,
+        &__previous-not-active,
+        &__next,
+        &__next-not-active {
+            height: 20px;
+        }
+
+        &__pages {
+
+            &__item,
+            &__item-active {
+                margin-left: 10px;
+            }
+
+            &__dots {
+                margin-left: 10px;
+            }
+        }
+    }
+}
+
+@media (max-width: ($phoneBreakPoint - 200px)) {
+
+    .ultimatedivision-paginator {
+
+        &__previous,
+        &__previous-not-active {
+            margin-right: 10px;
+        }
+
+        &__next,
+        &__next-not-active {
+            margin-left: 10px;
+        }
+
+        &__pages {
+
+            &__item,
+            &__item-active {
+                margin-left: 0;
+            }
+
+            &__dots {
+                margin-left: 0;
+            }
         }
     }
 }

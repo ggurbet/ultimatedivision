@@ -25,6 +25,7 @@ import (
 	"ultimatedivision/internal/templatefuncs"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
+	"ultimatedivision/queue"
 	"ultimatedivision/users"
 )
 
@@ -65,13 +66,14 @@ type Server struct {
 		lootbox     controllers.LootBoxesTemplates
 		marketplace controllers.MarketplaceTemplates
 		clubs       controllers.ClubsTemplates
+		queue       controllers.QueueTemplates
 	}
 
 	cards.PercentageQualities
 }
 
 // NewServer is a constructor for admin web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities, marketplace *marketplace.Service, lootboxes *lootboxes.Service, clubs *clubs.Service) (*Server, error) {
+func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities, marketplace *marketplace.Service, lootboxes *lootboxes.Service, clubs *clubs.Service, queue *queue.Service) (*Server, error) {
 	server := &Server{
 		log:    log,
 		config: config,
@@ -143,6 +145,12 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	clubsRouter.HandleFunc("/squad/{squadId}/squad-cards/{cardId}/update", clubsController.UpdateCardPosition).Methods(http.MethodGet, http.MethodPost)
 	clubsRouter.HandleFunc("/squad/{squadId}/squad-cards/{cardId}", clubsController.DeleteCard).Methods(http.MethodGet)
 
+	queueRouter := router.PathPrefix("/queue").Subrouter().StrictSlash(true)
+	queueRouter.Use(server.withAuth)
+	queueController := controllers.NewQueue(log, queue, server.templates.queue)
+	queueRouter.HandleFunc("", queueController.List).Methods(http.MethodGet)
+	queueRouter.HandleFunc("/{id}", queueController.Get).Methods(http.MethodGet)
+
 	server.server = http.Server{
 		Handler: router,
 	}
@@ -210,7 +218,7 @@ func (server *Server) initializeTemplates() (err error) {
 		"Dec":  templatefuncs.Dec,
 	}).ParseFiles(
 		filepath.Join(server.config.StaticDir, "cards", "list.html"),
-		filepath.Join(server.config.StaticDir, "pagination", "pagination.html"))
+		filepath.Join(server.config.StaticDir, "cards", "pagination.html"))
 	if err != nil {
 		return err
 	}
@@ -221,7 +229,7 @@ func (server *Server) initializeTemplates() (err error) {
 		"Dec":  templatefuncs.Dec,
 	}).ParseFiles(
 		filepath.Join(server.config.StaticDir, "marketplace", "list.html"),
-		filepath.Join(server.config.StaticDir, "pagination", "pagination.html"))
+		filepath.Join(server.config.StaticDir, "marketplace", "pagination.html"))
 	if err != nil {
 		return err
 	}
@@ -280,6 +288,16 @@ func (server *Server) initializeTemplates() (err error) {
 		return err
 	}
 	server.templates.clubs.UpdateCardPosition, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "clubs", "updateCardPosition.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.queue.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "queue", "list.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.queue.Get, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "queue", "get.html"))
 	if err != nil {
 		return err
 	}

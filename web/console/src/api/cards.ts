@@ -38,9 +38,8 @@ export class CardClient extends APIClient {
         };
 
         const cardJSON = await response.json();
-        const card = cardJSON.card;
 
-        return new Card(card);
+        return new Card(cardJSON);
     };
 
     /** method returns filtered card list */

@@ -17,7 +17,7 @@ import { cardSelectionVisibility, choosePosition, exchangeCards, removeCard, set
 import './index.scss';
 
 export const FootballFieldPlayingArea: React.FC = () => {
-    const {cards} = useSelector((state: RootState) => state.cardsReducer.cardsPage);
+    const { cards } = useSelector((state: RootState) => state.cardsReducer.cardsPage);
     const formation = useSelector((state: RootState) => state.clubReducer.squad.formation);
     const dragStartIndex = useSelector((state: RootState) => state.clubReducer.options.dragStart);
 

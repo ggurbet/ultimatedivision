@@ -85,47 +85,52 @@ export const SignUp: React.FC<{ handleSignUp: any }> = ({
         {
             value: firstName,
             placeHolder: 'Name',
-            handleChange: setFirstName,
+            onChange: setFirstName,
             className: 'register__sign-up__sign-form__name',
             type: 'text',
             error: firstNameError,
             clearError: setFirstNameError,
+            validate: Validator.field,
         },
         {
             value: lastName,
             placeHolder: 'Surname',
-            handleChange: setLastName,
+            onChange: setLastName,
             className: 'register__sign-up__sign-form__surname',
             type: 'text',
             error: lastNameError,
             clearError: setLastNameError,
+            validate: Validator.field,
         },
         {
             value: email,
             placeHolder: 'E-mail',
-            handleChange: setEmail,
+            onChange: setEmail,
             className: 'register__sign-up__sign-form__email',
             type: 'email',
             error: emailError,
             clearError: setEmailError,
+            validate: Validator.email,
         },
         {
             value: password,
             placeHolder: 'Password',
-            handleChange: setPassword,
+            onChange: setPassword,
             className: 'register__sign-up__sign-form__password',
             type: 'password',
             error: passwordError,
             clearError: setPasswordError,
+            validate: Validator.password,
         },
         {
             value: nickName,
             placeHolder: 'Nickname',
-            handleChange: setNickName,
+            onChange: setNickName,
             className: 'register__sign-up__sign-form__password',
             type: 'text',
             error: nickNameError,
             clearError: setNickNameError,
+            validate: Validator.field,
         },
     ];
 
@@ -145,7 +150,7 @@ export const SignUp: React.FC<{ handleSignUp: any }> = ({
                         Hello!
                     </h2>
                     <p className="register__sign-up__description__information">
-                        Sign up to get access tp incredible emotions
+                        Sign up to get access to incredible emotions
                         with Ultimate Division
                     </p>
                 </div>
@@ -159,11 +164,12 @@ export const SignUp: React.FC<{ handleSignUp: any }> = ({
                                 key={index}
                                 value={data.value}
                                 placeHolder={data.placeHolder}
-                                handleChange={data.handleChange}
+                                onChange={data.onChange}
                                 className={data.className}
                                 type={data.type}
                                 error={data.error}
                                 clearError={data.clearError}
+                                validate={data.validate}
                             />
                         </>;
                     })}
@@ -180,7 +186,7 @@ export const SignUp: React.FC<{ handleSignUp: any }> = ({
                             className="register__sign-up__description__information__sign"
                             onClick={() => handleSignUp()}
                         >
-                            sign in
+                            Sign in
                         </span>
                     </p>
                 </div>

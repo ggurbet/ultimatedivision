@@ -2,30 +2,31 @@
 @import "aos/dist/aos.css";
 
 .footer {
-    background-color: black;
+    background-color: #001b4f;
 
     &__wrapper {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        width: 90%;
-        // max-width: 800px;
-        padding: 40px 30px;
+        max-width: 1440px;
+        padding: 40px 80px;
         margin: 0 auto;
     }
 
     &__links {
+        font-family: "Russo One";
         width: 200px;
         display: flex;
         gap: 30px;
         text-transform: none;
-        margin-left: 5%;
     }
 
     &__link {
         color: #fff;
         transition: color 0.3s;
         text-decoration: none;
+        font-size: 18px;
+        line-height: 22px;
 
         &:hover {
             text-decoration: underline;
@@ -33,21 +34,29 @@
         }
     }
 
-    &__social {
-        color: $highlightColor;
-        margin-right: 5%;
+    &__text {
+        font-weight: "Bebas Neue";
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 31px;
+        text-align: center;
+        text-transform: uppercase;
+        color: $roadmapHighlightColor;
+        transform: scaleX(0.75);
     }
 
     &__list {
-        margin-top: 10px;
+        width: 70%;
+        margin: 0 auto;
+        margin-top: 5px;
         list-style: none;
         display: flex;
         justify-content: space-between;
     }
 
     &__social-img {
-        width: 20px;
-        height: 20px;
+        width: 25px;
+        height: 25px;
         transition: all 0.3s;
 
         &:hover {
@@ -60,19 +69,54 @@
     }
 }
 
-@media (max-width: $tabletBreakPoint) {
+@media (max-width: $phoneBreakPoint + 100px) {
 
     .footer {
 
-        &__links {
-            margin: 0;
-            justify-content: center;
-        }
-
         &__wrapper {
+            flex-direction: column;
+            align-items: flex-start;
             justify-content: center;
             gap: 20px;
+        }
+
+        &__links {
+            margin: 0;
+            margin-bottom: 40px;
+        }
+
+        &__social {
+            display: flex;
             flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            text-align: left;
+        }
+
+        &__list {
+            width: 100%;
+        }
+
+        &__text {
+            transform: scale(1);
+            position: relative;
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: left;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .footer {
+
+        &__wrapper {
+            padding: 40px 30px;
+        }
+
+        &__text {
+            font-size: 18px;
         }
     }
 }

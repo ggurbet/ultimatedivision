@@ -7,63 +7,218 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    margin-right: 60px;
+    margin-top: -10%;
+    gap: 0;
 
-    &:after {
-        @extend %pseudoelementsInFootballerCard;
-
-        top: 32%;
-    }
-
-    &:before {
-        @extend %pseudoelementsInFootballerCard;
-
-        top: 55%;
+    &__divider {
+        height: 1px;
+        width: 80%;
+        margin: 10% auto;
+        background: linear-gradient(
+            270deg,
+            rgba(41, 41, 72, 0) -11.8%,
+            #675eae 46.61%,
+            rgba(41, 41, 71, 0) 111.17%
+        );
     }
 
     &__card {
-        width: 280px;
-        height: 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: auto;
         position: relative;
-        bottom: 100px;
+        margin: 0% 0 40% 0;
 
         &__background-type {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 80%;
         }
 
-        &__face-picture {
+        &__wrapper {
+            order: 1;
             z-index: 2;
-            position: absolute;
-            left: 0;
-            right: 0;
-            margin: 0 auto;
-            top: 97px;
+            padding: 0 20px;
             width: 60%;
+
+            &-face-picture {
+                display: flex;
+                align-items: center;
+                margin: 5px auto 0 2px;
+                width: 100%;
+            }
         }
 
         &__list {
-            margin: 275px 40px 200px 80px;
+            width: 60%;
+            order: 2;
+            margin: 3% auto 0 auto;
+            text-align: center;
             display: grid;
+            justify-content: center;
             grid-template-columns: repeat(2, 1fr);
             list-style: none;
 
+            :nth-child(odd) {
+                border-right: 1px solid #555d76;
+            }
+
             &__item {
-                color: rgb(87, 86, 86);
                 z-index: 2;
-                font-size: 20px;
+                color: rgb(87, 86, 86);
+                font-size: 150%;
             }
         }
 
         &__name {
+            order: 0;
+            z-index: 2;
+            margin: 11% 0 0 0%;
             color: rgb(87, 86, 86);
             text-align: center;
             width: 100%;
-            font-size: 24px;
-            z-index: 2;
-            margin-top: 60px;
-            position: absolute;
+            font-size: 130%;
+        }
+    }
+}
+
+@media screen and (min-width: $desktopBreakPoint) {
+
+    .footballer-card-illustrations {
+
+        &__card {
+
+            &__list {
+
+                &__item {
+                    font-size: 120%;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $desktopBreakPoint) {
+
+    .footballer-card-illustrations {
+
+        &__card {
+
+            &__list {
+
+                &__item {
+                    font-size: 90%;
+                }
+            }
+
+            &__name {
+                margin: 13% 0 0 0%;
+                font-size: 110%;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $tabletBreakPoint) {
+
+    .footballer-card-illustrations {
+
+        &__card {
+
+            &__wrapper {
+
+                &-face-picture {
+                    margin: 3px auto 0;
+                }
+            }
+
+            &__list {
+
+                &__item {
+                    font-size: 70%;
+                }
+            }
+
+            &__name {
+                margin: 16% 0 0 0%;
+                font-size: 100%;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $tabletBreakPoint - 100px) {
+
+    .footballer-card-illustrations {
+
+        &__card {
+
+            &__wrapper {
+
+                &-face-picture {
+                    margin: 5px auto 0;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
+
+    .footballer-card-illustrations {
+
+        &__card {
+
+            &__wrapper {
+                width: 55%;
+
+                &-face-picture {
+                    margin: 5px auto 0;
+                }
+            }
+
+            &__list {
+                margin: 2% auto 0 auto;
+
+                &__item {
+                    font-size: 22px;
+                }
+            }
+
+            &__name {
+                margin: 12% 0 0 0%;
+                font-size: 32px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint - 200px) {
+
+    .footballer-card-illustrations {
+
+        &__card {
+
+            &__wrapper {
+
+                &-face-picture {
+                    margin: 14px auto 0;
+                }
+            }
+
+            &__list {
+                margin: 2% auto 0 auto;
+
+                &__item {
+                    font-size: 22px;
+                }
+            }
+
+            &__name {
+                margin: 12% 0 0 0%;
+                font-size: 22px;
+            }
         }
     }
 }
