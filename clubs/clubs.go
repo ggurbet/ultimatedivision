@@ -29,8 +29,8 @@ type DB interface {
 	GetByUserID(ctx context.Context, userID uuid.UUID) (Club, error)
 	// GetSquad returns squad.
 	GetSquad(ctx context.Context, clubID uuid.UUID) (Squad, error)
-	// GetCaptainID returns id of captain.
-	GetCaptainID(ctx context.Context, squadID uuid.UUID) (uuid.UUID, error)
+	// GetFormation returns formation of the squad.
+	GetFormation(ctx context.Context, squadID uuid.UUID) (Formation, error)
 	// ListSquadCards returns all cards from squad.
 	ListSquadCards(ctx context.Context, squadID uuid.UUID) ([]SquadCard, error)
 	// AddSquadCard adds new card to the squad.
@@ -39,8 +39,8 @@ type DB interface {
 	DeleteSquadCard(ctx context.Context, squadID, cardID uuid.UUID) error
 	// UpdateTacticFormationCaptain updates tactic, formation and capitan in the squad.
 	UpdateTacticFormationCaptain(ctx context.Context, squad Squad) error
-	// UpdatePosition updates position of card in the squad.
-	UpdatePosition(ctx context.Context, newPosition Position, squadID, cardID uuid.UUID) error
+	// UpdatePosition updates position of cards in the squad.
+	UpdatePosition(ctx context.Context, squadCards []SquadCard) error
 }
 
 // Club defines club entity.
@@ -79,19 +79,19 @@ const (
 	// FourTwoTwoTwo defines 4-2-2-2 scheme.
 	FourTwoTwoTwo Formation = 3
 	// FourThreeOneTwo defines 4-3-1-2 scheme.
-	FourThreeOneTwo = 4
+	FourThreeOneTwo Formation = 4
 	// FourThreeThree defines 4-3-3 scheme.
-	FourThreeThree = 5
+	FourThreeThree Formation = 5
 	// FourTwoThreeOne defines 4-2-3-1 scheme.
-	FourTwoThreeOne = 6
+	FourTwoThreeOne Formation = 6
 	// FourThreeTwoOne defines 4-3-2-1 scheme.
-	FourThreeTwoOne = 7
+	FourThreeTwoOne Formation = 7
 	// FourOneThreeTwo defines 4-1-3-2 scheme.
-	FourOneThreeTwo = 8
+	FourOneThreeTwo Formation = 8
 	// FiveThreeTwo defines 5-3-2 scheme.
-	FiveThreeTwo = 9
+	FiveThreeTwo Formation = 9
 	// ThreeFiveTwo defines 4-5-2 scheme.
-	ThreeFiveTwo = 10
+	ThreeFiveTwo Formation = 10
 )
 
 // Tactic defines a list of possible tactics.
@@ -112,28 +112,64 @@ type Position int
 const (
 	// GK defines goalkeeper.
 	GK Position = 1
-	// CB defines central defenders.
-	CB Position = 2
 	// LB defines left defenders.
-	LB Position = 3
+	LB Position = 2
+	// LCD defines left central defenders.
+	LCD Position = 3
+	// CCD defines center central defenders.
+	CCD Position = 4
+	// RCD defines right central defenders.
+	RCD Position = 5
 	// RB defines right defenders.
-	RB Position = 4
-	// CM defines central midfielder.
-	CM Position = 5
+	RB Position = 6
+	// LCDM defines left central defensive midfielder.
+	LCDM Position = 7
+	// CCDM defines center central defensive midfielder.
+	CCDM Position = 8
+	// RCDM defines right central defensive midfielder.
+	RCDM Position = 9
+	// LCM defines left central midfielder.
+	LCM Position = 10
+	// CCM defines central central midfielder.
+	CCM Position = 11
+	// RCM defines right central midfielder.
+	RCM Position = 12
 	// LM defines left midfielder.
-	LM Position = 6
+	LM Position = 13
 	// RM defines right midfielder.
-	RM Position = 7
-	// CAM defines central attacking midfielder.
-	CAM Position = 8
+	RM Position = 14
+	// LCAM defines left central attacking midfielder.
+	LCAM Position = 15
+	// CCAM defines center central attacking midfielder.
+	CCAM Position = 16
+	// RCAM defines right central attacking midfielder.
+	RCAM Position = 17
 	// LWB defines left attacking defenders.
-	LWB Position = 9
+	LWB Position = 18
 	// RWB defines right attacking defenders.
-	RWB Position = 10
+	RWB Position = 19
 	// RW defines right forward.
-	RW Position = 11
+	RW Position = 20
 	// LW defines left forward.
-	LW Position = 12
-	// ST defines central forward.
-	ST Position = 13
+	LW Position = 21
+	// LST defines left central forward.
+	LST Position = 22
+	// RST defines right central forward.
+	RST Position = 23
+	// CST defines center central forward.
+	CST Position = 24
 )
+
+// FormationToPosition defines positions that are present in the formation.
+var FormationToPosition = map[Formation][]Position{
+	FourFourTwo:     {GK, LB, LCD, RCD, RB, LM, LCM, RCM, RM, LST, RST},
+	FourTwoFour:     {GK, LB, LCD, RCD, RB, LCM, RCM, LW, LST, RST, RW},
+	FourTwoTwoTwo:   {GK, LB, LCD, RCD, RB, LCAM, LCDM, RCDM, RCAM, LST, RST},
+	FourThreeOneTwo: {GK, LB, LCD, RCD, RB, LCM, CCM, CCAM, RCM, LST, RST},
+	FourThreeThree:  {GK, LB, LCD, RCD, RB, LCM, CCM, RCM, LW, CST, RW},
+	FourTwoThreeOne: {GK, LB, LCD, RCD, RB, LCDM, LCAM, CCAM, RCAM, RCDM, CST},
+	FourThreeTwoOne: {GK, LB, LCD, RCD, RB, LCM, CCM, RCM, LW, CST, RW},
+	FourOneThreeTwo: {GK, LB, LCD, RCD, RB, LM, CCM, CCDM, RM, LST, RST},
+	FiveThreeTwo:    {GK, LWB, LCD, CCD, RCD, RWB, LCM, CCM, RCM, LST, RST},
+	ThreeFiveTwo:    {GK, LCD, CCD, RCD, LM, LCDM, CCAM, RCDM, RM, LST, RST},
+}

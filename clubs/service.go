@@ -16,6 +16,9 @@ import (
 // ErrClubs indicates that there was an error in the service.
 var ErrClubs = errs.Class("clubs service error")
 
+// squadSize defines number of cards in the full squad.
+const squadSize = 11
+
 // Service is handling clubs related logic.
 //
 // architecture: Service
@@ -54,8 +57,10 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID) (uuid.UUID
 // CreateSquad creates new squad for club.
 func (service *Service) CreateSquad(ctx context.Context, clubID uuid.UUID) (uuid.UUID, error) {
 	newSquad := Squad{
-		ID:     uuid.New(),
-		ClubID: clubID,
+		ID:        uuid.New(),
+		ClubID:    clubID,
+		Formation: FourFourTwo,
+		Tactic:    Balanced,
 	}
 
 	squadID, err := service.clubs.CreateSquad(ctx, newSquad)
@@ -63,12 +68,35 @@ func (service *Service) CreateSquad(ctx context.Context, clubID uuid.UUID) (uuid
 	return squadID, ErrClubs.Wrap(err)
 }
 
-// Add add new card to the squad of the club.
-func (service *Service) Add(ctx context.Context, position Position, squadID, cardID uuid.UUID) error {
-	newSquadCard := SquadCard{
-		SquadID:  squadID,
-		CardID:   cardID,
-		Position: position,
+// AddSquadCards adds cards to the squad.
+func (service *Service) AddSquadCards(ctx context.Context, squadID uuid.UUID, newSquadCard SquadCard) error {
+	squadCards, err := service.clubs.ListSquadCards(ctx, squadID)
+	if err != nil {
+		return ErrClubs.Wrap(err)
+	}
+
+	if len(squadCards) == squadSize {
+		return ErrClubs.New("squad is full")
+	}
+
+	formation, err := service.clubs.GetFormation(ctx, squadID)
+	if err != nil {
+		return ErrClubs.Wrap(err)
+	}
+
+	newSquadCard.SquadID = squadID
+	newSquadCard.Position = FormationToPosition[formation][newSquadCard.Position]
+
+	for _, card := range squadCards {
+		if card.Position != newSquadCard.Position {
+			continue
+		}
+
+		err = service.clubs.DeleteSquadCard(ctx, squadID, card.CardID)
+		if err != nil {
+			return ErrClubs.Wrap(err)
+		}
+		break
 	}
 
 	return ErrClubs.Wrap(service.clubs.AddSquadCard(ctx, newSquadCard))
@@ -93,7 +121,48 @@ func (service *Service) UpdateSquad(ctx context.Context, squadID uuid.UUID, form
 
 // UpdateCardPosition updates position of card in the squad.
 func (service *Service) UpdateCardPosition(ctx context.Context, squadID uuid.UUID, cardID uuid.UUID, newPosition Position) error {
-	return ErrClubs.Wrap(service.clubs.UpdatePosition(ctx, newPosition, squadID, cardID))
+	squadCards, err := service.clubs.ListSquadCards(ctx, squadID)
+	if err != nil {
+		return ErrClubs.Wrap(err)
+	}
+
+	var oldPosition Position
+
+	for _, card := range squadCards {
+		if card.CardID == cardID {
+			oldPosition = card.Position
+			break
+		}
+	}
+
+	formation, err := service.clubs.GetFormation(ctx, squadID)
+	if err != nil {
+		return ErrClubs.Wrap(err)
+	}
+
+	newPosition = FormationToPosition[formation][newPosition]
+
+	updatedCards := make([]SquadCard, 0, 2)
+
+	updatedSquadCard := SquadCard{
+		SquadID:  squadID,
+		CardID:   cardID,
+		Position: newPosition,
+	}
+
+	updatedCards = append(updatedCards, updatedSquadCard)
+
+	for _, card := range squadCards {
+		if card.Position != newPosition {
+			continue
+		}
+
+		card.Position = oldPosition
+		updatedCards = append(updatedCards, card)
+		break
+	}
+
+	return ErrClubs.Wrap(service.clubs.UpdatePosition(ctx, updatedCards))
 }
 
 // GetSquad returns squad of club.
@@ -105,6 +174,34 @@ func (service *Service) GetSquad(ctx context.Context, clubID uuid.UUID) (Squad, 
 // GetSquadCards returns al cards from squad.
 func (service *Service) GetSquadCards(ctx context.Context, squadID uuid.UUID) ([]SquadCard, error) {
 	squadCards, err := service.clubs.ListSquadCards(ctx, squadID)
+	if err != nil {
+		return squadCards, ErrClubs.Wrap(err)
+	}
+
+	if len(squadCards) < squadSize {
+		for i := len(squadCards); i < squadSize; i++ {
+			var squadCard = SquadCard{
+				SquadID: squadID,
+			}
+
+			squadCards = append(squadCards, squadCard)
+		}
+	}
+
+	formation, err := service.clubs.GetFormation(ctx, squadID)
+	if err != nil {
+		return nil, ErrClubs.Wrap(err)
+	}
+
+	for i := 0; i < len(squadCards); i++ {
+		for j := 0; j < len(FormationToPosition[formation]); j++ {
+			if squadCards[i].Position == FormationToPosition[formation][j] {
+				squadCards[i].Position = Position(j)
+				break
+			}
+		}
+	}
+
 	return squadCards, ErrClubs.Wrap(err)
 }
 

@@ -296,7 +296,10 @@ func (controller *Clubs) Add(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = controller.clubs.Add(ctx, clubs.Position(position), squadID, cardID)
+		err = controller.clubs.AddSquadCards(ctx, squadID, clubs.SquadCard{
+			Position: clubs.Position(position),
+			CardID:   cardID,
+		})
 		if err != nil {
 			controller.log.Error("could not add card to the squad", ErrClubs.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
