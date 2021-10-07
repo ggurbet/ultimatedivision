@@ -2,30 +2,48 @@
 
 .lot {
     width: 100%;
-    padding: 200px 70px 60px;
+    padding: 200px 10%;
     background-color: $mainBackground;
     display: flex;
     justify-content: center;
     font-weight: lighter;
     color: white;
 
-    &__wrapper {
-        display: flex;
-        margin: 0 auto;
-        padding: 20px 50px 50px;
-        border-radius: 10px;
-        position: relative;
-        background: linear-gradient(180deg, rgba(36, 36, 62, 0.496) 0%, rgba(31, 31, 52, 0.8) 100%),
-            radial-gradient(170.68% 341.01% at 97.11% 95.96%, rgba(46, 46, 80, 0) 0%, rgba(99, 62, 146, 0.9) 100%),
-            radial-gradient(130.06% 157.22% at 46.4% 72.11%, rgba(46, 46, 80, 0) 0%, rgba(57, 89, 137, 0.9) 100%),
-            radial-gradient(158.27% 83.8% at 50% 50%, #2e2e50 0%, #3b3b68 100%);
-    }
-
     &__border {
-        max-width: 1704px;
+        max-width: 1440px;
+        width: 100%;
         background: linear-gradient(0deg, rgb(40, 40, 70), rgb(89, 89, 148));
         padding: 2px;
         border-radius: 10px;
+    }
+
+    &__wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
+        border-radius: 10px;
+        position: relative;
+        background: linear-gradient(
+            180deg,
+            rgba(36, 36, 62, 0.496) 0%,
+            rgba(31, 31, 52, 0.8) 100%
+        ),
+            radial-gradient(
+            170.68% 341.01% at 97.11% 95.96%,
+            rgba(46, 46, 80, 0) 0%,
+            rgba(99, 62, 146, 0.9) 100%
+        ),
+            radial-gradient(
+            130.06% 157.22% at 46.4% 72.11%,
+            rgba(46, 46, 80, 0) 0%,
+            rgba(57, 89, 137, 0.9) 100%
+        ),
+            radial-gradient(158.27% 83.8% at 50% 50%, #2e2e50 0%, #3b3b68 100%);
+    }
+
+    .footballer-card-illustrations {
+        width: 30%;
     }
 
     &__name-wrapper {
@@ -49,9 +67,74 @@
     }
 
     &__stats-area {
-        width: 75%;
+        width: 70%;
         height: 100%;
         display: flex;
         flex-direction: column;
+    }
+}
+
+@media screen and (max-width: $desktopBreakPoint) {
+
+    .lot {
+        width: 100%;
+        padding: 200px 5%;
+
+        &__stats-area {
+            width: 75%;
+        }
+    }
+}
+
+@media screen and (max-width: $tabletBreakPoint) {
+
+    .lot {
+        width: 100%;
+        padding: 200px 5%;
+
+        &__border {
+            width: 90%;
+            border-radius: 10px;
+        }
+
+        &__name-wrapper {
+            top: -40px;
+            width: 250px;
+            height: 50px;
+        }
+
+        &__name {
+            font-size: 24px;
+        }
+
+        &__stats-area {
+            width: 65%;
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
+
+    .lot {
+        padding: 150px 5%;
+
+        &__wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .footballer-card-illustrations {
+            width: 100%;
+            margin: 5% auto;
+        }
+
+        &__stats-area {
+            width: 100%;
+            margin: 5% auto;
+            display: flex;
+            flex-direction: column;
+        }
     }
 }
