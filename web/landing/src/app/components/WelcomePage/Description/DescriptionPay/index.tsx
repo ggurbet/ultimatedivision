@@ -17,11 +17,10 @@ export const DescriptionPay = () => {
             <div className="description-pay__text-area">
                 <h2 className="description-pay__title">Play-to-Earn</h2>
                 <p className="description-pay__text">
-                    Players who own a founder player card will have access
-                    to the game 2 weeks earlier, will be marked as UD founders
-                    in game and will receive special NFT drops to further boost
-                    their clubs. UD Founders will start the competition in the
-                    top division and will maximise their Play-to-Earn profits.
+                    Club Owners who hold a Founder Collection NFT will be
+                    awarded the in-game title of UD Founder. The UD Founders
+                    will receive exclusive airdrops and will start
+                    the game in UD’s top division.
                 </p>
             </div>
         </div>

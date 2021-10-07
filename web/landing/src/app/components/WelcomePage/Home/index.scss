@@ -21,7 +21,76 @@
         margin-top: 120px;
         display: flex;
         flex-direction: column;
+        position: static;
         transition: all 0.3s;
+    }
+
+    &__discord,
+    &__twitter {
+        width: 84px;
+        height: 60px;
+        padding: 10px 25px;
+        display: flex;
+        justify-content: center;
+        justify-content: space-between;
+        align-items: center;
+        text-decoration: none;
+        color: white;
+        background: #001b4f;
+        font-family: "Hanson";
+        font-size: 18px;
+        font-weight: 700;
+        border: 2px solid $roadmapHighlightColor;
+    }
+
+    &__discord {
+        width: 290px;
+        height: 60px;
+        margin-right: 10px;
+
+        &__logo {
+            margin-right: 26px;
+        }
+
+        &__logo-mobile {
+            border: 1px solid red;
+        }
+
+        &__text {
+            margin-top: 4px;
+            //sorry
+        }
+
+        &:hover {
+            background: linear-gradient(95.3deg, rgba(0, 0, 0, 0.2) 4.05%, rgba(0, 0, 0, 0) 87.48%),
+                linear-gradient(0deg, #0df55c, #0df55c);
+        }
+    }
+
+    &__twitter {
+
+        &:hover {
+            background: linear-gradient(95.3deg, rgba(0, 0, 0, 0.2) 4.05%, rgba(0, 0, 0, 0) 87.48%),
+                linear-gradient(0deg, #0df55c, #0df55c);
+        }
+    }
+
+    &__buttons-wrapper {
+        max-width: 380px;
+        margin-top: 40px;
+        display: flex;
+        justify-content: space-between;
+
+        &__mobile {
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+    }
+
+    &__mobile-wrapper {
+        display: none;
     }
 
     &__value {
@@ -137,6 +206,10 @@
         &__text-area {
             margin-top: 20px;
         }
+
+        &__discord {
+            font-size: 14px;
+        }
     }
 }
 
@@ -159,6 +232,17 @@
             font-size: 64px;
         }
 
+        &__buttons-wrapper {
+            display: none;
+        }
+
+        &__mobile-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
         &__description {
             display: none;
         }
@@ -172,9 +256,36 @@
         }
 
         &__description-mobile {
-            width: unset;
+            width: 100%;
             margin-top: 60px;
             display: block;
+        }
+
+        &__discord {
+
+            &__logo {
+                margin-right: 5px;
+            }
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint - 150px) {
+    .home {
+        &__discord,
+        &__twitter {
+
+            &__logo {
+                width: 25px;
+            }
+        }
+        &__discord {
+
+            padding: 10px;
+            justify-content: space-around;
+            &__text {
+                font-size: 12px;
+            }
         }
     }
 }

@@ -51,7 +51,8 @@
         margin-top: 5px;
         list-style: none;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
+        column-gap: 30px;
     }
 
     &__social-img {

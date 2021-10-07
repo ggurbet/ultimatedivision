@@ -13,11 +13,11 @@ export const DescriptionCards = () => {
                     The Player Cards - Become UD Founder
                 </h2>
                 <p className="description-cards__text">
-                    Each football player on the field is controlled by Player Card
-                    NFT - they are required to make a squad. We will be releasing a
-                    limited founder collection of extremely rare and powerful
-                    player cards on September 20. Each player card NFT has stats
-                    that will determine how good the footballer is.
+                    Each player in your club is an NFT - build a squad of 11 NFTs,
+                    for your team to compete week in, week out.
+                    These NFT’s have the player’s stats, which determine how strong
+                    each player is. If you want to score a limited Founder Collection
+                    NFT, then make sure you are ready for date.
                 </p>
             </div>
             <div className="description-cards__wrapper">
