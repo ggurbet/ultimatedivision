@@ -1,7 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 import { Card, CardsPage } from '@/card';
-
 import { GET_USER_CARDS, USER_CARD } from '@/app/store/actions/cards';
 
 const DEFAULT_OFFSET_VALUE: number = 0;

@@ -2,9 +2,7 @@
 // See LICENSE for copying information.
 
 import { Card } from '@/card';
-
 import { MarketPlacePage } from '@/marketplace';
-
 import { GET_SELLING_CARDS, MARKETPLACE_CARD } from '../actions/marketplace';
 
 /** Markeplace state base implementation */

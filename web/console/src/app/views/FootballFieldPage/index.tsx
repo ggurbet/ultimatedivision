@@ -3,12 +3,10 @@
 
 import { DragEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { FootballFieldCardSelection } from
     '@components/FootballField/FootballFieldCardSelection';
 import { FootballFieldPlayingArea } from
     '@components/FootballField/FotballFieldPlayingArea';
-
 import { RootState } from '@/app/store';
 import { getClub, removeCard } from '@/app/store/actions/club';
 

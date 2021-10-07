@@ -3,7 +3,6 @@
 
 import { LootboxClient } from '@/api/lootboxes';
 import { LootboxService } from '@/lootbox/service';
-
 import { BUY_LOOTBOX } from '../actions/lootboxes';
 
 /** Lootbox state base implementation */

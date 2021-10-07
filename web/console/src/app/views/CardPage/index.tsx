@@ -2,13 +2,10 @@
 // See LICENSE for copying information.
 
 import { useEffect } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { openUserCard } from '@/app/store/actions/cards';
-
 import { useParams } from 'react-router';
-
 import { FootballerCardIllustrations } from '@/app/components/common/Card/CardIllustrations';
 import { FootballerCardPrice } from '@/app/components/common/Card/CardPrice';
 import { FootballerCardStatsArea } from '@/app/components/common/Card/CardStatsArea';

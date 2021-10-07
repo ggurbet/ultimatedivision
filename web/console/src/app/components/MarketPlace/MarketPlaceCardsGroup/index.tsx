@@ -2,7 +2,6 @@
 // See LICENSE for copying information.
 
 import { Lot } from '@/marketplace';
-
 import { MarketPlaceFootballerCard } from '@components/MarketPlace/MarketPlaceCardsGroup/MarketPlaceFootballerCard';
 
 import './index.scss';

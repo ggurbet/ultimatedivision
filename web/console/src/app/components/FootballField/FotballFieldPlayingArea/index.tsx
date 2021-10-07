@@ -3,13 +3,10 @@
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { FootballFieldControlsArea } from '@/app/components/FootballField/FootballFieldControlsArea';
 import { PlayingAreaFootballerCard } from '@components/FootballField/PlayingAreaFootballerCard';
-
 import { SquadCard } from '@/club';
 import { Card } from '@/card';
-
 import { RootState } from '@/app/store';
 import { cardSelectionVisibility, choosePosition, exchangeCards, removeCard, setDragStart, setDragTarget }
     from '@/app/store/actions/club';

@@ -1,11 +1,9 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
+
 import { Link } from 'react-router-dom';
-
 import { Lot } from '@/marketplace';
-
 import { PlayerCard } from '@components/common/PlayerCard';
-
 import currentBid
     from '@static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/bid.svg';
 import priceGoldIcon

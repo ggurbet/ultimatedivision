@@ -3,7 +3,6 @@
 
 import { FootballerCardIllustrationsDiagramsArea } from '@/app/components/common/Card/CardIllustrationsDiagramsArea';
 import { FootballerCardIllustrationsRadar } from '@/app/components/common/Card/CardIllustrationsRadar';
-
 import { Card } from '@/card';
 
 import './index.scss';

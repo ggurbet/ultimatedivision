@@ -2,15 +2,12 @@
 // See LICENSE for copying information.
 
 import { useSelector } from 'react-redux';
-
 import { Doughnut } from 'react-chartjs-2';
-
 import { RootState } from '@/app/store';
-
+import { Card } from "@/card";
 import currency from '@static/img/FootballerCardPage/currency.svg';
 
 import './index.scss';
-import { Card } from '@/card';
 
 export const FootballerCardPrice: React.FC<{card: Card}> = ({ card }) => {
     const FIRST_CARD_INDEX = 0;
