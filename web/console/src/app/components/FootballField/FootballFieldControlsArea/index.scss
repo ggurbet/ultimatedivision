@@ -1,16 +1,20 @@
 @import "@/index.scss";
 
 .football-field-controls-area {
-    margin-left: 20px;
+    margin: 0 0 0 auto;
+    padding: 5px;
     background: $highlightBackground;
     width: 25%;
+    height: 100%;
     max-width: 400px;
     border-radius: 5px;
     font-family: "Montserrat", sans-serif;
 
     &__title {
-        text-transform: uppercase;
         margin: 24px 0 24px 24px;
+        font-family: "BebasNeue", sans-serif;
+        font-size: 32px;
+        text-transform: uppercase;
     }
 
     &.football-field-information-option &:first-child {
@@ -20,7 +24,52 @@
 
 .football-field-control {
 
+    &__heading {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 20px;
+    }
+
+    &__list {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 17px;
+    }
+
     &:last-child {
         border: none;
+    }
+}
+
+@media screen and (max-width: $desktopBreakPoint) {
+
+    .football-field-controls-area {
+
+        &__title {
+            font-size: 28px;
+        }
+    }
+}
+
+@media screen and (max-width: $tabletBreakPoint) {
+
+    .football-field-controls-area {
+        width: 100%;
+        margin: 5% 0;
+        max-width: none;
+
+        &__title {
+            font-size: 24px;
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
+
+    .football-field-controls-area {
+
+        &__title {
+            font-size: 24px;
+        }
     }
 }

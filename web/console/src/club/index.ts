@@ -17,8 +17,7 @@ export class Squad {
     public formation: number = DEFAULT_VALUE;
     public tactic: number = DEFAULT_VALUE;
     public captainId: string = '';
-};
-
+}
 
 /** backend card  */
 export class SquadCard {
@@ -34,9 +33,10 @@ export class Options {
         public chosedCard: number = DEFAULT_VALUE,
         public showCardSeletion: boolean = false,
         public dragStart: number | null = null,
-        public dragTarget: number | null = null,
-    ) { }
+        public dragTarget: number | null = null
+    ) {}
 }
+
 /** club reducer state  */
 export class ClubState {
     public clubs: Club = new Club();
@@ -45,7 +45,17 @@ export class ClubState {
     public options: Options = new Options();
 }
 
-export type FormationsType = '4-4-2' | '4-2-4' | '4-2-2-2' | '4-3-1-2' | '4-3-3' | '4-2-3-1' | '4-3-2-1' | '4-1-3-2' | '5-3-2' | '4-5-2';
+export type FormationsType =
+  | '4-4-2'
+  | '4-2-4'
+  | '4-2-2-2'
+  | '4-3-1-2'
+  | '4-3-3'
+  | '4-2-3-1'
+  | '4-3-2-1'
+  | '4-1-3-2'
+  | '5-3-2'
+  | '4-5-2';
 export type TacticsType = 'attack' | 'defence' | 'balanced';
 
 /* eslint-disable no-magic-numbers */
@@ -65,5 +75,5 @@ export enum Formations {
 export enum Tactic {
     'attack' = 1,
     'defence' = 2,
-    'balanced' = 3
+    'balanced' = 3,
 }

@@ -1,4 +1,9 @@
 @mixin footballFieldCardPosition($top, $left) {
     top: calc(#{$top} - 162px / 2);
-    left: calc(#{$left} - 110px / 2);
+    left: calc(#{$left} - 100px / 2);
+}
+
+@mixin footballFieldCardPositionPhone($top, $left) {
+    top: calc(#{$top} - 162px / 2);
+    left: calc(#{$left} - 50px / 2);
 }
