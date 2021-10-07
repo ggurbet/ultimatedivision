@@ -3,6 +3,7 @@ module ultimatedivision
 go 1.15
 
 require (
+	github.com/ethereum/go-ethereum v1.10.9
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2
@@ -11,6 +12,6 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/zeebo/errs v1.2.2
 	go.uber.org/zap v1.15.0
-	golang.org/x/crypto v0.0.0-20190605123033-f99c8df09eb5
-	golang.org/x/sync v0.0.0-20190423024810-112230192c58
+	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 )

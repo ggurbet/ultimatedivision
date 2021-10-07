@@ -271,7 +271,9 @@
 }
 
 @media (max-width: $phoneBreakPoint - 150px) {
+
     .home {
+
         &__discord,
         &__twitter {
 
@@ -279,10 +281,11 @@
                 width: 25px;
             }
         }
-        &__discord {
 
+        &__discord {
             padding: 10px;
             justify-content: space-around;
+
             &__text {
                 font-size: 12px;
             }
