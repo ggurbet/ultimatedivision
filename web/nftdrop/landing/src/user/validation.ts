@@ -14,18 +14,4 @@ export class Validator {
 
         return re.test(String(email).toLowerCase());
     };
-    /** static method for password field validation */
-    static password(password: string): boolean {
-        /** same validation from back-end:
-         * min 8 letter password, with at least a symbol,
-         * upper and lower case letters and a number */
-        const re = new RegExp(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/, 'i');
-
-        return re.test(String(password).toLowerCase());
-    };
-    /** static method for all string form fields validation,
-     * except password and email */
-    static field(field: string): boolean {
-        return !!field;
-    };
 };

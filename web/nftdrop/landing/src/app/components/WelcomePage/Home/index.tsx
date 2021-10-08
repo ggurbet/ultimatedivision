@@ -64,7 +64,7 @@ export const Home: React.FC = () => {
                     data-aos-easing="ease-in-out-cubic"
                 />
                 <div className="home__mobile-wrapper">
-                    <p className="home__description-mobile">
+                    <div className="home__description-mobile">
                         Get one to become UD founder and join the Play-to-Earn game.
                         Build your club in the metaverse.
                         <div className="home__buttons-wrapper__mobile">
@@ -96,7 +96,7 @@ export const Home: React.FC = () => {
                             />
                         </a>
                         </div>
-                    </p>
+                    </div>
                 </div>
                 <ScrollTop />
             </div>

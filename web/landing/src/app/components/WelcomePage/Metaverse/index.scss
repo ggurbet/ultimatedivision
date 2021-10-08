@@ -1,0 +1,122 @@
+@import "@static/styles/reset";
+@import "@static/styles/variables";
+
+.metaverse {
+    width: 100%;
+    background: $metaverve-bg-color;
+
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 1440px;
+        margin: auto;
+        padding: 80px 70px;
+        overflow: hidden;
+    }
+
+    &__title {
+        margin-top: 80px;
+        font-family: "Hanson", sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 64px;
+        line-height: 67px;
+        text-align: center;
+        color: $metaverve-title;
+        transition: all 0.3s;
+    }
+
+    &__subtitle {
+        font-family: "Hanson", sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 48px;
+        line-height: 67px;
+        text-align: center;
+        color: $metaverve-text;
+        transition: all 0.3s;
+    }
+
+    &__cards {
+        display: flex;
+        flex-direction: row;
+        width: 80%;
+        object-fit: cover;
+        margin: auto;
+        position: relative;
+    }
+
+    &__sold-scale {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 90%;
+        height: 65px;
+        margin: 40px auto;
+        background-image: url("../../../static/images/metaverse/sold-progress-scale-1440.png");
+        background-size: 100% 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        transition: all 0.3s;
+
+        &__text {
+            position: absolute;
+            font-family: "Roboto", sans-serif;
+            font-style: normal;
+            font-weight: 300;
+            font-size: 24px;
+            color: $metaverve-text;
+        }
+    }
+}
+
+@media (max-width: $desktopBreakPoint) {
+
+    .metaverse {
+
+        &__title {
+            margin-top: 0;
+            font-size: 40px;
+        }
+
+        &__subtitle {
+            font-size: 28px;
+            line-height: unset;
+        }
+
+        &__sold-scale {
+            height: 55px;
+            width: 100%;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .metaverse {
+
+        &__wrapper {
+            padding: 80px 30px;
+        }
+
+        &__title {
+            font-size: 28px;
+        }
+
+        &__subtitle {
+            font-size: 22px;
+            line-height: unset;
+            margin-bottom: 40px;
+        }
+
+        &__cards {
+            width: 100%;
+        }
+
+        &__sold-scale {
+            height: 40px;
+        }
+    }
+}

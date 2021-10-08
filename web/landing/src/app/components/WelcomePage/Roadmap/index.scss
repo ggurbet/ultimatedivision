@@ -1,0 +1,118 @@
+@import "/src/index.scss";
+@import "aos/dist/aos.css";
+
+.roadmap {
+    background: #2c3c8f;
+    color: white;
+    min-height: 1000px;
+    position: relative;
+    overflow: hidden;
+
+    &__wrapper {
+        position: relative;
+        padding: 100px 90px;
+        max-width: 1440px;
+        margin: 0 auto;
+        transition: all 0.3s;
+    }
+
+    &__title {
+        margin-bottom: 100px;
+        color: $roadmapHighlightColor;
+        text-align: center;
+        font-family: "Russo One";
+        font-style: normal;
+        font-weight: normal;
+        font-size: 43px;
+        line-height: 52px;
+    }
+
+    &__road {
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        gap: 30px;
+    }
+
+    &__flag {
+        height: 273px;
+        position: absolute;
+        right: 90px;
+        bottom: -120px;
+        transition: all 0.3s linear;
+    }
+
+    &__bottom {
+        height: 90px;
+        position: absolute;
+        width: 3000px;
+        left: -20px;
+        bottom: -40px;
+    }
+}
+
+@media (max-width: $desktopBreakPoint) {
+
+    .roadmap {
+
+        &__wrapper {
+            padding: 70px;
+        }
+
+        &__road {
+            margin-left: 40px;
+            flex-direction: column;
+            align-items: flex-start;
+
+            &:before {
+                content: "";
+                height: 100%;
+                position: absolute;
+                left: -25px;
+                width: 5px;
+                background: linear-gradient(90deg, #00ffa3 0%, #00ffa3 135.85%);
+            }
+        }
+
+        &__flag {
+            height: 237px;
+            bottom: 0;
+        }
+    }
+}
+
+@media (max-width: $tabletBreakPoint) {
+
+    .roadmap {
+
+        &__wrapper {
+            padding: 70px 40px;
+        }
+
+        &__flag {
+            right: 50px;
+        }
+
+        &__title {
+            margin-bottom: 100px;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .roadmap {
+
+        &__wrapper {
+            padding: 70px 20px;
+        }
+
+        &__flag {
+            right: 30px;
+        }
+
+        &__title {
+            margin-bottom: 80px;
+        }
+    }
+}

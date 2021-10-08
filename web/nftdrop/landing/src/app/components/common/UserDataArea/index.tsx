@@ -5,8 +5,6 @@ import React, { SetStateAction, useEffect, useState } from 'react';
 
 import { useDebounce } from '@/app/hooks/useDebounce';
 
-import check from '@static/images/registerPage/check.svg';
-
 export const UserDataArea: React.FC<{
     value: string,
     placeHolder: string,
@@ -27,21 +25,20 @@ export const UserDataArea: React.FC<{
     validate,
 }) => {
     const DELAY: number = 500;
-    const SUCCESS_BACKGROUND_IMAGE_PATH : string = `url(${check})`;
     /**
     * The value string from input returned by the useDebounce method after 500 milliseconds.
     */
     const debouncedValue: string = useDebounce(value, DELAY);
 
     /** inline styles for valid input field */
-    const [successLabelStyle , setSuccessLabelStyle] =
-        useState({});
+    const [successLabelClassName , setSuccessLabelClassName] =
+        useState<string>('');
 
     useEffect(() => {
         if (!validate(debouncedValue)) {
-            setSuccessLabelStyle({});
+            setSuccessLabelClassName('');
         } else {
-            setSuccessLabelStyle({ backgroundImage: SUCCESS_BACKGROUND_IMAGE_PATH });
+            setSuccessLabelClassName('-check');
         };
 
     }, [debouncedValue]);
@@ -54,11 +51,10 @@ export const UserDataArea: React.FC<{
     return (
         <div className={`${className}__ wrapper`}>
             <input
-                className={error ? `${className}-error` : className}
+                className={error ? `${className}-error` : `${className}${successLabelClassName}`}
                 value={value}
                 placeholder={placeHolder}
                 onChange={handleChange}
-                style={successLabelStyle}
                 type={type}
             />
             {error && <label className={`${className}__error`} htmlFor={value}>

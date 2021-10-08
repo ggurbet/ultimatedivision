@@ -1,0 +1,66 @@
+@import "@static/styles/reset";
+@import "@static/styles/variables";
+@import "@static/styles/extends";
+@import "@static/styles/mixins";
+
+@font-face {
+    font-family: "BebasNeue";
+    src: url("@static/fonts/BebasNeue-Regular.ttf");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Thorletto";
+    src: url("@static/fonts/Thorletto.ttf");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Russo One";
+    src: url("@static/fonts/RussoOne-Regular.ttf");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Hanson";
+    src: url("@static/fonts/Hanson-Bold.ttf");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Rubik";
+    src: url("@static/fonts/Rubik-Regular.ttf");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("@static/fonts/Roboto-Regular.ttf");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Montserrat";
+    src: url("@static/fonts/Montserrat-Regular.ttf") format("truetype");
+}
+
+html {
+    scroll-behavior: smooth;
+    font-family: "BebasNeue", sans-serif;
+}
+
+.main {
+    overflow-y: hidden;
+}

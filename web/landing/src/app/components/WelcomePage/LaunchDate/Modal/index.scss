@@ -1,0 +1,209 @@
+@import "/src/index.scss";
+
+.launch-date-modal {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(#0b2774c7, #030024d8);
+    text-align: center;
+    backdrop-filter: blur(8px);
+
+    &__window {
+        padding: 100px 80px;
+        width: 90%;
+        max-width: 800px;
+        position: relative;
+        z-index: 3;
+        text-align: center;
+        background: url("@static/images/headingPage/play.png");
+        background-position: center;
+        background-size: cover;
+        background-color: #000108;
+        transition: width 0.3s;
+        border-radius: 5px;
+    }
+
+    &__description {
+        margin-bottom: 60px;
+        font-family: "Russo One";
+        text-align: left;
+        font-size: 56px;
+        color: $roadmapHighlightColor;
+        transition: font-size 0.3s;
+    }
+
+    &__input-wrapper {
+        position: relative;
+    }
+
+    &__input-label {
+        position: absolute;
+        left: 0;
+        top: -35px;
+        color: white;
+        font-family: "Rubik";
+        font-size: 24px;
+        line-height: 28px;
+    }
+
+    &__close {
+        position: absolute;
+        right: -8%;
+        top: -5%;
+        cursor: pointer;
+
+        &__text {
+            color: #8a8faf;
+            font-size: 80px;
+        }
+    }
+
+    &__notification {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+
+        &__wrapper {
+            position: relative;
+        }
+
+        &__send,
+        &__send-check,
+        &__send-error {
+            width: 100%;
+            line-height: 40px;
+            outline: none;
+            cursor: pointer;
+            background: #001c39;
+            border: 1px solid $roadmapHighlightColor;
+            font-size: 24px;
+            padding: 5px 29px;
+            color: white;
+            background-repeat: no-repeat;
+            background-position: 98% 50%;
+
+            &__error {
+                position: absolute;
+                right: 0;
+                top: -35px;
+                color: red;
+                font-family: "Rubik";
+                font-size: 24px;
+                line-height: 28px;
+                text-align: right;
+            }
+        }
+
+        &__send-check {
+            background-image: url("@static/images/registerPage/check.svg");
+        }
+
+        &__send-error {
+            border: 1px solid red;
+        }
+
+        &__confirm {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Hanson";
+            z-index: 1;
+            font-size: 18px;
+            text-align: center;
+            border: none;
+            width: 240px;
+            height: 66px;
+            line-height: 40px;
+            margin-top: 10%;
+            color: white;
+            background: linear-gradient(
+                95.3deg,
+                rgba(0, 0, 0, 0.2) 4.05%,
+                rgba(0, 0, 0, 0) 87.48%
+            ),
+                linear-gradient(0deg, #0df55c, #0df55c);
+            cursor: pointer;
+        }
+    }
+
+    &__wrapper {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: $desktopBreakPoint) {
+
+        &__description {
+            width: 90%;
+            font-size: 50px;
+        }
+
+        &__close {
+            right: 0;
+            top: -80px;
+        }
+    }
+
+    @media (max-width: $tabletBreakPoint) {
+
+        &__window {
+            padding: 100px 40px;
+        }
+
+        &__close {
+            right: 0;
+            top: -80px;
+        }
+
+        &__notification {
+
+            &__confirm {
+                font-size: 16px;
+                line-height: 30px;
+                margin-top: 10%;
+            }
+        }
+
+        &__description {
+            font-size: 50px;
+        }
+    }
+
+    @media (max-width: $phoneBreakPoint) {
+
+        &__window {
+            padding: 40px 20px;
+        }
+
+        &__notification {
+            width: 100%;
+
+            &__send,
+            &__send-check {
+                padding: 5px 15px;
+            }
+
+            &__confirm {
+                line-height: 32px;
+                width: 100%;
+            }
+        }
+
+        &__description {
+            font-size: 44px;
+        }
+    }
+
+    @media (max-width: $phoneBreakPoint - 280px) {
+
+        &__window {
+            width: 80%;
+            padding-bottom: 2%;
+        }
+    }
+}

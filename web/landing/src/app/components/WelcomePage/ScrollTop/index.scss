@@ -1,0 +1,38 @@
+@import "/src/index.scss";
+
+.scroll-to-top {
+    width: auto;
+    position: fixed;
+    bottom: 100px;
+    right: 10%;
+    z-index: 2;
+    opacity: 50%;
+    cursor: pointer;
+
+    &__button {
+        width: 50px;
+    }
+}
+
+.scroll-to-top:hover {
+    opacity: 100%;
+
+    svg {
+
+        path {
+            fill: #92b0ff;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .scroll-to-top {
+        right: 20px;
+        bottom: 60px;
+
+        &__button {
+            width: 40px;
+        }
+    }
+}

@@ -1,0 +1,44 @@
+%button {
+    display: inline-block;
+    position: relative;
+    border: 5px solid $highlightColor;
+    background-color: $highlightColor;
+    padding: 10px 130px;
+    margin: 0 auto;
+    font-size: 28px;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+
+    &:before {
+        width: 0;
+        opacity: 0;
+        content: "play";
+        height: 100%;
+        top: 0;
+        left: 0;
+        clip-path: polygon(0 0, 100% 0%, 75% 100%, 0% 100%);
+        display: flex;
+        position: absolute;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        color: $highlightColor;
+        background-color: white;
+        transition: all 1s;
+    }
+
+    &:hover {
+
+        &:before {
+            clip-path: polygon(0 0, 100% 0%, 100% 100%, 0% 100%);
+            opacity: 1;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: $tabletBreakPoint) {
+        padding: 5px 100px;
+        font-size: 22px;
+    }
+}
