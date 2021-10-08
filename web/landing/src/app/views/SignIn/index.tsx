@@ -14,7 +14,7 @@ import { loginUser } from '@/app/store/actions/users';
 import { UserDataArea } from '@components/common/UserDataArea';
 
 import facebook from '@static/images/registerPage/facebook_logo.svg';
-import google from '@static/images/registerPage/google_logo.svg'
+import google from '@static/images/registerPage/google_logo.svg';
 import ultimate from '@static/images/registerPage/ultimate.svg';
 
 import './index.scss';

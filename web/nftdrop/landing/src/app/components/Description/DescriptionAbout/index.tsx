@@ -3,19 +3,18 @@
 
 import './index.scss';
 import field from '@static/images/description/field.webp';
-import fieldMobile from '@static/images/description/field-mobile.webp'
-
+import fieldMobile from '@static/images/description/field-mobile.webp';
 
 export const DescriptionAbout = () => {
     return (
         <div className="description-about" id="about">
             <div className="description-about__image-area">
                 <picture>
-                <img
-                    className="description-about__field"
-                    src={field}
-                    alt="field image"
-                />
+                    <img
+                        className="description-about__field"
+                        src={field}
+                        alt="field image"
+                    />
                 </picture>
             </div>
             <div className="description-about__text-area">

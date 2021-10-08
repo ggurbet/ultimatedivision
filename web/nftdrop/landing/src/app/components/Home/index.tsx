@@ -68,33 +68,33 @@ export const Home: React.FC = () => {
                         Get one to become UD founder and join the Play-to-Earn game.
                         Build your club in the metaverse.
                         <div className="home__buttons-wrapper__mobile">
-                        <a
-                            className="home__discord"
-                            href="https://discord.com/invite/ultimatedivision"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <img
-                                className="home__discord__logo"
-                                src={discord}
-                                alt="discord logo"
-                            />
-                            <span className="home__discord__text">
+                            <a
+                                className="home__discord"
+                                href="https://discord.com/invite/ultimatedivision"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <img
+                                    className="home__discord__logo"
+                                    src={discord}
+                                    alt="discord logo"
+                                />
+                                <span className="home__discord__text">
                                 Join Discord
-                            </span>
-                        </a>
-                        <a
-                            className="home__twitter"
-                            href="https://twitter.com/UltimateDivnft"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <img
-                                className="home__twitter__logo"
-                                src={twitter}
-                                alt="twitter logo"
-                            />
-                        </a>
+                                </span>
+                            </a>
+                            <a
+                                className="home__twitter"
+                                href="https://twitter.com/UltimateDivnft"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <img
+                                    className="home__twitter__logo"
+                                    src={twitter}
+                                    alt="twitter logo"
+                                />
+                            </a>
                         </div>
                     </div>
                 </div>
