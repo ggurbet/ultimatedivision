@@ -248,10 +248,6 @@ func (server *Server) brotliMiddleware(fn http.Handler) http.Handler {
 		}
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 
-		server.log.Error("URI: "+r.RequestURI, nil)
-		server.log.Error("extension: "+extension, nil)
-		server.log.Error("mime: "+mime.TypeByExtension(extension), nil)
-
 		// we have gzipped only fonts, js and css bundles
 		formats := map[string]bool{
 			".js":  true,
@@ -267,8 +263,6 @@ func (server *Server) brotliMiddleware(fn http.Handler) http.Handler {
 			fn.ServeHTTP(w, r)
 			return
 		}
-
-		server.log.Error("brotli needed", nil)
 
 		w.Header().Set("Content-Encoding", "br")
 
