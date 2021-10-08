@@ -1,6 +1,7 @@
 @import "/src/index.scss";
 
 .ultimatedivision-mint-btn {
+    position: relative;
     width: 268px;
     height: 72px;
     border: none;
@@ -18,5 +19,14 @@
         font-size: 24px;
         line-height: 25px;
         color: $metaverve-text;
+    }
+
+    .error {
+        font-size: 12px;
+        position: absolute;
+        bottom: -45px;
+        padding: 10px 0;
+        width: 100%;
+        background: rgb(169, 1, 1);
     }
 }

@@ -10,18 +10,6 @@ export class Service {
         this.provider = ethereumProvider;
     }
 
-    public async connectMetamask() {
-        const onboarding = new MetaMaskOnboarding();
-
-        if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-            // @ts-ignore
-            return await window.ethereum.request({ method: 'eth_requestAccounts' });
-
-        } else {
-            onboarding.startOnboarding();
-        }
-    }
-
     public async sendTransaction(adress: string, amount: string) {
         try {
             const signer = this.provider.getSigner();
