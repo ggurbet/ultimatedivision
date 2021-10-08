@@ -1,0 +1,149 @@
+@import "/src/index.scss";
+@import "aos/dist/aos.css";
+
+.launch-date {
+    background: #001236;
+
+    &__wrapper {
+        width: 100%;
+        max-width: 1440px;
+        position: relative;
+        margin: 0 auto;
+        display: flex;
+        padding: 0 70px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__ball {
+        width: 440px;
+        height: 440px;
+        position: relative;
+        animation: bounce 5s ease-in-out both infinite;
+        transition: all 0.3s linear;
+
+        @keyframes bounce {
+
+            0% {
+                transform: translateY(-20px);
+            }
+
+            50% {
+                transform: translateY(20px);
+            }
+
+            100% {
+                transform: translateY(-20px);
+            }
+        }
+    }
+
+    &__information {
+        display: block;
+
+        &__subtitle {
+            font-family: "Rubik";
+            color: white;
+            font-size: 28px;
+        }
+
+        &__title {
+            font-family: "Russo One";
+            font-size: 56px;
+            color: $roadmapHighlightColor;
+            letter-spacing: 2px;
+            font-weight: lighter;
+        }
+
+        &__remind {
+            width: 290px;
+            height: 72px;
+            font-family: "Hanson";
+            margin-top: 40px;
+            font-size: 26px;
+            text-align: center;
+            vertical-align: middle;
+            background: $highlightColor;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    @media (max-width: $desktopBreakPoint + 200px) {
+
+        &__information {
+
+            &__subtitle {
+                font-size: 24px;
+            }
+
+            &__title {
+                font-size: 42px;
+            }
+
+            &__remind {
+                font-size: 20px;
+                padding: 15px 25px;
+                line-height: 48px;
+            }
+        }
+    }
+
+    @media (max-width: $desktopBreakPoint) {
+
+        &__wrapper {
+            padding: 0 50px;
+        }
+
+        &__information {
+
+            &__subtitle {
+                font-size: 22px;
+            }
+
+            &__title {
+                font-size: 36px;
+            }
+
+            &__remind {
+                width: 156px;
+                height: 42px;
+                line-height: 36px;
+                font-size: 14px;
+            }
+        }
+
+        &__ball {
+            width: 250px;
+            height: 250px;
+        }
+    }
+
+    @media (max-width: $tabletBreakPoint) {
+        overflow: hidden;
+
+        &__wrapper {
+            background-image: url("@static/images/launchDate/ball-mobile.png");
+            background-position: right;
+            background-size: contain;
+            background-repeat: no-repeat;
+            min-height: 440px;
+            padding: 70px 30px;
+        }
+
+        &__ball {
+            display: none;
+        }
+    }
+
+    // @media (max-width: $phoneBreakPoint) {
+
+    //     &__wrapper {
+    //         background-position: 300% 50%;
+    //     }
+    // }
+}

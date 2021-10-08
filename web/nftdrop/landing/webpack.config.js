@@ -18,7 +18,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist/"),
         filename: "[name].[hash].js",
-        publicPath: "/static/dist/",
+        publicPath: "/",
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -90,7 +90,7 @@ module.exports = {
                 },
             },
             {
-                test: /\.(jpe|jpg|png|svg)(\?.*$|$)/,
+                test: /\.(jpe|jpg|png|svg|webp)(\?.*$|$)/,
                 exclude: /(node_modules)/,
                 type: "asset/resource",
                 generator: {
