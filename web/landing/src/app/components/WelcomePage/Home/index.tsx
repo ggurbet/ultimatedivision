@@ -19,7 +19,7 @@ export const Home: React.FC = () => {
                     data-aos-duration="600"
                     data-aos-easing="ease-in-out-cubic"
                 >
-                    <h2 className="home__value">10 000</h2>
+                    <h1 className="home__value">10 000</h1>
                     <h3 className="home__title">Unique Collectible Player Cards.</h3>
                     <p className="home__description">
                         Get one to become UD founder and join the Play-to-Earn game.
@@ -64,7 +64,7 @@ export const Home: React.FC = () => {
                     data-aos-easing="ease-in-out-cubic"
                 />
                 <div className="home__mobile-wrapper">
-                    <p className="home__description-mobile">
+                    <div className="home__description-mobile">
                         Get one to become UD founder and join the Play-to-Earn game.
                         Build your club in the metaverse.
                         <div className="home__buttons-wrapper__mobile">
@@ -96,7 +96,7 @@ export const Home: React.FC = () => {
                             />
                         </a>
                         </div>
-                    </p>
+                    </div>
                 </div>
                 <ScrollTop />
             </div>

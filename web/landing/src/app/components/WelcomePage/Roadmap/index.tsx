@@ -76,6 +76,7 @@ export const Roadmap: React.FC = () => {
                 className="roadmap__bottom"
                 src={footer}
                 alt="bottom texture"
+                loading="lazy"
             />
         </section>
     );

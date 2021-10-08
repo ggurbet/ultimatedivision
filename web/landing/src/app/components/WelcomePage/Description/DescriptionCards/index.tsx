@@ -25,6 +25,7 @@ export const DescriptionCards = () => {
                     className="description-cards__card"
                     src={cards}
                     alt="cards"
+                    loading="lazy"
                 />
             </div>
         </div>

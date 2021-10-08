@@ -13,16 +13,19 @@ export const DescriptionAbout = () => {
                 <img
                     src={field}
                     alt="field image"
+                    loading="lazy"
                 />
                 <img
                     className="description-about__mirrored"
                     src={fieldMirrored}
                     alt="field mirrored"
+                    loading="lazy"
                 />
                 <img
                     className="description-about__stats-image"
                     src={cardStats}
                     alt="card stats image"
+                    loading="lazy"
                 />
             </div>
             <div className="description-about__text-area">

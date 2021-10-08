@@ -1,7 +1,6 @@
 @import "@/index.scss";
 
 .about-menu {
-    width: 400px;
     width: 25%;
     min-height: 110vh;
     top: 0;
@@ -9,25 +8,32 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    padding: 190px 2% 10% 5%;
     background-color: $highlightBackground;
     color: white;
-    padding: 30px 40px 30px;
 
-    &__logo-wrapper {
-        padding-top: 3px;
-        padding-left: 10px;
-        width: 100%;
-        margin-bottom: 100px;
+    &__title {
+        align-self: start;
+        padding: 10px;
+        text-transform: uppercase;
+        font-size: 32px;
+        line-height: 38px;
+        color: #fff;
     }
 
     &__whitepaper,
     &__tokenomics {
         display: flex;
         justify-content: space-between;
-        width: 300px;
-        padding: 17px 25px;
+        width: 100%;
+        padding: 20px 10px;
         cursor: pointer;
         transition: background 0.3s;
+        font-family: "Montserrat", sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 20px;
 
         &:hover {
             background-color: #464678;
@@ -41,6 +47,9 @@
 
     &__tokenomics-list,
     &__whitepaper-list {
+        display: flex;
+        flex-direction: column;
+        align-self: start;
         list-style: none;
         overflow-y: hidden;
         transition: height 0.3s ease-in-out;
@@ -49,16 +58,19 @@
     &__tokenomics-item,
     &__whitepaper-item {
         font-family: "Montserrat", sans-serif;
-        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 17px;
         cursor: pointer;
         color: white;
     }
 
     &__tokenomics-link,
     &__whitepaper-link {
-        width: 270px;
+        width: auto;
         display: inline-block;
-        padding: 5px 14px;
+        padding: 10px 25px;
         color: white;
         text-decoration: none;
         transition: all 0.3s;
@@ -66,6 +78,75 @@
         &:hover {
             background-color: #464678;
             color: $cardHighlightColor;
+        }
+    }
+}
+
+@media screen and (max-width: $desktopBreakPoint) {
+
+    .about-menu {
+        padding: 190px 1% 10% 5%;
+
+        &__whitepaper,
+        &__tokenomics {
+            font-size: 14px;
+        }
+    }
+}
+
+@media screen and (max-width: $tabletBreakPoint) {
+
+    .about-menu {
+        padding: 190px 1% 10% 5%;
+
+        &__title {
+            font-size: 28px;
+            line-height: 38px;
+        }
+
+        &__whitepaper,
+        &__tokenomics {
+            font-size: 12px;
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
+
+    .about-menu {
+        width: 90%;
+        min-height: auto;
+        position: absolute;
+        margin: 30% 2% 10% 5%;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    .whitepaper,
+    .tokenomics {
+
+        .whitepaper__wrapper,
+        .tokenomics__wrapper {
+            width: 100%;
+            margin: 0;
+            padding: 0%;
+
+            div {
+                width: 100%;
+                margin-top: 70%;
+
+                * {
+                    padding: 5%;
+                    margin: 0;
+                }
+
+                .spending__diagrams {
+
+                    &__doughnut {
+                        height: auto;
+                    }
+                }
+            }
         }
     }
 }

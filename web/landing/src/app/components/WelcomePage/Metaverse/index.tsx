@@ -30,7 +30,8 @@ export const Metaverse: React.FC = () => {
                     data-aos-duration="600"
                     data-aos-easing="ease-in-out-cubic"
                     src={cards}
-                    alt=""
+                    alt="cards"
+                    loading="lazy"
                 />
                 <div className="metaverse__sold-scale"
                     data-aos="fade-left"

@@ -7,14 +7,14 @@ import Aos from 'aos';
 import { dataAosLogoAnimation } from '@utils/dataAosLogoAnimation';
 import { aosDelayLogoAnimation } from '@utils/aosDelayLogoAnimation';
 
-import consensys from '@static/images/Projects/consensys.png';
-import nem from '@static/images/Projects/nem.png';
-import storj from '@static/images/Projects/storj.png';
-import near from '@static/images/Projects/near.png';
-import elixir from '@static/images/Projects/elixir.png';
-import affinidi from '@static/images/Projects/affinidi.png';
-import trustana from '@static/images/Projects/trustana.png';
-import bloom from '@static/images/Projects/bloom.png';
+import consensys from '@static/images/Projects/consensys.svg';
+import nem from '@static/images/Projects/nem.svg';
+import storj from '@static/images/Projects/storj.svg';
+import near from '@static/images/Projects/near.svg';
+import elixir from '@static/images/Projects/elixir.svg';
+import affinidi from '@static/images/Projects/affinidi.svg';
+import trustana from '@static/images/Projects/trustana.svg';
+import bloom from '@static/images/Projects/bloom.svg';
 
 import './index.scss';
 

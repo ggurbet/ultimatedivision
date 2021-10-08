@@ -1,0 +1,142 @@
+@import "/src/index.scss";
+
+.card {
+    width: 100%;
+    display: flex;
+    position: relative;
+    margin: 0 auto 40px;
+    padding: 70px 90px;
+    justify-content: space-between;
+    align-items: center;
+    background: #19215e;
+    border: 1px solid #3f4ba7;
+
+    &__text-area {
+        width: 70%;
+    }
+
+    &__title {
+        font-family: "Thorletto", sans-serif;
+        font-size: 36px;
+        color: $roadmapHighlightColor;
+        font-weight: 400;
+        line-height: 115px;
+        margin-bottom: 36px;
+    }
+
+    &__description {
+        max-width: 500px;
+        font-size: 24px;
+        line-height: 28px;
+        font-weight: bold;
+        font-family: "Roboto";
+        text-align: left;
+        color: white;
+        margin-bottom: 80px;
+    }
+
+    &__box {
+        margin-top: 5%;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+
+        &__subtitle {
+            font-family: "Russo One";
+            margin-left: 5%;
+            font-size: 24px;
+            color: $roadmapHighlightColor;
+        }
+    }
+
+    @media (max-width: $desktopBreakPoint) {
+        padding: 65px 50px;
+        align-items: flex-start;
+
+        &__title {
+            margin-bottom: 12px;
+            font-size: 36px;
+        }
+
+        &__description {
+            font-size: 20px;
+            margin-bottom: 50px;
+            width: 85%;
+        }
+
+        &__box {
+
+            &__subtitle {
+                font-size: 18px;
+            }
+        }
+
+        &__image {
+            height: 160px;
+            width: 160px;
+        }
+    }
+
+    @media (max-width: $tabletBreakPoint) {
+
+        &__title {
+            font-size: 24px;
+        }
+
+        &__description {
+            font-size: 16px;
+        }
+
+        &__box {
+
+            &__subtitle {
+                font-size: 16px;
+            }
+        }
+    }
+
+    @media (max-width: $phoneBreakPoint) {
+        padding: 43px 20px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+
+        &__text-area {
+            width: 100%;
+        }
+
+        &__title {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 200px;
+        }
+
+        &__description {
+            width: 100%;
+            font-size: 18px;
+        }
+
+        &__box {
+
+            &__present {
+                width: 35px;
+            }
+
+            &__subtitle {
+                font-size: 12px;
+            }
+        }
+
+        &__image {
+            position: absolute;
+            top: 160px;
+        }
+    }
+
+    @media (max-width: $phoneBreakPoint - 200px) {
+
+        &__title {
+            font-size: 18px;
+        }
+    }
+}
