@@ -3,7 +3,7 @@
 import { FieldControl } from '@/app/types/club';
 import { FootballFieldControl } from
     '@/app/components/FootballField/FootballFieldControlsArea/FootballFieldControl';
-import { setCaptain, setFormation, setTactic } from "@/app/store/actions/club";
+import { setCaptain, setFormation, setTactic } from '@/app/store/actions/club';
 
 import './index.scss';
 

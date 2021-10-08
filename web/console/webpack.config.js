@@ -24,7 +24,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: "Ultimate Division",
             template: "./public/index.html",
-            favicon: "./src/app/static/images/favicon.ico",
+            favicon: "./src/app/static/img/favicon.ico",
         }),
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin(),
