@@ -2,7 +2,6 @@
 // See LICENSE for copying information.
 
 import { Dispatch } from 'redux';
-
 import { Card } from '@/card';
 import { LootboxClient } from '@/api/lootboxes';
 import { Lootbox } from '@/lootbox';

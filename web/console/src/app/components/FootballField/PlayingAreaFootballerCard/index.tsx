@@ -3,9 +3,7 @@
 
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-
 import { PlayerCard } from '@components/common/PlayerCard';
-
 import { Card } from '@/card';
 import { removeCard } from '@/app/store/actions/club';
 

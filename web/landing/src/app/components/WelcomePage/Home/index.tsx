@@ -4,6 +4,9 @@ import React from 'react';
 import PlayerIllustration from '@static/images/home/Player-Illustration.png';
 import { ScrollTop } from '../ScrollTop';
 
+import discord from '@static/images/home/discord.svg';
+import twitter from '@static/images/home/twitter.svg';
+
 import './index.scss';
 
 export const Home: React.FC = () => {
@@ -22,6 +25,35 @@ export const Home: React.FC = () => {
                         Get one to become UD founder and join the Play-to-Earn game.
                         Build your club in the metaverse.
                     </p>
+                    <div className="home__buttons-wrapper">
+                        <a
+                            className="home__discord"
+                            href="https://discord.com/invite/ultimatedivision"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <img
+                                className="home__discord__logo"
+                                src={discord}
+                                alt="discord logo"
+                            />
+                            <span className="home__discord__text">
+                                Join Discord
+                            </span>
+                        </a>
+                        <a
+                            className="home__twitter"
+                            href="https://twitter.com/UltimateDivnft"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <img
+                                className="home__twitter__logo"
+                                src={twitter}
+                                alt="twitter logo"
+                            />
+                        </a>
+                    </div>
                 </div>
                 <img
                     src={PlayerIllustration}
@@ -31,10 +63,41 @@ export const Home: React.FC = () => {
                     data-aos-duration="600"
                     data-aos-easing="ease-in-out-cubic"
                 />
-                <p className="home__description-mobile">
+                <div className="home__mobile-wrapper">
+                    <p className="home__description-mobile">
                         Get one to become UD founder and join the Play-to-Earn game.
                         Build your club in the metaverse.
-                </p>
+                        <div className="home__buttons-wrapper__mobile">
+                        <a
+                            className="home__discord"
+                            href="https://discord.com/invite/ultimatedivision"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <img
+                                className="home__discord__logo"
+                                src={discord}
+                                alt="discord logo"
+                            />
+                            <span className="home__discord__text">
+                                Join Discord
+                            </span>
+                        </a>
+                        <a
+                            className="home__twitter"
+                            href="https://twitter.com/UltimateDivnft"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <img
+                                className="home__twitter__logo"
+                                src={twitter}
+                                alt="twitter logo"
+                            />
+                        </a>
+                        </div>
+                    </p>
+                </div>
                 <ScrollTop />
             </div>
         </section >

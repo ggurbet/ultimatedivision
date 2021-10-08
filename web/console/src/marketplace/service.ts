@@ -1,9 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-
 import { MarketplaceClient } from '@/api/marketplace';
-
 import { CreatedLot } from '@/app/types/marketplace';
 import { Pagination } from '@/app/types/pagination';
 import { Lot, MarketPlacePage } from '.';

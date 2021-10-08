@@ -2,9 +2,9 @@
 // See LICENSE for copying information.
 
 export const PaginatorBlockPages: React.FC<{
-    blockPages: number[],
-    onPageChange: (type: string, pageNumber?: number) => void,
-    currentPage: number,
+    blockPages: number[];
+    onPageChange: (type: string, pageNumber?: number) => void;
+    currentPage: number;
 }> = ({ blockPages, onPageChange, currentPage }) =>
     <ul className="ultimatedivision-paginator__pages">
         {blockPages.map((page, index) =>

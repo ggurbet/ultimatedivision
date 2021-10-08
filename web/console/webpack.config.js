@@ -4,6 +4,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const StylelintPlugin = require("stylelint-webpack-plugin");
+const zlib = require("zlib");
+const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
     mode: "development",
@@ -12,6 +14,7 @@ module.exports = {
     },
     entry: "./src/index.tsx",
     target: "web",
+    devtool: "inline-source-map",
     output: {
         path: path.resolve(__dirname, "dist/"),
         filename: "[name].[hash].js",
@@ -21,26 +24,35 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: "Ultimate Division",
             template: "./public/index.html",
-            favicon: "./src/app/static/img/favicon.ico",
+            favicon: "./src/app/static/images/favicon.ico",
         }),
         new CleanWebpackPlugin(),
-        new CssMinimizerPlugin(),
-        new MiniCssExtractPlugin({
-            filename: "[name].css",
-            chunkFilename: "[id].css",
-        }),
+        new MiniCssExtractPlugin(),
         new StylelintPlugin({ fix: true }),
+        new CompressionPlugin({
+            filename: "[path][base].br",
+            algorithm: "brotliCompress",
+            test: /\.(js|css|html|svg)$/,
+            compressionOptions: {
+                params: {
+                    [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+                },
+            },
+            threshold: 10240,
+            minRatio: 0.8,
+            deleteOriginalAssets: false,
+        }),
     ],
     devServer: {
         port: 3000,
         open: true,
         historyApiFallback: true,
-        hot: true,
     },
     resolve: {
         alias: {
             "@components": path.resolve(__dirname, "./src/app/components/"),
             "@static": path.resolve(__dirname, "./src/app/static/"),
+            "@utils": path.resolve(__dirname, "./src/app/utils/"),
             "@": path.resolve(__dirname, "./src/"),
         },
         extensions: [".ts", ".tsx", ".js", ".jsx"],
@@ -59,7 +71,15 @@ module.exports = {
             },
             {
                 test: /\.(s[c]ss|css)$/,
-                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+                exclude: /(node_modules)/,
+                use: [
+                    //for dev style-loader, for production
+                    // MiniCssExtractPlugin.loader
+                    "style-loader",
+                    // MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "sass-loader",
+                ],
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,

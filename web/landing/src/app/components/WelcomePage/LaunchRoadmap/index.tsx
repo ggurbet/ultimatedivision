@@ -21,15 +21,15 @@ export const LaunchRoadmap: React.FC = () => {
         },
         {
             title: 'What’s inside?',
-            subTitle: 'The Treasury now contains 10 ETH ',
-            description: `20 mysterious lootboxes will be sent to lucky owners
-            of UD founder player cards. You can sell it for a minimum listing price
-            of 0.05 ETH or wait for the game launch to see what’s inside.`,
+            subTitle: 'The Treasury now contains 20 ETH ',
+            description: `20 mysterious lootboxes will be sent to lucky owners of UD founder
+            player cards. You can sell it or wait for the
+            game launch to see what's inside.`,
             image: fifty,
         },
         {
             title: 'Team Spirit',
-            subTitle: 'The Treasury now contains 10 ETH',
+            subTitle: 'The Treasury now contains 30 ETH',
             description: `It’s almost time to get to the field.
             Get one of 20 founder kits for your club
             that your fans will absolutely love. `,
@@ -37,7 +37,7 @@ export const LaunchRoadmap: React.FC = () => {
         },
         {
             title: 'Game On',
-            subTitle: '50 ETH have been deposited to the treasury',
+            subTitle: 'The Treasury now contains 40 ETH',
             description: `The UD Metaverse is now unstoppable and the first
             competition will soon begin. Prepare your NFTs to become 1 of 10000 UD
             founders and join the game before anyone else. Will your club reach

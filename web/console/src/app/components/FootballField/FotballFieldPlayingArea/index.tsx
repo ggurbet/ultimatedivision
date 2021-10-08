@@ -3,23 +3,32 @@
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { FootballFieldControlsArea } from '@/app/components/FootballField/FootballFieldControlsArea';
 import { PlayingAreaFootballerCard } from '@components/FootballField/PlayingAreaFootballerCard';
-
 import { SquadCard } from '@/club';
 import { Card } from '@/card';
-
 import { RootState } from '@/app/store';
-import { cardSelectionVisibility, choosePosition, exchangeCards, removeCard, setDragStart, setDragTarget }
-    from '@/app/store/actions/club';
+import {
+    cardSelectionVisibility,
+    choosePosition,
+    exchangeCards,
+    removeCard,
+    setDragStart,
+    setDragTarget,
+} from '@/app/store/actions/club';
 
 import './index.scss';
 
 export const FootballFieldPlayingArea: React.FC = () => {
-    const { cards } = useSelector((state: RootState) => state.cardsReducer.cardsPage);
-    const formation = useSelector((state: RootState) => state.clubReducer.squad.formation);
-    const dragStartIndex = useSelector((state: RootState) => state.clubReducer.options.dragStart);
+    const { cards } = useSelector(
+        (state: RootState) => state.cardsReducer.cardsPage
+    );
+    const formation = useSelector(
+        (state: RootState) => state.clubReducer.squad.formation
+    );
+    const dragStartIndex = useSelector(
+        (state: RootState) => state.clubReducer.options.dragStart
+    );
 
     const dispatch = useDispatch();
     const fieldSetup = useSelector((state: RootState) => state.clubReducer);
@@ -68,7 +77,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
         setTimeout(() => {
             window.scroll(X_SCROLL_POINT, Y_SCROLL_POINT);
         }, DELAY);
-    };
+    }
 
     /** getting dragged card index and changing state to allow mouseUp */
     function dragStart(e: any, index: number = DEFAULT_VALUE): void {
@@ -123,24 +132,34 @@ export const FootballFieldPlayingArea: React.FC = () => {
                     {fieldSetup.squadCards.map((fieldCard: SquadCard, index: number) => {
                         const card = getCard(fieldCard.cardId);
                         const equality = dragStartIndex === index;
-                        // TODO: change style by some class to change style in card
 
                         return (
                             <div
                                 style={
                                     equality
-                                        ? { left: x - outerOffset.x, top: y - OFFSET_TOP, zIndex: 5, pointerEvents: 'none' }
+                                        ? {
+                                            left: x - outerOffset.x,
+                                            top: y - OFFSET_TOP,
+                                            zIndex: 5,
+                                            pointerEvents: 'none',
+                                        }
                                         : undefined
                                 }
                                 key={index}
-                                className={`playing-area__${formation}__${card ? 'card' : 'empty-card'}`}
-                                onClick={(e) => handleClick(index)}
+                                className={`playing-area__${formation}__${
+                                    card ? 'card' : 'empty-card'
+                                }`}
+                                onClick={() => handleClick(index)}
                                 onDragStart={(e) => dragStart(e, index)}
                                 onMouseUp={(e) => onMouseUp(e, index)}
                                 draggable={true}
                             >
-                                {
-                                    card && <PlayingAreaFootballerCard card={card} index={index} place={'PlayingArea'} />
+                                {card &&
+                  <PlayingAreaFootballerCard
+                      card={card}
+                      index={index}
+                      place={'PlayingArea'}
+                  />
                                 }
                             </div>
                         );
@@ -156,13 +175,13 @@ export const FootballFieldPlayingArea: React.FC = () => {
                                 key={index}
                             >
                                 {card &&
-                                    <img
-                                        // If data exist it has maininfo, but TS do not let me use it even with check
-                                        /** TODO: check for undefined will removed after correct Card type */
-                                        src={card.style && card.style.shadow}
-                                        alt="card shadow"
-                                        className={`playing-area__${formation}-shadows__shadow`}
-                                    />
+                  <img
+                      // If data exist it has maininfo, but TS do not let me use it even with check
+                      /** TODO: check for undefined will removed after correct Card type */
+                      src={card.style && card.style.shadow}
+                      alt="card shadow"
+                      className={`playing-area__${formation}-shadows__shadow`}
+                  />
                                 }
                             </div>
                         );
@@ -173,4 +192,3 @@ export const FootballFieldPlayingArea: React.FC = () => {
         </div>
     );
 };
-

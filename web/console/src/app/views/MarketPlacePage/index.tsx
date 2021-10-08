@@ -2,10 +2,8 @@
 // See LICENSE for copying information.
 
 import { useSelector } from 'react-redux';
-
 import { RootState } from '@/app/store';
 import { filteredLots, listOfLots } from '@/app/store/actions/marketplace';
-
 import { MarketPlaceCardsGroup } from '@components/MarketPlace/MarketPlaceCardsGroup';
 import { FilterField } from '@components/common/FilterField';
 import { Paginator } from '@components/common/Paginator';

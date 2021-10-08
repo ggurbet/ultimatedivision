@@ -1,19 +1,16 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
-import { useDispatch, useSelector } from 'react-redux';
 
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { listOfCards } from '@/app/store/actions/cards';
 import { addCard, cardSelectionVisibility } from '@/app/store/actions/club';
-
 import { Card } from '@/card';
 import { Squad } from '@/club';
-
 import { FilterField } from
     '@components/FootballField/FootballFieldCardSelection/FilterField';
 import { PlayerCard } from '@components/common/PlayerCard';
 import { Paginator } from '@components/common/Paginator';
-
 
 import './index.scss';
 

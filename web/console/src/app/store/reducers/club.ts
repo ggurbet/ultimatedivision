@@ -29,7 +29,8 @@ export const clubReducer = (state = clubState, action: any = {}) => {
     case CREATE_CLUB:
         state = Object.assign(clubState, action.club);
         break;
-        // next cases will be replaced
+
+    // next cases will be replaced
     case FORMATION:
         squad.formation = action.formation;
         break;
@@ -40,8 +41,7 @@ export const clubReducer = (state = clubState, action: any = {}) => {
         options.chosedCard = action.index;
         break;
     case ADD_CARD:
-        cards[action.fieldCard.index].cardId =
-                action.fieldCard.card.cardId;
+        cards[action.fieldCard.index].cardId = action.fieldCard.card.cardId;
         break;
     case REMOVE_CARD:
         cards[action.index].cardId = '';
@@ -54,8 +54,7 @@ export const clubReducer = (state = clubState, action: any = {}) => {
         break;
     case EXCHANGE_CARDS:
         const prevCard = cards[action.position.previous];
-        cards[action.position.previous] =
-                cards[action.position.current];
+        cards[action.position.previous] = cards[action.position.current];
         cards[action.position.current] = prevCard;
         break;
     default:

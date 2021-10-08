@@ -3,12 +3,9 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-
 import { Card } from '@/card';
-
 import { createLot } from '@/app/store/actions/marketplace';
 import { CreatedLot } from '@/app/types/marketplace';
-
 import { PlayerCard } from '@components/common/PlayerCard';
 
 /** TODO: replace it by class fields */

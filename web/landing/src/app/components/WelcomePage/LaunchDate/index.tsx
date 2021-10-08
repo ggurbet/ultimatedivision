@@ -43,7 +43,7 @@ export const LaunchDate: React.FC = () => {
                             data-aos="fade-left"
                             className="launch-date__information__title"
                         >
-                            20 September 20:00
+                            1 November 20:00
                         </h1>
                         <a
                             data-aos="fade-left"

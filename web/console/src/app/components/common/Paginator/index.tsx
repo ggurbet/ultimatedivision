@@ -2,11 +2,8 @@
 // See LICENSE for copying information.
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-
 import { PaginatorBlockPages } from '@components/common/Paginator/PaginatorBlockPages';
-
 import { Pagination } from '@/app/types/pagination';
-
 import next
     from '@static/img/UltimateDivisionPaginator/next.svg';
 import notActiveNext

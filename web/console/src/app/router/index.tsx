@@ -95,8 +95,8 @@ export class RouteConfig {
         Summary,
         true
     );
-    public static GameMechanick: ComponentRoutes = new ComponentRoutes(
-        'game-mechanicks',
+    public static GameMechanics: ComponentRoutes = new ComponentRoutes(
+        'game-mechanics',
         GameMechanics,
         true
     );
@@ -145,7 +145,7 @@ export class RouteConfig {
         RouteConfig.Store,
         RouteConfig.Whitepaper.addChildren([
             RouteConfig.Summary,
-            RouteConfig.GameMechanick,
+            RouteConfig.GameMechanics,
             RouteConfig.PayToEarnEconomy,
             RouteConfig.Technology,
         ]),

@@ -2,10 +2,8 @@
 // See LICENSE for copying information.
 
 import { useSelector } from 'react-redux';
-
 import { filteredCards, listOfCards } from '@/app/store/actions/cards';
 import { RootState } from '@/app/store';
-
 import { ClubCardsArea } from '@components/Club/ClubCardsArea';
 import { FilterField } from '@components/common/FilterField';
 import { Paginator } from '@components/common/Paginator';

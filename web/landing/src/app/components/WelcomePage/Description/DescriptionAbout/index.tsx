@@ -28,11 +28,11 @@ export const DescriptionAbout = () => {
             <div className="description-about__text-area">
                 <h2 className="description-about__title">About the Game</h2>
                 <p className="description-about__text">
-                    Ultimate Division is football world simulator.
-                    Players can own clubs, compete with each other in weekly
-                    competitions and earn money by winning.
-                    Other players can be hired as managers and coaches for your own club.
-                    Each assets in the game is NFT and brings profit when put to use.
+                    Ultimate Division is a world football simulator.
+                    UD players will own clubs, players and face each other
+                    in weekly competitions to win cash prizes!
+                    Other players can be hired as managers or coaches
+                    for your Club!
                 </p>
             </div>
         </div>

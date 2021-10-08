@@ -2,12 +2,9 @@
 // See LICENSE for copying information.
 
 import { Dispatch } from 'redux';
-
 import { CardClient } from '@/api/cards';
-
 import { Card, CardsPage, ICard } from '@/card';
 import { CardService } from '@/card/service';
-
 import { Pagination } from '@/app/types/pagination';
 
 export const GET_USER_CARDS = ' GET_USER_CARDS';

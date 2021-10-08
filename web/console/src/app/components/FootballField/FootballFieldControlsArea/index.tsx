@@ -3,9 +3,9 @@
 import { FieldControl } from '@/app/types/club';
 import { FootballFieldControl } from
     '@/app/components/FootballField/FootballFieldControlsArea/FootballFieldControl';
+import { setCaptain, setFormation, setTactic } from "@/app/store/actions/club";
 
 import './index.scss';
-import { setCaptain, setFormation, setTactic } from '@/app/store/actions/club';
 
 export const FootballFieldControlsArea: React.FC = () => {
     const CONTROLS_FIELDS = [

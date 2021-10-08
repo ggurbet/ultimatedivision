@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import './index.scss';
 
 export const FilterFieldDropdown: React.FC<{ props: { label: string; image: string } }> = ({ props }) => {

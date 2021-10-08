@@ -3,15 +3,12 @@
 
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { FieldControl } from '@/app/types/club';
-
+import { RootState } from "@/app/store";
 import { DropdownStyle } from '@/app/utils/dropdownStyle';
-
 import triangle from '@static/img/FootballFieldPage/triangle.svg';
 
 import './index.scss';
-import { RootState } from '@/app/store';
 
 export const FootballFieldControl: React.FC<{ props: FieldControl }> = ({ props }) => {
     const squad = useSelector((state: RootState) => state.clubReducer.squad);
