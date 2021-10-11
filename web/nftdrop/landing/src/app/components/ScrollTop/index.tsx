@@ -13,12 +13,7 @@ export const ScrollTop: React.FC = () => {
     };
 
     return (
-        <div className="scroll-to-top"
-            onClick={() => handleScroolToTop()}
-            data-aos="fade-bottom"
-            data-aos-duration="600"
-            data-aos-easing="ease-in-out-cubic"
-        >
+        <div className="scroll-to-top" onClick={() => handleScroolToTop()}>
             <svg viewBox="0 0 66 66" fill="none" xmlns="http://www.w3.org/2000/svg"
                 className="scroll-to-top__button">
                 <rect

@@ -1,6 +1,8 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import React from 'react';
+
 import { Card } from './Card';
 import fifteen from '@static/images/launchRoadmap/15.svg';
 import fifty from '@static/images/launchRoadmap/50.svg';

@@ -1,8 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import React, { useEffect } from 'react';
-import Aos from 'aos';
+import React from 'react';
 
 import './index.scss';
 
@@ -13,23 +12,10 @@ export const RoadmapPoint: React.FC<{
         id: number,
         done: boolean
     }
-}> = ({
-    item
-}) => {
-    useEffect(() => {
-        Aos.init({
-            duration: 1000,
-        });
-    }, []);
+}> = ({ item }) => {
 
     return (
-        <div
-            className="roadmap-point"
-            data-aos={item.id % 2 === 0 ? 'zoom-in-left-custom' : 'zoom-in-right-custom'}
-            data-aos-delay={200 * item.id}
-            data-aos-duration="600"
-            data-aos-easing="ease-in-out-cubic"
-        >
+        <div className="roadmap-point">
             <p className="roadmap-point__date">
                 {item.date}
             </p>

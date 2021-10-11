@@ -8,28 +8,17 @@ import { DescriptionPay } from '@components/Description/DescriptionPay';
 import './index.scss';
 
 export const Description = () => {
+
     return (
         <section className="description">
             <div className="description__wrapper">
-                <div className="description__container"
-                    data-aos="fade-right"
-                    data-aos-duration="600"
-                    data-aos-easing="ease-in-out-cubic"
-                >
+                <div className="description__container">
                     <DescriptionAbout />
                 </div>
-                <div className="description__container"
-                    data-aos="fade-left"
-                    data-aos-duration="600"
-                    data-aos-easing="ease-in-out-cubic"
-                >
+                <div className="description__container">
                     <DescriptionCards />
                 </div>
-                <div className="description__container"
-                    data-aos="fade-right"
-                    data-aos-duration="600"
-                    data-aos-easing="ease-in-out-cubic"
-                >
+                <div className="description__container">
                     <DescriptionPay />
                 </div>
             </div>

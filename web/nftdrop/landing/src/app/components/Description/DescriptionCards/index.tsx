@@ -1,6 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import webkitCards from '@static/images/description/cardsGroup.png';
 import cards from '@static/images/description/cardsGroup.webp';
 
 import './index.scss';
@@ -21,11 +22,15 @@ export const DescriptionCards = () => {
                 </p>
             </div>
             <div className="description-cards__wrapper">
-                <img
-                    className="description-cards__card"
-                    src={cards}
-                    alt="cards"
-                />
+                <picture>
+                    <source srcSet={cards} type="image/webp" />
+                    <img
+                        className="description-cards__card"
+                        src={webkitCards}
+                        alt="cards"
+                        loading="lazy"
+                    />
+                </picture>
             </div>
         </div>
     );

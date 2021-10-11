@@ -1,8 +1,16 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
+
 import React from 'react';
-import PlayerIllustration from '@static/images/home/footballer.webp';
+
 import { ScrollTop } from '../ScrollTop';
+
+import webkitFootballer from '@static/images/home/footballer.png';
+import webkitFootballerTablet from '@static/images/home/footballerTablet.png';
+import webkitFootballerMobile from '@static/images/home/footballerMobile.png';
+import footballer from '@static/images/home/footballer.webp';
+import footballerTablet from '@static/images/home/footballerTablet.webp';
+import footballerMobile from '@static/images/home/footballerMobile.webp';
 
 import discord from '@static/images/home/discord.svg';
 import twitter from '@static/images/home/twitter.svg';
@@ -15,11 +23,11 @@ export const Home: React.FC = () => {
         <section className="home" id="home">
             <div className="home__wrapper">
                 <div className="home__text-area"
-                    data-aos="fade-right"
-                    data-aos-duration="600"
-                    data-aos-easing="ease-in-out-cubic"
+
+
+
                 >
-                    <h2 className="home__value">10 000</h2>
+                    <h1 className="home__value">10 000</h1>
                     <h3 className="home__title">Unique Collectible Player Cards.</h3>
                     <p className="home__description">
                         Get one to become UD founder and join the Play-to-Earn game.
@@ -55,14 +63,19 @@ export const Home: React.FC = () => {
                         </a>
                     </div>
                 </div>
-                <img
-                    src={PlayerIllustration}
-                    alt="Player Illustration"
-                    className="home__player-image"
-                    data-aos="fade-left"
-                    data-aos-duration="600"
-                    data-aos-easing="ease-in-out-cubic"
-                />
+                <picture
+                >
+                    <source media="(max-width: 500px)" srcSet={footballerMobile} type="image/webp" />
+                    <source media="(max-width: 800px)" srcSet={footballerTablet} type="image/webp" />
+                    <source media="(min-width: 800px)" srcSet={footballer} type="image/webp" />
+                    <source media="(max-width: 500px)" srcSet={webkitFootballerMobile} />
+                    <source media="(max-width: 800px)" srcSet={webkitFootballerTablet} />
+                    <img
+                        className="home__player-image"
+                        src={webkitFootballer}
+                        alt="Player Illustration"
+                    />
+                </picture>
                 <div className="home__mobile-wrapper">
                     <div className="home__description-mobile">
                         Get one to become UD founder and join the Play-to-Earn game.
@@ -80,7 +93,7 @@ export const Home: React.FC = () => {
                                     alt="discord logo"
                                 />
                                 <span className="home__discord__text">
-                                Join Discord
+                                    Join Discord
                                 </span>
                             </a>
                             <a

@@ -1,29 +1,37 @@
-const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const StylelintPlugin = require('stylelint-webpack-plugin');
-const zlib = require('zlib');
-const CompressionPlugin = require('compression-webpack-plugin');
+const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const StylelintPlugin = require("stylelint-webpack-plugin");
+const zlib = require("zlib");
+const CompressionPlugin = require("compression-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
-    mode: 'development',
+    mode: "production",
     experiments: {
         asset: true,
     },
     entry: './src/index.tsx',
     target: 'web',
+    devtool: 'inline-source-map',
     output: {
         path: path.resolve(__dirname, 'dist/'),
         filename: '[name].[hash].js',
-        publicPath: '/static/dist/',
+        publicPath: '/static/dist/'
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Ultimate Division',
-            template: './public/index.html',
-            favicon: './src/app/static/images/favicon.ico',
+            title: "Ultimate Division",
+            template: "./public/index.html",
+            favicon: "./src/app/static/images/favicon.ico",
+            meta: {
+                'twitter:card': { name: 'twitter:card', content: "./src/app/static/images/ultimate.png" },
+                "twitter:image": { property: "twitter:image", content: "./src/app/static/images/ultimate.png" },
+                "twitter:title": { property: "twitter:title", content: "Ultimate Division" },
+                "twitter:description": { property: "twitter:description", content: "Ultimate Division is a world football simulator. UD players will own clubs, players and face each other in weekly competitions to win cash prizes! Other players can be hired as managers or coaches for your Club!" }
+            }
         }),
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin(),
@@ -123,4 +131,16 @@ module.exports = {
             },
         ],
     },
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+        },
+        // minimize: true,
+        minimizer: [
+            new UglifyJsPlugin({
+                test: /\.js(\?.*)?$/i,
+            }),
+            // new CssMinimizerPlugin(),
+        ]
+    }
 };

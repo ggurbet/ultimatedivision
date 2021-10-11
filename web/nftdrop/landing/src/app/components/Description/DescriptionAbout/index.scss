@@ -9,19 +9,19 @@
     position: relative;
 
     &__image-area {
-        min-width: 550px;
+        // min-width: 550px;
         transition: all 0.3s;
     }
 
-    &__field {
-        width: 100%;
-    }
-
     &__text-area {
-        margin-left: 20px;
+        padding-right: 20px;
+        margin-top: 100px;
+        margin-left: -120px;
     }
 
     &__text {
+        width: 110%;
+        margin-right: 30px;
         font-family: "Roboto";
         margin-top: 40px;
         font-size: 24px;
@@ -35,25 +35,25 @@
     }
 }
 
-@media (max-width: $desktopBreakPoint) {
+@media (max-width: 1200px) {
+
+    .description-about {
+
+        &__text-area {
+            margin-top: 0;
+        }
+    }
+}
+
+@media (max-width: 1100px) {
 
     .description-about {
         margin: 100px auto;
         padding: 10px 30px;
 
-        &__image-area {
-            min-width: 400px;
-        }
-
-        &__stats-image {
-            width: 45%;
-            right: -20%;
-            bottom: unset;
-            top: 300px;
-        }
-
         &__text-area {
-            margin-left: 50px;
+            margin-top: 20px;
+            margin-left: -60px;
         }
 
         &__title {
@@ -61,6 +61,8 @@
         }
 
         &__text {
+            width: 100%;
+            margin-top: 30px;
             font-size: 15px;
         }
     }
@@ -70,8 +72,9 @@
 
     .description-about {
 
-        &__image-area {
-            min-width: 300px;
+        &__text-area {
+            margin-top: 5px;
+            margin-left: -80px;
         }
 
         &__stats-image {
@@ -80,29 +83,23 @@
             bottom: unset;
             top: 200px;
         }
-
-        &__text-area {
-            margin-left: 50px;
-        }
     }
 }
 
-@media (max-width: $phoneBreakPoint) {
+@media (max-width: $phoneBreakPoint + 100px) {
 
     .description-about {
         flex-direction: column;
         align-items: center;
 
-        &__image-area {
-            min-width: unset;
-            width: 100%;
-            position: relative;
-            top: 50px;
+        &__field {
+            margin-top: 60px;
         }
 
         &__text-area {
             margin-left: 0;
-            margin-top: 60px;
+            margin-top: 40px;
+            padding: 0;
         }
 
         &__mirrored {
@@ -118,6 +115,16 @@
             font-size: 18px;
             font-weight: bold;
             text-align: justify;
+        }
+    }
+}
+
+@media (max-width: 375px) {
+
+    .description-about {
+
+        &__field {
+            width: 100%;
         }
     }
 }

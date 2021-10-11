@@ -13,6 +13,7 @@ export const DescriptionPay = () => {
                 className="description-pay__radar"
                 src={radar}
                 alt="radar diagram"
+                loading="lazy"
             />
             <div className="description-pay__text-area">
                 <h2 className="description-pay__title">Play-to-Earn</h2>

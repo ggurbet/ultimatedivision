@@ -4,16 +4,8 @@
 @import "@static/styles/mixins";
 
 @font-face {
-    font-family: "BebasNeue";
-    src: url("@static/fonts/BebasNeue-Regular.ttf");
-    font-style: normal;
-    font-weight: lighter;
-    font-display: swap;
-}
-
-@font-face {
     font-family: "Thorletto";
-    src: url("@static/fonts/Thorletto.ttf");
+    src: url("@static/fonts/Thorletto.ttf") format("truetype");
     font-style: normal;
     font-weight: lighter;
     font-display: swap;
@@ -21,7 +13,7 @@
 
 @font-face {
     font-family: "Russo One";
-    src: url("@static/fonts/RussoOne-Regular.ttf");
+    src: url("@static/fonts/RussoOne-Regular.ttf") format("truetype");
     font-style: normal;
     font-weight: lighter;
     font-display: swap;
@@ -29,7 +21,7 @@
 
 @font-face {
     font-family: "Hanson";
-    src: url("@static/fonts/Hanson-Bold.ttf");
+    src: url("@static/fonts/Hanson-Bold.ttf") format("truetype");
     font-style: normal;
     font-weight: lighter;
     font-display: swap;
@@ -37,7 +29,7 @@
 
 @font-face {
     font-family: "Rubik";
-    src: url("@static/fonts/Rubik-Regular.ttf");
+    src: url("@static/fonts/Rubik-Regular.ttf") format("truetype");
     font-style: normal;
     font-weight: lighter;
     font-display: swap;
@@ -45,7 +37,7 @@
 
 @font-face {
     font-family: "Roboto";
-    src: url("@static/fonts/Roboto-Regular.ttf");
+    src: url("@static/fonts/Roboto-Regular.ttf") format("truetype");
     font-style: normal;
     font-weight: lighter;
     font-display: swap;

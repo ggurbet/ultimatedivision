@@ -1,5 +1,4 @@
 @import "/src/index.scss";
-@import "aos/dist/aos.css";
 
 .launch-date {
     background: #001236;
@@ -100,6 +99,7 @@
         }
 
         &__information {
+            z-index: 2;
 
             &__subtitle {
                 font-size: 22px;
@@ -127,23 +127,19 @@
         overflow: hidden;
 
         &__wrapper {
-            background-image: url("@static/images/launchDate/ball-mobile.webp");
-            background-position: right;
-            background-size: contain;
-            background-repeat: no-repeat;
+            justify-content: left;
             min-height: 440px;
             padding: 70px 30px;
         }
 
         &__ball {
-            display: none;
+            height: 100%;
+            width: unset;
+            position: absolute;
+            right: 0;
+            top: 0;
+            animation: unset;
+            z-index: 0;
         }
     }
-
-    // @media (max-width: $phoneBreakPoint) {
-
-    //     &__wrapper {
-    //         background-position: 300% 50%;
-    //     }
-    // }
 }

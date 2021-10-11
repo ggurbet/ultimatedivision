@@ -1,11 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import React, { useEffect } from 'react';
-import Aos from 'aos';
-
-import { dataAosLogoAnimation } from '@utils/dataAosLogoAnimation';
-import { aosDelayLogoAnimation } from '@utils/aosDelayLogoAnimation';
+import React from 'react';
 
 import consensys from '@static/images/projects/consensys.svg';
 import nem from '@static/images/projects/nem.svg';
@@ -19,11 +15,6 @@ import bloom from '@static/images/projects/bloom.svg';
 import './index.scss';
 
 export const Projects: React.FC = () => {
-    useEffect(() => {
-        Aos.init({
-            duration: 1500
-        });
-    }, []);
 
     const logos = [
         consensys,
@@ -40,7 +31,7 @@ export const Projects: React.FC = () => {
         <section className="projects">
             <div className="projects__wrapper">
 
-                <h2 className="projects__title" data-aos="fade-left">
+                <h2 className="projects__title">
                     The game was created by a team involved in the development
                     of well-know crypto projects
                 </h2>
@@ -48,14 +39,6 @@ export const Projects: React.FC = () => {
                     {logos.map((logo, index) => (
                         <div
                             key={index}
-                            data-aos={
-                                dataAosLogoAnimation(index)
-                            }
-                            data-aos-delay={
-                                aosDelayLogoAnimation(index)
-                            }
-                            data-aos-duration={500}
-                            data-aos-easing="ease-in-out-cubic"
                             className="projects__area__item"
                         >
                             <img
@@ -68,7 +51,7 @@ export const Projects: React.FC = () => {
 
                     ))}
                 </div>
-            </div>
-        </section>
+            </div >
+        </section >
     );
 };

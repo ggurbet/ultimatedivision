@@ -1,9 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useEffect } from 'react';
-
-import Aos from 'aos';
 import box from '@static/images/launchRoadmap/box1.svg';
 
 import './index.scss';
@@ -16,20 +13,10 @@ export const Card: React.FC<{
         image: string,
     }
 }> = ({ card }) => {
-    useEffect(() => {
-        Aos.init({
-            duration: 500,
-        });
-    });
 
     return (
-        <div className="card"
-            data-aos="fade-right"
-            data-aos-duration="600"
-            data-aos-easing="ease-in-out-cubic"
-        >
-            <div className="card__text-area"
-            >
+        <div className="card">
+            <div className="card__text-area">
                 <h1 className="card__title">
                     {card.title}
                 </h1>

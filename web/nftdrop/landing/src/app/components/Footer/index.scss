@@ -1,5 +1,4 @@
 @import "/src/index.scss";
-@import "aos/dist/aos.css";
 
 .footer {
     background-color: #001b4f;
@@ -22,6 +21,7 @@
     }
 
     &__link {
+        margin: 10px;
         color: #fff;
         transition: color 0.3s;
         text-decoration: none;
@@ -35,8 +35,7 @@
     }
 
     &__text {
-        font-weight: "Bebas Neue";
-        font-weight: bold;
+        font-family: "Russo One";
         font-size: 20px;
         line-height: 31px;
         text-align: center;
