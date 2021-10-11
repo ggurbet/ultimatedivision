@@ -259,7 +259,6 @@ func (server *Server) brotliMiddleware(fn http.Handler) http.Handler {
 		// in case if old browser doesn't support gzip decoding or if file extension is not recommended to gzip
 		// just return original file
 		if !isGzipSupported || !isNeededFormatToGzip {
-			server.log.Error("brotli not needed", nil)
 			fn.ServeHTTP(w, r)
 			return
 		}
