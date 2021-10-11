@@ -45,7 +45,7 @@
         "max-len": [
             "warn",
             {
-                "code": 90,
+                "code": 100,
                 "comments": 80,
                 "ignoreUrls": true,
                 "ignoreRegExpLiterals": true

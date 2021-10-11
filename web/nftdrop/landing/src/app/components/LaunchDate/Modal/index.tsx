@@ -51,14 +51,14 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
 
     return <div className="launch-date-modal">
         <div className="launch-date-modal__window">
-            <a
+            <div
                 onClick={handleModal}
                 className="launch-date-modal__close"
             >
                 <p className="launch-date-modal__close__text">
                     &#215;
                 </p>
-            </a>
+            </div>
             <h1 className="launch-date-modal__description">
                 Get notified on the launch
             </h1>

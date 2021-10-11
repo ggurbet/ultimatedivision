@@ -26,7 +26,8 @@ export const UserDataArea: React.FC<{
 }) => {
     const DELAY: number = 500;
     /**
-    * The value string from input returned by the useDebounce method after 500 milliseconds.
+    * The value string from input returned by the useDebounce method
+    * after 500 milliseconds.
     */
     const debouncedValue: string = useDebounce(value, DELAY);
 
@@ -41,7 +42,7 @@ export const UserDataArea: React.FC<{
             setSuccessLabelClassName('-check');
         };
 
-    }, [debouncedValue]);
+    }, [debouncedValue, validate]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);

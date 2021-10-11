@@ -1,10 +1,11 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import { MintButton } from '@components/common/MintButton';
+
 import cards from '@static/images/metaverse/cards.webp';
 
 import './index.scss';
-import { MintButton } from '@components/common/MintButton';
 
 export const Metaverse: React.FC = () => {
     return (
@@ -37,7 +38,9 @@ export const Metaverse: React.FC = () => {
                     data-aos-duration="600"
                     data-aos-easing="ease-in-out-cubic"
                 >
-                    <span className="metaverse__sold-scale__text">Cards Sold 0/10000</span>
+                    <span className="metaverse__sold-scale__text">
+                        Cards Sold 0/10000
+                    </span>
                 </div>
                 <MintButton />
             </div>

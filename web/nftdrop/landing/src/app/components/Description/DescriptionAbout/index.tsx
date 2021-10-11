@@ -1,9 +1,9 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import './index.scss';
 import field from '@static/images/description/field.webp';
-import fieldMobile from '@static/images/description/field-mobile.webp';
+
+import './index.scss';
 
 export const DescriptionAbout = () => {
     return (
@@ -13,7 +13,7 @@ export const DescriptionAbout = () => {
                     <img
                         className="description-about__field"
                         src={field}
-                        alt="field image"
+                        alt="field"
                     />
                 </picture>
             </div>

@@ -22,8 +22,8 @@ export const LaunchRoadmap: React.FC = () => {
         {
             title: 'What’s inside?',
             subTitle: 'The Treasury now contains 20 ETH ',
-            description: `20 mysterious lootboxes will be sent to lucky owners of UD founder
-            player cards. You can sell it or wait for the
+            description: `20 mysterious lootboxes will be sent to lucky owners of UD
+            founder player cards. You can sell it or wait for the
             game launch to see what's inside.`,
             image: fifty,
         },
