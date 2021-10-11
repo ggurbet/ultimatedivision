@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal | Update Password</title>
+</head>
+<body>
+<form action="/admins/update/{{.ID}}" method="post">
+    <table>
+        <tr>
+            <td>
+                New Password :
+            </td>
+            <td>
+                <input type="text" name="password">
+            </td>
+        </tr>
+    </table>
+    <input type="submit" value="Update">
+</form>
+</body>
+</html>

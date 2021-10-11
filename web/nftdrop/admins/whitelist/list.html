@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Portal | Whitelist</title>
+</head>
+<body>
+<nav>
+  <div>
+    <ul>
+      <li><a href="/whitelist/create">Add to whitelist</a></li>
+      <li><a href="/whitelist/set-password">Set password</a></li>
+    </ul>
+  </div>
+</nav>
+<table style="width:100%">
+  <thead>
+  <tr>
+    <th>Address</th>
+    <th>Password</th>
+  </tr>
+  </thead>
+  {{range .}}
+  <tr>
+    <td>
+      {{.Address}}
+    </td>
+    <td>
+      {{.Password}}
+    </td>
+    <td>
+      <a href="/whitelist/delete/{{.Address}}">Delete</a>
+    </td>
+  </tr>
+  {{end}}
+</table>
+</body>
+</html>

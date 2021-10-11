@@ -11,6 +11,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/nftdrop"
+	"ultimatedivision/nftdrop/admin/admins"
 	"ultimatedivision/nftdrop/whitelist"
 )
 
@@ -44,9 +45,15 @@ func New(databaseURL string) (nftdrop.DB, error) {
 func (db *database) CreateSchema(ctx context.Context) (err error) {
 	createTableQuery :=
 		`CREATE TABLE IF NOT EXISTS whitelist (
-			address  VARCHAR PRIMARY KEY NOT NULL,
-			password BYTEA               NOT NULL
-		);`
+            address  VARCHAR PRIMARY KEY NOT NULL,
+            password BYTEA               NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS admins (
+            id            BYTEA     PRIMARY KEY    NOT NULL,
+            email         VARCHAR                  NOT NULL,
+            password_hash BYTEA                    NOT NULL,
+            created_at    TIMESTAMP WITH TIME ZONE NOT NULL
+        );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)
 	if err != nil {
@@ -64,4 +71,9 @@ func (db *database) Close() error {
 // Whitelist provided access to accounts db.
 func (db *database) Whitelist() whitelist.DB {
 	return &whitelistDB{conn: db.conn}
+}
+
+// Admins provided access to accounts db.
+func (db *database) Admins() admins.DB {
+	return &adminsDB{conn: db.conn}
 }
