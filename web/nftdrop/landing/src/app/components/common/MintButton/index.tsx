@@ -36,8 +36,8 @@ export const MintButton: React.FC = () => {
             }
 
         } else {
-            onboarding.current &&
-                onboarding.current?.startOnboarding();
+            onboarding.current
+            && onboarding.current?.startOnboarding();
         }
     };
 

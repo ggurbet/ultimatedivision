@@ -37,11 +37,11 @@
         transition: font-size 0.3s;
     }
 
-    &__input-wrapper {
+    &__email-wrapper {
         position: relative;
     }
 
-    &__input-label {
+    &__email-label {
         position: absolute;
         left: 0;
         top: -35px;
@@ -72,9 +72,9 @@
             position: relative;
         }
 
-        &__send,
-        &__send-check,
-        &__send-error {
+        &__email,
+        &__email-check,
+        &__email-error {
             width: 100%;
             line-height: 40px;
             outline: none;
@@ -99,11 +99,11 @@
             }
         }
 
-        &__send-check {
+        &__email-check {
             background-image: url("@static/images/registerPage/check.svg");
         }
 
-        &__send-error {
+        &__email-error {
             border: 1px solid red;
         }
 
@@ -162,10 +162,14 @@
 
         &__notification {
 
-            &__send,
-            &__send-check,
-            &__send-error {
+            &__email,
+            &__email-check,
+            &__email-error {
                 font-size: 18px;
+
+                &__error {
+                    font-size: 18px;
+                }
             }
 
             &__confirm {
@@ -173,6 +177,10 @@
                 line-height: 30px;
                 margin-top: 10%;
             }
+        }
+
+        &__email-label {
+            font-size: 18px;
         }
 
         &__description {
@@ -189,16 +197,25 @@
         &__notification {
             width: 100%;
 
-            &__send,
-            &__send-check {
+            &__email,
+            &__email-check,
+            &__email-error {
                 font-size: 14px;
                 padding: 5px 25px 5px 10px;
+
+                &__error {
+                    font-size: 14px;
+                }
             }
 
             &__confirm {
                 line-height: 32px;
                 width: 100%;
             }
+        }
+
+        &__email-label {
+            font-size: 14px;
         }
 
         &__description {
@@ -209,8 +226,25 @@
     @media (max-width: $phoneBreakPoint - 280px) {
 
         &__window {
-            width: 80%;
             padding-bottom: 2%;
+        }
+
+        &__close {
+            top: -70px;
+        }
+
+        &__notification {
+
+            &__email,
+            &__email-check,
+            &__email-error {
+
+                &__error {
+                    top: 50px;
+                    left: 0;
+                    right: unset;
+                }
+            }
         }
     }
 }

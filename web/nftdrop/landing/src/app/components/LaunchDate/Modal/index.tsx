@@ -42,7 +42,7 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
         value: email,
         placeHolder: 'Email',
         onChange: setEmail,
-        className: 'launch-date-modal__notification__send',
+        className: 'launch-date-modal__notification__email',
         type: 'email',
         error: emailError,
         clearError: setEmailError,
@@ -67,10 +67,10 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
                     className="launch-date-modal__notification"
                     onSubmit={handleSubmit}
                 >
-                    <div className="launch-date-modal__input-wrapper">
+                    <div className="launch-date-modal__email-wrapper">
                         <label
                             htmlFor={formValue.value}
-                            className="launch-date-modal__input-label"
+                            className="launch-date-modal__email-label"
                         >
                             Email
                         </label>
