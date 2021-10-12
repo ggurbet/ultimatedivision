@@ -15,6 +15,7 @@ import (
 	"ultimatedivision"
 	"ultimatedivision/admin/admins"
 	"ultimatedivision/cards"
+	"ultimatedivision/cards/avatars"
 	"ultimatedivision/clubs"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
@@ -78,15 +79,11 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
         CREATE TABLE IF NOT EXISTS cards (
             id                BYTEA         PRIMARY KEY                            NOT NULL,
             player_name       VARCHAR                                              NOT NULL,
-            quality           VARCHAR                                              NOT NULL,
-            picture_type      INTEGER                                              NOT NULL,
+            quality           VARCHAR                                              NOT NULL,  
             height            NUMERIC(16,2)                                        NOT NULL,
             weight            NUMERIC(16,2)                                        NOT NULL,
-            skin_color        INTEGER                                              NOT NULL,
-            hair_style        INTEGER                                              NOT NULL,
-            hair_color        INTEGER                                              NOT NULL,
             dominant_foot     VARCHAR                                              NOT NULL,
-            is_tattoos        BOOLEAN                                              NOT NULL,
+            is_tattoo         BOOLEAN                                              NOT NULL,
             status            INTEGER                                              NOT NULL,
             type              VARCHAR                                              NOT NULL,
             user_id           BYTEA         REFERENCES users(id) ON DELETE CASCADE NOT NULL,
@@ -140,10 +137,23 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             sweeping          INTEGER                                              NOT NULL,
             throwing          INTEGER                                              NOT NULL
         );
-        CREATE TABLE IF NOT EXISTS cards_accessories (
-            card_id      BYTEA   REFERENCES cards(id) ON DELETE CASCADE NOT NULL,
-            accessory_id INTEGER                                        NOT NULL,
-            PRIMARY KEY(accessory_id, card_id)
+        CREATE TABLE IF NOT EXISTS avatars (
+            card_id          BYTEA   PRIMARY KEY REFERENCES cards(id) ON DELETE CASCADE NOT NULL,
+            picture_type     INTEGER                                                    NOT NULL,
+            face_color       INTEGER                                                    NOT NULL,
+            face_type        INTEGER                                                    NOT NULL,
+            eyebrows_type    INTEGER                                                    NOT NULL,
+            eyebrows_color   INTEGER                                                    NOT NULL,
+            eyelaser_type    INTEGER                                                    NOT NULL,
+            hairstyle_color  INTEGER                                                    NOT NULL,
+            hairstyle_type   INTEGER                                                    NOT NULL,
+            nose             INTEGER                                                    NOT NULL,
+            tshirt           INTEGER                                                    NOT NULL,
+            beard            INTEGER                                                    NOT NULL,
+            lips             INTEGER                                                    NOT NULL,
+            tattoo           INTEGER                                                    NOT NULL,
+            original_url     VARCHAR                                                    NOT NULL,
+            preview_url      VARCHAR                                                    NOT NULL
         );
         CREATE TABLE IF NOT EXISTS admins (
             id            BYTEA     PRIMARY KEY    NOT NULL,
@@ -218,6 +228,11 @@ func (db *database) Users() users.DB {
 // Cards provided access to accounts db.
 func (db *database) Cards() cards.DB {
 	return &cardsDB{conn: db.conn}
+}
+
+// Avatars provided access to accounts db.
+func (db *database) Avatars() avatars.DB {
+	return &avatarsDB{conn: db.conn}
 }
 
 // Clubs provide access to clubs db.

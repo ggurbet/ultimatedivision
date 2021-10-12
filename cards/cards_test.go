@@ -52,15 +52,10 @@ func TestCards(t *testing.T) {
 		ID:               uuid.New(),
 		PlayerName:       "Dmytro yak muk",
 		Quality:          "wood",
-		PictureType:      1,
 		Height:           178.8,
 		Weight:           72.2,
-		SkinColor:        1,
-		HairStyle:        1,
-		HairColor:        1,
-		Accessories:      []int{1, 2},
 		DominantFoot:     "left",
-		IsTattoos:        false,
+		IsTattoo:         false,
 		Status:           cards.StatusActive,
 		Type:             cards.TypeWon,
 		UserID:           user1.ID,
@@ -119,15 +114,10 @@ func TestCards(t *testing.T) {
 		ID:               uuid.New(),
 		PlayerName:       "Vova",
 		Quality:          "gold",
-		PictureType:      2,
 		Height:           179.9,
 		Weight:           73.3,
-		SkinColor:        2,
-		HairStyle:        2,
-		HairColor:        2,
-		Accessories:      []int{1, 2},
 		DominantFoot:     "right",
-		IsTattoos:        true,
+		IsTattoo:         true,
 		Status:           cards.StatusSale,
 		UserID:           uuid.New(),
 		Tactics:          2,
@@ -348,12 +338,8 @@ func compareCards(t *testing.T, card1, card2 cards.Card) {
 	assert.Equal(t, card1.Quality, card2.Quality)
 	assert.Equal(t, card1.Height, card2.Height)
 	assert.Equal(t, card1.Weight, card2.Weight)
-	assert.Equal(t, card1.SkinColor, card2.SkinColor)
-	assert.Equal(t, card1.HairStyle, card2.HairStyle)
-	assert.Equal(t, card1.HairColor, card2.HairColor)
-	assert.Equal(t, card1.Accessories, card2.Accessories)
 	assert.Equal(t, card1.DominantFoot, card2.DominantFoot)
-	assert.Equal(t, card1.IsTattoos, card2.IsTattoos)
+	assert.Equal(t, card1.IsTattoo, card2.IsTattoo)
 	assert.Equal(t, card1.Status, card2.Status)
 	assert.Equal(t, card1.UserID, card2.UserID)
 	assert.Equal(t, card1.Positioning, card2.Positioning)

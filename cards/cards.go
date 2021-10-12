@@ -48,15 +48,10 @@ type Card struct {
 	ID               uuid.UUID    `json:"id"`
 	PlayerName       string       `json:"playerName"`
 	Quality          Quality      `json:"quality"`
-	PictureType      int          `json:"pictureType"`
 	Height           float64      `json:"height"`
 	Weight           float64      `json:"weight"`
-	SkinColor        int          `json:"skinColor"`
-	HairStyle        int          `json:"hairStyle"`
-	HairColor        int          `json:"hairColor"`
-	Accessories      []int        `json:"accessories"`
 	DominantFoot     DominantFoot `json:"dominantFoot"`
-	IsTattoos        bool         `json:"isTattoos"`
+	IsTattoo         bool         `json:"isTattoo"`
 	Status           Status       `json:"status"`
 	Type             Type         `json:"type"`
 	UserID           uuid.UUID    `json:"userId"`
@@ -136,36 +131,6 @@ var QualityToValue = map[Quality]int{
 // GetValueOfQuality returns value of card by key.
 func (quality Quality) GetValueOfQuality() int {
 	return QualityToValue[quality]
-}
-
-// PictureType defines the list of possible card picture types.
-var PictureType = map[int]string{
-	1: "https://drive.google.com/file/d/1ESKPpiCoMUkOEpaa40VBFl4O1bPrDntS/view?usp=sharing",
-	2: "https://drive.google.com/file/d/1baFCTjDVzIy5ucdcz-jMCb2FPSKyIRU2/view?usp=sharing",
-}
-
-// SkinColor defines the list of possible card skin colors.
-var SkinColor = map[int]string{
-	1: "https://drive.google.com/file/d/1ESKPpiCoMUkOEpaa40VBFl4O1bPrDntS/view?usp=sharing",
-	2: "https://drive.google.com/file/d/1baFCTjDVzIy5ucdcz-jMCb2FPSKyIRU2/view?usp=sharing",
-}
-
-// HairStyle defines the list of possible card hairstyles.
-var HairStyle = map[int]string{
-	1: "https://drive.google.com/file/d/1ESKPpiCoMUkOEpaa40VBFl4O1bPrDntS/view?usp=sharing",
-	2: "https://drive.google.com/file/d/1baFCTjDVzIy5ucdcz-jMCb2FPSKyIRU2/view?usp=sharing",
-}
-
-// HairColor defines the list of possible card hair colors.
-var HairColor = map[int]string{
-	1: "https://drive.google.com/file/d/1ESKPpiCoMUkOEpaa40VBFl4O1bPrDntS/view?usp=sharing",
-	2: "https://drive.google.com/file/d/1baFCTjDVzIy5ucdcz-jMCb2FPSKyIRU2/view?usp=sharing",
-}
-
-// Accessory defines the list of possible card accessories.
-var Accessory = map[int]string{
-	1: "https://drive.google.com/file/d/1ESKPpiCoMUkOEpaa40VBFl4O1bPrDntS/view?usp=sharing",
-	2: "https://drive.google.com/file/d/1baFCTjDVzIy5ucdcz-jMCb2FPSKyIRU2/view?usp=sharing",
 }
 
 // DominantFoot defines the list of possible card dominant foots.
