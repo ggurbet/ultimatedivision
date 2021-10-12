@@ -11,8 +11,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/admin/admins"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/nftdrop/admin/admins"
 )
 
 var (

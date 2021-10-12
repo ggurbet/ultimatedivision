@@ -10,8 +10,8 @@ import (
 	_ "github.com/lib/pq" // using postgres driver
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/admin/admins"
 	"ultimatedivision/nftdrop"
-	"ultimatedivision/nftdrop/admin/admins"
 	"ultimatedivision/nftdrop/whitelist"
 )
 

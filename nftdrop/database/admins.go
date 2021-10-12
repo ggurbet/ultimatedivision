@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/nftdrop/admin/admins"
+	"ultimatedivision/admin/admins"
 )
 
 // ErrAdmins indicates that there was an error in the database.

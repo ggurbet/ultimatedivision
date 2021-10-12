@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-package server
+package landing
 
 import (
 	"context"
@@ -21,7 +21,7 @@ import (
 
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/ratelimit"
-	"ultimatedivision/nftdrop/server/controllers"
+	"ultimatedivision/nftdrop/landing/controllers"
 	"ultimatedivision/nftdrop/whitelist"
 )
 

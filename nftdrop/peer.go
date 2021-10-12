@@ -11,12 +11,12 @@ import (
 	"github.com/zeebo/errs"
 	"golang.org/x/sync/errgroup"
 
+	"ultimatedivision/admin/adminauth"
+	"ultimatedivision/admin/admins"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/nftdrop/admin/adminauth"
-	"ultimatedivision/nftdrop/admin/admins"
 	"ultimatedivision/nftdrop/admin/adminserver"
-	"ultimatedivision/nftdrop/server"
+	"ultimatedivision/nftdrop/landing"
 	"ultimatedivision/nftdrop/whitelist"
 )
 
@@ -40,7 +40,7 @@ type DB interface {
 // Config is the global configuration for nftdrop.
 type Config struct {
 	Landing struct {
-		Server server.Config `json:"server"`
+		Server landing.Config `json:"server"`
 	} `json:"landing"`
 
 	Admins struct {
@@ -75,7 +75,7 @@ type Peer struct {
 	// Landing web server with web UI.
 	Landing struct {
 		Listener net.Listener
-		Endpoint *server.Server
+		Endpoint *landing.Server
 	}
 
 	// Admin web server with web UI.
@@ -136,7 +136,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			return nil, err
 		}
 
-		peer.Landing.Endpoint = server.NewServer(
+		peer.Landing.Endpoint = landing.NewServer(
 			config.Landing.Server,
 			logger,
 			peer.Landing.Listener,

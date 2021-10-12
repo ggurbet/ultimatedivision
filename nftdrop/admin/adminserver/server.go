@@ -15,10 +15,10 @@ import (
 	"github.com/zeebo/errs"
 	"golang.org/x/sync/errgroup"
 
+	"ultimatedivision/admin/adminauth"
+	"ultimatedivision/admin/admins"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/nftdrop/admin/adminauth"
-	"ultimatedivision/nftdrop/admin/admins"
 	"ultimatedivision/nftdrop/admin/adminserver/controllers"
 	"ultimatedivision/nftdrop/whitelist"
 )
