@@ -29,8 +29,8 @@
         line-height: 22px;
 
         &:hover {
-            text-decoration: underline;
-            color: white;
+            text-decoration: none;
+            color: $roadmapHighlightColor;
         }
     }
 

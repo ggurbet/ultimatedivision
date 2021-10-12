@@ -24,6 +24,11 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
             isValidForm = false;
         };
 
+        if (!email) {
+            setEmailError('Please, enter your email');
+            isValidForm = false;
+        };
+
         return isValidForm;
     };
 
@@ -43,7 +48,7 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
         placeHolder: 'Email',
         onChange: setEmail,
         className: 'launch-date-modal__notification__email',
-        type: 'email',
+        type: 'text',
         error: emailError,
         clearError: setEmailError,
         validate: Validator.email,

@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import MetaMaskOnboarding from '@metamask/onboarding';
 

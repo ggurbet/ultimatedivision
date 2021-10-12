@@ -24,8 +24,6 @@ export const Home: React.FC = () => {
             <div className="home__wrapper">
                 <div className="home__text-area"
 
-
-
                 >
                     <h1 className="home__value">10 000</h1>
                     <h3 className="home__title">Unique Collectible Player Cards.</h3>
@@ -63,13 +61,28 @@ export const Home: React.FC = () => {
                         </a>
                     </div>
                 </div>
-                <picture
-                >
-                    <source media="(max-width: 500px)" srcSet={footballerMobile} type="image/webp" />
-                    <source media="(max-width: 800px)" srcSet={footballerTablet} type="image/webp" />
-                    <source media="(min-width: 800px)" srcSet={footballer} type="image/webp" />
-                    <source media="(max-width: 500px)" srcSet={webkitFootballerMobile} />
-                    <source media="(max-width: 800px)" srcSet={webkitFootballerTablet} />
+                <picture>
+                    <source
+                        media="(max-width: 500px)"
+                        srcSet={footballerMobile} type="image/webp"
+                    />
+                    <source
+                        media="(max-width: 800px)"
+                        srcSet={footballerTablet} type="image/webp"
+                    />
+                    <source
+                        media="(min-width: 800px)"
+                        srcSet={footballer}
+                        type="image/webp"
+                    />
+                    <source
+                        media="(max-width: 500px)"
+                        srcSet={webkitFootballerMobile}
+                    />
+                    <source
+                        media="(max-width: 800px)"
+                        srcSet={webkitFootballerTablet}
+                    />
                     <img
                         className="home__player-image"
                         src={webkitFootballer}

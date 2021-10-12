@@ -15,7 +15,6 @@ module.exports = {
     },
     entry: './src/index.tsx',
     target: 'web',
-    devtool: 'inline-source-map',
     output: {
         path: path.resolve(__dirname, 'dist/'),
         filename: '[name].[hash].js',

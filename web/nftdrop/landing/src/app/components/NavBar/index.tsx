@@ -32,10 +32,13 @@ export const Navbar: React.FC = () => {
                     className={`ultimatedivision-navbar__items${dropdownMenu ? '-active' : ''}`}
                 >
                     {navBarItems.map((item, index) =>
-                        <li key={index} className="ultimatedivision-navbar__item">
+                        <li
+                            key={index}
+                            className={`ultimatedivision-navbar__items${dropdownMenu ? '-active' : ''}__item`}
+                        >
                             <a
                                 href={`#${item.toLowerCase()}`}
-                                className="ultimatedivision-navbar__item"
+                                className={`ultimatedivision-navbar__items${dropdownMenu ? '-active' : ''}__item__icon`}
                                 onClick={() => setDropdownMenu(false)}
                             >
                                 {item}

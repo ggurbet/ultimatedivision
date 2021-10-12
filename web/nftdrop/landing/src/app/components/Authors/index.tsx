@@ -32,5 +32,5 @@ export const Authors: React.FC = () => {
                 </div>
             </div>
         </section>
-    )
+    );
 };

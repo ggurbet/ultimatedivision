@@ -22,7 +22,7 @@ export const DescriptionAbout = () => {
                 <img
                     className="description-about__field"
                     src={webkitField}
-                    alt="field image"
+                    alt="field"
                     loading="lazy"
                 />
             </picture>

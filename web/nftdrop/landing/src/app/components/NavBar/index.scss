@@ -30,11 +30,11 @@
             width: 50%;
             margin: auto;
 
-            li {
+            &__item {
                 list-style-type: none;
                 margin-right: 8%;
 
-                a {
+                &__icon {
                     padding: 2%;
                     text-decoration: none;
                     font-family: "Russo One", sans-serif;
@@ -46,8 +46,8 @@
                     cursor: pointer;
                 }
 
-                a:hover {
-                    text-decoration: underline;
+                &__icon:hover {
+                    color: $highlightColor;
                 }
             }
         }
@@ -88,15 +88,15 @@
             .ultimatedivision-navbar__items {
                 width: 50%;
 
-                li {
+                &__item {
                     margin-right: 3%;
 
-                    a {
+                    &__icon {
                         font-size: 15px;
                         line-height: 22px;
                     }
 
-                    a:hover {
+                    &__icon:hover {
                         text-decoration: underline;
                     }
                 }
@@ -152,7 +152,7 @@
 
             .ultimatedivision-navbar__items-active {
                 position: absolute;
-                z-index: 2;
+                z-index: 3;
                 order: 0;
                 flex-direction: column;
                 width: 100%;
@@ -161,7 +161,7 @@
                 margin: 0 auto auto -50px;
                 background-color: $navbar-backgrond-color;
 
-                li {
+                &__item {
                     list-style-type: none;
                     text-align: center;
                     margin-left: 0;
@@ -171,7 +171,7 @@
                         margin-top: 40px;
                     }
 
-                    a {
+                    &__icon {
                         text-decoration: none;
                         font-family: "Russo One", sans-serif;
                         font-style: normal;
@@ -180,10 +180,6 @@
                         line-height: 24px;
                         color: $navbar-item-color;
                         cursor: pointer;
-                    }
-
-                    a:hover {
-                        text-decoration: underline;
                     }
                 }
             }
@@ -233,7 +229,7 @@
 
             .ultimatedivision-navbar__items-active {
                 position: absolute;
-                z-index: 1;
+                z-index: 3;
                 order: 0;
                 display: flex;
                 flex-direction: column;
@@ -241,19 +237,15 @@
                 height: 600px;
                 margin: 0 auto auto -30px;
 
-                li {
+                &__item {
                     list-style-type: none;
                     text-align: left;
                     margin: 0 auto;
 
-                    a {
+                    &__icon {
                         padding: 5px 5px 28px 5px;
                         font-size: 28px;
                         line-height: 34px;
-                    }
-
-                    a:hover {
-                        text-decoration: underline;
                     }
                 }
             }
