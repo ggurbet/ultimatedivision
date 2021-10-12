@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Avatar by card id</title>
+</head>
+<body>
+    <nav>
+        <div>
+            <ul>
+                <li><a href="/admins">Admins</a></li>
+                <li><a href="/users">Users</a></li>
+                <li><a href="/cards">Cards</a></li>
+                <li><a href="/marketplace">Marketplace</a></li>
+            </ul>
+        </div>
+    </nav>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <th>CardID</th>
+                <th>PictureType</th>
+                <th>FaceColor</th>
+                <th>FaceType</th>
+                <th>EyeBrowsType</th>
+                <th>EyeBrowsColor</th>
+                <th>EyeLaserType</th>
+                <th>HairstyleColor</th>
+                <th>HairstyleType</th>
+                <th>Nose</th>
+                <th>Tshirt</th>
+                <th>Beard</th>
+                <th>Lips</th>
+                <th>Tattoo</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>{{.CardID}}</td>
+            <td>{{.PictureType}}</td>
+            <td>{{.FaceColor}}</td>
+            <td>{{.FaceType}}</td>
+            <td>{{.EyeBrowsType}}</td>
+            <td>{{.EyeBrowsColor}}</td>
+            <td>{{.EyeLaserType}}</td>
+            <td>{{.HairstyleColor}}</td>
+            <td>{{.HairstyleType}}</td>
+            <td>{{.Nose}}</td>
+            <td>{{.Tshirt}}</td>
+            <td>{{.Beard}}</td>
+            <td>{{.Lips}}</td>
+            <td>{{.Tattoo}}</td>
+        </tr>
+    </table>
+    <img class="avatar" src="data:image/png;base64, {{.Image}}" />
+</body>
+</html>
+
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333333;
+    }
+    li {
+        float: left;
+    }
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 16px;
+        text-decoration: none;
+    }
+    li a:hover {
+        background-color: #111111;
+    }
+    .validation-summary-errors ul {
+        background-color: white;
+    }
+    .validation-summary-errors li {
+        margin: 15px;
+        color: red;
+    }
+    th {
+        text-align: left;
+    }
+    .avatar {
+        height: 50%;
+        width: 50%;
+        padding-left: 25%;
+    }
+</style>

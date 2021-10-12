@@ -19,6 +19,7 @@ import (
 	"ultimatedivision/admin/admins"
 	"ultimatedivision/admin/adminserver/controllers"
 	"ultimatedivision/cards"
+	"ultimatedivision/cards/avatars"
 	"ultimatedivision/clubs"
 	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
@@ -62,6 +63,7 @@ type Server struct {
 		admin       controllers.AdminTemplates
 		user        controllers.UserTemplates
 		card        controllers.CardTemplates
+		avatar      controllers.AvatarTemplates
 		auth        controllers.AuthTemplates
 		lootbox     controllers.LootBoxesTemplates
 		marketplace controllers.MarketplaceTemplates
@@ -73,7 +75,7 @@ type Server struct {
 }
 
 // NewServer is a constructor for admin web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities, marketplace *marketplace.Service, lootboxes *lootboxes.Service, clubs *clubs.Service, queue *queue.Service) (*Server, error) {
+func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities, avatars *avatars.Service, marketplace *marketplace.Service, lootboxes *lootboxes.Service, clubs *clubs.Service, queue *queue.Service) (*Server, error) {
 	server := &Server{
 		log:    log,
 		config: config,
@@ -116,6 +118,11 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	cardsRouter.HandleFunc("", cardsController.List).Methods(http.MethodGet)
 	cardsRouter.HandleFunc("/create/{userId}", cardsController.Create).Methods(http.MethodGet)
 	cardsRouter.HandleFunc("/delete/{id}", cardsController.Delete).Methods(http.MethodGet)
+
+	avatarsRouter := router.PathPrefix("/avatars").Subrouter().StrictSlash(true)
+	avatarsRouter.Use(server.withAuth)
+	avatarsController := controllers.NewAvatars(log, avatars, server.templates.avatar)
+	avatarsRouter.HandleFunc("/{cardId}", avatarsController.Get).Methods(http.MethodGet)
 
 	marketplaceRouter := router.PathPrefix("/marketplace").Subrouter().StrictSlash(true)
 	marketplaceRouter.Use(server.withAuth)
@@ -219,6 +226,11 @@ func (server *Server) initializeTemplates() (err error) {
 	}).ParseFiles(
 		filepath.Join(server.config.StaticDir, "cards", "list.html"),
 		filepath.Join(server.config.StaticDir, "cards", "pagination.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.avatar.Get, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "avatars", "get.html"))
 	if err != nil {
 		return err
 	}

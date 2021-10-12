@@ -304,6 +304,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Users.Service,
 			peer.Cards.Service,
 			config.Cards.PercentageQualities,
+			peer.Avatars.Service,
 			peer.Marketplace.Service,
 			peer.LootBoxes.Service,
 			peer.Clubs.Service,
