@@ -25,12 +25,6 @@ module.exports = {
             title: "Ultimate Division",
             template: "./public/index.html",
             favicon: "./src/app/static/images/favicon.ico",
-            meta: {
-                'twitter:card': { name: 'twitter:card', content: "./src/app/static/images/ultimate.png" },
-                "twitter:image": { property: "twitter:image", content: "./src/app/static/images/ultimate.png" },
-                "twitter:title": { property: "twitter:title", content: "Ultimate Division" },
-                "twitter:description": { property: "twitter:description", content: "Ultimate Division is a world football simulator. UD players will own clubs, players and face each other in weekly competitions to win cash prizes! Other players can be hired as managers or coaches for your Club!" }
-            }
         }),
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin(),
