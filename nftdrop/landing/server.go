@@ -238,6 +238,7 @@ func (server *Server) getIP(r *http.Request) (ip string, err error) {
 }
 
 // brotliMiddleware is used to compress static content using brotli to minify resources if browser support such decoding.
+// TODO: add gzip also.
 func (server *Server) brotliMiddleware(fn http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "public, max-age=31536000")
