@@ -11,6 +11,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -72,8 +73,8 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, whitelis
 	whitelistRouter.Handle("/{address}", server.rateLimit(http.HandlerFunc(whitelistController.Get))).Methods(http.MethodGet)
 
 	fs := http.FileServer(http.Dir(server.config.StaticDir))
-	router.PathPrefix("/static/").Handler(http.StripPrefix("/static", fs))
-	router.PathPrefix("/").Handler(server.brotliMiddleware(http.HandlerFunc(server.appHandler))).Methods(http.MethodGet)
+	router.PathPrefix("/static/").Handler(server.brotliMiddleware(http.StripPrefix("/static", fs)))
+	router.PathPrefix("/").Handler(http.HandlerFunc(server.appHandler)).Methods(http.MethodGet)
 
 	server.server = http.Server{
 		Handler: router,
@@ -239,33 +240,25 @@ func (server *Server) getIP(r *http.Request) (ip string, err error) {
 // brotliMiddleware is used to compress static content using brotli to minify resources if browser support such decoding.
 func (server *Server) brotliMiddleware(fn http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		isGzipSupported := strings.Contains(r.Header.Get("Accept-Encoding"), "br")
-		extension := filepath.Ext(r.RequestURI)
-
-		w.Header().Set("Cache-Control", "public,max-age=31536000,immutable")
-		if extension != "" {
-			w.Header().Set("Content-Type", mime.TypeByExtension(extension))
-		}
+		w.Header().Set("Cache-Control", "public, max-age=31536000")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 
-		// we have gzipped only fonts, js and css bundles
-		formats := map[string]bool{
-			".js":  true,
-			".ttf": true,
-			".css": true,
-		}
-		isNeededFormatToGzip := formats[extension]
-
-		// in case if old browser doesn't support gzip decoding or if file extension is not recommended to gzip
-		// just return original file
-		if !isGzipSupported || !isNeededFormatToGzip {
+		isBrotliSupported := strings.Contains(r.Header.Get("Accept-Encoding"), "br")
+		if !isBrotliSupported {
 			fn.ServeHTTP(w, r)
 			return
 		}
 
+		info, err := os.Stat(server.config.StaticDir + strings.TrimPrefix(r.URL.Path, "/static") + ".br")
+		if err != nil {
+			fn.ServeHTTP(w, r)
+			return
+		}
+
+		extension := filepath.Ext(info.Name()[:len(info.Name())-3])
+		w.Header().Set("Content-Type", mime.TypeByExtension(extension))
 		w.Header().Set("Content-Encoding", "br")
 
-		// updating request URL
 		newRequest := new(http.Request)
 		*newRequest = *r
 		newRequest.URL = new(url.URL)
