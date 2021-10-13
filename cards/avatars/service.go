@@ -40,8 +40,8 @@ func (service *Service) Create(ctx context.Context, avatar Avatar) error {
 	return ErrAvatar.Wrap(service.avatars.Create(ctx, avatar))
 }
 
-// GenerateAvatar generates a common avatar from different layers of photos.
-func (service *Service) GenerateAvatar(ctx context.Context, cardID uuid.UUID, isTattoo bool, name string) (Avatar, error) {
+// Generate generates a common avatar from different layers of photos.
+func (service *Service) Generate(ctx context.Context, cardID uuid.UUID, isTattoo bool, name string) (Avatar, error) {
 	var (
 		layer  image.Image
 		layers []image.Image

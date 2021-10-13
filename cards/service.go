@@ -40,7 +40,30 @@ func NewService(cards DB, config Config, avatars *avatars.Service) *Service {
 }
 
 // Create adds card in DB.
-func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentageQualities []int, imageName string) (Card, error) {
+func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentageQualities []int, nameImage string) (Card, error) {
+	var (
+		err  error
+		card Card
+	)
+
+	if card, err = service.Generate(ctx, userID, percentageQualities); err != nil {
+		return card, ErrCards.Wrap(err)
+	}
+
+	if err = service.cards.Create(ctx, card); err != nil {
+		return card, ErrCards.Wrap(err)
+	}
+
+	var avatar avatars.Avatar
+	if avatar, err = service.avatars.Generate(ctx, card.ID, card.IsTattoo, nameImage); err != nil {
+		return card, ErrCards.Wrap(err)
+	}
+
+	return card, ErrCards.Wrap(service.avatars.Create(ctx, avatar))
+}
+
+// Generate generates card.
+func (service *Service) Generate(ctx context.Context, userID uuid.UUID, percentageQualities []int) (Card, error) {
 	qualities := map[string]int{
 		"wood":    percentageQualities[0],
 		"silver":  percentageQualities[1],
@@ -182,17 +205,7 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentage
 		Throwing:         generateSkill(goalkeeping),
 	}
 
-	var err error
-	if err = service.cards.Create(ctx, card); err != nil {
-		return card, ErrCards.Wrap(err)
-	}
-
-	var avatar avatars.Avatar
-	if avatar, err = service.avatars.GenerateAvatar(ctx, card.ID, card.IsTattoo, imageName); err != nil {
-		return card, ErrCards.Wrap(err)
-	}
-
-	return card, ErrCards.Wrap(service.avatars.Create(ctx, avatar))
+	return card, nil
 }
 
 // searchValueByPercent search value string by percent.
