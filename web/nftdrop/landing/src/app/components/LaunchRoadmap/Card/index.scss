@@ -8,8 +8,8 @@
     padding: 70px 90px;
     justify-content: space-between;
     align-items: center;
-    background: #19215e;
-    border: 1px solid #3f4ba7;
+    background: linear-gradient(#213497 100%, #2c3c8f 0%);
+    box-shadow: 0 10px 20px 0 $roadmapHighlightColor;
 
     &__text-area {
         width: 70%;

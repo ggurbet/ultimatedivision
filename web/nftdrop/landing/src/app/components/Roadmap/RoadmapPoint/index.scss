@@ -41,6 +41,7 @@
         font-size: 49.7679px;
         line-height: 60px;
         transition: font-size 0.3s;
+        margin-left: -5px;
     }
 
     &__list {
@@ -49,6 +50,7 @@
     }
 
     &__item {
+        display: flex;
         font-family: "Roboto";
         font-style: normal;
         font-weight: normal;
@@ -56,13 +58,18 @@
         line-height: 21px;
         margin-bottom: 25px;
 
+        &__description {
+            width: 100%;
+        }
+
         &:before {
             content: "\2022";
             color: $roadmapHighlightColor;
             font-weight: bold;
             display: inline-block;
             width: 1em;
-            margin-left: -1em;
+            height: auto;
+            margin-left: -5px;
         }
     }
 }
@@ -92,6 +99,13 @@
         &__list {
             margin-top: 0;
             margin-left: 20px;
+        }
+
+        &__item {
+
+            &:before {
+                margin-left: -15px;
+            }
         }
     }
 }

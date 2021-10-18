@@ -97,6 +97,18 @@
         &__title {
             margin-bottom: 100px;
         }
+
+        &__road {
+            position: relative;
+
+            &:after {
+                position: absolute;
+                height: 100%;
+                width: 5px;
+                background: white;
+                left: 0;
+            }
+        }
     }
 }
 

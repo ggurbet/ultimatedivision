@@ -25,7 +25,9 @@ export const RoadmapPoint: React.FC<{
                         className="roadmap-point__item"
                         key={index}
                     >
-                        {point}
+                        <span className="roadmap-point__item__description">
+                            {point}
+                        </span>
                     </li>
                 ))}
             </ul>

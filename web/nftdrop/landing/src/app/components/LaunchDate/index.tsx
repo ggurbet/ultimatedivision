@@ -44,14 +44,14 @@ export const LaunchDate: React.FC = () => {
                         >
                             1 November 20:00
                         </h1>
-                        <div
-                            data-aos="fade-left"
-                            data-aos-delay={600}
+                        <button
                             className="launch-date__information__remind"
                             onClick={handleModal}
                         >
-                            Remind Me
-                        </div>
+                            <span className="launch-date__information__remind__text">
+                                Remind Me
+                            </span>
+                        </button>
                     </div>
                 </div>
             </section>

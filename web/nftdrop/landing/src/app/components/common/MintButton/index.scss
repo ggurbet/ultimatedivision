@@ -17,8 +17,9 @@
         font-style: normal;
         font-weight: bold;
         font-size: 24px;
-        line-height: 25px;
+        line-height: 72px;
         color: $metaverve-text;
+        margin: auto;
     }
 
     .error {
@@ -28,5 +29,19 @@
         padding: 10px 0;
         width: 100%;
         background: rgb(169, 1, 1);
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .ultimatedivision-mint-btn {
+        width: 356px;
+    }
+}
+
+@media (max-width: $phoneBreakPoint - 200px) {
+
+    .ultimatedivision-mint-btn {
+        width: 90%;
     }
 }

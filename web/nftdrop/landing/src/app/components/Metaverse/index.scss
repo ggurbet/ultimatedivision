@@ -98,7 +98,7 @@
     .metaverse {
 
         &__wrapper {
-            padding: 80px 30px;
+            padding: 80px 10px;
         }
 
         &__title {
@@ -112,11 +112,22 @@
         }
 
         &__cards {
-            width: 100%;
+            width: unset;
         }
 
         &__sold-scale {
             height: 40px;
+            width: 356px;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint - 200px) {
+
+    .metaverse {
+
+        &__sold-scale {
+            width: 90%;
         }
     }
 }

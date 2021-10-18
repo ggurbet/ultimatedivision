@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import box from '@static/images/launchRoadmap/box1.svg';
+import box from '@static/images/launchRoadmap/box.svg';
 
 import './index.scss';
 

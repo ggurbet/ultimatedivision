@@ -53,26 +53,37 @@
             color: $roadmapHighlightColor;
             letter-spacing: 2px;
             font-weight: lighter;
+            margin-top: 5px;
         }
 
         &__remind {
-            width: 290px;
+            float: left;
+            width: 270px;
             height: 72px;
-            font-family: "Hanson";
-            margin-top: 40px;
-            font-size: 26px;
-            text-align: center;
-            vertical-align: middle;
             background: $highlightColor;
-            color: white;
-            cursor: pointer;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            margin: 45px auto;
+            cursor: pointer;
+            border: none;
+
+            &__text {
+                font-family: "Hanson", sans-serif;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 24px;
+                line-height: 72px;
+                color: $metaverve-text;
+                margin: auto;
+            }
         }
     }
+}
 
-    @media (max-width: $desktopBreakPoint + 200px) {
+@media (max-width: $desktopBreakPoint + 200px) {
+
+    .launch-date {
 
         &__information {
 
@@ -83,16 +94,13 @@
             &__title {
                 font-size: 42px;
             }
-
-            &__remind {
-                font-size: 20px;
-                padding: 15px 25px;
-                line-height: 48px;
-            }
         }
     }
+}
 
-    @media (max-width: $desktopBreakPoint) {
+@media (max-width: $desktopBreakPoint) {
+
+    .launch-date {
 
         &__wrapper {
             padding: 0 50px;
@@ -108,13 +116,6 @@
             &__title {
                 font-size: 36px;
             }
-
-            &__remind {
-                width: 156px;
-                height: 42px;
-                line-height: 36px;
-                font-size: 14px;
-            }
         }
 
         &__ball {
@@ -122,14 +123,17 @@
             height: 250px;
         }
     }
+}
 
-    @media (max-width: $tabletBreakPoint) {
+@media (max-width: $tabletBreakPoint) {
+
+    .launch-date {
         overflow: hidden;
 
         &__wrapper {
             justify-content: left;
             min-height: 440px;
-            padding: 70px 30px;
+            padding: 70px 20px;
         }
 
         &__ball {
@@ -140,6 +144,44 @@
             top: 0;
             animation: unset;
             z-index: 0;
+        }
+
+        &__information {
+
+            &__remind {
+                width: 156px;
+                height: 42px;
+                margin: 25px auto;
+
+                &__text {
+                    font-size: 14px;
+                    line-height: 42px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .launch-date {
+
+        &__information {
+
+            &__title {
+                margin-top: 30px;
+            }
+
+            &__remind {
+                width: 270px;
+                height: 72px;
+                margin: 65px auto;
+
+                &__text {
+                    line-height: 72px;
+                    font-size: 24px;
+                }
+            }
         }
     }
 }

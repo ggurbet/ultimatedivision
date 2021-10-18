@@ -222,7 +222,7 @@
         &__wrapper {
             position: relative;
             height: unset;
-            padding: 70px 30px;
+            padding: 70px 20px;
             flex-direction: column;
         }
 
@@ -232,6 +232,11 @@
 
         &__value {
             font-size: 64px;
+            padding-left: 10px;
+        }
+
+        &__title {
+            padding-left: 10px;
         }
 
         &__buttons-wrapper {
@@ -287,6 +292,20 @@
             &__text {
                 font-size: 12px;
             }
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint - 200px) {
+
+    .home {
+
+        &__value {
+            padding-left: 0;
+        }
+
+        &__title {
+            padding-left: 0;
         }
     }
 }
