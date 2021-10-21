@@ -3,7 +3,7 @@
 
 import { ethers } from 'ethers';
 
-import { Service } from '@/app/services';
+import { Service } from '@/app/ethers/service';
 
 export class ServicePlugin {
     public static create() {

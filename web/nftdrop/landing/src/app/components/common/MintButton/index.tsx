@@ -4,6 +4,8 @@
 import React, { useState } from 'react';
 
 import MetaMaskOnboarding from '@metamask/onboarding';
+import { ServicePlugin } from '@/app/plugins/service';
+import { NFT_ABI, NFT_ABI_SALE } from '@/app/ethers';
 
 import './index.scss';
 
@@ -37,8 +39,14 @@ export const MintButton: React.FC = () => {
 
         } else {
             onboarding.current
-            && onboarding.current?.startOnboarding();
+                && onboarding.current?.startOnboarding();
         }
+
+        /** for testing */
+        const service = ServicePlugin.create();
+        const wallet = await service.getWallet();
+        const totalSupply = await service.getLastTokenId(wallet, NFT_ABI);
+        const contract = await service.sendTransaction(wallet, totalSupply, NFT_ABI_SALE);
     };
 
     return (
