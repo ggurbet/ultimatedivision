@@ -45,7 +45,7 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
 
     const formValue = {
         value: email,
-        placeHolder: 'Email',
+        placeHolder: 'Your Email',
         onChange: setEmail,
         className: 'launch-date-modal__notification__email',
         type: 'text',

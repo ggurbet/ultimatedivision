@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Modal } from './Modal';
 
@@ -15,6 +15,13 @@ import './index.scss';
 export const LaunchDate: React.FC = () => {
 
     const [isShowModal, setIsShowModal] = useState(false);
+
+    useEffect(() => {
+        /** provides logic to disable scrolling */
+        isShowModal
+            ? document.body.classList.add('scroll-hidden')
+            : document.body.classList.remove('scroll-hidden');
+    }, [isShowModal]);
 
     const handleModal = () => setIsShowModal(prev => !prev);
 

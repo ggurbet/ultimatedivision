@@ -1,5 +1,9 @@
 @import "/src/index.scss";
 
+.scroll-hidden {
+    overflow: hidden;
+}
+
 .launch-date {
     background: #001236;
 
@@ -39,7 +43,9 @@
     }
 
     &__information {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        align-self: center;
 
         &__subtitle {
             font-family: "Rubik";
@@ -64,7 +70,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 45px auto;
+            margin-top: 25px;
             cursor: pointer;
             border: none;
 
@@ -149,13 +155,13 @@
         &__information {
 
             &__remind {
-                width: 156px;
-                height: 42px;
-                margin: 25px auto;
+                width: 270px;
+                height: 72px;
+                margin-top: 65px;
 
                 &__text {
-                    font-size: 14px;
-                    line-height: 42px;
+                    line-height: 72px;
+                    font-size: 24px;
                 }
             }
         }
@@ -170,17 +176,6 @@
 
             &__title {
                 margin-top: 30px;
-            }
-
-            &__remind {
-                width: 270px;
-                height: 72px;
-                margin: 65px auto;
-
-                &__text {
-                    line-height: 72px;
-                    font-size: 24px;
-                }
             }
         }
     }
