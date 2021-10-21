@@ -4,6 +4,7 @@
 import React from 'react';
 
 import { Card } from './Card';
+
 import fifteen from '@static/images/launchRoadmap/15.svg';
 import fifty from '@static/images/launchRoadmap/50.svg';
 import eighty from '@static/images/launchRoadmap/80.svg';

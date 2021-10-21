@@ -3,11 +3,12 @@
 
 import React from 'react';
 
+import { RoadmapPoint } from './RoadmapPoint';
+
 import footer from '@static/images/roadmap/bottom.svg';
 import flag from '@static/images/roadmap/flag.svg';
 
 import './index.scss';
-import { RoadmapPoint } from './RoadmapPoint';
 
 export const Roadmap: React.FC = () => {
 

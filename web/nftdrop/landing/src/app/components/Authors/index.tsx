@@ -2,6 +2,7 @@
 // See LICENSE for copying information.
 
 import { BoostyLogo, ChickenfishLogo } from '@static/images/authorsPage/authors';
+
 import './index.scss';
 
 export const Authors: React.FC = () => {
