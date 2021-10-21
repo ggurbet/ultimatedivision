@@ -11,7 +11,6 @@ const Store = () => {
 
     return (
         <section className="store">
-            <div className="store__wrapper">
                 {!isOpening ?
                     <>
                         <h1 className="store__title">Box</h1>
@@ -20,7 +19,6 @@ const Store = () => {
                     :
                     <LootboxContent handleOpening={handleOpening} />
                 }
-            </div>
         </section>
     );
 };

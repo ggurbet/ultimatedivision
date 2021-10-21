@@ -1,36 +1,35 @@
 @import "@/index.scss";
 
 .box-selection {
-    display: flex;
-    height: 100%;
-    justify-content: space-around;
-    padding: 0 70px;
 
-    :nth-child(1) {
-        z-index: 1;
+    &__wrapper {
+        width: 100%;
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 0 50px;
+        display: flex;
+        justify-content: space-between;
     }
 }
 
 @media screen and (max-width: $desktopBreakPoint + 300px) {
 
     .box-selection {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 0% auto;
-        padding: 0;
-        gap: 100px;
+
+        &__wrapper {
+            flex-direction: column;
+            align-items: center;
+            gap: 100px;
+        }
     }
 }
 
-@media screen and (max-width: $phoneBreakPoint) {
+@media (max-width: $phoneBreakPoint) {
 
     .box-selection {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        justify-content: space-around;
-        padding: 0 5%;
-        gap: 100px;
+
+        &__wrapper {
+            padding: 0 30px;
+        }
     }
 }

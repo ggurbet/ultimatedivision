@@ -36,13 +36,15 @@ export const LootboxSelection: React.FC<{ handleOpening: Dispatch<SetStateAction
 
     return (
         <div className="box-selection">
-            {boxesData.map((item, index) =>
-                <LootboxCard
-                    data={item}
-                    key={index}
-                    handleOpening={handleOpening}
-                />
-            )}
+            <div className="box-selection__wrapper">
+                {boxesData.map((item, index) =>
+                    <LootboxCard
+                        data={item}
+                        key={index}
+                        handleOpening={handleOpening}
+                    />
+                )}
+            </div>
         </div>
     );
 };

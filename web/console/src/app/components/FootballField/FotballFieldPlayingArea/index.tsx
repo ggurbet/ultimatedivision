@@ -80,13 +80,13 @@ export const FootballFieldPlayingArea: React.FC = () => {
     }
 
     /** getting dragged card index and changing state to allow mouseUp */
-    function dragStart(e: any, index: number = DEFAULT_VALUE): void {
+    function dragStart(e: React.MouseEvent<HTMLDivElement>, index: number = DEFAULT_VALUE): void {
         handleDrag(true);
         dispatch(setDragStart(index));
     }
     /** eslint-disable */
     /** getting second drag index  and exchanging with first index*/
-    function onMouseUp(e: any, index: number = DEFAULT_VALUE): void {
+    function onMouseUp(e: React.MouseEvent<HTMLDivElement>, index: number = DEFAULT_VALUE): void {
         e.stopPropagation();
 
         if (isDragging && dragStartIndex !== null) {
@@ -100,7 +100,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
     }
 
     /** when we release card not on target it just brings it on start position*/
-    function mouseUpOnArea(e: any) {
+    function mouseUpOnArea(e: React.MouseEvent<HTMLInputElement>) {
         e.stopPropagation();
         dispatch(setDragStart());
     }

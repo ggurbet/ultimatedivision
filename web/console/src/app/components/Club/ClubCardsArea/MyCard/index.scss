@@ -141,7 +141,7 @@
     }
 }
 
-@media (max-width: $phoneBreakPoint - 200px) {
+@media (max-width: $phoneBreakPoint - 150px) {
 
     .club-card {
         width: 150px;
@@ -156,12 +156,21 @@
         }
 
         &__face-picture {
-            margin-top: -7px;
-            margin-left: 18px;
+            margin-top: 2px;
+            margin-left: 22px;
+            height: 100px;
         }
 
         &__price-gold {
             bottom: 120px;
+        }
+
+        &__confirm-icon {
+            z-index: 3;
+            position: absolute;
+            top: 0;
+            right: 25px;
+            width: 17px;
         }
 
         &__price {
