@@ -12,6 +12,7 @@ import (
 
 	"ultimatedivision/admin/admins"
 	"ultimatedivision/nftdrop"
+	"ultimatedivision/nftdrop/subscribers"
 	"ultimatedivision/nftdrop/whitelist"
 )
 
@@ -53,6 +54,11 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             email         VARCHAR                  NOT NULL,
             password_hash BYTEA                    NOT NULL,
             created_at    TIMESTAMP WITH TIME ZONE NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS subscribers (
+            email            VARCHAR PRIMARY KEY         NOT NULL,
+            email_normalized VARCHAR UNIQUE              NOT NULL,
+            created_at       TIMESTAMP WITH TIME ZONE    NOT NULL
         );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)
@@ -76,4 +82,9 @@ func (db *database) Whitelist() whitelist.DB {
 // Admins provided access to accounts db.
 func (db *database) Admins() admins.DB {
 	return &adminsDB{conn: db.conn}
+}
+
+// Subscribers provided access to accounts db.
+func (db *database) Subscribers() subscribers.DB {
+	return &subscribersDB{conn: db.conn}
 }

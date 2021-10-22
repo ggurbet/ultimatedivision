@@ -17,6 +17,7 @@ import (
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/nftdrop/admin/adminserver"
 	"ultimatedivision/nftdrop/landing"
+	"ultimatedivision/nftdrop/subscribers"
 	"ultimatedivision/nftdrop/whitelist"
 )
 
@@ -29,6 +30,9 @@ type DB interface {
 
 	// Admins provides access to admins db.
 	Admins() admins.DB
+
+	// Subscribers provides access to subscribers db.
+	Subscribers() subscribers.DB
 
 	// Close closes underlying db connection.
 	Close() error
@@ -83,6 +87,11 @@ type Peer struct {
 		Listener net.Listener
 		Endpoint *adminserver.Server
 	}
+
+	// exposes subscribers related logic.
+	Subscribers struct {
+		Service *subscribers.Service
+	}
 }
 
 // New is a constructor for nftdrop.Peer.
@@ -97,6 +106,10 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			config.Whitelist.Config,
 			peer.Database.Whitelist(),
 		)
+	}
+
+	{ // subscribers setup
+		peer.Subscribers.Service = subscribers.NewService(peer.Database.Subscribers())
 	}
 
 	{ // admins setup
@@ -141,6 +154,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			logger,
 			peer.Landing.Listener,
 			peer.Whitelist.Service,
+			peer.Subscribers.Service,
 		)
 	}
 

@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/internal/mail"
 	"ultimatedivision/users"
 )
 
@@ -31,7 +32,7 @@ func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
 		return nil, ErrUsers.Wrap(err)
 	}
 	defer func() {
-		err = errs.Combine(err, ErrUsers.Wrap(rows.Close()))
+		err = errs.Combine(err, rows.Close())
 	}()
 
 	var data []users.User
@@ -72,7 +73,7 @@ func (usersDB *usersDB) Get(ctx context.Context, id uuid.UUID) (users.User, erro
 // GetByEmail returns user by email from the data base.
 func (usersDB *usersDB) GetByEmail(ctx context.Context, email string) (users.User, error) {
 	var user users.User
-	emailNormalized := normalizeEmail(email)
+	emailNormalized := mail.Normalize(email)
 
 	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, last_login, status, created_at FROM users WHERE email_normalized=$1", emailNormalized)
 
@@ -90,7 +91,7 @@ func (usersDB *usersDB) GetByEmail(ctx context.Context, email string) (users.Use
 
 // Create creates a user and writes to the database.
 func (usersDB *usersDB) Create(ctx context.Context, user users.User) error {
-	emailNormalized := normalizeEmail(user.Email)
+	emailNormalized := mail.Normalize(user.Email)
 	query := `INSERT INTO users(
                   id, 
                   email, 

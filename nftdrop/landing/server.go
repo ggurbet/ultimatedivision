@@ -23,6 +23,7 @@ import (
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/ratelimit"
 	"ultimatedivision/nftdrop/landing/controllers"
+	"ultimatedivision/nftdrop/subscribers"
 	"ultimatedivision/nftdrop/whitelist"
 )
 
@@ -54,7 +55,7 @@ type Server struct {
 }
 
 // NewServer is a constructor for nftdrop web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, whitelist *whitelist.Service) *Server {
+func NewServer(config Config, log logger.Logger, listener net.Listener, whitelist *whitelist.Service, subscribers *subscribers.Service) *Server {
 	server := &Server{
 		log:      log,
 		config:   config,
@@ -65,12 +66,16 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, whitelis
 	server.rateLimiter = ratelimit.NewRateLimiter(time.Minute*5, 5, 10000)
 
 	whitelistController := controllers.NewWhitelist(log, whitelist)
+	subscribersController := controllers.NewEmails(log, subscribers)
 
 	router := mux.NewRouter()
 	apiRouter := router.PathPrefix("/api/v0").Subrouter()
 
 	whitelistRouter := apiRouter.PathPrefix("/whitelist").Subrouter()
 	whitelistRouter.Handle("/{address}", server.rateLimit(http.HandlerFunc(whitelistController.Get))).Methods(http.MethodGet)
+
+	SubscribersRouter := apiRouter.PathPrefix("/subscribers").Subrouter()
+	SubscribersRouter.Handle("", server.rateLimit(http.HandlerFunc(subscribersController.Create))).Methods(http.MethodPost)
 
 	fs := http.FileServer(http.Dir(server.config.StaticDir))
 	router.PathPrefix("/static/").Handler(server.brotliMiddleware(http.StripPrefix("/static", fs)))
