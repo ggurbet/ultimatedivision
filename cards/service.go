@@ -15,7 +15,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards/avatars"
-	"ultimatedivision/internal/pagination"
+	"ultimatedivision/pkg/pagination"
 )
 
 // ErrCards indicated that there was an error in service.

@@ -11,8 +11,8 @@ import (
 
 	"ultimatedivision/admin/adminauth"
 	"ultimatedivision/admin/admins"
-	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/pkg/auth"
 )
 
 // AuthError is a internal error for auth controller.

@@ -13,8 +13,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"ultimatedivision/console/emails"
-	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/pkg/auth"
 	"ultimatedivision/users"
 )
 

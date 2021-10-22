@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
 
-	"ultimatedivision/internal/sync"
+	"ultimatedivision/pkg/sync"
 )
 
 func TestCycle_Basic(t *testing.T) {

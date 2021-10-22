@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"ultimatedivision/admin/admins"
-	"ultimatedivision/internal/auth"
+	"ultimatedivision/pkg/auth"
 )
 
 const (

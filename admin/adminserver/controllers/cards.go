@@ -15,7 +15,7 @@ import (
 
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/internal/pagination"
+	"ultimatedivision/pkg/pagination"
 )
 
 var (

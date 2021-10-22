@@ -14,8 +14,8 @@ import (
 	"github.com/lib/pq"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/internal/pagination"
 	"ultimatedivision/marketplace"
+	"ultimatedivision/pkg/pagination"
 )
 
 // ensures that marketplaceDB implements marketplace.DB.

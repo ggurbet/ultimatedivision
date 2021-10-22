@@ -10,7 +10,7 @@ import (
 
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/internal/sync"
+	"ultimatedivision/pkg/sync"
 	"ultimatedivision/users"
 )
 

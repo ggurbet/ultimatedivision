@@ -14,7 +14,7 @@ import (
 
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/internal/pagination"
+	"ultimatedivision/pkg/pagination"
 	"ultimatedivision/pkg/sqlsearchoperators"
 )
 

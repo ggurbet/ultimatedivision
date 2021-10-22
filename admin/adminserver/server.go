@@ -21,11 +21,11 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/avatars"
 	"ultimatedivision/clubs"
-	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/templatefuncs"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
+	"ultimatedivision/pkg/auth"
 	"ultimatedivision/queue"
 	"ultimatedivision/users"
 )

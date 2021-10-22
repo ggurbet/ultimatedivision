@@ -9,8 +9,8 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/pkg/auth"
 	"ultimatedivision/queue"
 )
 

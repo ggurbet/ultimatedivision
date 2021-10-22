@@ -16,8 +16,8 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
-	"ultimatedivision/internal/pagination"
 	"ultimatedivision/marketplace"
+	"ultimatedivision/pkg/pagination"
 )
 
 // ensures that cardsDB implements cards.DB.

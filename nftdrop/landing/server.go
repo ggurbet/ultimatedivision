@@ -21,10 +21,10 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/internal/ratelimit"
 	"ultimatedivision/nftdrop/landing/controllers"
 	"ultimatedivision/nftdrop/subscribers"
 	"ultimatedivision/nftdrop/whitelist"
+	"ultimatedivision/pkg/ratelimit"
 )
 
 var (

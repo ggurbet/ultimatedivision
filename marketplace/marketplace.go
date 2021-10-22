@@ -11,7 +11,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
-	"ultimatedivision/internal/pagination"
+	"ultimatedivision/pkg/pagination"
 	"ultimatedivision/users"
 )
 

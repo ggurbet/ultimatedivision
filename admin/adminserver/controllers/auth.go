@@ -11,8 +11,8 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/admin/adminauth"
-	"ultimatedivision/internal/auth"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/pkg/auth"
 )
 
 // AuthError is a internal error for auth controller.

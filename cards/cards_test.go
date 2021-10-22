@@ -18,7 +18,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/database"
 	"ultimatedivision/database/dbtesting"
-	"ultimatedivision/internal/pagination"
+	"ultimatedivision/pkg/pagination"
 	"ultimatedivision/pkg/sqlsearchoperators"
 	"ultimatedivision/users"
 )
