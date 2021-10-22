@@ -10,28 +10,8 @@ export class UserService {
     public constructor(users: UserClient) {
         this.users = users;
     };
-    /** handles user registration */
-    public async register(user: User): Promise<void> {
-        return await this.users.register(user);
-    };
-    /** return registred user */
-    public async login(email: string, password: string): Promise<void> {
-        return await this.users.login(email, password);
-    };
-    /** handles user changing password */
-    public async changePassword(password: string, newPassword: string): Promise<void> {
-        return await this.users.changePassword(password, newPassword);
-    };
-    /** handles user check email token */
-    public async checkEmailToken(token: string | null): Promise<void> {
-        await this.users.checkEmailToken(token);
-    };
-    /** handles user check recover token */
-    public async checkRecoverToken(token: string | null): Promise<void> {
-        await this.users.checkRecoverToken(token);
-    };
-    /** handles user recover password */
-    public async recoverPassword(password: string): Promise<void> {
-        await this.users.recoverPassword(password);
+    /** handles the logic of user subscription to news by email */
+    public async getNotifications(email: string): Promise<void> {
+        await this.users.getNotifications(email);
     };
 };

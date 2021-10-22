@@ -12,8 +12,9 @@ export const UserDataArea: React.FC<{
     className: string,
     type: string,
     error: SetStateAction<string | null>,
-    clearError: any,
+    clearLabel: () => void,
     validate: (value: string) => boolean,
+    successLabel: SetStateAction<string | null>,
 }> = ({
     value,
     placeHolder,
@@ -21,8 +22,9 @@ export const UserDataArea: React.FC<{
     className,
     type,
     error,
-    clearError,
+    clearLabel,
     validate,
+    successLabel
 }) => {
     const DELAY: number = 500;
     /**
@@ -46,7 +48,7 @@ export const UserDataArea: React.FC<{
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
-        clearError(null);
+        clearLabel();
     };
 
     return (
@@ -60,6 +62,9 @@ export const UserDataArea: React.FC<{
             />
             {error && <label className={`${className}__error`} htmlFor={value}>
                 {error}
+            </label>}
+            {successLabel && <label className={`${className}__success`} htmlFor={value}>
+                {successLabel}
             </label>}
         </div>
     );

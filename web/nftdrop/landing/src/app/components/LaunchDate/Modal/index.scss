@@ -45,7 +45,7 @@
         position: absolute;
         left: 0;
         top: -35px;
-        color: $label-color;
+        color: $modalMainTextColor;
         font-family: "Rubik";
         font-size: 24px;
         line-height: 28px;
@@ -83,19 +83,24 @@
             border: 1px solid $roadmapHighlightColor;
             font-size: 24px;
             padding: 5px 35px 5px 30px;
-            color: white;
+            color: $modalMainTextColor;
             background-repeat: no-repeat;
             background-position: 98% 50%;
 
-            &__error {
+            &__error,
+            &__success {
                 position: absolute;
                 right: 0;
                 top: -35px;
-                color: red;
+                color: $modalErrorColor;
                 font-family: "Rubik";
                 font-size: 24px;
                 line-height: 28px;
                 text-align: right;
+            }
+
+            &__success {
+                color: $roadmapHighlightColor;
             }
         }
 
@@ -104,7 +109,7 @@
         }
 
         &__email-error {
-            border: 1px solid red;
+            border: 1px solid $modalErrorColor;
         }
 
         &__confirm {
@@ -120,7 +125,7 @@
             height: 66px;
             line-height: 40px;
             margin-top: 10%;
-            color: white;
+            color: $modalMainTextColor;
             background: linear-gradient(
                 95.3deg,
                 rgba(0, 0, 0, 0.2) 4.05%,
@@ -167,7 +172,8 @@
             &__email-error {
                 font-size: 18px;
 
-                &__error {
+                &__error,
+                &__success {
                     font-size: 18px;
                 }
             }
@@ -203,7 +209,8 @@
                 font-size: 14px;
                 padding: 5px 25px 5px 10px;
 
-                &__error {
+                &__error,
+                &__success {
                     font-size: 14px;
                 }
             }
@@ -239,7 +246,8 @@
             &__email-check,
             &__email-error {
 
-                &__error {
+                &__error,
+                &__success {
                     top: 50px;
                     left: 0;
                     right: unset;

@@ -4,6 +4,8 @@
 import React, { SetStateAction, useState } from 'react';
 
 import { Validator } from '@/user/validation';
+import { UserClient } from '@/api/user';
+import { UserService } from '@/user/service';
 
 import { UserDataArea } from '@components/common/UserDataArea';
 
@@ -14,6 +16,8 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
 }) => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError]
+        = useState<SetStateAction<null | string>>(null);
+    const [successEmailLabel, setSuccessEmailLabel]
         = useState<SetStateAction<null | string>>(null);
     /** checks if value does't valid then set an error message */
     const validateForm: () => boolean = () => {
@@ -32,15 +36,34 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
         return isValidForm;
     };
 
+    const user = new UserClient();
+    const users = new UserService(user);
+
+    /** describes the logic of user subscription to news */
+    async function getNotifications() {
+        try {
+            await users.getNotifications(email);
+            setEmailError(null);
+            setSuccessEmailLabel('The email was sent successfully');
+        } catch (error: any) {
+            setSuccessEmailLabel(null);
+            setEmailError(error.message);
+        };
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!validateForm()) {
             return;
         };
-        /** closes modal window */
-        handleModal();
-        /** TODO: send email for gets notifications to server */
+
+        getNotifications();
+    };
+
+    const clearLabel = () => {
+        setEmailError(null);
+        setSuccessEmailLabel(null);
     };
 
     const formValue = {
@@ -50,8 +73,9 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
         className: 'launch-date-modal__notification__email',
         type: 'text',
         error: emailError,
-        clearError: setEmailError,
+        clearLabel,
         validate: Validator.email,
+        successLabel: successEmailLabel,
     };
 
     return <div className="launch-date-modal">
