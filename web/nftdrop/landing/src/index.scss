@@ -44,6 +44,14 @@
 }
 
 @font-face {
+    font-family: "BaiJamjuree";
+    src: url("@static/fonts/BaiJamjuree-Regular.ttf") format("truetype");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
     font-family: "Montserrat";
     src: url("@static/fonts/Montserrat-Regular.ttf") format("truetype");
 }

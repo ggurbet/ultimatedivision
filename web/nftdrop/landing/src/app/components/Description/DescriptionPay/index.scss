@@ -17,16 +17,20 @@
     }
 
     &__text {
-        font-family: "Roboto";
-        font-weight: bold;
-        font-size: 24px;
+        font-family: "BaiJamjuree", sans-serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 22px;
+        color: #a5faff;
     }
 
     &__title {
-        font-size: 43px;
         color: $roadmapHighlightColor;
         margin-bottom: 40px;
-        font-family: "Hanson";
+        font-family: "Russo One", sans-serif;
+        font-size: 43px;
+        line-height: 52px;
     }
 }
 
@@ -61,7 +65,7 @@
         }
 
         &__title {
-            font-size: 36px;
+            font-size: 32px;
             position: absolute;
             top: 20px;
         }

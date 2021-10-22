@@ -9,7 +9,6 @@
     position: relative;
 
     &__image-area {
-        // min-width: 550px;
         transition: all 0.3s;
     }
 
@@ -22,16 +21,19 @@
     &__text {
         width: 110%;
         margin-right: 30px;
-        font-family: "Roboto";
         margin-top: 40px;
-        font-size: 24px;
-        font-weight: bold;
+        font-family: "BaiJamjuree", sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 22px;
+        color: #a5faff;
     }
 
     &__title {
-        font-family: "Hanson";
+        font-family: "Russo One";
         color: $roadmapHighlightColor;
-        font-size: 36px;
+        font-size: 43px;
+        line-height: 52px;
     }
 }
 
@@ -109,6 +111,7 @@
         &__title {
             position: absolute;
             top: -30px;
+            font-size: 32px;
         }
 
         &__text {

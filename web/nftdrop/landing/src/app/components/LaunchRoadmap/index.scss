@@ -22,8 +22,11 @@
     @media (max-width: $desktopBreakPoint) {
 
         &__wrapper {
-            padding: 90px 40px;
+            padding: 70px 40px;
         }
+    }
+
+    @media (max-width: $tabletBreakPoint) {
 
         &__title {
             font-size: 42px;

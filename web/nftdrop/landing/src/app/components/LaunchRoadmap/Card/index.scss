@@ -26,13 +26,14 @@
 
     &__description {
         max-width: 500px;
-        font-size: 24px;
-        line-height: 28px;
-        font-weight: bold;
-        font-family: "Roboto";
         text-align: left;
-        color: white;
         margin-bottom: 80px;
+        font-family: "BaiJamjuree", sans-serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 22px;
+        color: #a5faff;
     }
 
     &__box {

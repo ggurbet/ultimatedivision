@@ -16,11 +16,14 @@
         font-family: "Russo One";
         width: 200px;
         display: flex;
+        align-items: center;
+        justify-content: center;
         gap: 30px;
         text-transform: none;
     }
 
     &__link {
+        width: 84px;
         margin: 10px;
         color: #fff;
         transition: color 0.3s;
@@ -34,29 +37,35 @@
         }
     }
 
-    &__text {
-        font-family: "Russo One";
-        font-size: 20px;
-        line-height: 31px;
-        text-align: center;
-        text-transform: uppercase;
-        color: $roadmapHighlightColor;
-        transform: scaleX(0.75);
+    &__social {
+        margin-right: 10px;
     }
 
     &__list {
-        width: 70%;
-        margin: 0 auto;
-        margin-top: 5px;
         list-style: none;
         display: flex;
-        justify-content: space-around;
-        column-gap: 30px;
+        column-gap: 21px;
+    }
+
+    &__social-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 84px;
+        height: 47px;
+        background: #001b4f;
+        border: 2px solid #162574;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    &__social-text {
+        display: none;
     }
 
     &__social-img {
-        width: 25px;
-        height: 25px;
+        width: 27px;
+        height: 20px;
         transition: all 0.3s;
 
         &:hover {
@@ -66,6 +75,16 @@
 
     &__bottom {
         height: 5px;
+    }
+}
+
+@media (max-width: $tabletBreakPoint) {
+
+    .footer {
+
+        &__wrapper {
+            padding: 40px 20px;
+        }
     }
 }
 
@@ -97,14 +116,6 @@
             margin: 0;
             width: 60%;
         }
-
-        &__text {
-            transform: scale(1);
-            position: relative;
-            margin-bottom: 20px;
-            width: 100%;
-            text-align: left;
-        }
     }
 }
 
@@ -112,12 +123,57 @@
 
     .footer {
 
-        &__wrapper {
-            padding: 40px 30px;
+        &__list {
+            width: 100%;
         }
 
-        &__text {
-            font-size: 18px;
+        &__link {
+            width: 50%;
+            margin-left: 0;
+        }
+
+        &__links {
+            order: 1;
+            width: 100%;
+            margin: 42px 0 0 0;
+            gap: 20px;
+
+            :nth-child(2) {
+                text-align: right;
+            }
+        }
+
+        &__social-item {
+            width: 100%;
+            margin: 0;
+            text-decoration: none;
+        }
+
+        &__social {
+            order: 0;
+            margin: 0;
+        }
+
+        &__wrapper {
+            padding: 40px 20px;
+            gap: 0;
+        }
+
+        &__social-text {
+            display: block;
+            margin-left: 14px;
+            font-family: "RussoOne", sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 17px;
+            color: #fefefe;
+        }
+
+        &__social-link {
+            display: flex;
+            margin-left: 0;
+            text-decoration: none;
         }
     }
 }

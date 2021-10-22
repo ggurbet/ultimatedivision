@@ -22,8 +22,8 @@
         font-family: "Russo One";
         font-style: normal;
         font-weight: normal;
-        font-size: 43px;
-        line-height: 52px;
+        font-size: 64px;
+        line-height: 77px;
     }
 
     &__road {
@@ -87,7 +87,7 @@
     .roadmap {
 
         &__wrapper {
-            padding: 70px 40px;
+            padding: 70px 20px;
         }
 
         &__flag {
@@ -96,6 +96,8 @@
 
         &__title {
             margin-bottom: 100px;
+            font-size: 42px;
+            line-height: 51px;
         }
 
         &__road {
@@ -125,6 +127,8 @@
         }
 
         &__title {
+            font-size: 36px;
+            line-height: 43px;
             margin-bottom: 80px;
         }
     }

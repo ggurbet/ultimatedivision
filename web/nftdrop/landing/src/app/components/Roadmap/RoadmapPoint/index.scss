@@ -30,7 +30,11 @@
 
         &:after {
             width: 100vw;
-            background: linear-gradient(90deg, rgba(0, 255, 162, 0.891) 0%, rgba(0, 255, 163, 0) 135.85%);
+            background: linear-gradient(
+                90deg,
+                rgba(0, 255, 162, 0.891) 0%,
+                rgba(0, 255, 163, 0) 135.85%
+            );
         }
     }
 
@@ -56,6 +60,7 @@
         font-weight: normal;
         font-size: 18px;
         line-height: 21px;
+        color: #a5faff;
         margin-bottom: 25px;
 
         &__description {

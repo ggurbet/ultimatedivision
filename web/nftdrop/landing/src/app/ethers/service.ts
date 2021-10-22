@@ -47,7 +47,7 @@ export class Service {
             to: address.smartContractAddress.nftSale,
             data,
             value: currentPrice[0],
-        })
+        });
         const transaction = await signer.sendTransaction({
             to: address.smartContractAddress.nftSale,
             data,

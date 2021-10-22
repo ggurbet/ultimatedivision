@@ -12,13 +12,15 @@ export const Footer: React.FC = () => {
     const socialList = [
         {
             id: 1,
-            path: 'https://twitter.com/UltimateDivnft',
-            img: twitter,
+            path: 'https://discord.com/invite/ultimatedivision',
+            img: discord,
+            text: 'Discord',
         },
         {
             id: 2,
-            path: 'https://discord.com/invite/ultimatedivision',
-            img: discord,
+            path: 'https://twitter.com/UltimateDivnft',
+            img: twitter,
+            text: 'Twitter',
         },
     ];
 
@@ -30,40 +32,40 @@ export const Footer: React.FC = () => {
                         className="footer__link"
                         href="https://ultimatedivision.com/ud/whitepaper/summary"
                     >
-                            Whitepaper
+                        Whitepaper
                     </a>
                     <a
                         className="footer__link"
                         href="https://ultimatedivision.com/ud/whitepaper/summary"
                     >
-                            FAQ
+                        FAQ
                     </a>
                 </div>
                 <div className="footer__social">
-                    <p className="footer__text">follow us on social media:</p>
                     <ul className="footer__list">
                         {socialList.map((social) => (
-                            <li
+                            <a
                                 key={social.id}
                                 className="footer__social-item"
+                                href={social.path}
+                                target="_blank"
+                                rel="noreferrer"
                             >
-                                <a
-                                    className="footer__social-link"
-                                    href={social.path}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                >
+                                <div className="footer__social-link">
                                     <img
                                         className="footer__social-img"
                                         src={social.img}
                                         alt="social logo"
                                     />
-                                </a>
-                            </li>
+                                    <span className="footer__social-text">
+                                        {social.text}
+                                    </span>
+                                </div>
+                            </a>
                         ))}
                     </ul>
                 </div>
             </div>
-        </footer >
+        </footer>
     );
 };

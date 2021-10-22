@@ -6,7 +6,12 @@
     height: 72px;
     border: none;
     cursor: pointer;
-    background: linear-gradient(95.3deg, rgba(0, 0, 0, 0.2) 4.05%, rgba(0, 0, 0, 0) 87.48%), #0df55c;
+    background: linear-gradient(
+        95.3deg,
+        rgba(0, 0, 0, 0.2) 4.05%,
+        rgba(0, 0, 0, 0) 87.48%
+    ),
+        #0df55c;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -43,5 +48,12 @@
 
     .ultimatedivision-mint-btn {
         width: 90%;
+        height: 58px;
+
+        &__text {
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 21px;
+        }
     }
 }
