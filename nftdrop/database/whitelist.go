@@ -12,6 +12,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/nftdrop/whitelist"
+	"ultimatedivision/pkg/cryptoutils"
 )
 
 // ensures that whitelistDB implements whitelist.DB.
@@ -40,7 +41,7 @@ func (whitelistDB *whitelistDB) Create(ctx context.Context, wallet whitelist.Wal
 }
 
 // GetByAddress returns wallet by address from the data base.
-func (whitelistDB *whitelistDB) GetByAddress(ctx context.Context, address whitelist.Hex) (whitelist.Wallet, error) {
+func (whitelistDB *whitelistDB) GetByAddress(ctx context.Context, address cryptoutils.Address) (whitelist.Wallet, error) {
 	wallet := whitelist.Wallet{}
 	query :=
 		`SELECT
@@ -91,7 +92,7 @@ func (whitelistDB *whitelistDB) List(ctx context.Context) ([]whitelist.Wallet, e
 }
 
 // Delete deletes wallet from the database.
-func (whitelistDB *whitelistDB) Delete(ctx context.Context, address whitelist.Hex) error {
+func (whitelistDB *whitelistDB) Delete(ctx context.Context, address cryptoutils.Address) error {
 	query := `DELETE FROM whitelist
               WHERE address = $1`
 

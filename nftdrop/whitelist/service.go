@@ -5,10 +5,11 @@ package whitelist
 
 import (
 	"context"
-	"crypto/ecdsa"
 
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/zeebo/errs"
+
+	"ultimatedivision/pkg/cryptoutils"
 )
 
 // ErrWhitelist indicated that there was an error in service.
@@ -31,49 +32,47 @@ func NewService(config Config, whitelist DB) *Service {
 }
 
 // Create adds whitelist in the database.
-func (service *Service) Create(ctx context.Context, request CreateWallet) error {
-	var password []byte
+func (service *Service) Create(ctx context.Context, wallet CreateWallet) error {
+	var password cryptoutils.Signature
 
-	if request.PrivateKey != "" {
-		privateKeyECDSA, err := crypto.HexToECDSA(string(request.PrivateKey))
+	if wallet.PrivateKey != "" {
+		privateKeyECDSA, err := crypto.HexToECDSA(string(wallet.PrivateKey))
 		if err != nil {
 			return ErrWhitelist.Wrap(err)
 		}
 
-		password, err = service.generatePassword(request.Address, privateKeyECDSA)
+		password, err = cryptoutils.GenerateSignature(wallet.Address, service.config.NFTSale, privateKeyECDSA)
 		if err != nil {
 			return ErrWhitelist.Wrap(err)
 		}
 	}
 
 	whitelist := Wallet{
-		Address:  request.Address,
+		Address:  wallet.Address,
 		Password: password,
 	}
 	return ErrWhitelist.Wrap(service.whitelist.Create(ctx, whitelist))
 }
 
-// generatePassword generates password for user's wallet.
-func (service *Service) generatePassword(address Hex, privateKey *ecdsa.PrivateKey) ([]byte, error) {
-	dataSignature := []byte(service.config.SmartContract.Address + string(address))
-	hashSignature := crypto.Keccak256Hash(dataSignature)
-
-	return crypto.Sign(hashSignature.Bytes(), privateKey)
-}
-
 // GetByAddress returns whitelist by address from the database.
-func (service *Service) GetByAddress(ctx context.Context, address Hex) (SmartContractWithWhiteList, error) {
+func (service *Service) GetByAddress(ctx context.Context, address cryptoutils.Address) (Transaction, error) {
 	whitelist, err := service.whitelist.GetByAddress(ctx, address)
-	smartContractAddress := service.config.SmartContract.Address
-	smartContractPrice := service.config.SmartContract.Price
-
-	smartContractWithWhiteList := SmartContractWithWhiteList{
-		Wallet:  whitelist,
-		Address: smartContractAddress,
-		Price:   smartContractPrice,
+	if err != nil {
+		return Transaction{}, ErrWhitelist.Wrap(err)
+	}
+	if whitelist.Password == "" {
+		return Transaction{}, ErrWhitelist.New("password is empty")
 	}
 
-	return smartContractWithWhiteList, ErrWhitelist.Wrap(err)
+	transactionValue := Transaction{
+		Password: whitelist.Password,
+		SmartContractAddress: SmartContractAddress{
+			NFT:     service.config.NFT,
+			NFTSale: service.config.NFTSale,
+		},
+	}
+
+	return transactionValue, nil
 }
 
 // List returns all whitelist from the database.
@@ -94,12 +93,12 @@ func (service *Service) Update(ctx context.Context, whitelist Wallet) error {
 }
 
 // Delete deletes whitelist.
-func (service *Service) Delete(ctx context.Context, address Hex) error {
+func (service *Service) Delete(ctx context.Context, address cryptoutils.Address) error {
 	return ErrWhitelist.Wrap(service.whitelist.Delete(ctx, address))
 }
 
 // SetPassword generates passwords for all whitelist items.
-func (service *Service) SetPassword(ctx context.Context, privateKey Hex) error {
+func (service *Service) SetPassword(ctx context.Context, privateKey cryptoutils.PrivateKey) error {
 	privateKeyECDSA, err := crypto.HexToECDSA(string(privateKey))
 	if err != nil {
 		return ErrWhitelist.Wrap(err)
@@ -111,7 +110,7 @@ func (service *Service) SetPassword(ctx context.Context, privateKey Hex) error {
 	}
 
 	for _, v := range whitelist {
-		password, err := service.generatePassword(v.Address, privateKeyECDSA)
+		password, err := cryptoutils.GenerateSignature(v.Address, service.config.NFTSale, privateKeyECDSA)
 		if err != nil {
 			return ErrWhitelist.Wrap(err)
 		}

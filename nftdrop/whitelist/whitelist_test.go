@@ -18,17 +18,17 @@ import (
 func TestWhitelists(t *testing.T) {
 	whitelist1 := whitelist.Wallet{
 		Address:  "address1",
-		Password: []byte{},
+		Password: "",
 	}
 
 	whitelist2 := whitelist.Wallet{
 		Address:  "address2",
-		Password: []byte{},
+		Password: "",
 	}
 
 	whitelist3 := whitelist.Wallet{
 		Address:  "address3",
-		Password: []byte{},
+		Password: "",
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db nftdrop.DB) {
