@@ -15,7 +15,6 @@
         display: flex;
         padding: 0 70px;
         flex-direction: row;
-        justify-content: space-between;
         align-items: center;
     }
 
@@ -46,6 +45,7 @@
         display: flex;
         flex-direction: column;
         align-self: center;
+        margin-left: 117px;
 
         &__subtitle {
             font-family: "BaiJamjuree", sans-serif;
@@ -81,7 +81,7 @@
                 font-weight: bold;
                 font-size: 24px;
                 line-height: 72px;
-                color: $metaverve-text;
+                color: #ffff;
                 margin: auto;
             }
         }
@@ -154,6 +154,7 @@
         }
 
         &__information {
+            margin-left: 0;
 
             &__remind {
                 width: 270px;

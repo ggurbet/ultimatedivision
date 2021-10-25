@@ -146,6 +146,7 @@
         &__social-item {
             width: 100%;
             margin: 0;
+            justify-content: start;
             text-decoration: none;
         }
 
@@ -161,7 +162,8 @@
 
         &__social-text {
             display: block;
-            margin-left: 14px;
+            margin-left: 19px;
+            margin-top: 2px;
             font-family: "RussoOne", sans-serif;
             font-style: normal;
             font-weight: normal;
@@ -170,9 +172,12 @@
             color: #fefefe;
         }
 
+        &__social-img {
+            margin-left: 20px;
+        }
+
         &__social-link {
             display: flex;
-            margin-left: 0;
             text-decoration: none;
         }
     }

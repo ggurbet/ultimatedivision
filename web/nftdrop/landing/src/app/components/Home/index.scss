@@ -18,7 +18,7 @@
 
     &__text-area {
         width: 60%;
-        margin-top: 120px;
+        margin-top: 110px;
         display: flex;
         flex-direction: column;
         position: static;
@@ -132,7 +132,7 @@
         font-weight: 600;
         font-size: 18px;
         line-height: 21px;
-        color: $home-text;
+        color: #a5faff;
         transition: all 0.3s;
     }
 
@@ -230,17 +230,18 @@
         &__wrapper {
             position: relative;
             height: unset;
-            padding: 70px 30px;
+            padding: 46px 30px;
             flex-direction: column;
         }
 
         &__text-area {
             width: 100%;
+            margin: 0;
         }
 
         &__value {
             font-size: 64px;
-            padding-left: 10px;
+            padding-left: 0;
         }
 
         &__title {

@@ -13,12 +13,12 @@ module.exports = {
     experiments: {
         asset: true,
     },
-    entry: './src/index.tsx',
-    target: 'web',
+    entry: "./src/index.tsx",
+    target: "web",
     output: {
-        path: path.resolve(__dirname, 'dist/'),
-        filename: '[name].[hash].js',
-        publicPath: '/static/dist/'
+        path: path.resolve(__dirname, "dist/"),
+        filename: "[name].[hash].js",
+        publicPath: "/static/dist/",
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -30,8 +30,8 @@ module.exports = {
         new MiniCssExtractPlugin(),
         new StylelintPlugin({ fix: true }),
         new CompressionPlugin({
-            filename: '[path][base].br',
-            algorithm: 'brotliCompress',
+            filename: "[path][base].br",
+            algorithm: "brotliCompress",
             test: /\.(js|css|html|svg)$/,
             compressionOptions: {
                 params: {
@@ -50,13 +50,13 @@ module.exports = {
     },
     resolve: {
         alias: {
-            '@components': path.resolve(__dirname, './src/app/components/'),
-            '@static': path.resolve(__dirname, './src/app/static/'),
-            '@utils': path.resolve(__dirname, './src/app/utils/'),
-            '@': path.resolve(__dirname, './src/'),
+            "@components": path.resolve(__dirname, "./src/app/components/"),
+            "@static": path.resolve(__dirname, "./src/app/static/"),
+            "@utils": path.resolve(__dirname, "./src/app/utils/"),
+            "@": path.resolve(__dirname, "./src/"),
         },
-        extensions: ['.ts', '.tsx', '.js', '.jsx'],
-        modules: ['node_modules'],
+        extensions: [".ts", ".tsx", ".js", ".jsx"],
+        modules: ["node_modules"],
     },
     module: {
         rules: [
@@ -65,7 +65,7 @@ module.exports = {
                 exclude: /(node_modules)/,
                 use: [
                     {
-                        loader: 'ts-loader',
+                        loader: "ts-loader",
                     },
                 ],
             },
@@ -75,30 +75,30 @@ module.exports = {
                 use: [
                     //for dev style-loader, for production
                     // MiniCssExtractPlugin.loader
-                    'style-loader',
+                    "style-loader",
                     // MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'sass-loader',
+                    "css-loader",
+                    "sass-loader",
                 ],
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,
                 exclude: /(node_modules)/,
-                type: 'asset/resource',
+                type: "asset/resource",
                 generator: {
-                    filename: 'fonts/[name][hash:5][ext]',
+                    filename: "fonts/[name][hash:5][ext]",
                 },
             },
             {
                 test: /\.(jpe|jpg|png|svg|webp)(\?.*$|$)/,
                 exclude: /(node_modules)/,
-                type: 'asset/resource',
+                type: "asset/resource",
                 generator: {
-                    filename: 'images/[name][hash:5][ext]',
+                    filename: "images/[name][hash:5][ext]",
                 },
                 use: [
                     {
-                        loader: 'image-webpack-loader',
+                        loader: "image-webpack-loader",
                         options: {
                             mozjpeg: {
                                 progressive: true,
@@ -126,7 +126,7 @@ module.exports = {
     },
     optimization: {
         splitChunks: {
-            chunks: 'all',
+            chunks: "all",
         },
         // minimize: true,
         minimizer: [
@@ -134,6 +134,6 @@ module.exports = {
                 test: /\.js(\?.*)?$/i,
             }),
             // new CssMinimizerPlugin(),
-        ]
-    }
+        ],
+    },
 };

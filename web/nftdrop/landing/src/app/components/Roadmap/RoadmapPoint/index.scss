@@ -51,6 +51,14 @@
     &__list {
         margin-top: 100px;
         list-style: none;
+
+        :nth-child(2) {
+            width: 275px;
+        }
+
+        :nth-child(6) {
+            width: 296px;
+        }
     }
 
     &__item {
@@ -67,14 +75,12 @@
             width: 100%;
         }
 
-        &:before {
-            content: "\2022";
-            color: $roadmapHighlightColor;
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-            height: auto;
-            margin-left: -5px;
+        &__bullet {
+            width: 8px;
+            height: 8px;
+            margin: 6px 30px 4px -4px;
+            border-radius: 4px;
+            background: $roadmapHighlightColor;
         }
     }
 }
@@ -104,12 +110,21 @@
         &__list {
             margin-top: 0;
             margin-left: 20px;
+
+            :nth-child(2) {
+                width: 100%;
+            }
+
+            :nth-child(6) {
+                width: 100%;
+            }
         }
 
         &__item {
+            width: 100%;
 
-            &:before {
-                margin-left: -15px;
+            &__bullet {
+                margin: 6px 34px 4px -15px;
             }
         }
     }
@@ -139,6 +154,10 @@
             font-size: 15px;
             line-height: 18px;
             text-align: left;
+
+            &__bullet {
+                margin: 5px 23px 4px -15px;
+            }
         }
     }
 }
