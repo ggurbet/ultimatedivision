@@ -198,6 +198,7 @@ func TestCards(t *testing.T) {
 		repositoryCards := db.Cards()
 		repositoryUsers := db.Users()
 		id := uuid.New()
+
 		t.Run("get sql no rows", func(t *testing.T) {
 			_, err := repositoryCards.Get(ctx, id)
 			require.Error(t, err)
@@ -298,6 +299,12 @@ func TestCards(t *testing.T) {
 			assert.Equal(t, values, []string{"yak", "yak %", "% yak", "% yak %"})
 		})
 
+		t.Run("update status sql no rows", func(t *testing.T) {
+			err := repositoryCards.UpdateStatus(ctx, uuid.New(), cards.StatusActive)
+			require.Error(t, err)
+			require.Equal(t, cards.ErrNoCard.Has(err), true)
+		})
+
 		t.Run("update status", func(t *testing.T) {
 			card1.Status = cards.StatusActive
 			err := repositoryCards.UpdateStatus(ctx, card1.ID, card1.Status)
@@ -310,6 +317,12 @@ func TestCards(t *testing.T) {
 			compareCards(t, card2, allCards.Cards[0])
 		})
 
+		t.Run("update user id sql no rows", func(t *testing.T) {
+			err := repositoryCards.UpdateUserID(ctx, uuid.New(), uuid.New())
+			require.Error(t, err)
+			require.Equal(t, cards.ErrNoCard.Has(err), true)
+		})
+
 		t.Run("update user id", func(t *testing.T) {
 			card1.UserID = user2.ID
 			err := repositoryCards.UpdateUserID(ctx, card1.ID, user2.ID)
@@ -318,6 +331,12 @@ func TestCards(t *testing.T) {
 			card, err := repositoryCards.Get(ctx, card1.ID)
 			assert.NoError(t, err)
 			compareCards(t, card1, card)
+		})
+
+		t.Run("delete sql no rows", func(t *testing.T) {
+			err := repositoryCards.Delete(ctx, uuid.New())
+			require.Error(t, err)
+			require.Equal(t, cards.ErrNoCard.Has(err), true)
 		})
 
 		t.Run("delete", func(t *testing.T) {

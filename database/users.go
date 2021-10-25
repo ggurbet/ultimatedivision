@@ -49,7 +49,7 @@ func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
 		return nil, ErrUsers.Wrap(err)
 	}
 
-	return data, nil
+	return data, ErrUsers.Wrap(err)
 }
 
 // Get returns user by id from the data base.
@@ -67,7 +67,7 @@ func (usersDB *usersDB) Get(ctx context.Context, id uuid.UUID) (users.User, erro
 		return user, ErrUsers.Wrap(err)
 	}
 
-	return user, nil
+	return user, ErrUsers.Wrap(err)
 }
 
 // GetByEmail returns user by email from the data base.
@@ -86,7 +86,7 @@ func (usersDB *usersDB) GetByEmail(ctx context.Context, email string) (users.Use
 		return user, ErrUsers.Wrap(err)
 	}
 
-	return user, nil
+	return user, ErrUsers.Wrap(err)
 }
 
 // Create creates a user and writes to the database.
@@ -105,33 +105,40 @@ func (usersDB *usersDB) Create(ctx context.Context, user users.User) error {
                   created_at) 
                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
 
-	_, err := usersDB.conn.QueryContext(ctx, query, user.ID, user.Email, emailNormalized, user.PasswordHash,
+	_, err := usersDB.conn.ExecContext(ctx, query, user.ID, user.Email, emailNormalized, user.PasswordHash,
 		user.NickName, user.FirstName, user.LastName, user.LastLogin, user.Status, user.CreatedAt)
-	if err != nil {
-		return ErrUsers.Wrap(err)
-	}
 
-	return nil
+	return ErrUsers.Wrap(err)
 }
 
 // Delete deletes a user in the database.
 func (usersDB *usersDB) Delete(ctx context.Context, id uuid.UUID) error {
-	_, err := usersDB.conn.QueryContext(ctx, "DELETE FROM users WHERE id=$1", id)
+	result, err := usersDB.conn.ExecContext(ctx, "DELETE FROM users WHERE id=$1", id)
 	if err != nil {
 		return ErrUsers.Wrap(err)
 	}
 
-	return nil
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return users.ErrNoUser.New("user does not exist")
+	}
+
+	return ErrUsers.Wrap(err)
 }
 
 // Update updates a status in the database.
 func (usersDB *usersDB) Update(ctx context.Context, status users.Status, id uuid.UUID) error {
-	_, err := usersDB.conn.QueryContext(ctx, "UPDATE users SET status=$1 WHERE id=$2", status, id)
+	result, err := usersDB.conn.ExecContext(ctx, "UPDATE users SET status=$1 WHERE id=$2", status, id)
 	if err != nil {
 		return ErrUsers.Wrap(err)
 	}
 
-	return nil
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return users.ErrNoUser.New("user does not exist")
+	}
+
+	return ErrUsers.Wrap(err)
 }
 
 // GetNickNameByID returns users nickname by user id.
@@ -157,6 +164,15 @@ func (usersDB *usersDB) GetNickNameByID(ctx context.Context, id uuid.UUID) (stri
 
 // UpdatePassword updates a password in the database.
 func (usersDB *usersDB) UpdatePassword(ctx context.Context, passwordHash []byte, id uuid.UUID) error {
-	_, err := usersDB.conn.QueryContext(ctx, "UPDATE users SET password_hash=$1 WHERE id=$2", passwordHash, id)
+	result, err := usersDB.conn.ExecContext(ctx, "UPDATE users SET password_hash=$1 WHERE id=$2", passwordHash, id)
+	if err != nil {
+		return ErrUsers.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return users.ErrNoUser.New("user does not exist")
+	}
+
 	return ErrUsers.Wrap(err)
 }

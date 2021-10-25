@@ -46,6 +46,7 @@ func TestLootBox(t *testing.T) {
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repositoryUsers := db.Users()
 		repositoryLootBoxes := db.LootBoxes()
+		id := uuid.New()
 
 		t.Run("Create", func(t *testing.T) {
 			err := repositoryUsers.Create(ctx, user1)
@@ -70,6 +71,12 @@ func TestLootBox(t *testing.T) {
 			require.NoError(t, err)
 
 			compareLootBoxes(t, lootBoxDB, userLootBox1)
+		})
+
+		t.Run("Delete sql no rows", func(t *testing.T) {
+			err := repositoryLootBoxes.Delete(ctx, id)
+			require.Error(t, err)
+			assert.Equal(t, lootboxes.ErrNoLootBox.Has(err), true)
 		})
 
 		t.Run("Delete", func(t *testing.T) {

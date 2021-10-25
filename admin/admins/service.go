@@ -55,7 +55,7 @@ func (service *Service) Create(ctx context.Context, email string, password []byt
 		ID:           uuid.New(),
 		Email:        email,
 		PasswordHash: password,
-		CreatedAt:    time.Now(),
+		CreatedAt:    time.Now().UTC(),
 	}
 
 	passwordHash, err := service.encodePassword(password)

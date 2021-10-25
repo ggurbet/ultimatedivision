@@ -275,6 +275,12 @@ func TestMarketplace(t *testing.T) {
 			compareLot(t, lot1, activeLots[0])
 		})
 
+		t.Run("update shopperID of lot sql no rows", func(t *testing.T) {
+			err := repositoryMarketplace.UpdateShopperIDLot(ctx, id, id)
+			require.Error(t, err)
+			require.Equal(t, marketplace.ErrNoLot.Has(err), true)
+		})
+
 		t.Run("update shopperID of lot", func(t *testing.T) {
 			lot1.ShopperID = uuid.New()
 			err := repositoryMarketplace.UpdateShopperIDLot(ctx, lot1.ID, lot1.ShopperID)
@@ -285,7 +291,13 @@ func TestMarketplace(t *testing.T) {
 			compareLot(t, lot1, lotFromDB)
 		})
 
-		t.Run("update staus of lot", func(t *testing.T) {
+		t.Run("update status of lot sql no rows", func(t *testing.T) {
+			err := repositoryMarketplace.UpdateStatusLot(ctx, id, marketplace.StatusExpired)
+			require.Error(t, err)
+			require.Equal(t, marketplace.ErrNoLot.Has(err), true)
+		})
+
+		t.Run("update status of lot", func(t *testing.T) {
 			lot1.Status = marketplace.StatusExpired
 			err := repositoryMarketplace.UpdateStatusLot(ctx, lot1.ID, marketplace.StatusExpired)
 			require.NoError(t, err)
@@ -293,6 +305,12 @@ func TestMarketplace(t *testing.T) {
 			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.ID)
 			require.NoError(t, err)
 			compareLot(t, lot1, lotFromDB)
+		})
+
+		t.Run("update current price of lot sql no rows", func(t *testing.T) {
+			err := repositoryMarketplace.UpdateCurrentPriceLot(ctx, id, 25.0)
+			require.Error(t, err)
+			require.Equal(t, marketplace.ErrNoLot.Has(err), true)
 		})
 
 		t.Run("update current price of lot", func(t *testing.T) {
@@ -303,6 +321,12 @@ func TestMarketplace(t *testing.T) {
 			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.ID)
 			require.NoError(t, err)
 			compareLot(t, lot1, lotFromDB)
+		})
+
+		t.Run("update end time of lot sql no rows", func(t *testing.T) {
+			err := repositoryMarketplace.UpdateEndTimeLot(ctx, id, lot1.EndTime)
+			require.Error(t, err)
+			require.Equal(t, marketplace.ErrNoLot.Has(err), true)
 		})
 
 		t.Run("update end time of lot", func(t *testing.T) {

@@ -17,6 +17,9 @@ var ErrNoClub = errs.Class("club does not exist")
 // ErrNoSquad indicated that squad does not exist.
 var ErrNoSquad = errs.Class("squad does not exist")
 
+// ErrNoSquadCard indicated that squad card does not exist.
+var ErrNoSquadCard = errs.Class("squad card does not exist")
+
 // DB is exposing access to clubs db.
 //
 // architecture: DB

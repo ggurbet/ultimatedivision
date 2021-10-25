@@ -51,8 +51,12 @@ func (whitelistDB *whitelistDB) GetByAddress(ctx context.Context, address whitel
 			address = $1`
 
 	err := whitelistDB.conn.QueryRowContext(ctx, query, address).Scan(&wallet.Address, &wallet.Password)
-	if errors.Is(err, sql.ErrNoRows) {
-		return wallet, whitelist.ErrNoWhitelist.Wrap(err)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return wallet, whitelist.ErrNoWhitelist.Wrap(err)
+		}
+
+		return wallet, whitelist.ErrNoWhitelist.New("address does not exist")
 	}
 
 	return wallet, ErrWhitelist.Wrap(err)
@@ -91,7 +95,15 @@ func (whitelistDB *whitelistDB) Delete(ctx context.Context, address whitelist.He
 	query := `DELETE FROM whitelist
               WHERE address = $1`
 
-	_, err := whitelistDB.conn.ExecContext(ctx, query, address)
+	result, err := whitelistDB.conn.ExecContext(ctx, query, address)
+	if err != nil {
+		return ErrWhitelist.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return whitelist.ErrNoWhitelist.New("address does not exist")
+	}
 
 	return ErrWhitelist.Wrap(err)
 }
@@ -100,10 +112,19 @@ func (whitelistDB *whitelistDB) Delete(ctx context.Context, address whitelist.He
 func (whitelistDB *whitelistDB) Update(ctx context.Context, wallet whitelist.Wallet) error {
 	query :=
 		`UPDATE whitelist 
-		SET password = $1
-		WHERE address = $2`
+		 SET password = $1
+		 WHERE address = $2`
 
-	_, err := whitelistDB.conn.ExecContext(ctx, query, wallet.Password, wallet.Address)
+	result, err := whitelistDB.conn.ExecContext(ctx, query, wallet.Password, wallet.Address)
+	if err != nil {
+		return ErrWhitelist.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return whitelist.ErrNoWhitelist.New("wallet does not exist")
+	}
+
 	return ErrWhitelist.Wrap(err)
 }
 

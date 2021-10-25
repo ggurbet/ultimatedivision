@@ -93,6 +93,7 @@ func TestTeam(t *testing.T) {
 		repositoryClubs := db.Clubs()
 		repositoryCards := db.Cards()
 		repositoryUsers := db.Users()
+		id := uuid.New()
 
 		t.Run("Create club", func(t *testing.T) {
 			err := repositoryUsers.Create(ctx, testUser)
@@ -109,6 +110,12 @@ func TestTeam(t *testing.T) {
 			assert.Equal(t, squadID, testSquad.ID)
 		})
 
+		t.Run("Get club sql no rows", func(t *testing.T) {
+			_, err := repositoryClubs.GetByUserID(ctx, id)
+			require.Error(t, err)
+			require.Equal(t, clubs.ErrNoClub.Has(err), true)
+		})
+
 		t.Run("Get club", func(t *testing.T) {
 			clubDB, err := repositoryClubs.GetByUserID(ctx, testUser.ID)
 			require.NoError(t, err)
@@ -116,11 +123,23 @@ func TestTeam(t *testing.T) {
 			compareClubs(t, clubDB, testClub)
 		})
 
+		t.Run("Get squad sql no rows", func(t *testing.T) {
+			_, err := repositoryClubs.GetSquad(ctx, id)
+			require.Error(t, err)
+			require.Equal(t, clubs.ErrNoSquad.Has(err), true)
+		})
+
 		t.Run("Get squad", func(t *testing.T) {
 			squadDB, err := repositoryClubs.GetSquad(ctx, testClub.ID)
 			require.NoError(t, err)
 
 			compareSquads(t, squadDB, testSquad)
+		})
+
+		t.Run("get formation sql no rows", func(t *testing.T) {
+			_, err := repositoryClubs.GetFormation(ctx, id)
+			require.Error(t, err)
+			require.Equal(t, clubs.ErrNoSquad.Has(err), true)
 		})
 
 		t.Run("get formation", func(t *testing.T) {
@@ -150,14 +169,36 @@ func TestTeam(t *testing.T) {
 			comparePlayers(t, squadCardsDB, []clubs.SquadCard{testSquadCard2, testSquadCard1})
 		})
 
+		t.Run("Update tactic and formation in squad sql no rows", func(t *testing.T) {
+			err := repositoryClubs.UpdateTacticFormationCaptain(ctx, clubs.Squad{ID: id})
+			require.Error(t, err)
+			require.Equal(t, clubs.ErrNoSquad.Has(err), true)
+		})
+
 		t.Run("Update tactic and formation in squad", func(t *testing.T) {
 			err := repositoryClubs.UpdateTacticFormationCaptain(ctx, updatedSquad)
 			require.NoError(t, err)
 		})
 
+		t.Run("Update card position in squad sql no rows", func(t *testing.T) {
+			err := repositoryClubs.UpdatePosition(ctx, []clubs.SquadCard{{
+				id,
+				id,
+				clubs.Position(5),
+			}})
+			require.Error(t, err)
+			require.Equal(t, clubs.ErrNoSquad.Has(err), true)
+		})
+
 		t.Run("Update card position in squad", func(t *testing.T) {
 			err := repositoryClubs.UpdatePosition(ctx, []clubs.SquadCard{updatedSquadCard1, updatedSquadCard2})
 			require.NoError(t, err)
+		})
+
+		t.Run("Delete card from squad sql no rows", func(t *testing.T) {
+			err := repositoryClubs.DeleteSquadCard(ctx, id, id)
+			require.Error(t, err)
+			require.Equal(t, clubs.ErrNoSquadCard.Has(err), true)
 		})
 
 		t.Run("Delete card from squad", func(t *testing.T) {

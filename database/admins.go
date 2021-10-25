@@ -7,11 +7,10 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"ultimatedivision/admin/admins"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
-
-	"ultimatedivision/admin/admins"
 )
 
 // ErrAdmins indicates that there was an error in the database.
@@ -88,16 +87,26 @@ func (adminsDB *adminsDB) GetByEmail(ctx context.Context, email string) (admins.
 
 // Create inserts admin to DB.
 func (adminsDB *adminsDB) Create(ctx context.Context, admin admins.Admin) error {
-	_, err := adminsDB.conn.QueryContext(ctx,
+	_, err := adminsDB.conn.ExecContext(ctx,
 		`INSERT INTO admins(id,email,password_hash,created_at)
-		VALUES($1,$2,$3,$4)`, admin.ID, admin.Email, admin.PasswordHash, admin.CreatedAt)
+                VALUES($1,$2,$3,$4)`, admin.ID, admin.Email, admin.PasswordHash, admin.CreatedAt)
+
 	return ErrAdmins.Wrap(err)
 }
 
 // Update updates admin in DB.
 func (adminsDB *adminsDB) Update(ctx context.Context, admin admins.Admin) error {
-	_, err := adminsDB.conn.QueryContext(ctx,
+	result, err := adminsDB.conn.ExecContext(ctx,
 		"UPDATE admins SET password_hash = $1 WHERE id = $2",
 		admin.PasswordHash, admin.ID)
+	if err != nil {
+		return ErrAdmins.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return admins.ErrNoAdmin.New("admin does not exist")
+	}
+
 	return ErrAdmins.Wrap(err)
 }

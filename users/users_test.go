@@ -25,9 +25,9 @@ func TestUsers(t *testing.T) {
 		NickName:     "Nik",
 		FirstName:    "Nikita",
 		LastName:     "Tarkovskyi",
-		LastLogin:    time.Now(),
+		LastLogin:    time.Now().UTC(),
 		Status:       0,
-		CreatedAt:    time.Now(),
+		CreatedAt:    time.Now().UTC(),
 	}
 
 	user2 := users.User{
@@ -37,9 +37,9 @@ func TestUsers(t *testing.T) {
 		NickName:     "qwerty",
 		FirstName:    "Stas",
 		LastName:     "Isakov",
-		LastLogin:    time.Now(),
+		LastLogin:    time.Now().UTC(),
 		Status:       1,
-		CreatedAt:    time.Now(),
+		CreatedAt:    time.Now().UTC(),
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
@@ -77,6 +77,12 @@ func TestUsers(t *testing.T) {
 			compareUsers(t, user2, allUsers[1])
 		})
 
+		t.Run("update sql no rows", func(t *testing.T) {
+			err := repository.Update(ctx, users.StatusSuspended, id)
+			require.Error(t, err)
+			require.Equal(t, users.ErrNoUser.Has(err), true)
+		})
+
 		t.Run("update", func(t *testing.T) {
 			err := repository.Update(ctx, users.StatusSuspended, user1.ID)
 			require.NoError(t, err)
@@ -84,6 +90,12 @@ func TestUsers(t *testing.T) {
 			userFromDB, err := repository.Get(ctx, user1.ID)
 			require.NoError(t, err)
 			assert.Equal(t, users.StatusSuspended, userFromDB.Status)
+		})
+
+		t.Run("delete sql no rows", func(t *testing.T) {
+			err := repository.Delete(ctx, id)
+			require.Error(t, err)
+			require.Equal(t, users.ErrNoUser.Has(err), true)
 		})
 
 		t.Run("delete", func(t *testing.T) {
@@ -108,7 +120,6 @@ func compareUsers(t *testing.T, user1, user2 users.User) {
 	assert.Equal(t, user1.FirstName, user2.FirstName)
 	assert.Equal(t, user1.LastName, user2.LastName)
 	assert.Equal(t, user1.Status, user2.Status)
-	// TODO: compare dates in a better way.
-	// assert.Equal(t, true, user1.CreatedAt.Equal(user2.CreatedAt))
-	// assert.Equal(t, true, user1.LastLogin.Equal(user2.LastLogin))
+	assert.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, 1*time.Second)
+	assert.WithinDuration(t, user1.LastLogin, user2.LastLogin, 1*time.Second)
 }

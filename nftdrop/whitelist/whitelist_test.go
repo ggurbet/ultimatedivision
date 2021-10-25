@@ -26,6 +26,11 @@ func TestWhitelists(t *testing.T) {
 		Password: []byte{},
 	}
 
+	whitelist3 := whitelist.Wallet{
+		Address:  "address3",
+		Password: []byte{},
+	}
+
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db nftdrop.DB) {
 		repositoryWhitelist := db.Whitelist()
 
@@ -54,30 +59,41 @@ func TestWhitelists(t *testing.T) {
 			compareWhitelists(t, whitelist2, whitelistRecordsFromDB[1])
 		})
 
+		t.Run("listWithoutPassword", func(t *testing.T) {
+			whitelistRecordsFromDB, err := repositoryWhitelist.ListWithoutPassword(ctx)
+			require.NoError(t, err)
+
+			assert.Equal(t, whitelist1.Address, whitelistRecordsFromDB[0].Address)
+			assert.Equal(t, whitelist2.Address, whitelistRecordsFromDB[1].Address)
+		})
+
+		t.Run("update sql no rows", func(t *testing.T) {
+			err := repositoryWhitelist.Update(ctx, whitelist3)
+			require.Error(t, err)
+			require.Equal(t, whitelist.ErrNoWhitelist.Has(err), true)
+		})
+
+		t.Run("update", func(t *testing.T) {
+			err := repositoryWhitelist.Update(ctx, whitelist2)
+			require.NoError(t, err)
+
+			whitelistRecordsFromDB, err := repositoryWhitelist.List(ctx)
+			require.NoError(t, err)
+			compareWhitelists(t, whitelist1, whitelistRecordsFromDB[0])
+			compareWhitelists(t, whitelist2, whitelistRecordsFromDB[1])
+		})
+
+		t.Run("delete sql no rows", func(t *testing.T) {
+			err := repositoryWhitelist.Delete(ctx, whitelist3.Address)
+			require.Error(t, err)
+		})
+
 		t.Run("delete", func(t *testing.T) {
 			err := repositoryWhitelist.Delete(ctx, whitelist1.Address)
 			require.NoError(t, err)
 
 			err = repositoryWhitelist.Delete(ctx, whitelist2.Address)
 			require.NoError(t, err)
-		})
-		t.Run("update", func(t *testing.T) {
-			err := repositoryWhitelist.Update(ctx, whitelist2)
-			require.NoError(t, err)
-
-			whitelistRecordsFromDB, err := repositoryWhitelist.ListWithoutPassword(ctx)
-			require.NoError(t, err)
-			compareWhitelists(t, whitelist1, whitelistRecordsFromDB[0])
-			compareWhitelists(t, whitelist2, whitelistRecordsFromDB[1])
-		})
-		t.Run("listWithoutPassword", func(t *testing.T) {
-			err := repositoryWhitelist.Create(ctx, whitelist2)
-			require.NoError(t, err)
-
-			whitelistRecordsFromDB, err := repositoryWhitelist.ListWithoutPassword(ctx)
-			require.NoError(t, err)
-			compareWhitelists(t, whitelist1, whitelistRecordsFromDB[0])
-			compareWhitelists(t, whitelist2, whitelistRecordsFromDB[1])
 		})
 	})
 }

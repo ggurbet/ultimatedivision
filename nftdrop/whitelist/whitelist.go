@@ -17,17 +17,17 @@ var ErrNoWhitelist = errs.Class("whitelist does not exist")
 //
 // architecture: DB
 type DB interface {
-	// Create adds whitelist in the database.
+	// Create adds wallet in the database.
 	Create(ctx context.Context, wallet Wallet) error
-	// GetByAddress returns whitelist by address from the database.
+	// GetByAddress returns wallet by address from the database.
 	GetByAddress(ctx context.Context, address Hex) (Wallet, error)
-	// List returns all whitelist from the database.
+	// List returns all wallets from the database.
 	List(ctx context.Context) ([]Wallet, error)
-	// ListWithoutPassword returns whitelist without password from the database.
+	// ListWithoutPassword returns wallet without password from the database.
 	ListWithoutPassword(ctx context.Context) ([]Wallet, error)
-	// Update updates whitelist by address.
+	// Update updates wallet by address.
 	Update(ctx context.Context, wallet Wallet) error
-	// Delete deletes whitelist from the database.
+	// Delete deletes wallet from the database.
 	Delete(ctx context.Context, address Hex) error
 }
 

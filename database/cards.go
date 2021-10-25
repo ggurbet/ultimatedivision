@@ -466,13 +466,31 @@ func BuildWhereClauseDependsOnPlayerNameCards(filter cards.Filters) (string, []s
 
 // UpdateStatus updates status card in the database.
 func (cardsDB *cardsDB) UpdateStatus(ctx context.Context, id uuid.UUID, status cards.Status) error {
-	_, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET status=$1 WHERE id=$2", status, id)
+	result, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET status=$1 WHERE id=$2", status, id)
+	if err != nil {
+		return ErrCard.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return cards.ErrNoCard.New("card does not exist")
+	}
+
 	return ErrCard.Wrap(err)
 }
 
 // UpdateUserID updates user id card in the database.
 func (cardsDB *cardsDB) UpdateUserID(ctx context.Context, id, userID uuid.UUID) error {
-	_, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET user_id=$1 WHERE id=$2", userID, id)
+	result, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET user_id=$1 WHERE id=$2", userID, id)
+	if err != nil {
+		return ErrCard.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return cards.ErrNoCard.New("card does not exist")
+	}
+
 	return ErrCard.Wrap(err)
 }
 
@@ -484,6 +502,15 @@ func (cardsDB *cardsDB) Delete(ctx context.Context, id uuid.UUID) error {
         WHERE 
             id = $1`
 
-	_, err := cardsDB.conn.ExecContext(ctx, query, id)
+	result, err := cardsDB.conn.ExecContext(ctx, query, id)
+	if err != nil {
+		return ErrCard.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return cards.ErrNoCard.New("card does not exist")
+	}
+
 	return ErrCard.Wrap(err)
 }

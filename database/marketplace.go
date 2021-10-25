@@ -289,24 +289,60 @@ func (marketplaceDB *marketplaceDB) ListExpiredLot(ctx context.Context) ([]marke
 
 // UpdateShopperIDLot updates shopper id of lot in the database.
 func (marketplaceDB *marketplaceDB) UpdateShopperIDLot(ctx context.Context, id, shopperID uuid.UUID) error {
-	_, err := marketplaceDB.conn.ExecContext(ctx, "UPDATE lots SET shopper_id = $1 WHERE id = $2", shopperID, id)
+	result, err := marketplaceDB.conn.ExecContext(ctx, "UPDATE lots SET shopper_id = $1 WHERE id = $2", shopperID, id)
+	if err != nil {
+		return ErrMarketplace.Wrap(err)
+	}
+
+	rowsNum, err := result.RowsAffected()
+	if rowsNum == 0 {
+		return marketplace.ErrNoLot.New("lot does not exist")
+	}
+
 	return ErrMarketplace.Wrap(err)
 }
 
 // UpdateStatusLot updates status of lot in the database.
 func (marketplaceDB *marketplaceDB) UpdateStatusLot(ctx context.Context, id uuid.UUID, status marketplace.Status) error {
-	_, err := marketplaceDB.conn.ExecContext(ctx, "UPDATE lots SET status = $1 WHERE id = $2", status, id)
+	result, err := marketplaceDB.conn.ExecContext(ctx, "UPDATE lots SET status = $1 WHERE id = $2", status, id)
+	if err != nil {
+		return ErrMarketplace.Wrap(err)
+	}
+
+	rowsNum, err := result.RowsAffected()
+	if rowsNum == 0 {
+		return marketplace.ErrNoLot.New("lot does not exist")
+	}
+
 	return ErrMarketplace.Wrap(err)
 }
 
 // UpdateCurrentPriceLot updates current price of lot in the database.
 func (marketplaceDB *marketplaceDB) UpdateCurrentPriceLot(ctx context.Context, id uuid.UUID, currentPrice float64) error {
-	_, err := marketplaceDB.conn.ExecContext(ctx, "UPDATE lots SET current_price = $1 WHERE id = $2", currentPrice, id)
+	result, err := marketplaceDB.conn.ExecContext(ctx, "UPDATE lots SET current_price = $1 WHERE id = $2", currentPrice, id)
+	if err != nil {
+		return ErrMarketplace.Wrap(err)
+	}
+
+	rowsNum, err := result.RowsAffected()
+	if rowsNum == 0 {
+		return marketplace.ErrNoLot.New("lot does not exist")
+	}
+
 	return ErrMarketplace.Wrap(err)
 }
 
 // UpdateEndTimeLot updates end time of lot in the database.
 func (marketplaceDB *marketplaceDB) UpdateEndTimeLot(ctx context.Context, id uuid.UUID, endTime time.Time) error {
-	_, err := marketplaceDB.conn.ExecContext(ctx, "UPDATE lots SET end_time = $1 WHERE id = $2", endTime, id)
+	result, err := marketplaceDB.conn.ExecContext(ctx, "UPDATE lots SET end_time = $1 WHERE id = $2", endTime, id)
+	if err != nil {
+		return ErrMarketplace.Wrap(err)
+	}
+
+	rowsNum, err := result.RowsAffected()
+	if rowsNum == 0 {
+		return marketplace.ErrNoLot.New("lot does not exist")
+	}
+
 	return ErrMarketplace.Wrap(err)
 }

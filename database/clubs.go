@@ -20,9 +20,6 @@ var _ clubs.DB = (*clubsDB)(nil)
 // ErrClubs indicates that there was an error in the database.
 var ErrClubs = errs.Class("clubs repository error")
 
-// ErrSquad indicates that there was an error in the database.
-var ErrSquad = errs.Class("squad repository error")
-
 // clubsDB provide access to club DB.
 //
 // architecture: Database
@@ -83,7 +80,7 @@ func (clubsDB *clubsDB) AddSquadCard(ctx context.Context, squadCards clubs.Squad
 	_, err := clubsDB.conn.ExecContext(ctx, query,
 		squadCards.SquadID, squadCards.CardID, squadCards.Position)
 
-	return ErrSquad.Wrap(err)
+	return ErrClubs.Wrap(err)
 }
 
 // DeleteSquadCard deletes card from squad.
@@ -91,9 +88,17 @@ func (clubsDB *clubsDB) DeleteSquadCard(ctx context.Context, squadID, cardID uui
 	query := `DELETE FROM squad_cards
               WHERE card_id = $1 and id = $2`
 
-	_, err := clubsDB.conn.ExecContext(ctx, query, cardID, squadID)
+	result, err := clubsDB.conn.ExecContext(ctx, query, cardID, squadID)
+	if err != nil {
+		return ErrClubs.Wrap(err)
+	}
 
-	return ErrSquad.Wrap(err)
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return clubs.ErrNoSquadCard.New("squad card does not exist")
+	}
+
+	return ErrClubs.Wrap(err)
 }
 
 // GetByUserID returns club owned by the user.
@@ -149,10 +154,10 @@ func (clubsDB *clubsDB) ListSquadCards(ctx context.Context, squadID uuid.UUID) (
 
 	rows, err := clubsDB.conn.QueryContext(ctx, query, squadID)
 	if err != nil {
-		return nil, ErrSquad.Wrap(err)
+		return nil, ErrClubs.Wrap(err)
 	}
 	defer func() {
-		err = errs.Combine(err, ErrSquad.Wrap(rows.Close()))
+		err = errs.Combine(err, rows.Close())
 	}()
 
 	var players []clubs.SquadCard
@@ -161,16 +166,16 @@ func (clubsDB *clubsDB) ListSquadCards(ctx context.Context, squadID uuid.UUID) (
 		var player clubs.SquadCard
 		err = rows.Scan(&player.SquadID, &player.CardID, &player.Position)
 		if err != nil {
-			return nil, clubs.ErrNoSquad.Wrap(err)
+			return nil, clubs.ErrNoSquadCard.Wrap(err)
 		}
 
 		players = append(players, player)
 	}
 	if err = rows.Err(); err != nil {
-		return nil, ErrSquad.Wrap(err)
+		return nil, ErrClubs.Wrap(err)
 	}
 
-	return players, nil
+	return players, ErrClubs.Wrap(err)
 }
 
 // UpdateTacticFormationCaptain updates tactic, formation and capitan in the squad.
@@ -179,9 +184,16 @@ func (clubsDB *clubsDB) UpdateTacticFormationCaptain(ctx context.Context, squad 
 			  SET tactic = $1, formation = $2, captain_id = $3
   			  WHERE id = $4`
 
-	_, err := clubsDB.conn.ExecContext(ctx, query, squad.Tactic, squad.Formation, squad.CaptainID, squad.ID)
+	result, err := clubsDB.conn.ExecContext(ctx, query, squad.Tactic, squad.Formation, squad.CaptainID, squad.ID)
+	if err != nil {
+		return ErrClubs.Wrap(err)
+	}
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return clubs.ErrNoSquad.New("squad does not exist")
+	}
 
-	return ErrSquad.Wrap(err)
+	return ErrClubs.Wrap(err)
 }
 
 // GetFormation returns formation of the squad.
@@ -192,6 +204,13 @@ func (clubsDB *clubsDB) GetFormation(ctx context.Context, squadID uuid.UUID) (cl
               WHERE id = $1`
 
 	err := clubsDB.conn.QueryRowContext(ctx, query, squadID).Scan(&formation)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return formation, clubs.ErrNoSquad.Wrap(err)
+		}
+
+		return formation, ErrClubs.Wrap(err)
+	}
 
 	return formation, ErrClubs.Wrap(err)
 }
@@ -211,11 +230,20 @@ func (clubsDB *clubsDB) UpdatePosition(ctx context.Context, squadCards []clubs.S
 	}()
 
 	for _, squadCard := range squadCards {
-		_, err = preparedQuery.ExecContext(ctx, squadCard.Position, squadCard.CardID, squadCard.SquadID)
+		result, err := preparedQuery.ExecContext(ctx, squadCard.Position, squadCard.CardID, squadCard.SquadID)
+		if err != nil {
+			return ErrClubs.Wrap(err)
+		}
+
+		rowNum, err := result.RowsAffected()
+		if rowNum == 0 {
+			return clubs.ErrNoSquad.New("squad card does not exist")
+		}
+
 		if err != nil {
 			return ErrClubs.Wrap(err)
 		}
 	}
 
-	return ErrSquad.Wrap(err)
+	return ErrClubs.Wrap(err)
 }

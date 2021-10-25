@@ -59,7 +59,14 @@ func (lootboxesDB *lootboxesDB) Delete(ctx context.Context, lootboxID uuid.UUID)
 	query := `DELETE FROM lootboxes
               WHERE lootbox_id = $1`
 
-	_, err := lootboxesDB.conn.ExecContext(ctx, query, lootboxID)
+	result, err := lootboxesDB.conn.ExecContext(ctx, query, lootboxID)
+	if err != nil {
+		return ErrLootBoxes.Wrap(err)
+	}
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return lootboxes.ErrNoLootBox.New("invalid query")
+	}
 
 	return ErrLootBoxes.Wrap(err)
 }

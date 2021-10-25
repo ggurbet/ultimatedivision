@@ -60,7 +60,7 @@ func (service *Service) Create(ctx context.Context, email, password, nickName, f
 		LastName:     lastName,
 		LastLogin:    time.Time{},
 		Status:       StatusCreated,
-		CreatedAt:    time.Now(),
+		CreatedAt:    time.Now().UTC(),
 	}
 	err := user.EncodePass()
 	if err != nil {
