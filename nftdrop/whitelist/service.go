@@ -10,6 +10,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/pkg/cryptoutils"
+	"ultimatedivision/pkg/pagination"
 )
 
 // ErrWhitelist indicated that there was an error in service.
@@ -75,9 +76,16 @@ func (service *Service) GetByAddress(ctx context.Context, address cryptoutils.Ad
 	return transactionValue, nil
 }
 
-// List returns all whitelist from the database.
-func (service *Service) List(ctx context.Context) ([]Wallet, error) {
-	whitelistRecords, err := service.whitelist.List(ctx)
+// List returns whitelist page from the database.
+func (service *Service) List(ctx context.Context, cursor pagination.Cursor) (Page, error) {
+	if cursor.Limit <= 0 {
+		cursor.Limit = service.config.Cursor.Limit
+	}
+	if cursor.Page <= 0 {
+		cursor.Page = service.config.Cursor.Page
+	}
+
+	whitelistRecords, err := service.whitelist.List(ctx, cursor)
 	return whitelistRecords, ErrWhitelist.Wrap(err)
 }
 

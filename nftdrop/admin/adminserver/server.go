@@ -18,6 +18,7 @@ import (
 	"ultimatedivision/admin/adminauth"
 	"ultimatedivision/admin/admins"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/internal/templatefuncs"
 	"ultimatedivision/nftdrop/admin/adminserver/controllers"
 	"ultimatedivision/nftdrop/whitelist"
 	"ultimatedivision/pkg/auth"
@@ -77,7 +78,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 		return nil, Error.Wrap(err)
 	}
 
-	router := mux.NewRouter()
+	router := mux.NewRouter().StrictSlash(true)
 	authController := controllers.NewAuth(server.log, server.authService, server.cookieAuth, server.templates.auth)
 	router.HandleFunc("/login", authController.Login).Methods(http.MethodPost, http.MethodGet)
 	router.HandleFunc("/logout", authController.Logout).Methods(http.MethodPost)
@@ -150,7 +151,13 @@ func (server *Server) initializeTemplates() (err error) {
 		return err
 	}
 
-	server.templates.whitelist.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "whitelist", "list.html"))
+	server.templates.whitelist.List, err = template.New("list.html").Funcs(template.FuncMap{
+		"Iter": templatefuncs.Iter,
+		"Inc":  templatefuncs.Inc,
+		"Dec":  templatefuncs.Dec,
+	}).ParseFiles(
+		filepath.Join(server.config.StaticDir, "whitelist", "list.html"),
+		filepath.Join(server.config.StaticDir, "whitelist", "pagination.html"))
 	if err != nil {
 		return err
 	}

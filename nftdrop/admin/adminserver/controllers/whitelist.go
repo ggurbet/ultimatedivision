@@ -6,6 +6,7 @@ package controllers
 import (
 	"html/template"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
@@ -13,6 +14,7 @@ import (
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/nftdrop/whitelist"
 	"ultimatedivision/pkg/cryptoutils"
+	"ultimatedivision/pkg/pagination"
 )
 
 var (
@@ -47,7 +49,7 @@ func NewWhitelist(log logger.Logger, whitelist *whitelist.Service, templates Whi
 	return whitelistController
 }
 
-// Create is an endpoint that creates new item in whitelist.
+// Create is an endpoint that creates new wallet in whitelist.
 func (controller *Whitelist) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -55,7 +57,7 @@ func (controller *Whitelist) Create(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		err := controller.templates.Create.Execute(w, nil)
 		if err != nil {
-			controller.log.Error("could not execute create whitelist item template", ErrWhitelist.Wrap(err))
+			controller.log.Error("could not execute create wallet template", ErrWhitelist.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -91,20 +93,48 @@ func (controller *Whitelist) Create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// List is an endpoint that will provide a web page with all whitelist items.
+// List is an endpoint that will provide a web page with whitelist page.
 func (controller *Whitelist) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	var (
+		err         error
+		limit, page int
+	)
+	urlQuery := r.URL.Query()
+	limitQuery := urlQuery.Get("limit")
+	pageQuery := urlQuery.Get("page")
 
-	whitelist, err := controller.whitelist.List(ctx)
+	if limitQuery != "" {
+		limit, err = strconv.Atoi(limitQuery)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+
+	if pageQuery != "" {
+		page, err = strconv.Atoi(pageQuery)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+
+	cursor := pagination.Cursor{
+		Limit: limit,
+		Page:  page,
+	}
+
+	whitelistPage, err := controller.whitelist.List(ctx, cursor)
 	if err != nil {
-		controller.log.Error("could not list whitelist", ErrWhitelist.Wrap(err))
+		controller.log.Error("could not list wallets", ErrWhitelist.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	err = controller.templates.List.Execute(w, whitelist)
+	err = controller.templates.List.Execute(w, whitelistPage)
 	if err != nil {
-		controller.log.Error("could not execute list whitelist template", ErrWhitelist.Wrap(err))
+		controller.log.Error("could not execute list wallets page template", ErrWhitelist.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -125,7 +155,7 @@ func (controller *Whitelist) Delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		controller.log.Error("could not delete whitelist item", ErrWhitelist.Wrap(err))
 
-		if whitelist.ErrNoWhitelist.Has(err) {
+		if whitelist.ErrNoWallet.Has(err) {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
@@ -164,7 +194,7 @@ func (controller *Whitelist) SetPassword(w http.ResponseWriter, r *http.Request)
 		if err = controller.whitelist.SetPassword(ctx, privateKey); err != nil {
 			controller.log.Error("could not set password", ErrWhitelist.Wrap(err))
 
-			if whitelist.ErrNoWhitelist.Has(err) {
+			if whitelist.ErrNoWallet.Has(err) {
 				http.Error(w, err.Error(), http.StatusNotFound)
 				return
 			}

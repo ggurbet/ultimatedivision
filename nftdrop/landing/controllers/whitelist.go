@@ -52,7 +52,7 @@ func (controller *Whitelist) Get(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		controller.log.Error("could don't get transaction value", ErrWhitelist.Wrap(err))
 
-		if whitelist.ErrNoWhitelist.Has(err) {
+		if whitelist.ErrNoWallet.Has(err) {
 			controller.serveError(w, http.StatusNotFound, ErrWhitelist.Wrap(err))
 			return
 		}

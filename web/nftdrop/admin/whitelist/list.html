@@ -20,7 +20,7 @@
     <th>Password</th>
   </tr>
   </thead>
-  {{range .}}
+  {{range .Wallets}}
   <tr>
     <td>
       {{.Address}}
@@ -34,5 +34,9 @@
   </tr>
   {{end}}
 </table>
+<br>
+<div style='text-align:center'>
+  {{template "pagination" .}}
+</div>
 </body>
 </html>

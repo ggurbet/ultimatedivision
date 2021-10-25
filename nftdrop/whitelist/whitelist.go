@@ -9,10 +9,11 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/pkg/cryptoutils"
+	"ultimatedivision/pkg/pagination"
 )
 
-// ErrNoWhitelist indicated that whitelist does not exist.
-var ErrNoWhitelist = errs.Class("whitelist does not exist")
+// ErrNoWallet indicated that wallet in whitelist does not exist.
+var ErrNoWallet = errs.Class("wallet does not exist")
 
 // DB is exposing access to whitelist db.
 //
@@ -20,10 +21,10 @@ var ErrNoWhitelist = errs.Class("whitelist does not exist")
 type DB interface {
 	// Create adds wallet in the database.
 	Create(ctx context.Context, wallet Wallet) error
-	// GetByAddress returns wallet by address from the database.
+	// GetByAddress returns whitelist by address from the database.
 	GetByAddress(ctx context.Context, address cryptoutils.Address) (Wallet, error)
-	// List returns all wallets from the database.
-	List(ctx context.Context) ([]Wallet, error)
+	// List returns whitelist page from the database.
+	List(ctx context.Context, cursor pagination.Cursor) (Page, error)
 	// ListWithoutPassword returns wallet without password from the database.
 	ListWithoutPassword(ctx context.Context) ([]Wallet, error)
 	// Update updates wallet by address.
@@ -47,6 +48,8 @@ type CreateWallet struct {
 // Config defines configuration for queue.
 type Config struct {
 	SmartContractAddress `json:"smartContractAddress"`
+
+	pagination.Cursor `json:"cursor"`
 }
 
 // SmartContractAddress entity describes smart contract addresses.
@@ -59,4 +62,10 @@ type SmartContractAddress struct {
 type Transaction struct {
 	Password             cryptoutils.Signature `json:"password"`
 	SmartContractAddress `json:"smartContractAddress"`
+}
+
+// Page holds wallets page entity which is used to show listed page of wallets.
+type Page struct {
+	Wallets []Wallet        `json:"wallets"`
+	Page    pagination.Page `json:"page"`
 }
