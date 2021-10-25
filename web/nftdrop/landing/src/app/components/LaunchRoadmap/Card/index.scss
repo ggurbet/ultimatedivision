@@ -15,6 +15,15 @@
         width: 70%;
     }
 
+    &__image-0,
+    &__image-1,
+    &__image-2,
+    &__image-3,
+    &__image-4 {
+        margin: auto;
+        width: 30%;
+    }
+
     &__title {
         font-family: "Thorletto", sans-serif;
         font-size: 36px;
@@ -132,9 +141,15 @@
             }
         }
 
-        &__image {
+        &__image-0,
+        &__image-1,
+        &__image-2,
+        &__image-3,
+        &__image-4 {
             position: absolute;
-            top: 110px;
+            width: 158.1px;
+            height: 158.1px;
+            top: 120px;
         }
     }
 

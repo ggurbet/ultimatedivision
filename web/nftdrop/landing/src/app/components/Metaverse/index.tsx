@@ -13,22 +13,35 @@ import cardsMobile from '@static/images/metaverse/cards-mobile.webp';
 import './index.scss';
 
 export const Metaverse: React.FC = () => {
-
     return (
         <section className="metaverse" id="metaverse">
             <div className="metaverse__wrapper">
-                <h2 className="metaverse__title">
-                    Ultimate Divison
-                </h2>
-                <h3 className="metaverse__subtitle">
-                    Football Metaverse
-                </h3>
+                <h2 className="metaverse__title">Ultimate Divison</h2>
+                <h3 className="metaverse__subtitle">Football Metaverse</h3>
                 <picture>
-                    <source media="(max-width: 600px)" srcSet={cardsMobile} type="image/webp" />
-                    <source media="(max-width: 800px)" srcSet={cardsTablet} type="image/webp" />
-                    <source media="(min-width: 800px)" srcSet={cards} type="image/webp" />
-                    <source media="(max-width: 600px)" srcSet={webkitCardsMobile} />
-                    <source media="(max-width: 800px)" srcSet={webkitCardsTablet} />
+                    <source
+                        media="(max-width: 600px)"
+                        srcSet={cardsMobile}
+                        type="image/webp"
+                    />
+                    <source
+                        media="(max-width: 800px)"
+                        srcSet={cardsTablet}
+                        type="image/webp"
+                    />
+                    <source
+                        media="(min-width: 800px)"
+                        srcSet={cards}
+                        type="image/webp"
+                    />
+                    <source
+                        media="(max-width: 600px)"
+                        srcSet={webkitCardsMobile}
+                    />
+                    <source
+                        media="(max-width: 800px)"
+                        srcSet={webkitCardsTablet}
+                    />
                     <img
                         className="metaverse__cards"
                         src={webkitCards}
@@ -37,7 +50,9 @@ export const Metaverse: React.FC = () => {
                     />
                 </picture>
                 <div className="metaverse__sold-scale">
-                    <span className="metaverse__sold-scale__text">Cards Sold 0/10000</span>
+                    <span className="metaverse__sold-scale__text">
+                        Cards Sold 0/10000
+                    </span>
                 </div>
                 <MintButton />
             </div>

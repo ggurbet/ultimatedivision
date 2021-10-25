@@ -17,8 +17,8 @@
     }
 
     &__text-area {
-        width: 60%;
-        margin-top: 110px;
+        width: 55%;
+        margin-top: 120px;
         display: flex;
         flex-direction: column;
         position: static;
@@ -143,6 +143,7 @@
     &__player-image {
         z-index: 0;
         width: 50%;
+        height: 720px;
         position: absolute;
         right: 50px;
         transition: all 0.3s;
@@ -173,7 +174,7 @@
         }
 
         &__text-area {
-            width: 65%;
+            width: 55%;
             margin-top: 80px;
         }
 
@@ -191,6 +192,10 @@
             font-size: 18px;
             line-height: 21px;
         }
+
+        &__player-image {
+            height: 512px;
+        }
     }
 }
 
@@ -202,9 +207,17 @@
             height: 550px;
         }
 
+        &__text-area {
+            margin-top: 30px;
+        }
+
         &__value {
             font-size: 32px;
             line-height: 77px;
+        }
+
+        &__player-image {
+            height: 384px;
         }
     }
 }
@@ -267,6 +280,7 @@
         &__player-image {
             top: unset;
             right: unset;
+            height: 354px;
             margin-top: 40px;
             position: relative;
             width: 100%;

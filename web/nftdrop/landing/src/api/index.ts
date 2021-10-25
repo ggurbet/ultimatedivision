@@ -28,10 +28,10 @@ export class APIClient {
     protected readonly http: HttpClient = new HttpClient();
     protected async handleError(response: Response): Promise<void> {
         switch (response.status) {
-            case 400: throw new BadRequestError();
-            case 500: throw new InternalError();
-            default:
-                throw new InternalError();
+        case 400: throw new BadRequestError();
+        case 500: throw new InternalError();
+        default:
+            throw new InternalError();
         }
     }
 };

@@ -4,32 +4,44 @@
 import React from 'react';
 
 import { ScrollTop } from '../ScrollTop';
+import { AnimationImage } from '@components/common/AnimationImage';
 
-import webkitFootballer from '@static/images/home/footballer.png';
-import webkitFootballerTablet from '@static/images/home/footballerTablet.png';
-import webkitFootballerMobile from '@static/images/home/footballerMobile.png';
-import footballer from '@static/images/home/footballer.webp';
-import footballerTablet from '@static/images/home/footballerTablet.webp';
-import footballerMobile from '@static/images/home/footballerMobile.webp';
+import footballerAnimation from '@static/images/home/animation-player/data.json';
 
+import ball from '@static/images/home/animation-player/images/ball.svg';
+import card from '@static/images/home/animation-player/images/card.svg';
+import head from '@static/images/home/animation-player/images/head.svg';
+import leftArm from '@static/images/home/animation-player/images/leftArm.svg';
+import leftLeg from '@static/images/home/animation-player/images/leftLeg.svg';
+import rightArm from '@static/images/home/animation-player/images/rightArm.svg';
+import rightLeg from '@static/images/home/animation-player/images/rightLeg.svg';
 import discord from '@static/images/home/discord.svg';
 import twitter from '@static/images/home/twitter.svg';
 
 import './index.scss';
 
 export const Home: React.FC = () => {
+    const animationImages: string[] = [
+        leftArm,
+        leftLeg,
+        rightLeg,
+        rightArm,
+        head,
+        ball,
+        card,
+    ];
 
     return (
         <section className="home" id="home">
             <div className="home__wrapper">
-                <div className="home__text-area"
-
-                >
+                <div className="home__text-area">
                     <h1 className="home__value">10 000</h1>
-                    <h3 className="home__title">Unique Collectible Player Cards.</h3>
+                    <h3 className="home__title">
+                        Unique Collectible Player Cards.
+                    </h3>
                     <p className="home__description">
-                        Get one to become UD founder and join the Play-to-Earn game.
-                        Build your club in the metaverse.
+                        Get one to become UD founder and join the Play-to-Earn
+                        game. Build your club in the metaverse.
                     </p>
                     <div className="home__buttons-wrapper">
                         <a
@@ -61,38 +73,19 @@ export const Home: React.FC = () => {
                         </a>
                     </div>
                 </div>
-                <picture>
-                    <source
-                        media="(max-width: 500px)"
-                        srcSet={footballerMobile} type="image/webp"
-                    />
-                    <source
-                        media="(max-width: 800px)"
-                        srcSet={footballerTablet} type="image/webp"
-                    />
-                    <source
-                        media="(min-width: 800px)"
-                        srcSet={footballer}
-                        type="image/webp"
-                    />
-                    <source
-                        media="(max-width: 500px)"
-                        srcSet={webkitFootballerMobile}
-                    />
-                    <source
-                        media="(max-width: 800px)"
-                        srcSet={webkitFootballerTablet}
-                    />
-                    <img
-                        className="home__player-image"
-                        src={webkitFootballer}
-                        alt="Player Illustration"
-                    />
-                </picture>
+                <AnimationImage
+                    className={'home__player-image'}
+                    heightFrom={4000}
+                    heightTo={-800}
+                    loop={true}
+                    animationData={footballerAnimation}
+                    animationImages={animationImages}
+                    isNeedScrollListener={false}
+                />
                 <div className="home__mobile-wrapper">
                     <div className="home__description-mobile">
-                        Get one to become UD founder and join the Play-to-Earn game.
-                        Build your club in the metaverse.
+                        Get one to become UD founder and join the Play-to-Earn
+                        game. Build your club in the metaverse.
                         <div className="home__buttons-wrapper__mobile">
                             <a
                                 className="home__discord"
@@ -126,6 +119,6 @@ export const Home: React.FC = () => {
                 </div>
                 <ScrollTop />
             </div>
-        </section >
+        </section>
     );
 };
