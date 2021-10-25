@@ -40,7 +40,7 @@ func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
 		var user users.User
 		err := rows.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.LastLogin, &user.Status, &user.CreatedAt)
 		if err != nil {
-			return nil, users.ErrNoUser.Wrap(err)
+			return nil, ErrUsers.Wrap(err)
 		}
 
 		data = append(data, user)
@@ -82,7 +82,6 @@ func (usersDB *usersDB) GetByEmail(ctx context.Context, email string) (users.Use
 		if errors.Is(err, sql.ErrNoRows) {
 			return user, users.ErrNoUser.Wrap(err)
 		}
-
 		return user, ErrUsers.Wrap(err)
 	}
 

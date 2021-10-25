@@ -92,10 +92,6 @@ func (lootboxesDB *lootboxesDB) List(ctx context.Context) ([]lootboxes.LootBox, 
 
 		err = rows.Scan(&userLootBox.UserID, &userLootBox.LootBoxID, &userLootBox.Type)
 		if err != nil {
-			if errors.Is(err, sql.ErrNoRows) {
-				return nil, lootboxes.ErrNoLootBox.Wrap(err)
-			}
-
 			return nil, ErrLootBoxes.Wrap(err)
 		}
 

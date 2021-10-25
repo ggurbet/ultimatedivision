@@ -39,9 +39,6 @@ func (subscribersDB *subscribersDB) List(ctx context.Context) ([]subscribers.Sub
 		var subscriber subscribers.Subscriber
 		err := rows.Scan(&subscriber.Email, &subscriber.CreatedAt)
 		if err != nil {
-			if errors.Is(err, sql.ErrNoRows) {
-				return nil, subscribers.ErrNoSubscriber.Wrap(err)
-			}
 			return nil, subscribers.ErrSubscribers.Wrap(err)
 		}
 

@@ -29,7 +29,7 @@ type avatarsDB struct {
 }
 
 const (
-	allAvatarFields = `card_id, picture_type, face_color, face_type, eyebrows_type, eyebrows_color,
+	allFieldsOfAvatar = `card_id, picture_type, face_color, face_type, eyebrows_type, eyebrows_color,
 		eyelaser_type, hairstyle_color, hairstyle_type, nose, tshirt, beard, lips, tattoo, original_url, preview_url`
 )
 
@@ -37,7 +37,7 @@ const (
 func (avatarsDB *avatarsDB) Create(ctx context.Context, avatar avatars.Avatar) error {
 	query :=
 		`INSERT INTO
-			avatars(` + allAvatarFields + `) 
+			avatars(` + allFieldsOfAvatar + `) 
 		VALUES 
 			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
 		`
@@ -53,7 +53,7 @@ func (avatarsDB *avatarsDB) Get(ctx context.Context, cardID uuid.UUID) (avatars.
 	avatar := avatars.Avatar{}
 	query :=
 		`SELECT
-            ` + allAvatarFields + `
+            ` + allFieldsOfAvatar + `
         FROM 
             avatars
         WHERE
