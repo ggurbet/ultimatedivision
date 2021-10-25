@@ -6,6 +6,7 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -154,6 +155,13 @@ func (controller *Clubs) Get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+const (
+	// minimumPositionValue defines the minimal value of the position in the squad.
+	minimumPositionValue clubs.Position = 0
+	// maximumPositionValue defines the maximal value of the position in the squad.
+	maximumPositionValue clubs.Position = 10
+)
+
 // UpdatePosition is an endpoint that updates card position in the squad.
 func (controller *Clubs) UpdatePosition(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -238,10 +246,10 @@ func (controller *Clubs) Add(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var squadCard clubs.SquadCard
+	squadCard.CardID = cardID
 
 	if err = json.NewDecoder(r.Body).Decode(&squadCard); err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
-		return
 	}
 
 	squadCard.CardID = cardID
@@ -251,7 +259,7 @@ func (controller *Clubs) Add(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = controller.clubs.AddSquadCards(ctx, squadID, squadCard)
+	err = controller.clubs.AddSquadCard(ctx, squadID, squadCard)
 	if err != nil {
 		controller.log.Error("could not add card to the squad", ErrClubs.Wrap(err))
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
@@ -285,13 +293,6 @@ func (controller *Clubs) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-const (
-	// minimumPositionValue defines the minimal value of the position in the squad.
-	minimumPositionValue clubs.Position = 0
-	// maximumPositionValue defines the maximal value of the position in the squad.
-	maximumPositionValue clubs.Position = 10
-)
-
 // UpdateRequest is struct for update body payload.
 type UpdateRequest struct {
 	ID        uuid.UUID       `json:"squadId"`
@@ -320,5 +321,44 @@ func (controller *Clubs) serveError(w http.ResponseWriter, status int, err error
 	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
 		controller.log.Error("failed to write json error response", ErrClubs.Wrap(err))
+	}
+}
+
+// ChangeFormation is a method that change formation and card position.
+func (controller *Clubs) ChangeFormation(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	params := mux.Vars(r)
+
+	newFormationID, err := strconv.Atoi(params["formationID"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
+		return
+	}
+
+	formation := clubs.Formation(newFormationID)
+
+	if !clubs.Formation(newFormationID).IsValid() {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.New("Formation ID is not correct"))
+		return
+	}
+
+	squadID, err := uuid.Parse(params["squadId"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
+		return
+	}
+
+	data, err := controller.clubs.ChangeFormation(ctx, formation, squadID)
+	if err != nil {
+		controller.log.Error("could not change formation", ErrClubs.Wrap(err))
+		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(data); err != nil {
+		controller.log.Error("failed to write json response", ErrClubs.Wrap(err))
+		return
 	}
 }

@@ -20,6 +20,9 @@ var _ clubs.DB = (*clubsDB)(nil)
 // ErrClubs indicates that there was an error in the database.
 var ErrClubs = errs.Class("clubs repository error")
 
+// ErrSquad indicates that there was an error in the database.
+var ErrSquad = errs.Class("squad repository error")
+
 // clubsDB provide access to club DB.
 //
 // architecture: Database
@@ -196,6 +199,17 @@ func (clubsDB *clubsDB) UpdateTacticFormationCaptain(ctx context.Context, squad 
 	return ErrClubs.Wrap(err)
 }
 
+// UpdateFormation updates formation in the squad.
+func (clubsDB *clubsDB) UpdateFormation(ctx context.Context, newFormation clubs.Formation, squadID uuid.UUID) error {
+	query := `UPDATE squads
+			  SET formation = $1
+  			  WHERE id = $2`
+
+	_, err := clubsDB.conn.ExecContext(ctx, query, newFormation, squadID)
+
+	return ErrSquad.Wrap(err)
+}
+
 // GetFormation returns formation of the squad.
 func (clubsDB *clubsDB) GetFormation(ctx context.Context, squadID uuid.UUID) (clubs.Formation, error) {
 	var formation clubs.Formation
@@ -215,8 +229,8 @@ func (clubsDB *clubsDB) GetFormation(ctx context.Context, squadID uuid.UUID) (cl
 	return formation, ErrClubs.Wrap(err)
 }
 
-// UpdatePosition updates position of cards in the squad.
-func (clubsDB *clubsDB) UpdatePosition(ctx context.Context, squadCards []clubs.SquadCard) error {
+// UpdatePositions updates positions of cards in the squad.
+func (clubsDB *clubsDB) UpdatePositions(ctx context.Context, squadCards []clubs.SquadCard) error {
 	query := `UPDATE squad_cards
 			  SET card_position = $1
 			  WHERE card_id = $2 and id = $3`
@@ -246,4 +260,26 @@ func (clubsDB *clubsDB) UpdatePosition(ctx context.Context, squadCards []clubs.S
 	}
 
 	return ErrClubs.Wrap(err)
+}
+
+// GetCaptainID returns id of captain of the users team.
+func (clubsDB *clubsDB) GetCaptainID(ctx context.Context, squadID uuid.UUID) (uuid.UUID, error) {
+	query := `SELECT captain_id
+			  FROM squads
+              WHERE id = $1`
+
+	var id uuid.UUID
+
+	row := clubsDB.conn.QueryRowContext(ctx, query, squadID)
+
+	err := row.Scan(&id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return uuid.New(), clubs.ErrNoSquad.Wrap(err)
+		}
+
+		return uuid.New(), ErrSquad.Wrap(err)
+	}
+
+	return id, nil
 }

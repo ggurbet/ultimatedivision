@@ -82,7 +82,7 @@ type Card struct {
 	ShortPassing     int          `json:"shortPassing"`
 	LongPassing      int          `json:"longPassing"`
 	ForwardPass      int          `json:"forwardPass"`
-	Offense          int          `json:"offense"`
+	Offence          int          `json:"offence"`
 	FinishingAbility int          `json:"finishingAbility"`
 	ShotPower        int          `json:"shotPower"`
 	Accuracy         int          `json:"accuracy"`
@@ -236,6 +236,66 @@ type Config struct {
 	} `json:"tattoos"`
 
 	pagination.Cursor `json:"cursor"`
+
+	// CardEfficiencyParameters coefficients for calculating the efficiency of the card.
+	CardEfficiencyParameters struct {
+		GK struct {
+			Goalkeeping float64 `json:"goalkeeping"`
+			Physique    float64 `json:"physique"`
+			Tactics     float64 `json:"tactics"`
+		} `json:"gk"`
+		CD struct {
+			Defence  float64 `json:"defence"`
+			Physique float64 `json:"physique"`
+			Tactics  float64 `json:"tactics"`
+		} `json:"cd"`
+		LBorRB struct {
+			Defence   float64 `json:"defence"`
+			Physique  float64 `json:"physique"`
+			Tactics   float64 `json:"tactics"`
+			Technique float64 `json:"technique"`
+		} `json:"lbOrRb"`
+		CDM struct {
+			Defence   float64 `json:"defence"`
+			Physique  float64 `json:"physique"`
+			Tactics   float64 `json:"tactics"`
+			Technique float64 `json:"technique"`
+			Offence   float64 `json:"offence"`
+		} `json:"cdm"`
+		CM struct {
+			Defence   float64 `json:"defence"`
+			Physique  float64 `json:"physique"`
+			Tactics   float64 `json:"tactics"`
+			Technique float64 `json:"technique"`
+			Offence   float64 `json:"offence"`
+		} `json:"cm"`
+		CAM struct {
+			Defence   float64 `json:"defence"`
+			Physique  float64 `json:"physique"`
+			Tactics   float64 `json:"tactics"`
+			Technique float64 `json:"technique"`
+			Offence   float64 `json:"offence"`
+		} `json:"cam"`
+		RMorLM struct {
+			Defence   float64 `json:"defence"`
+			Physique  float64 `json:"physique"`
+			Tactics   float64 `json:"tactics"`
+			Technique float64 `json:"technique"`
+			Offence   float64 `json:"offence"`
+		} `json:"rmOrLm"`
+		RWorLW struct {
+			Physique  float64 `json:"physique"`
+			Tactics   float64 `json:"tactics"`
+			Technique float64 `json:"technique"`
+			Offence   float64 `json:"offence"`
+		} `json:"rwOrLw"`
+		ST struct {
+			Physique  float64 `json:"physique"`
+			Tactics   float64 `json:"tactics"`
+			Technique float64 `json:"technique"`
+			Offence   float64 `json:"offence"`
+		} `json:"st"`
+	} `json:"cardEfficiencyParameters"`
 }
 
 // PercentageQualities entity for probabilities generate cards.

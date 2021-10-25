@@ -181,7 +181,7 @@ func TestTeam(t *testing.T) {
 		})
 
 		t.Run("Update card position in squad sql no rows", func(t *testing.T) {
-			err := repositoryClubs.UpdatePosition(ctx, []clubs.SquadCard{{
+			err := repositoryClubs.UpdatePositions(ctx, []clubs.SquadCard{{
 				id,
 				id,
 				clubs.Position(5),
@@ -191,7 +191,7 @@ func TestTeam(t *testing.T) {
 		})
 
 		t.Run("Update card position in squad", func(t *testing.T) {
-			err := repositoryClubs.UpdatePosition(ctx, []clubs.SquadCard{updatedSquadCard1, updatedSquadCard2})
+			err := repositoryClubs.UpdatePositions(ctx, []clubs.SquadCard{updatedSquadCard1, updatedSquadCard2})
 			require.NoError(t, err)
 		})
 

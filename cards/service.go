@@ -15,6 +15,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards/avatars"
+	"ultimatedivision/clubs"
 	"ultimatedivision/pkg/pagination"
 )
 
@@ -181,7 +182,7 @@ func (service *Service) Generate(ctx context.Context, userID uuid.UUID, percenta
 		ShortPassing:     generateSkill(technique),
 		LongPassing:      generateSkill(technique),
 		ForwardPass:      generateSkill(technique),
-		Offense:          offense,
+		Offence:          offense,
 		FinishingAbility: generateSkill(offense),
 		ShotPower:        generateSkill(offense),
 		Accuracy:         generateSkill(offense),
@@ -354,4 +355,171 @@ func (service *Service) UpdateUserID(ctx context.Context, id, userID uuid.UUID) 
 // Delete deletes card record in database.
 func (service *Service) Delete(ctx context.Context, cardID uuid.UUID) error {
 	return ErrCards.Wrap(service.cards.Delete(ctx, cardID))
+}
+
+// EffectivenessGK determines the effectiveness of the card in the GK position.
+func (service *Service) EffectivenessGK(card Card) float64 {
+	return service.config.CardEfficiencyParameters.GK.Goalkeeping*float64(card.Goalkeeping) +
+		service.config.CardEfficiencyParameters.GK.Physique*float64(card.Physique) +
+		service.config.CardEfficiencyParameters.GK.Tactics*float64(card.Tactics)
+}
+
+// EffectivenessCD determines the effectiveness of the card in the CD position.
+func (service *Service) EffectivenessCD(card Card) float64 {
+	return service.config.CardEfficiencyParameters.CD.Defence*float64(card.Defence) +
+		service.config.CardEfficiencyParameters.CD.Physique*float64(card.Physique) +
+		service.config.CardEfficiencyParameters.CD.Tactics*float64(card.Tactics)
+}
+
+// EffectivenessLBorRB determines the effectiveness of the card in the LB/RB position.
+func (service *Service) EffectivenessLBorRB(card Card) float64 {
+	return service.config.CardEfficiencyParameters.LBorRB.Defence*float64(card.Defence) +
+		service.config.CardEfficiencyParameters.LBorRB.Physique*float64(card.Physique) +
+		service.config.CardEfficiencyParameters.LBorRB.Tactics*float64(card.Tactics) +
+		service.config.CardEfficiencyParameters.LBorRB.Technique*float64(card.Technique)
+}
+
+// EffectivenessCDM determines the effectiveness of the card in the CDM position.
+func (service *Service) EffectivenessCDM(card Card) float64 {
+	return service.config.CardEfficiencyParameters.CDM.Defence*float64(card.Defence) +
+		service.config.CardEfficiencyParameters.CDM.Physique*float64(card.Physique) +
+		service.config.CardEfficiencyParameters.CDM.Tactics*float64(card.Tactics) +
+		service.config.CardEfficiencyParameters.CDM.Technique*float64(card.Technique) +
+		service.config.CardEfficiencyParameters.CDM.Offence*float64(card.Offence)
+}
+
+// EffectivenessCM determines the effectiveness of the card in the CM position.
+func (service *Service) EffectivenessCM(card Card) float64 {
+	return service.config.CardEfficiencyParameters.CM.Defence*float64(card.Defence) +
+		service.config.CardEfficiencyParameters.CM.Physique*float64(card.Physique) +
+		service.config.CardEfficiencyParameters.CM.Tactics*float64(card.Tactics) +
+		service.config.CardEfficiencyParameters.CM.Technique*float64(card.Technique) +
+		service.config.CardEfficiencyParameters.CM.Offence*float64(card.Offence)
+}
+
+// EffectivenessCAM determines the effectiveness of the card in the CAM position.
+func (service *Service) EffectivenessCAM(card Card) float64 {
+	return service.config.CardEfficiencyParameters.CAM.Defence*float64(card.Defence) +
+		service.config.CardEfficiencyParameters.CAM.Physique*float64(card.Physique) +
+		service.config.CardEfficiencyParameters.CAM.Tactics*float64(card.Tactics) +
+		service.config.CardEfficiencyParameters.CAM.Technique*float64(card.Technique) +
+		service.config.CardEfficiencyParameters.CAM.Offence*float64(card.Offence)
+}
+
+// EffectivenessRMorLM determines the effectiveness of the card in the LM/RM position.
+func (service *Service) EffectivenessRMorLM(card Card) float64 {
+	return service.config.CardEfficiencyParameters.RMorLM.Defence*float64(card.Defence) +
+		service.config.CardEfficiencyParameters.RMorLM.Physique*float64(card.Physique) +
+		service.config.CardEfficiencyParameters.RMorLM.Tactics*float64(card.Tactics) +
+		service.config.CardEfficiencyParameters.RMorLM.Technique*float64(card.Technique) +
+		service.config.CardEfficiencyParameters.RMorLM.Offence*float64(card.Offence)
+}
+
+// EffectivenessRWorLW determines the effectiveness of the card in the LW/RW position.
+func (service *Service) EffectivenessRWorLW(card Card) float64 {
+	return service.config.CardEfficiencyParameters.RWorLW.Physique*float64(card.Physique) +
+		service.config.CardEfficiencyParameters.RWorLW.Tactics*float64(card.Tactics) +
+		service.config.CardEfficiencyParameters.RWorLW.Technique*float64(card.Technique) +
+		service.config.CardEfficiencyParameters.RWorLW.Offence*float64(card.Offence)
+}
+
+// EffectivenessST determines the effectiveness of the card in the ST position.
+func (service *Service) EffectivenessST(card Card) float64 {
+	return service.config.CardEfficiencyParameters.ST.Physique*float64(card.Physique) +
+		service.config.CardEfficiencyParameters.ST.Tactics*float64(card.Tactics) +
+		service.config.CardEfficiencyParameters.ST.Technique*float64(card.Technique) +
+		service.config.CardEfficiencyParameters.ST.Offence*float64(card.Offence)
+}
+
+// RemoveIndex for remove element from slice.
+func RemoveIndex(s []clubs.SquadCard, index int) []clubs.SquadCard {
+	return append(s[:index], s[index+1:]...)
+}
+
+// EffectiveCardForPosition determines the effective card in the position.
+func (service *Service) EffectiveCardForPosition(ctx context.Context, position clubs.Position, cards []clubs.SquadCard) (Card, error) {
+	cardCoefficients := make(map[float64]Card)
+
+	for _, card := range cards {
+		card, err := service.Get(ctx, card.CardID)
+		if err != nil {
+			return card, ErrCards.Wrap(err)
+		}
+		switch position {
+		case clubs.GK:
+			coefficient := service.EffectivenessGK(card)
+			cardCoefficients[coefficient] = card
+		case clubs.CST,
+			clubs.LST,
+			clubs.RST:
+			coefficient := service.EffectivenessST(card)
+			cardCoefficients[coefficient] = card
+		case clubs.LW,
+			clubs.RW:
+			coefficient := service.EffectivenessRWorLW(card)
+			cardCoefficients[coefficient] = card
+		case clubs.RM,
+			clubs.LM:
+			coefficient := service.EffectivenessRMorLM(card)
+			cardCoefficients[coefficient] = card
+		case clubs.CCAM,
+			clubs.RCAM,
+			clubs.LCAM:
+			coefficient := service.EffectivenessCAM(card)
+			cardCoefficients[coefficient] = card
+		case clubs.CCM,
+			clubs.LCM,
+			clubs.RCM:
+			coefficient := service.EffectivenessCM(card)
+			cardCoefficients[coefficient] = card
+		case clubs.CCDM,
+			clubs.LCDM,
+			clubs.RCDM:
+			coefficient := service.EffectivenessCDM(card)
+			cardCoefficients[coefficient] = card
+		case clubs.LB,
+			clubs.RB,
+			clubs.RWB,
+			clubs.LWB:
+			coefficient := service.EffectivenessLBorRB(card)
+			cardCoefficients[coefficient] = card
+		case clubs.CCD,
+			clubs.LCD,
+			clubs.RCD:
+			coefficient := service.EffectivenessCD(card)
+			cardCoefficients[coefficient] = card
+		}
+	}
+
+	var max float64
+
+	for coeff := range cardCoefficients {
+		max = coeff
+		if coeff > max {
+			max = coeff
+		}
+	}
+
+	for key, v := range cards {
+		if cardCoefficients[max].ID == v.CardID {
+			cards = RemoveIndex(cards, key)
+		}
+	}
+
+	return cardCoefficients[max], nil
+}
+
+// CardsWithNewPositions returns cards with new position by new formation.
+func (service *Service) CardsWithNewPositions(ctx context.Context, cards []clubs.SquadCard, positions []clubs.Position) (map[clubs.Position]uuid.UUID, error) {
+	positionMap := make(map[clubs.Position]uuid.UUID)
+
+	for _, position := range positions {
+		card, err := service.EffectiveCardForPosition(ctx, position, cards)
+		if err != nil {
+			return positionMap, ErrCards.Wrap(err)
+		}
+		positionMap[position] = card.ID
+	}
+
+	return positionMap, nil
 }

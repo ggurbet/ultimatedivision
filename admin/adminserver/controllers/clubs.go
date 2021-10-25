@@ -296,7 +296,7 @@ func (controller *Clubs) Add(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = controller.clubs.AddSquadCards(ctx, squadID, clubs.SquadCard{
+		err = controller.clubs.AddSquadCard(ctx, squadID, clubs.SquadCard{
 			Position: clubs.Position(position),
 			CardID:   cardID,
 		})

@@ -75,7 +75,7 @@ func (marketplaceDB *marketplaceDB) GetLotByID(ctx context.Context, id uuid.UUID
 		&lot.Card.Composure, &lot.Card.Aggression, &lot.Card.Vision, &lot.Card.Awareness, &lot.Card.Crosses, &lot.Card.Physique, &lot.Card.Acceleration, &lot.Card.RunningSpeed,
 		&lot.Card.ReactionSpeed, &lot.Card.Agility, &lot.Card.Stamina, &lot.Card.Strength, &lot.Card.Jumping, &lot.Card.Balance, &lot.Card.Technique, &lot.Card.Dribbling,
 		&lot.Card.BallControl, &lot.Card.WeakFoot, &lot.Card.SkillMoves, &lot.Card.Finesse, &lot.Card.Curve, &lot.Card.Volleys, &lot.Card.ShortPassing, &lot.Card.LongPassing,
-		&lot.Card.ForwardPass, &lot.Card.Offense, &lot.Card.FinishingAbility, &lot.Card.ShotPower, &lot.Card.Accuracy, &lot.Card.Distance, &lot.Card.Penalty,
+		&lot.Card.ForwardPass, &lot.Card.Offence, &lot.Card.FinishingAbility, &lot.Card.ShotPower, &lot.Card.Accuracy, &lot.Card.Distance, &lot.Card.Penalty,
 		&lot.Card.FreeKicks, &lot.Card.Corners, &lot.Card.HeadingAccuracy, &lot.Card.Defence, &lot.Card.OffsideTrap, &lot.Card.Sliding, &lot.Card.Tackles, &lot.Card.BallFocus,
 		&lot.Card.Interceptions, &lot.Card.Vigilance, &lot.Card.Goalkeeping, &lot.Card.Reflexes, &lot.Card.Diving, &lot.Card.Handling, &lot.Card.Sweeping, &lot.Card.Throwing,
 	)
@@ -132,7 +132,7 @@ func (marketplaceDB *marketplaceDB) ListActiveLots(ctx context.Context, cursor p
 			&lot.Card.Composure, &lot.Card.Aggression, &lot.Card.Vision, &lot.Card.Awareness, &lot.Card.Crosses, &lot.Card.Physique, &lot.Card.Acceleration, &lot.Card.RunningSpeed,
 			&lot.Card.ReactionSpeed, &lot.Card.Agility, &lot.Card.Stamina, &lot.Card.Strength, &lot.Card.Jumping, &lot.Card.Balance, &lot.Card.Technique, &lot.Card.Dribbling,
 			&lot.Card.BallControl, &lot.Card.WeakFoot, &lot.Card.SkillMoves, &lot.Card.Finesse, &lot.Card.Curve, &lot.Card.Volleys, &lot.Card.ShortPassing, &lot.Card.LongPassing,
-			&lot.Card.ForwardPass, &lot.Card.Offense, &lot.Card.FinishingAbility, &lot.Card.ShotPower, &lot.Card.Accuracy, &lot.Card.Distance, &lot.Card.Penalty,
+			&lot.Card.ForwardPass, &lot.Card.Offence, &lot.Card.FinishingAbility, &lot.Card.ShotPower, &lot.Card.Accuracy, &lot.Card.Distance, &lot.Card.Penalty,
 			&lot.Card.FreeKicks, &lot.Card.Corners, &lot.Card.HeadingAccuracy, &lot.Card.Defence, &lot.Card.OffsideTrap, &lot.Card.Sliding, &lot.Card.Tackles, &lot.Card.BallFocus,
 			&lot.Card.Interceptions, &lot.Card.Vigilance, &lot.Card.Goalkeeping, &lot.Card.Reflexes, &lot.Card.Diving, &lot.Card.Handling, &lot.Card.Sweeping, &lot.Card.Throwing,
 		); err != nil {
@@ -189,7 +189,7 @@ func (marketplaceDB *marketplaceDB) ListActiveLotsByItemID(ctx context.Context, 
 			&lot.Card.Composure, &lot.Card.Aggression, &lot.Card.Vision, &lot.Card.Awareness, &lot.Card.Crosses, &lot.Card.Physique, &lot.Card.Acceleration, &lot.Card.RunningSpeed,
 			&lot.Card.ReactionSpeed, &lot.Card.Agility, &lot.Card.Stamina, &lot.Card.Strength, &lot.Card.Jumping, &lot.Card.Balance, &lot.Card.Technique, &lot.Card.Dribbling,
 			&lot.Card.BallControl, &lot.Card.WeakFoot, &lot.Card.SkillMoves, &lot.Card.Finesse, &lot.Card.Curve, &lot.Card.Volleys, &lot.Card.ShortPassing, &lot.Card.LongPassing,
-			&lot.Card.ForwardPass, &lot.Card.Offense, &lot.Card.FinishingAbility, &lot.Card.ShotPower, &lot.Card.Accuracy, &lot.Card.Distance, &lot.Card.Penalty,
+			&lot.Card.ForwardPass, &lot.Card.Offence, &lot.Card.FinishingAbility, &lot.Card.ShotPower, &lot.Card.Accuracy, &lot.Card.Distance, &lot.Card.Penalty,
 			&lot.Card.FreeKicks, &lot.Card.Corners, &lot.Card.HeadingAccuracy, &lot.Card.Defence, &lot.Card.OffsideTrap, &lot.Card.Sliding, &lot.Card.Tackles, &lot.Card.BallFocus,
 			&lot.Card.Interceptions, &lot.Card.Vigilance, &lot.Card.Goalkeeping, &lot.Card.Reflexes, &lot.Card.Diving, &lot.Card.Handling, &lot.Card.Sweeping, &lot.Card.Throwing,
 		); err != nil {

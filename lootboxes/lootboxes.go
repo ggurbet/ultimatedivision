@@ -82,8 +82,8 @@ func sortLootBoxCards(cards []cards.Card) {
 			return sortByQuality
 		}
 
-		parametersOfCard1 := cards[i].Tactics + cards[i].Physique + cards[i].Technique + cards[i].Offense + cards[i].Defence + cards[i].Goalkeeping
-		parametersOfCard2 := cards[j].Tactics + cards[j].Physique + cards[j].Technique + cards[j].Offense + cards[j].Defence + cards[j].Goalkeeping
+		parametersOfCard1 := cards[i].Tactics + cards[i].Physique + cards[i].Technique + cards[i].Offence + cards[i].Defence + cards[i].Goalkeeping
+		parametersOfCard2 := cards[j].Tactics + cards[j].Physique + cards[j].Technique + cards[j].Offence + cards[j].Defence + cards[j].Goalkeeping
 
 		return parametersOfCard1 > parametersOfCard2
 	})
