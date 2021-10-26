@@ -78,7 +78,7 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
         successLabel: successEmailLabel,
     };
 
-    return <div className="launch-date-modal">
+    return <section className="launch-date-modal">
         <div className="launch-date-modal__window">
             <div
                 onClick={handleModal}
@@ -115,5 +115,5 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
             <div className="launch-date-modal__wrapper"
             />
         </div>
-    </div>;
+    </section>;
 };

@@ -138,10 +138,13 @@
 
     &__wrapper {
         width: 100%;
-        margin-bottom: 20px;
     }
 
     @media (max-width: $desktopBreakPoint) {
+
+        &__window {
+            padding: 60px 80px;
+        }
 
         &__description {
             width: 90%;
@@ -253,6 +256,65 @@
                     right: unset;
                 }
             }
+        }
+    }
+}
+
+@media (max-height: $phoneBreakPoint - 50px) {
+
+    .launch-date-modal {
+
+        &__window {
+            padding: 10px;
+            height: 80vh;
+            max-width: 600px;
+        }
+
+        &__close {
+            top: -10vh;
+
+            &__text {
+                font-size: 45px;
+            }
+        }
+
+        &__email-label {
+            font-size: 14px;
+        }
+
+        &__description {
+            margin-bottom: 10vh;
+            font-size: 50px;
+        }
+
+        &__notification {
+
+            &__confirm {
+                margin-top: 5vh;
+                height: 50px;
+            }
+
+            &__email,
+            &__email-check,
+            &__email-error {
+                font-size: 14px;
+
+                &__error,
+                &__success {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-height: $phoneBreakPoint - 300px) {
+
+    .launch-date-modal {
+
+        &__description {
+            font-size: 32px;
+            margin-bottom: 15vh;
         }
     }
 }
