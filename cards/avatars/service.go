@@ -8,10 +8,13 @@ import (
 	"fmt"
 	"image"
 	"path/filepath"
+	"strconv"
 
 	"github.com/google/uuid"
+	"github.com/nfnt/resize"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/cards"
 	"ultimatedivision/pkg/imageprocessing"
 	"ultimatedivision/pkg/rand"
 )
@@ -41,16 +44,17 @@ func (service *Service) Create(ctx context.Context, avatar Avatar) error {
 }
 
 // Generate generates a common avatar from different layers of photos.
-func (service *Service) Generate(ctx context.Context, cardID uuid.UUID, isTattoo bool, name string) (Avatar, error) {
+func (service *Service) Generate(ctx context.Context, card cards.Card, name string) (Avatar, error) {
 	var (
-		layer  image.Image
-		layers []image.Image
-		count  int
-		err    error
+		layer                 image.Image
+		layers                []image.Image
+		originalAvatarsLayers []image.Image
+		count                 int
+		err                   error
 	)
 
 	avatar := Avatar{
-		CardID:      cardID,
+		CardID:      card.ID,
 		PictureType: PictureTypeFirst,
 	}
 
@@ -130,7 +134,7 @@ func (service *Service) Generate(ctx context.Context, cardID uuid.UUID, isTattoo
 	layers = append(layers, layer)
 
 	// Tattoo
-	if isTattoo {
+	if card.IsTattoo {
 		pathToTattoo := filepath.Join(service.config.PathToAvararsComponents, service.config.TattooFolder, fmt.Sprintf(service.config.TattooTypeFolder, avatar.FaceType))
 		if count, err = imageprocessing.LayerComponentsCount(pathToTattoo, service.config.TattooFile); err != nil {
 			return avatar, ErrNoAvatarFile.Wrap(err)
@@ -218,13 +222,171 @@ func (service *Service) Generate(ctx context.Context, cardID uuid.UUID, isTattoo
 		layers = append(layers, layer)
 	}
 
-	originalImage := imageprocessing.Layering(layers)
+	originalAvatar := imageprocessing.Layering(layers, 0, 0)
 
-	avatar.OriginalURL = filepath.Join(service.config.PathToOutputAvatarsRemote, name+"."+string(TypeImagePNG))
-	if err = imageprocessing.SaveImage(filepath.Join(service.config.PathToOutputAvatarsLocal, name+"."+string(TypeImagePNG)), originalImage); err != nil {
+	// Background
+	pathToBackground := filepath.Join(service.config.PathToAvararsComponents, service.config.BackgroundFolder)
+	if layer, err = imageprocessing.CreateLayer(pathToBackground, string(card.Quality)+"."+string(TypeImagePNG)); err != nil {
+		return avatar, ErrNoAvatarFile.Wrap(err)
+	}
+	originalAvatarsLayers = append(originalAvatarsLayers, layer)
+
+	reducedOriginalAvatar := resize.Resize(uint(service.config.Sizes.OriginalAvatar.Width), uint(service.config.Sizes.OriginalAvatar.Height), originalAvatar, resize.Lanczos3)
+	originalAvatarsLayers = append(originalAvatarsLayers, reducedOriginalAvatar)
+
+	originalImage := imageprocessing.Layering(originalAvatarsLayers, service.config.IndentOriginalAvatar.Left, service.config.IndentOriginalAvatar.Above)
+
+	var fontColors string
+	switch card.Quality {
+	case cards.QualityWood:
+		fontColors = service.config.Inscriptions.FontColors.Wood
+	case cards.QualitySilver:
+		fontColors = service.config.Inscriptions.FontColors.Silver
+	case cards.QualityGold:
+		fontColors = service.config.Inscriptions.FontColors.Gold
+	case cards.QualityDiamond:
+		fontColors = service.config.Inscriptions.FontColors.Diamond
+	default:
+		return avatar, ErrAvatar.New("quality not exist")
+	}
+
+	// PlayerName
+	inscriptionPlayerName := imageprocessing.Inscription{
+		Img:         originalImage,
+		Width:       service.config.Sizes.Background.Width,
+		Height:      service.config.Sizes.Background.Height,
+		PathToFonts: service.config.Inscriptions.PathToFonts,
+		FontSize:    service.config.Inscriptions.PlayerName.FontSize,
+		FontColor:   fontColors,
+		Text:        card.PlayerName,
+		X:           service.config.Inscriptions.PlayerName.X,
+		Y:           service.config.Inscriptions.PlayerName.Y,
+		TextAlign:   service.config.Inscriptions.PlayerName.TextAlign,
+	}
+
+	originalImageWithLabelPlayerName, err := imageprocessing.ApplyInscription(inscriptionPlayerName)
+	if err != nil {
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
+	// Tactics
+	inscriptionTac := imageprocessing.Inscription{
+		Img:         originalImageWithLabelPlayerName,
+		Width:       service.config.Sizes.Background.Width,
+		Height:      service.config.Sizes.Background.Height,
+		PathToFonts: service.config.Inscriptions.PathToFonts,
+		FontSize:    service.config.Inscriptions.GameCharacteristics.FontSize,
+		FontColor:   fontColors,
+		Text:        strconv.Itoa(card.Tactics),
+		X:           service.config.Inscriptions.GameCharacteristics.Tac.X,
+		Y:           service.config.Inscriptions.GameCharacteristics.Tac.Y,
+		TextAlign:   service.config.Inscriptions.GameCharacteristics.TextAlign,
+	}
+
+	originalImageWithLabelTac, err := imageprocessing.ApplyInscription(inscriptionTac)
+	if err != nil {
+		return avatar, ErrAvatar.Wrap(err)
+	}
+
+	// Physique
+	inscriptionPhy := imageprocessing.Inscription{
+		Img:         originalImageWithLabelTac,
+		Width:       service.config.Sizes.Background.Width,
+		Height:      service.config.Sizes.Background.Height,
+		PathToFonts: service.config.Inscriptions.PathToFonts,
+		FontSize:    service.config.Inscriptions.GameCharacteristics.FontSize,
+		FontColor:   fontColors,
+		Text:        strconv.Itoa(card.Physique),
+		X:           service.config.Inscriptions.GameCharacteristics.Phy.X,
+		Y:           service.config.Inscriptions.GameCharacteristics.Phy.Y,
+		TextAlign:   service.config.Inscriptions.GameCharacteristics.TextAlign,
+	}
+
+	originalImageWithLabelPhy, err := imageprocessing.ApplyInscription(inscriptionPhy)
+	if err != nil {
+		return avatar, ErrAvatar.Wrap(err)
+	}
+
+	// Technique
+	inscriptionTec := imageprocessing.Inscription{
+		Img:         originalImageWithLabelPhy,
+		Width:       service.config.Sizes.Background.Width,
+		Height:      service.config.Sizes.Background.Height,
+		PathToFonts: service.config.Inscriptions.PathToFonts,
+		FontSize:    service.config.Inscriptions.GameCharacteristics.FontSize,
+		FontColor:   fontColors,
+		Text:        strconv.Itoa(card.Technique),
+		X:           service.config.Inscriptions.GameCharacteristics.Tec.X,
+		Y:           service.config.Inscriptions.GameCharacteristics.Tec.Y,
+		TextAlign:   service.config.Inscriptions.GameCharacteristics.TextAlign,
+	}
+
+	originalImageWithLabelTec, err := imageprocessing.ApplyInscription(inscriptionTec)
+	if err != nil {
+		return avatar, ErrAvatar.Wrap(err)
+	}
+
+	// Offence
+	inscriptionOff := imageprocessing.Inscription{
+		Img:         originalImageWithLabelTec,
+		Width:       service.config.Sizes.Background.Width,
+		Height:      service.config.Sizes.Background.Height,
+		PathToFonts: service.config.Inscriptions.PathToFonts,
+		FontSize:    service.config.Inscriptions.GameCharacteristics.FontSize,
+		FontColor:   fontColors,
+		Text:        strconv.Itoa(card.Offence),
+		X:           service.config.Inscriptions.GameCharacteristics.Off.X,
+		Y:           service.config.Inscriptions.GameCharacteristics.Off.Y,
+		TextAlign:   service.config.Inscriptions.GameCharacteristics.TextAlign,
+	}
+
+	originalImageWithLabelOff, err := imageprocessing.ApplyInscription(inscriptionOff)
+	if err != nil {
+		return avatar, ErrAvatar.Wrap(err)
+	}
+
+	// Defence
+	inscriptionDef := imageprocessing.Inscription{
+		Img:         originalImageWithLabelOff,
+		Width:       service.config.Sizes.Background.Width,
+		Height:      service.config.Sizes.Background.Height,
+		PathToFonts: service.config.Inscriptions.PathToFonts,
+		FontSize:    service.config.Inscriptions.GameCharacteristics.FontSize,
+		FontColor:   fontColors,
+		Text:        strconv.Itoa(card.Defence),
+		X:           service.config.Inscriptions.GameCharacteristics.Def.X,
+		Y:           service.config.Inscriptions.GameCharacteristics.Def.Y,
+		TextAlign:   service.config.Inscriptions.GameCharacteristics.TextAlign,
+	}
+
+	originalImageWithLabelDef, err := imageprocessing.ApplyInscription(inscriptionDef)
+	if err != nil {
+		return avatar, ErrAvatar.Wrap(err)
+	}
+
+	// Goalkeeping
+	inscriptionGk := imageprocessing.Inscription{
+		Img:         originalImageWithLabelDef,
+		Width:       service.config.Sizes.Background.Width,
+		Height:      service.config.Sizes.Background.Height,
+		PathToFonts: service.config.Inscriptions.PathToFonts,
+		FontSize:    service.config.Inscriptions.GameCharacteristics.FontSize,
+		FontColor:   fontColors,
+		Text:        strconv.Itoa(card.Goalkeeping),
+		X:           service.config.Inscriptions.GameCharacteristics.Gk.X,
+		Y:           service.config.Inscriptions.GameCharacteristics.Gk.Y,
+		TextAlign:   service.config.Inscriptions.GameCharacteristics.TextAlign,
+	}
+
+	originalImageWithLabelGk, err := imageprocessing.ApplyInscription(inscriptionGk)
+	if err != nil {
+		return avatar, ErrAvatar.Wrap(err)
+	}
+
+	avatar.OriginalURL = filepath.Join(service.config.PathToOutputAvatarsRemote, name+"."+string(TypeImagePNG))
+	if err = imageprocessing.SaveImage(filepath.Join(service.config.PathToOutputAvatarsLocal, name+"."+string(TypeImagePNG)), originalImageWithLabelGk); err != nil {
+		return avatar, ErrAvatar.Wrap(err)
+	}
 	return avatar, nil
 }
 

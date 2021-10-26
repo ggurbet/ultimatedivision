@@ -14,7 +14,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/cards/avatars"
 	"ultimatedivision/clubs"
 	"ultimatedivision/pkg/pagination"
 )
@@ -26,17 +25,15 @@ var ErrCards = errs.Class("cards service error")
 //
 // architecture: Service
 type Service struct {
-	cards   DB
-	config  Config
-	avatars *avatars.Service
+	cards  DB
+	config Config
 }
 
 // NewService is a constructor for cards service.
-func NewService(cards DB, config Config, avatars *avatars.Service) *Service {
+func NewService(cards DB, config Config) *Service {
 	return &Service{
-		cards:   cards,
-		config:  config,
-		avatars: avatars,
+		cards:  cards,
+		config: config,
 	}
 }
 
@@ -50,17 +47,7 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentage
 	if card, err = service.Generate(ctx, userID, percentageQualities); err != nil {
 		return card, ErrCards.Wrap(err)
 	}
-
-	if err = service.cards.Create(ctx, card); err != nil {
-		return card, ErrCards.Wrap(err)
-	}
-
-	var avatar avatars.Avatar
-	if avatar, err = service.avatars.Generate(ctx, card.ID, card.IsTattoo, nameImage); err != nil {
-		return card, ErrCards.Wrap(err)
-	}
-
-	return card, ErrCards.Wrap(service.avatars.Create(ctx, avatar))
+	return card, service.cards.Create(ctx, card)
 }
 
 // Generate generates card.

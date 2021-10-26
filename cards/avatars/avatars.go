@@ -60,7 +60,8 @@ type Config struct {
 	PathToOutputAvatarsLocal  string `json:"pathToOutputAvatarsLocal"`
 	PathToOutputAvatarsRemote string `json:"pathToOutputAvatarsRemote"`
 
-	FaceColorFolder string `json:"faceColorFolder"`
+	BackgroundFolder string `json:"backgroundFolder"`
+	FaceColorFolder  string `json:"faceColorFolder"`
 
 	TattooFolder     string `json:"tattooFolder"`
 	TattooTypeFolder string `json:"tattooTypeFolder"`
@@ -100,10 +101,82 @@ type Config struct {
 		Beard     int `json:"beard"`
 	} `json:"percentageFacialFeatures"`
 
-	SizePreviewImage struct {
-		Height int `json:"height"`
-		Width  int `json:"width"`
-	} `json:"sizePreviewImage"`
+	Sizes struct {
+		Background struct {
+			Size
+		} `json:"background"`
+
+		OriginalAvatar struct {
+			Size
+		} `json:"originalAvatar"`
+
+		PreviewImage struct {
+			Size
+		} `json:"previewImage"`
+	} `json:"sizes"`
+
+	IndentOriginalAvatar struct {
+		Left  int `json:"left"`
+		Above int `json:"above"`
+	} `json:"indentOriginalAvatar"`
+
+	Inscriptions struct {
+		PathToFonts string `json:"pathToFonts"`
+
+		FontColors struct {
+			Wood    string `json:"wood"`
+			Silver  string `json:"silver"`
+			Gold    string `json:"gold"`
+			Diamond string `json:"diamond"`
+		} `json:"fontColors"`
+
+		PlayerName struct {
+			FontSize  float64 `json:"fontSize"`
+			TextAlign float64 `json:"textAlign"`
+			Coordinate
+		} `json:"playerName"`
+
+		GameCharacteristics struct {
+			FontSize  float64 `json:"fontSize"`
+			TextAlign float64 `json:"textAlign"`
+
+			Tac struct {
+				Coordinate
+			} `json:"tac"`
+
+			Phy struct {
+				Coordinate
+			} `json:"phy"`
+
+			Tec struct {
+				Coordinate
+			} `json:"tec"`
+
+			Off struct {
+				Coordinate
+			} `json:"off"`
+
+			Def struct {
+				Coordinate
+			} `json:"def"`
+
+			Gk struct {
+				Coordinate
+			} `json:"gk"`
+		} `json:"gameCharacteristics"`
+	} `json:"inscriptions"`
+}
+
+// Size entity describes width and height object.
+type Size struct {
+	Width  int `json:"width"`
+	Height int `json:"height"`
+}
+
+// Coordinate entity describes x and y coordinates object.
+type Coordinate struct {
+	X float64 `json:"x"`
+	Y float64 `json:"y"`
 }
 
 // TypeImage defines the list of possible type of avatar image.

@@ -64,7 +64,6 @@ func New(logger logger.Logger, config Config, quantityOfCard int) (peer *Peer, e
 		peer.Cards.Service = cards.NewService(
 			nil,
 			config.AvatarCards.CardConfig,
-			peer.Avatars.Service,
 		)
 	}
 

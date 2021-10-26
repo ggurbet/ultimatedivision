@@ -57,7 +57,7 @@ func (service *Service) Generate(ctx context.Context, count int) ([]AvatarCards,
 			return nil, ErrAvatarCard.Wrap(err)
 		}
 
-		if avatar, err = service.avatars.Generate(ctx, avatarCard.Card.ID, avatarCard.Card.IsTattoo, strconv.Itoa(i)); err != nil {
+		if avatar, err = service.avatars.Generate(ctx, avatarCard.Card, strconv.Itoa(i)); err != nil {
 			return nil, ErrAvatarCard.Wrap(err)
 		}
 		avatarCard.OriginalURL = avatar.OriginalURL
@@ -89,7 +89,7 @@ func (service *Service) TestGenerate(ctx context.Context, count int) ([]avatars.
 			return nil, ErrAvatarCard.Wrap(err)
 		}
 
-		avatar, err := service.avatars.Generate(ctx, avatarCard.Card.ID, avatarCard.Card.IsTattoo, avatarCard.Card.ID.String())
+		avatar, err := service.avatars.Generate(ctx, avatarCard.Card, avatarCard.Card.ID.String())
 		if err != nil {
 			return nil, ErrAvatarCard.Wrap(err)
 		}

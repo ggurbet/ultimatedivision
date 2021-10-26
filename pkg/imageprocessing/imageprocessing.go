@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"regexp"
 
+	"github.com/fogleman/gg"
 	"github.com/zeebo/errs"
 )
 
@@ -54,7 +55,7 @@ func CreateLayer(path, name string) (image.Image, error) {
 }
 
 // Layering overlays image layers on the base image.
-func Layering(layers []image.Image) *image.RGBA {
+func Layering(layers []image.Image, width, height int) *image.RGBA {
 	var generalImage *image.RGBA
 	for k, layer := range layers {
 		if k == 0 {
@@ -65,7 +66,8 @@ func Layering(layers []image.Image) *image.RGBA {
 		}
 
 		if layer != nil {
-			draw.Draw(generalImage, layer.Bounds(), layer, image.Point{}, draw.Over)
+			offset := image.Pt(width, height)
+			draw.Draw(generalImage, layer.Bounds().Add(offset), layer, image.Point{}, draw.Over)
 		}
 	}
 	return generalImage
@@ -86,4 +88,32 @@ func SaveImage(fullPath string, baseImage image.Image) error {
 	}()
 
 	return nil
+}
+
+// Inscription entity describes values required to apply inscription to the image.
+type Inscription struct {
+	Img         image.Image
+	Width       int
+	Height      int
+	PathToFonts string
+	FontSize    float64
+	FontColor   string
+	Text        string
+	X           float64
+	Y           float64
+	TextAlign   float64
+}
+
+// ApplyInscription overlays the inscription on the image.
+func ApplyInscription(inscription Inscription) (image.Image, error) {
+	dc := gg.NewContext(inscription.Width, inscription.Height)
+	if err := dc.LoadFontFace(inscription.PathToFonts, inscription.FontSize); err != nil {
+		return nil, err
+	}
+
+	dc.SetHexColor(inscription.FontColor)
+	dc.DrawImage(inscription.Img, 0, 0)
+	dc.DrawStringAnchored(inscription.Text, inscription.X, inscription.Y, inscription.TextAlign, 0.5)
+	dc.Clip()
+	return dc.Image(), nil
 }
