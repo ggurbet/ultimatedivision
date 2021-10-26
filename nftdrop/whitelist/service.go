@@ -67,7 +67,7 @@ func (service *Service) GetByAddress(ctx context.Context, address cryptoutils.Ad
 
 	transactionValue := Transaction{
 		Password: whitelist.Password,
-		SmartContractAddress: SmartContractAddress{
+		Contracts: Contracts{
 			NFT:     service.config.NFT,
 			NFTSale: service.config.NFTSale,
 		},

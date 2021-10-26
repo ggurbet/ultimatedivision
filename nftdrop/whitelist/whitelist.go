@@ -47,21 +47,20 @@ type CreateWallet struct {
 
 // Config defines configuration for queue.
 type Config struct {
-	SmartContractAddress `json:"smartContractAddress"`
-
+	Contracts         `json:"contracts"`
 	pagination.Cursor `json:"cursor"`
 }
 
-// SmartContractAddress entity describes smart contract addresses.
-type SmartContractAddress struct {
+// Contracts entity describes smart contracts address.
+type Contracts struct {
 	NFT     cryptoutils.Address `json:"nft"`
 	NFTSale cryptoutils.Address `json:"nftSale"`
 }
 
-// Transaction entity describes password wallet and smart contract addresses.
+// Transaction entity describes password wallet and smart contracts address.
 type Transaction struct {
-	Password             cryptoutils.Signature `json:"password"`
-	SmartContractAddress `json:"smartContractAddress"`
+	Password  cryptoutils.Signature `json:"password"`
+	Contracts `json:"contracts"`
 }
 
 // Page holds wallets page entity which is used to show listed page of wallets.
