@@ -58,16 +58,14 @@ func (controller *Marketplace) ListActiveLots(w http.ResponseWriter, r *http.Req
 	playerName := urlQuery.Get(string(cards.FilterPlayerName))
 
 	if limitQuery != "" {
-		limit, err = strconv.Atoi(limitQuery)
-		if err != nil {
+		if limit, err = strconv.Atoi(limitQuery); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 	}
 
 	if pageQuery != "" {
-		page, err = strconv.Atoi(pageQuery)
-		if err != nil {
+		if page, err = strconv.Atoi(pageQuery); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -113,9 +111,9 @@ func (controller *Marketplace) ListActiveLots(w http.ResponseWriter, r *http.Req
 
 // GetLotByID is an endpoint that returns lot by id.
 func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 	vars := mux.Vars(r)
-	w.Header().Set("Content-Type", "application/json")
 
 	id, err := uuid.Parse(vars["id"])
 	if err != nil {
@@ -169,12 +167,11 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 
 // CreateLot is an endpoint that creates lot.
 func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
 	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
 
 	claims, err := auth.GetClaims(ctx)
 	if err != nil {
-		controller.log.Error("could not authorize user", ErrMarketplace.Wrap(err))
 		controller.serveError(w, http.StatusUnauthorized, ErrMarketplace.Wrap(err))
 		return
 	}
@@ -199,12 +196,11 @@ func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request)
 
 // PlaceBetLot is an endpoint that returns lot by id.
 func (controller *Marketplace) PlaceBetLot(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
 	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
 
 	claims, err := auth.GetClaims(ctx)
 	if err != nil {
-		controller.log.Error("could not authorize user", ErrMarketplace.Wrap(err))
 		controller.serveError(w, http.StatusUnauthorized, ErrMarketplace.Wrap(err))
 		return
 	}
@@ -237,8 +233,7 @@ func (controller *Marketplace) serveError(w http.ResponseWriter, status int, err
 
 	response.Error = err.Error()
 
-	err = json.NewEncoder(w).Encode(response)
-	if err != nil {
+	if err = json.NewEncoder(w).Encode(response); err != nil {
 		controller.log.Error("failed to write json error response", ErrMarketplace.Wrap(err))
 	}
 }

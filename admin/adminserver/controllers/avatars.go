@@ -66,8 +66,7 @@ func (controller *Avatars) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = controller.templates.Get.Execute(w, avatar)
-	if err != nil {
+	if err = controller.templates.Get.Execute(w, avatar); err != nil {
 		controller.log.Error("can not execute get avatar template", ErrAvatars.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -62,8 +62,7 @@ func (controller *Clubs) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = controller.clubs.Create(ctx, id)
-	if err != nil {
+	if _, err = controller.clubs.Create(ctx, id); err != nil {
 		controller.log.Error("could not create club", ErrClubs.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -95,8 +94,7 @@ func (controller *Clubs) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = controller.templates.List.Execute(w, club)
-	if err != nil {
+	if err = controller.templates.List.Execute(w, club); err != nil {
 		controller.log.Error("could not parse template", ErrClubs.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -114,8 +112,7 @@ func (controller *Clubs) CreateSquad(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = controller.clubs.CreateSquad(ctx, id)
-	if err != nil {
+	if _, err = controller.clubs.CreateSquad(ctx, id); err != nil {
 		controller.log.Error("could not create squad", ErrClubs.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -147,8 +144,7 @@ func (controller *Clubs) GetSquad(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = controller.templates.ListSquads.Execute(w, squad)
-	if err != nil {
+	if err = controller.templates.ListSquads.Execute(w, squad); err != nil {
 		controller.log.Error("could not parse template", ErrClubs.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -186,15 +182,13 @@ func (controller *Clubs) UpdateSquad(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = controller.templates.UpdateSquad.Execute(w, squad)
-		if err != nil {
+		if err = controller.templates.UpdateSquad.Execute(w, squad); err != nil {
 			controller.log.Error("could not parse template", ErrClubs.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	case http.MethodPost:
-		err = r.ParseForm()
-		if err != nil {
+		if err = r.ParseForm(); err != nil {
 			http.Error(w, "could not parse form", http.StatusBadRequest)
 			return
 		}
@@ -217,12 +211,12 @@ func (controller *Clubs) UpdateSquad(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = controller.clubs.UpdateSquad(ctx, squadID, clubs.Formation(newFormation), clubs.Tactic(newTactic), newCaptainID)
-		if err != nil {
+		if err = controller.clubs.UpdateSquad(ctx, squadID, clubs.Formation(newFormation), clubs.Tactic(newTactic), newCaptainID); err != nil {
 			controller.log.Error("could not update squad", ErrClubs.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
 		Redirect(w, r, "/clubs/"+clubID.String()+"/squad", http.MethodGet)
 	}
 }
@@ -250,8 +244,7 @@ func (controller *Clubs) ListSquadCards(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	err = controller.templates.ListSquadCards.Execute(w, squadCards)
-	if err != nil {
+	if err = controller.templates.ListSquadCards.Execute(w, squadCards); err != nil {
 		controller.log.Error("could not parse template", ErrClubs.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -271,15 +264,13 @@ func (controller *Clubs) Add(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		err = controller.templates.AddCard.Execute(w, squadID)
-		if err != nil {
+		if err = controller.templates.AddCard.Execute(w, squadID); err != nil {
 			controller.log.Error("could not parse template", ErrClubs.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	case http.MethodPost:
-		err = r.ParseForm()
-		if err != nil {
+		if err = r.ParseForm(); err != nil {
 			http.Error(w, "could not parse form", http.StatusBadRequest)
 			return
 		}
@@ -296,15 +287,17 @@ func (controller *Clubs) Add(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = controller.clubs.AddSquadCard(ctx, squadID, clubs.SquadCard{
+		squadCard := clubs.SquadCard{
 			Position: clubs.Position(position),
 			CardID:   cardID,
-		})
-		if err != nil {
+		}
+
+		if err = controller.clubs.AddSquadCard(ctx, squadID, squadCard); err != nil {
 			controller.log.Error("could not add card to the squad", ErrClubs.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
 		Redirect(w, r, "/clubs/squad/"+squadID.String(), http.MethodGet)
 	}
 }
@@ -336,15 +329,13 @@ func (controller *Clubs) UpdateCardPosition(w http.ResponseWriter, r *http.Reque
 			SquadID: squadID,
 		}
 
-		err = controller.templates.UpdateCardPosition.Execute(w, updateCardPosition)
-		if err != nil {
+		if err = controller.templates.UpdateCardPosition.Execute(w, updateCardPosition); err != nil {
 			controller.log.Error("could not parse template", ErrClubs.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	case http.MethodPost:
-		err = r.ParseForm()
-		if err != nil {
+		if err = r.ParseForm(); err != nil {
 			http.Error(w, "could not parse form", http.StatusBadRequest)
 			return
 		}
@@ -355,12 +346,12 @@ func (controller *Clubs) UpdateCardPosition(w http.ResponseWriter, r *http.Reque
 			return
 		}
 
-		err = controller.clubs.UpdateCardPosition(ctx, squadID, cardID, clubs.Position(newPosition))
-		if err != nil {
+		if err = controller.clubs.UpdateCardPosition(ctx, squadID, cardID, clubs.Position(newPosition)); err != nil {
 			controller.log.Error("could not update card position", ErrClubs.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
 		Redirect(w, r, "/clubs/squad/"+squadID.String(), http.MethodGet)
 	}
 }
@@ -382,8 +373,7 @@ func (controller *Clubs) DeleteCard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = controller.clubs.Delete(ctx, squadID, cardID)
-	if err != nil {
+	if err = controller.clubs.Delete(ctx, squadID, cardID); err != nil {
 		controller.log.Error("could not delete card", ErrClubs.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

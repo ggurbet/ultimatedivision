@@ -55,7 +55,7 @@ func (controller *Users) List(w http.ResponseWriter, r *http.Request) {
 	users, err := controller.users.List(ctx)
 	if err != nil {
 		controller.log.Error("could not get users list", ErrUsers.Wrap(err))
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "could not get users list", http.StatusInternalServerError)
 		return
 	}
 
@@ -73,15 +73,13 @@ func (controller *Users) Create(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		err := controller.templates.Create.Execute(w, nil)
-		if err != nil {
+		if err := controller.templates.Create.Execute(w, nil); err != nil {
 			controller.log.Error("could not execute create users template", ErrUsers.Wrap(err))
 			http.Error(w, "could not execute create users template", http.StatusInternalServerError)
 			return
 		}
 	case http.MethodPost:
-		err := r.ParseForm()
-		if err != nil {
+		if err := r.ParseForm(); err != nil {
 			http.Error(w, "could not get users form", http.StatusBadRequest)
 			return
 		}
@@ -111,8 +109,7 @@ func (controller *Users) Create(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = controller.users.Create(ctx, email, password, nickName, firstName, lastName)
-		if err != nil {
+		if err := controller.users.Create(ctx, email, password, nickName, firstName, lastName); err != nil {
 			controller.log.Error("could not create user", ErrUsers.Wrap(err))
 			http.Error(w, "could not create user", http.StatusInternalServerError)
 			return
@@ -126,14 +123,10 @@ func (controller *Users) Update(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	params := mux.Vars(r)
 	id := params["id"]
-	if id == "" {
-		http.Error(w, "id is empty", http.StatusBadRequest)
-		return
-	}
 
 	userID, err := uuid.Parse(id)
 	if err != nil {
-		http.Error(w, "could not parse uuid", http.StatusBadRequest)
+		http.Error(w, "could not parse user id", http.StatusBadRequest)
 		return
 	}
 
@@ -150,15 +143,13 @@ func (controller *Users) Update(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = controller.templates.Update.Execute(w, user)
-		if err != nil {
+		if err = controller.templates.Update.Execute(w, user); err != nil {
 			controller.log.Error("could not execute update users template", ErrUsers.Wrap(err))
 			http.Error(w, "could not execute update users template", http.StatusInternalServerError)
 			return
 		}
 	case http.MethodPost:
-		err = r.ParseForm()
-		if err != nil {
+		if err = r.ParseForm(); err != nil {
 			http.Error(w, "could not get users form", http.StatusBadRequest)
 			return
 		}
@@ -169,8 +160,7 @@ func (controller *Users) Update(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = controller.users.Update(ctx, users.Status(status), userID)
-		if err != nil {
+		if err = controller.users.Update(ctx, users.Status(status), userID); err != nil {
 			controller.log.Error("could not update users status", ErrUsers.Wrap(err))
 			http.Error(w, "could not update users status", http.StatusInternalServerError)
 			return
@@ -183,20 +173,14 @@ func (controller *Users) Update(w http.ResponseWriter, r *http.Request) {
 func (controller *Users) Delete(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	params := mux.Vars(r)
-	id := params["id"]
-	if id == "" {
-		http.Error(w, "id is empty", http.StatusBadRequest)
+
+	id, err := uuid.Parse(params["id"])
+	if err != nil {
+		http.Error(w, "could not parse user id", http.StatusBadRequest)
 		return
 	}
 
-	uuid, err := uuid.Parse(id)
-	if err != nil {
-		http.Error(w, "could not parse uuid", http.StatusBadRequest)
-		return
-	}
-
-	err = controller.users.Delete(ctx, uuid)
-	if err != nil {
+	if err = controller.users.Delete(ctx, id); err != nil {
 		controller.log.Error("could not delete user", ErrUsers.Wrap(err))
 		http.Error(w, "could not delete user", http.StatusInternalServerError)
 		return

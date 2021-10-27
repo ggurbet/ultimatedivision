@@ -30,22 +30,19 @@ type CardTemplates struct {
 
 // Cards is a mvc controller that handles all cards related views.
 type Cards struct {
-	log logger.Logger
-
-	cards *cards.Service
-
+	log       logger.Logger
+	cards     *cards.Service
 	templates CardTemplates
-
-	percentageQualities cards.PercentageQualities
+	config    cards.PercentageQualities
 }
 
 // NewCards is a constructor for cards controller.
-func NewCards(log logger.Logger, cards *cards.Service, templates CardTemplates, percentageQualities cards.PercentageQualities) *Cards {
+func NewCards(log logger.Logger, cards *cards.Service, templates CardTemplates, config cards.PercentageQualities) *Cards {
 	cardsController := &Cards{
-		log:                 log,
-		cards:               cards,
-		templates:           templates,
-		percentageQualities: percentageQualities,
+		log:       log,
+		cards:     cards,
+		templates: templates,
+		config:    config,
 	}
 
 	return cardsController
@@ -63,16 +60,14 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 	pageQuery := urlQuery.Get("page")
 
 	if limitQuery != "" {
-		limit, err = strconv.Atoi(limitQuery)
-		if err != nil {
+		if limit, err = strconv.Atoi(limitQuery); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 	}
 
 	if pageQuery != "" {
-		page, err = strconv.Atoi(pageQuery)
-		if err != nil {
+		if page, err = strconv.Atoi(pageQuery); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -107,10 +102,10 @@ func (controller *Cards) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	vars := mux.Vars(r)
 	percentageQualities := []int{
-		controller.percentageQualities.Wood,
-		controller.percentageQualities.Silver,
-		controller.percentageQualities.Gold,
-		controller.percentageQualities.Diamond,
+		controller.config.Wood,
+		controller.config.Silver,
+		controller.config.Gold,
+		controller.config.Diamond,
 	}
 
 	userID, err := uuid.Parse(vars["userId"])
@@ -121,7 +116,7 @@ func (controller *Cards) Create(w http.ResponseWriter, r *http.Request) {
 
 	if _, err := controller.cards.Create(ctx, userID, percentageQualities, strconv.Itoa((rand.Intn(99) + 1))); err != nil {
 		controller.log.Error("could not create card", ErrCards.Wrap(err))
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "could not create card", http.StatusInternalServerError)
 		return
 	}
 
@@ -133,18 +128,15 @@ func (controller *Cards) Delete(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	vars := mux.Vars(r)
 
-	if vars["id"] == "" {
-		http.Error(w, "id parameter is empty", http.StatusBadRequest)
-		return
-	}
 	id, err := uuid.Parse(vars["id"])
 	if err != nil {
 		http.Error(w, "could not parse card id", http.StatusBadRequest)
 		return
 	}
+
 	if err := controller.cards.Delete(ctx, id); err != nil {
 		controller.log.Error("could not delete card", ErrCards.Wrap(err))
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "could not delete card", http.StatusInternalServerError)
 		return
 	}
 

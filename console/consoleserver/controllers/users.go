@@ -12,7 +12,6 @@ import (
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/auth"
 	"ultimatedivision/users"
-	"ultimatedivision/users/userauth"
 )
 
 var (
@@ -44,13 +43,13 @@ func (controller *Users) GetProfile(w http.ResponseWriter, r *http.Request) {
 
 	claims, err := auth.GetClaims(ctx)
 	if err != nil {
-		controller.serveError(w, http.StatusUnauthorized, ErrClubs.Wrap(err))
+		controller.serveError(w, http.StatusUnauthorized, ErrUsers.Wrap(err))
 		return
 	}
 
 	profile, err := controller.users.GetProfile(ctx, claims.UserID)
 	if err != nil {
-		controller.serveError(w, http.StatusInternalServerError, userauth.ErrUnauthenticated.Wrap(err))
+		controller.serveError(w, http.StatusInternalServerError, ErrUsers.Wrap(err))
 		return
 	}
 
@@ -70,8 +69,7 @@ func (controller *Users) serveError(w http.ResponseWriter, status int, err error
 
 	response.Error = err.Error()
 
-	err = json.NewEncoder(w).Encode(response)
-	if err != nil {
-		controller.log.Error("failed to write json error response", AuthError.Wrap(err))
+	if err = json.NewEncoder(w).Encode(response); err != nil {
+		controller.log.Error("failed to write json error response", ErrUsers.Wrap(err))
 	}
 }

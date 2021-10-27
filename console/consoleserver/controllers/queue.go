@@ -74,8 +74,8 @@ func (controller *Queue) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = client.Conn.ReadJSON(&request); err != nil {
-		controller.serveError(client.Conn, http.StatusBadRequest, err.Error())
 		controller.log.Error("could not read JSON from websocket", ErrQueue.Wrap(err))
+		controller.serveError(client.Conn, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -83,8 +83,8 @@ func (controller *Queue) Create(w http.ResponseWriter, r *http.Request) {
 	case queue.ActionStartSearch:
 		if _, err = controller.queue.Get(client.UserID); err != nil {
 			if err = controller.queue.Create(ctx, client); err != nil {
-				controller.serveError(client.Conn, http.StatusInternalServerError, err.Error())
 				controller.log.Error("could not create user's queue", ErrQueue.Wrap(err))
+				controller.serveError(client.Conn, http.StatusInternalServerError, err.Error())
 				return
 			}
 			controller.serveError(client.Conn, http.StatusOK, "you added!")
@@ -105,8 +105,8 @@ func (controller *Queue) Create(w http.ResponseWriter, r *http.Request) {
 		controller.serveError(client.Conn, http.StatusBadRequest, "you don't have been added!")
 		return
 	default:
-		controller.serveError(client.Conn, http.StatusBadRequest, "wrong action")
 		controller.log.Error("wrong action", ErrQueue.Wrap(err))
+		controller.serveError(client.Conn, http.StatusBadRequest, "wrong action")
 		return
 	}
 }

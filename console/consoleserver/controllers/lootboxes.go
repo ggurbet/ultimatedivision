@@ -115,8 +115,7 @@ func (controller *LootBoxes) serveError(w http.ResponseWriter, status int, err e
 
 	response.Error = err.Error()
 
-	err = json.NewEncoder(w).Encode(response)
-	if err != nil {
+	if err = json.NewEncoder(w).Encode(response); err != nil {
 		controller.log.Error("failed to write json error response", ErrLootBoxes.Wrap(err))
 	}
 }

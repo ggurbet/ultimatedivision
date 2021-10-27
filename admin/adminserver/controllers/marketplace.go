@@ -70,16 +70,14 @@ func (controller *Marketplace) ListActiveLots(w http.ResponseWriter, r *http.Req
 	pageQuery := urlQuery.Get("page")
 
 	if limitQuery != "" {
-		limit, err = strconv.Atoi(limitQuery)
-		if err != nil {
+		if limit, err = strconv.Atoi(limitQuery); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 	}
 
 	if pageQuery != "" {
-		page, err = strconv.Atoi(pageQuery)
-		if err != nil {
+		if page, err = strconv.Atoi(pageQuery); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -101,8 +99,7 @@ func (controller *Marketplace) ListActiveLots(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	err = controller.templates.List.Execute(w, lotsPage)
-	if err != nil {
+	if err = controller.templates.List.Execute(w, lotsPage); err != nil {
 		controller.log.Error("can not execute list lots template", ErrMarketplace.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -132,8 +129,7 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	err = controller.templates.Get.Execute(w, lot)
-	if err != nil {
+	if err = controller.templates.Get.Execute(w, lot); err != nil {
 		controller.log.Error("can not execute get lot template", ErrMarketplace.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -155,16 +151,14 @@ func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request)
 		pageQuery := urlQuery.Get("page")
 
 		if limitQuery != "" {
-			limit, err = strconv.Atoi(limitQuery)
-			if err != nil {
+			if limit, err = strconv.Atoi(limitQuery); err != nil {
 				http.Error(w, ErrCards.Wrap(err).Error(), http.StatusBadRequest)
 				return
 			}
 		}
 
 		if pageQuery != "" {
-			page, err = strconv.Atoi(pageQuery)
-			if err != nil {
+			if page, err = strconv.Atoi(pageQuery); err != nil {
 				http.Error(w, ErrCards.Wrap(err).Error(), http.StatusBadRequest)
 				return
 			}

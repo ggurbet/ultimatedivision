@@ -50,7 +50,6 @@ func NewAdmins(log logger.Logger, admins *admins.Service, templates AdminTemplat
 // List is an endpoint that will provide a web page with all admins.
 func (controller *Admins) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-
 	admins, err := controller.admins.List(ctx)
 	if err != nil {
 		controller.log.Error("could not get admins list", ErrAdmins.Wrap(err))
@@ -58,8 +57,7 @@ func (controller *Admins) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = controller.templates.List.Execute(w, admins)
-	if err != nil {
+	if err = controller.templates.List.Execute(w, admins); err != nil {
 		controller.log.Error("can not execute list admins template", ErrAdmins.Wrap(err))
 		http.Error(w, "can not execute list admins template", http.StatusInternalServerError)
 		return
@@ -70,8 +68,7 @@ func (controller *Admins) List(w http.ResponseWriter, r *http.Request) {
 func (controller *Admins) Create(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		err := controller.templates.Create.Execute(w, nil)
-		if err != nil {
+		if err := controller.templates.Create.Execute(w, nil); err != nil {
 			controller.log.Error("could not execute create admins template", ErrAdmins.Wrap(err))
 			http.Error(w, "could not execute create admins template", http.StatusInternalServerError)
 			return
@@ -79,21 +76,24 @@ func (controller *Admins) Create(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		ctx := r.Context()
 
-		err := r.ParseForm()
-		if err != nil {
+		if err := r.ParseForm(); err != nil {
 			http.Error(w, "could not parse admin create form", http.StatusBadRequest)
 			return
 		}
 
 		email := r.FormValue("email")
-		password := r.FormValue("password")
-		if email == "" || password == "" {
-			http.Error(w, "email or password input is empty", http.StatusBadRequest)
+		if email == "" {
+			http.Error(w, "email input is empty", http.StatusBadRequest)
 			return
 		}
 
-		err = controller.admins.Create(ctx, email, []byte(password))
-		if err != nil {
+		password := r.FormValue("password")
+		if password == "" {
+			http.Error(w, "password input is empty", http.StatusBadRequest)
+			return
+		}
+
+		if err := controller.admins.Create(ctx, email, []byte(password)); err != nil {
 			controller.log.Error("could not create admin", ErrAdmins.Wrap(err))
 			http.Error(w, "could not create admin", http.StatusInternalServerError)
 			return
@@ -106,11 +106,9 @@ func (controller *Admins) Create(w http.ResponseWriter, r *http.Request) {
 // Update is an endpoint that updates admin.
 func (controller *Admins) Update(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-
 	params := mux.Vars(r)
-	idParam := params["id"]
 
-	id, err := uuid.Parse(idParam)
+	id, err := uuid.Parse(params["id"])
 	if err != nil {
 		http.Error(w, "could not parse uuid", http.StatusBadRequest)
 		return
@@ -131,23 +129,25 @@ func (controller *Admins) Update(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = controller.templates.Update.Execute(w, admin)
-		if err != nil {
+		if err = controller.templates.Update.Execute(w, admin); err != nil {
 			controller.log.Error("could not execute update admins template", ErrAdmins.Wrap(err))
 			http.Error(w, "could not execute update admins template", http.StatusInternalServerError)
 			return
 		}
 	case http.MethodPost:
-		err = r.ParseForm()
-		if err != nil {
+		if err = r.ParseForm(); err != nil {
 			http.Error(w, "could not parse admin create form", http.StatusBadRequest)
 			return
 		}
 
 		password := r.FormValue("password")
+		if password == "" {
+			http.Error(w, "password input is empty", http.StatusBadRequest)
+			return
+		}
 		passwordAgain := r.FormValue("password-again")
-		if password == "" || passwordAgain == "" {
-			http.Error(w, "empty field", http.StatusBadRequest)
+		if passwordAgain == "" {
+			http.Error(w, "password-again input is empty", http.StatusBadRequest)
 			return
 		}
 
@@ -156,8 +156,7 @@ func (controller *Admins) Update(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = controller.admins.Update(ctx, id, []byte(password))
-		if err != nil {
+		if err = controller.admins.Update(ctx, id, []byte(password)); err != nil {
 			controller.log.Error("could not update admin", ErrAdmins.Wrap(err))
 			http.Error(w, "could not update admin", http.StatusInternalServerError)
 			return

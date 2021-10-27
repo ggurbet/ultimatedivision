@@ -47,8 +47,7 @@ func NewQueue(log logger.Logger, queue *queue.Service, templates QueueTemplates)
 // List is an endpoint that will provide a web page with clients.
 func (controller *Queue) List(w http.ResponseWriter, r *http.Request) {
 	clients := controller.queue.List()
-	err := controller.templates.List.Execute(w, clients)
-	if err != nil {
+	if err := controller.templates.List.Execute(w, clients); err != nil {
 		controller.log.Error("can not execute list clients template", ErrQueue.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -77,8 +76,7 @@ func (controller *Queue) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = controller.templates.Get.Execute(w, client)
-	if err != nil {
+	if err = controller.templates.Get.Execute(w, client); err != nil {
 		controller.log.Error("can not execute get client template", ErrQueue.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

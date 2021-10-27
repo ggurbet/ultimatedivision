@@ -49,10 +49,6 @@ func NewLootBoxes(log logger.Logger, lootboxes *lootboxes.Service, templates Loo
 func (controller *LootBoxes) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	vars := mux.Vars(r)
-	if vars["id"] == "" {
-		http.Error(w, ErrLootBoxes.New("id parameter is empty").Error(), http.StatusBadRequest)
-		return
-	}
 
 	id, err := uuid.Parse(vars["id"])
 	if err != nil {
@@ -62,17 +58,14 @@ func (controller *LootBoxes) Create(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		err = controller.templates.Create.Execute(w, id)
-		if err != nil {
+		if err = controller.templates.Create.Execute(w, id); err != nil {
 			controller.log.Error("could not execute template", ErrLootBoxes.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	case http.MethodPost:
 		lootBoxType := r.FormValue("lootbox")
-
-		_, err = controller.lootboxes.Create(ctx, lootboxes.Type(lootBoxType), id)
-		if err != nil {
+		if _, err = controller.lootboxes.Create(ctx, lootboxes.Type(lootBoxType), id); err != nil {
 			controller.log.Error("could not create loot box", ErrLootBoxes.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -85,10 +78,6 @@ func (controller *LootBoxes) Create(w http.ResponseWriter, r *http.Request) {
 func (controller *LootBoxes) Open(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	vars := mux.Vars(r)
-	if vars["userID"] == "" || vars["lootboxID"] == "" {
-		http.Error(w, ErrLootBoxes.New("id parameter is empty").Error(), http.StatusBadRequest)
-		return
-	}
 
 	userID, err := uuid.Parse(vars["userID"])
 	if err != nil {
@@ -114,8 +103,7 @@ func (controller *LootBoxes) Open(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = controller.templates.ListCards.Execute(w, cards)
-	if err != nil {
+	if err = controller.templates.ListCards.Execute(w, cards); err != nil {
 		controller.log.Error("could not execute template", ErrLootBoxes.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -133,8 +121,7 @@ func (controller *LootBoxes) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = controller.templates.List.Execute(w, lootBoxes)
-	if err != nil {
+	if err = controller.templates.List.Execute(w, lootBoxes); err != nil {
 		controller.log.Error("could not execute template", ErrLootBoxes.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
