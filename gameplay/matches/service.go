@@ -206,12 +206,12 @@ func (service *Service) chooseSquad(ctx context.Context, goalByPosition map[club
 
 // Create creates new match.
 func (service *Service) Create(ctx context.Context, squad1ID uuid.UUID, squad2ID uuid.UUID, user1ID, user2ID uuid.UUID) error {
-	squadCards1, err := service.clubs.GetSquadCards(ctx, squad1ID)
+	squadCards1, err := service.clubs.ListSquadCards(ctx, squad1ID)
 	if err != nil {
 		return ErrMatches.Wrap(err)
 	}
 
-	squadCards2, err := service.clubs.GetSquadCards(ctx, squad2ID)
+	squadCards2, err := service.clubs.ListSquadCards(ctx, squad2ID)
 	if err != nil {
 		return ErrMatches.Wrap(err)
 	}
