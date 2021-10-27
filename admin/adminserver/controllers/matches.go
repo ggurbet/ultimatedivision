@@ -90,7 +90,7 @@ func (controller *Matches) Create(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = controller.matches.Create(ctx, squad1ID, squad2ID, user1ID, user2ID)
+		_, err = controller.matches.Create(ctx, squad1ID, squad2ID, user1ID, user2ID)
 		if err != nil {
 			controller.log.Error("could not create match", ErrMatches.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)

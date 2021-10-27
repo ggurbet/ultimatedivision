@@ -30,9 +30,9 @@ func IsIncludeRange(percent int) bool {
 }
 
 // Minute generates minute in given interval.
-func Minute(begin, end int) int {
+func Minute(start, end int) int {
 	rand.Seed(time.Now().UnixNano())
-	minute := begin + rand.Intn(end-begin+1)
+	minute := start + rand.Intn(end-start+1)
 
 	return minute
 }
