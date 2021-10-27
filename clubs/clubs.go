@@ -5,6 +5,7 @@ package clubs
 
 import (
 	"context"
+	"sort"
 	"time"
 
 	"github.com/google/uuid"
@@ -198,4 +199,23 @@ var FormationToPosition = map[Formation][]Position{
 	FourOneThreeTwo: {GK, LB, LCD, RCD, RB, LM, CCM, CCDM, RM, LST, RST},
 	FiveThreeTwo:    {GK, LWB, LCD, CCD, RCD, RWB, LCM, CCM, RCM, LST, RST},
 	ThreeFiveTwo:    {GK, LCD, CCD, RCD, LM, LCDM, CCAM, RCDM, RM, LST, RST},
+}
+
+// sortSquadCards sorts cards from the squad by positions.
+func sortSquadCards(cards []SquadCard) {
+	sort.Slice(cards, func(i, j int) bool {
+		return cards[i].Position < cards[j].Position
+	})
+}
+
+// convertPositions converts cards positions from 0-10 view, to positions that are present in the formation.
+func convertPositions(squadCards []SquadCard, formation Formation) {
+	for i := 0; i < len(squadCards); i++ {
+		for j := 0; j < len(FormationToPosition[formation]); j++ {
+			if squadCards[i].Position == FormationToPosition[formation][j] {
+				squadCards[i].Position = Position(j)
+				break
+			}
+		}
+	}
 }

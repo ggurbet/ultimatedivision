@@ -174,21 +174,11 @@ func (service *Service) GetSquad(ctx context.Context, clubID uuid.UUID) (Squad, 
 	return squad, ErrClubs.Wrap(err)
 }
 
-// GetSquadCards returns al cards from squad.
-func (service *Service) GetSquadCards(ctx context.Context, squadID uuid.UUID) ([]SquadCard, error) {
+// ListSquadCards returns all cards from the squad.
+func (service *Service) ListSquadCards(ctx context.Context, squadID uuid.UUID) ([]SquadCard, error) {
 	squadCards, err := service.clubs.ListSquadCards(ctx, squadID)
 	if err != nil {
 		return squadCards, ErrClubs.Wrap(err)
-	}
-
-	if len(squadCards) < squadSize {
-		for i := len(squadCards); i < squadSize; i++ {
-			var squadCard = SquadCard{
-				SquadID: squadID,
-			}
-
-			squadCards = append(squadCards, squadCard)
-		}
 	}
 
 	formation, err := service.clubs.GetFormation(ctx, squadID)
@@ -196,14 +186,32 @@ func (service *Service) GetSquadCards(ctx context.Context, squadID uuid.UUID) ([
 		return nil, ErrClubs.Wrap(err)
 	}
 
-	for i := 0; i < len(squadCards); i++ {
-		for j := 0; j < len(FormationToPosition[formation]); j++ {
-			if squadCards[i].Position == FormationToPosition[formation][j] {
-				squadCards[i].Position = Position(j)
-				break
+	convertPositions(squadCards, formation)
+
+	if len(squadCards) < squadSize {
+		for i := 0; i < squadSize; i++ {
+			var isPositionInTheSquad bool
+			for _, card := range squadCards {
+				if card.Position == Position(i) {
+					isPositionInTheSquad = true
+					break
+				}
 			}
+
+			if isPositionInTheSquad == true {
+				continue
+			}
+
+			var squadCard = SquadCard{
+				SquadID:  squadID,
+				Position: Position(i),
+			}
+
+			squadCards = append(squadCards, squadCard)
 		}
 	}
+
+	sortSquadCards(squadCards)
 
 	return squadCards, ErrClubs.Wrap(err)
 }

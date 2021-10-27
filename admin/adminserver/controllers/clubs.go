@@ -238,7 +238,7 @@ func (controller *Clubs) ListSquadCards(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	squadCards, err := controller.clubs.GetSquadCards(ctx, squadID)
+	squadCards, err := controller.clubs.ListSquadCards(ctx, squadID)
 	if err != nil {
 		controller.log.Error("could not get squad cards", ErrClubs.Wrap(err))
 		switch {
