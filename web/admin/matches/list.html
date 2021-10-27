@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Matches</title>
+</head>
+<body>
+<nav>
+  <div>
+    <ul>
+      <li><a href="/admins">Admins</a></li>
+      <li><a href="/users">Users</a></li>
+      <li><a href="/cards">Cards</a></li>
+      <li><a href="/marketplace/create">Create lot</a></li>
+      <li><a href="/matches/create">Create and play match</a></li>
+    </ul>
+  </div>
+</nav>
+<table style="width:100%">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>User1 ID</th>
+    <th>Squad1 ID</th>
+    <th>User2 ID</th>
+    <th>Squad2 ID</th>
+  </tr>
+  </thead>
+  {{range .Matches}}
+  <tr>
+    <td>{{.ID}}</td>
+    <td>{{.User1ID}}</td>
+    <td>{{.Squad1ID}}</td>
+    <td>{{.User2ID}}</td>
+    <td>{{.Squad2ID}}</td>
+    <td><a href="/matches/delete/{{.ID}}">Delete match</a></td>
+    <td><a href="/matches/{{.ID}}/goals">Get goals</a></td>
+  </tr>
+  {{end}}
+</table>
+<div style='text-align:center'>
+  {{template "pagination" .}}
+</div>
+</body>
+</html>

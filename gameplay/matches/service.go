@@ -147,9 +147,9 @@ func chooseGoalscorer(squadCards []clubs.SquadCard, goalByPosition map[clubs.Pos
 		randNumber < 100-goalByPosition[clubs.CCD]:
 		for _, card := range squadCards {
 			if card.Position == clubs.RM || card.Position == clubs.LM ||
-				card.Position == clubs.CCDM || card.Position == clubs.CCAM ||
-				card.Position == clubs.LCDM || card.Position == clubs.LCAM ||
-				card.Position == clubs.RCDM || card.Position == clubs.RCAM {
+				card.Position == clubs.CCDM ||
+				card.Position == clubs.LCDM ||
+				card.Position == clubs.RCDM {
 				cardsByPosition = append(cardsByPosition, card.CardID)
 			}
 		}
@@ -163,10 +163,14 @@ func chooseGoalscorer(squadCards []clubs.SquadCard, goalByPosition map[clubs.Pos
 		for _, card := range squadCards {
 			if card.Position == clubs.CCD || card.Position == clubs.LCD ||
 				card.Position == clubs.LB || card.Position == clubs.RCD ||
-				card.Position == clubs.RB {
+				card.Position == clubs.RB || card.Position == clubs.RWB ||
+				card.Position == clubs.LWB {
 				cardsByPosition = append(cardsByPosition, card.CardID)
 			}
 		}
+	}
+	if len(cardsByPosition) == 0 {
+		return uuid.Nil
 	}
 
 	randIndex := rand.Intn(len(cardsByPosition))

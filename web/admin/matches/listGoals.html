@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Match Goals</title>
+</head>
+<body>
+<nav>
+    <div>
+        <ul>
+            <li><a href="/admins">Admins</a></li>
+            <li><a href="/users">Users</a></li>
+            <li><a href="/cards">Cards</a></li>
+            <li><a href="/marketplace/create">Create lot</a></li>
+        </ul>
+    </div>
+</nav>
+<table style="width:100%">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Match ID</th>
+        <th>User ID</th>
+        <th>Card ID</th>
+        <th>Minute</th>
+    </tr>
+    </thead>
+    {{range .}}
+    <tr>
+        <td>{{.ID}}</td>
+        <td>{{.MatchID}}</td>
+        <td>{{.UserID}}</td>
+        <td>{{.CardID}}</td>
+        <td>{{.Minute}}</td>
+    </tr>
+    {{end}}
+</table>
+</body>
+</html>

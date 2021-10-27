@@ -96,7 +96,7 @@ type Config struct {
 		RB  int `json:"rb"`
 	} `json:"goalProbabilityByPosition"`
 
-	pagination.Cursor `json:"cursor"`
+	pagination.Cursor `json:"pagination"`
 }
 
 // Match describes match entity.

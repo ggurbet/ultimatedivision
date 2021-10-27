@@ -14,7 +14,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/clubs"
 	"ultimatedivision/pkg/pagination"
 )
 
