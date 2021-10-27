@@ -46,30 +46,6 @@
         margin: auto;
         position: relative;
     }
-
-    &__sold-scale {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 90%;
-        height: 55px;
-        margin: 40px auto;
-        background-image: url("@static/images/metaverse/sold-progress-scale-1440.png");
-        background-size: 100% 100%;
-        background-position: center;
-        background-repeat: no-repeat;
-        transition: all 0.3s;
-
-        &__text {
-            position: absolute;
-            font-family: "BaiJamjuree", sans-serif;
-            font-weight: 600;
-            font-style: normal;
-            font-size: 24px;
-            color: $metaverve-text;
-        }
-    }
 }
 
 @media (max-width: $desktopBreakPoint) {
@@ -84,11 +60,6 @@
         &__subtitle {
             font-size: 28px;
             line-height: unset;
-        }
-
-        &__sold-scale {
-            height: 55px;
-            width: 100%;
         }
     }
 }
@@ -112,27 +83,22 @@
         }
 
         &__cards {
-            width: unset;
-        }
-
-        &__sold-scale {
-            height: 55px;
-            width: 356px;
+            width: 100%;
         }
     }
 }
 
-@media (max-width: $phoneBreakPoint - 200px) {
+@media (max-width: $phoneBreakPoint - 250px) {
 
     .metaverse {
 
-        &__sold-scale {
-            width: 90%;
+        &__title {
+            font-size: 24px;
+        }
 
-            &__text {
-                font-size: 18px;
-                line-height: 22px;
-            }
+        &__subtitle {
+            font-size: 20px;
+            margin-bottom: 40px;
         }
     }
 }

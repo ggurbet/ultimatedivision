@@ -1,11 +1,10 @@
 @import "@/index.scss";
 
 .description-cards {
-    margin: 200px auto;
-    min-height: 300px;
     display: flex;
     align-items: center;
-    overflow: hidden;
+    margin: 250px auto 100px auto;
+    min-height: 300px;
     transition: all 0.3s linear;
 
     &__text-area {
@@ -49,7 +48,7 @@
 @media (max-width: $desktopBreakPoint + 100px) {
 
     .description-cards {
-        margin: 50px auto;
+        margin: 90px auto 20px auto;
 
         &__text-area {
             width: 60%;
@@ -74,6 +73,8 @@
 
     .description-cards {
         flex-direction: column;
+        position: relative;
+        overflow: none;
 
         &__text-area {
             padding: 0 10px 0 30px;
@@ -81,7 +82,13 @@
         }
 
         &__text {
-            display: none;
+            width: 85%;
+            position: absolute;
+            top: 95%;
+            font-size: 18px;
+            line-height: 22px;
+            color: #a5faff;
+            text-align: justify;
         }
 
         &__title {
@@ -92,6 +99,17 @@
         &__wrapper {
             width: 110%;
             position: relative;
+            right: -15px;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint -  250px) {
+
+    .description-cards {
+
+        &__text {
+            width: 82%;
         }
     }
 }

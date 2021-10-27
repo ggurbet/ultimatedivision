@@ -47,6 +47,7 @@ export const Footer: React.FC = () => {
                             <a
                                 key={social.id}
                                 className="footer__social-item"
+                                id={`link-${social.id}`}
                                 href={social.path}
                                 target="_blank"
                                 rel="noreferrer"

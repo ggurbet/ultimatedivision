@@ -148,6 +148,14 @@
         right: 50px;
         transition: all 0.3s;
     }
+
+    .scroll-to-top {
+        display: none;
+    }
+
+    .visible {
+        display: block;
+    }
 }
 
 @media (max-width: $desktopBreakPoint + 200px) {

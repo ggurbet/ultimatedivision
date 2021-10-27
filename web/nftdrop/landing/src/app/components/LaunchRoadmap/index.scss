@@ -35,6 +35,10 @@
 
     @media (max-width: $phoneBreakPoint) {
 
+        &__wrapper {
+            padding: 70px 30px;
+        }
+
         &__title {
             margin: 0 auto 53px auto;
             font-size: 36px;

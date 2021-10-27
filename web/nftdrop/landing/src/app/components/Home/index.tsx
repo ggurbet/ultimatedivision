@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { ScrollTop } from '../ScrollTop';
 import { AnimationImage } from '@components/common/AnimationImage';
@@ -30,6 +30,42 @@ export const Home: React.FC = () => {
         ball,
         card,
     ];
+
+    /** Max height, when ScrollToTop block must be hidden. */
+    const MAX_HEIGHT_FROM_HOME = -200;
+
+    /** Show ScrollToTop block, when user scrolls down the landing page and hide block, when user looks Home component. */
+    const changeVisibleScrollToTop = () => {
+        const homeElem = document.getElementById('home');
+
+        if (!homeElem) {
+            return;
+        }
+
+        /** Current height from top page to Home component. */
+        const heightFromTop = homeElem.getBoundingClientRect().top;
+
+        const scrollUpBlock = document.querySelector('.scroll-to-top');
+
+        if (!scrollUpBlock) {
+            return;
+        }
+
+        if (heightFromTop <= MAX_HEIGHT_FROM_HOME) {
+            scrollUpBlock.classList.add('visible');
+
+            return;
+        }
+
+        scrollUpBlock.classList.remove('visible');
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', changeVisibleScrollToTop);
+
+        return () =>
+            window.removeEventListener('scroll', changeVisibleScrollToTop);
+    }, []);
 
     return (
         <section className="home" id="home">

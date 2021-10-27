@@ -33,7 +33,7 @@ export const Projects: React.FC = () => {
 
                 <h2 className="projects__title">
                     The game was created by a team involved in the development
-                    of well-know crypto projects
+                    of well-known crypto projects
                 </h2>
                 <div className="projects__area">
                     {logos.map((logo, index) => (

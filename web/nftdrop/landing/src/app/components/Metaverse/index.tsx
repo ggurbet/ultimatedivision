@@ -49,11 +49,6 @@ export const Metaverse: React.FC = () => {
                         loading="lazy"
                     />
                 </picture>
-                <div className="metaverse__sold-scale">
-                    <span className="metaverse__sold-scale__text">
-                        Cards Sold 0/10000
-                    </span>
-                </div>
                 <MintButton />
             </div>
         </section>

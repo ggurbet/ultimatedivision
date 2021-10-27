@@ -69,7 +69,12 @@
         }
 
         .ultimatedivision-mint-btn:hover {
-            background: linear-gradient(95.3deg, rgba(122, 71, 71, 0.2) 4.05%, rgba(0, 0, 0, 0) 87.48%), #0df55c;
+            background: linear-gradient(
+                95.3deg,
+                rgba(122, 71, 71, 0.2) 4.05%,
+                rgba(0, 0, 0, 0) 87.48%
+            ),
+                #0df55c;
         }
     }
 }
@@ -155,6 +160,8 @@
                 z-index: 3;
                 order: 0;
                 flex-direction: column;
+                align-items: center;
+                justify-self: center;
                 width: 100%;
                 height: 480px;
                 top: 80px;
@@ -168,7 +175,7 @@
                     padding: 25px;
 
                     &:first-child {
-                        margin-top: 40px;
+                        margin-top: 10%;
                     }
 
                     &__icon {
@@ -198,7 +205,12 @@
             }
 
             .ultimatedivision-mint-btn:hover {
-                background: linear-gradient(95.3deg, rgba(0, 0, 0, 0.2) 4.05%, rgba(0, 0, 0, 0) 87.48%), #0df55c;
+                background: linear-gradient(
+                    95.3deg,
+                    rgba(0, 0, 0, 0.2) 4.05%,
+                    rgba(0, 0, 0, 0) 87.48%
+                ),
+                    #0df55c;
             }
         }
     }
@@ -234,13 +246,17 @@
                 display: flex;
                 flex-direction: column;
                 width: 100%;
-                height: 600px;
+                height: 100vh;
                 margin: 0 auto auto -30px;
 
                 &__item {
                     list-style-type: none;
                     text-align: left;
                     margin: 0 auto;
+
+                    &:first-child {
+                        margin-top: 35%;
+                    }
 
                     &__icon {
                         padding: 5px 5px 28px 5px;
@@ -252,6 +268,25 @@
 
             .ultimatedivision-mint-btn {
                 display: none;
+            }
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint - 200px) {
+
+    .ultimatedivision-navbar {
+
+        .wrapper {
+
+            .ultimatedivision-navbar__items-active {
+
+                &__item {
+
+                    &:first-child {
+                        margin-top: 25%;
+                    }
+                }
             }
         }
     }
