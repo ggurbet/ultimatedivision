@@ -8,17 +8,18 @@ import (
 	"ultimatedivision/cards/avatars"
 )
 
-// AvatarCards describes avatar card entity.
-type AvatarCards struct {
+// CardWithLinkToAvatar describes card entity with link to avatar.
+type CardWithLinkToAvatar struct {
 	cards.Card
 	OriginalURL string `json:"originalUrl"`
 }
 
-// Config defines values needed by generate avatar cards.
+// Config defines values needed to generate card with avatar.
 type Config struct {
 	CardConfig           cards.Config              `json:"cardConfig"`
 	PercentageQualities  cards.PercentageQualities `json:"percentageQualities"`
 	AvatarConfig         avatars.Config            `json:"avatarConfig"`
-	PathToOutputJSONFile string                    `json:"pathToOutputJSONFile"`
-	NameOutputJSONFile   string                    `json:"nameOutputJSONFile"`
+	PathToOutputJSONFile string                    `json:"pathToOutputJsonFile"`
+	NameOutputJSONFile   string                    `json:"nameOutputJsonFile"`
+	PathToNamesDataset   string                    `json:"pathToNamesDataset"`
 }
