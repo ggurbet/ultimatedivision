@@ -35,6 +35,8 @@ type DB interface {
 	ListByPlayerName(ctx context.Context, filters Filters, cursor pagination.Cursor) (Page, error)
 	// ListCardIDsByPlayerNameWhereActiveLot returns card ids where active lot from DB by player name.
 	ListCardIDsByPlayerNameWhereActiveLot(ctx context.Context, filter Filters) ([]uuid.UUID, error)
+	// GetSquadCards returns all card with characteristics from the squad from the database.
+	GetSquadCards(ctx context.Context, id uuid.UUID) ([]Card, error)
 	// UpdateStatus updates status card in the database.
 	UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error
 	// UpdateUserID updates user id card in the database.
@@ -153,7 +155,7 @@ const (
 	StatusSale Status = 1
 )
 
-// Type defines the list of possible card Typees.
+// Type defines the list of possible card Types.
 type Type string
 
 const (

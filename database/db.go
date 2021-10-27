@@ -17,6 +17,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/avatars"
 	"ultimatedivision/clubs"
+	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/queue"
@@ -200,6 +201,24 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             start_time    TIMESTAMP WITH TIME ZONE                                        NOT NULL,
             end_time      TIMESTAMP WITH TIME ZONE                                        NOT NULL,
             period        INTEGER                                                         NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS matches (
+            id        BYTEA PRIMARY KEY                             NOT NULL,
+            user1_id  BYTEA REFERENCES users(id) ON DELETE CASCADE  NOT NULL,
+            squad1_id BYTEA REFERENCES squads(id) ON DELETE CASCADE NOT NULL,
+            user2_id  BYTEA REFERENCES users(id) ON DELETE CASCADE  NOT NULL,
+            squad2_id BYTEA REFERENCES squads(id) ON DELETE CASCADE NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS match_results(
+            id       BYTEA PRIMARY KEY                              NOT NULL,
+            match_id BYTEA REFERENCES matches(id) ON DELETE CASCADE NOT NULL,
+            user_id  BYTEA REFERENCES users(id) ON DELETE CASCADE   NOT NULL,
+            card_id  BYTEA REFERENCES cards(id) ON DELETE CASCADE   NOT NULL,
+            minute   INTEGER                                        NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS places (
+            user_id BYTEA   PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+            status  VARCHAR                                                    NOT NULL
         );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)
@@ -235,12 +254,12 @@ func (db *database) Avatars() avatars.DB {
 	return &avatarsDB{conn: db.conn}
 }
 
-// Clubs provide access to clubs db.
+// Clubs provide access to accounts db.
 func (db *database) Clubs() clubs.DB {
 	return &clubsDB{conn: db.conn}
 }
 
-// LootBoxes provide access to lootboxes db.
+// LootBoxes provide access to accounts db.
 func (db *database) LootBoxes() lootboxes.DB {
 	return &lootboxesDB{conn: db.conn}
 }
@@ -248,6 +267,11 @@ func (db *database) LootBoxes() lootboxes.DB {
 // Marketplace provided access to accounts db.
 func (db *database) Marketplace() marketplace.DB {
 	return &marketplaceDB{conn: db.conn}
+}
+
+// Matches provedes access to accounts db.
+func (db *database) Matches() matches.DB {
+	return &matchesDB{conn: db.conn}
 }
 
 // Queue provided access to accounts db.

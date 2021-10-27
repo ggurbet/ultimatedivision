@@ -329,6 +329,13 @@ func (service *Service) ListByUserID(ctx context.Context, userID uuid.UUID) ([]C
 	return userCards, ErrCards.Wrap(err)
 }
 
+// GetCardsFromSquadCards returns all card with characteristics from the squad.
+func (service *Service) GetCardsFromSquadCards(ctx context.Context, id uuid.UUID) ([]Card, error) {
+	cards, err := service.cards.GetSquadCards(ctx, id)
+
+	return cards, ErrCards.Wrap(err)
+}
+
 // UpdateStatus updates status of card in database.
 func (service *Service) UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error {
 	return ErrCards.Wrap(service.cards.UpdateStatus(ctx, id, status))
@@ -416,97 +423,4 @@ func (service *Service) EffectivenessST(card Card) float64 {
 		service.config.CardEfficiencyParameters.ST.Tactics*float64(card.Tactics) +
 		service.config.CardEfficiencyParameters.ST.Technique*float64(card.Technique) +
 		service.config.CardEfficiencyParameters.ST.Offence*float64(card.Offence)
-}
-
-// RemoveIndex for remove element from slice.
-func RemoveIndex(s []clubs.SquadCard, index int) []clubs.SquadCard {
-	return append(s[:index], s[index+1:]...)
-}
-
-// EffectiveCardForPosition determines the effective card in the position.
-func (service *Service) EffectiveCardForPosition(ctx context.Context, position clubs.Position, cards []clubs.SquadCard) (Card, error) {
-	cardCoefficients := make(map[float64]Card)
-
-	for _, card := range cards {
-		card, err := service.Get(ctx, card.CardID)
-		if err != nil {
-			return card, ErrCards.Wrap(err)
-		}
-		switch position {
-		case clubs.GK:
-			coefficient := service.EffectivenessGK(card)
-			cardCoefficients[coefficient] = card
-		case clubs.CST,
-			clubs.LST,
-			clubs.RST:
-			coefficient := service.EffectivenessST(card)
-			cardCoefficients[coefficient] = card
-		case clubs.LW,
-			clubs.RW:
-			coefficient := service.EffectivenessRWorLW(card)
-			cardCoefficients[coefficient] = card
-		case clubs.RM,
-			clubs.LM:
-			coefficient := service.EffectivenessRMorLM(card)
-			cardCoefficients[coefficient] = card
-		case clubs.CCAM,
-			clubs.RCAM,
-			clubs.LCAM:
-			coefficient := service.EffectivenessCAM(card)
-			cardCoefficients[coefficient] = card
-		case clubs.CCM,
-			clubs.LCM,
-			clubs.RCM:
-			coefficient := service.EffectivenessCM(card)
-			cardCoefficients[coefficient] = card
-		case clubs.CCDM,
-			clubs.LCDM,
-			clubs.RCDM:
-			coefficient := service.EffectivenessCDM(card)
-			cardCoefficients[coefficient] = card
-		case clubs.LB,
-			clubs.RB,
-			clubs.RWB,
-			clubs.LWB:
-			coefficient := service.EffectivenessLBorRB(card)
-			cardCoefficients[coefficient] = card
-		case clubs.CCD,
-			clubs.LCD,
-			clubs.RCD:
-			coefficient := service.EffectivenessCD(card)
-			cardCoefficients[coefficient] = card
-		}
-	}
-
-	var max float64
-
-	for coeff := range cardCoefficients {
-		max = coeff
-		if coeff > max {
-			max = coeff
-		}
-	}
-
-	for key, v := range cards {
-		if cardCoefficients[max].ID == v.CardID {
-			cards = RemoveIndex(cards, key)
-		}
-	}
-
-	return cardCoefficients[max], nil
-}
-
-// CardsWithNewPositions returns cards with new position by new formation.
-func (service *Service) CardsWithNewPositions(ctx context.Context, cards []clubs.SquadCard, positions []clubs.Position) (map[clubs.Position]uuid.UUID, error) {
-	positionMap := make(map[clubs.Position]uuid.UUID)
-
-	for _, position := range positions {
-		card, err := service.EffectiveCardForPosition(ctx, position, cards)
-		if err != nil {
-			return positionMap, ErrCards.Wrap(err)
-		}
-		positionMap[position] = card.ID
-	}
-
-	return positionMap, nil
 }

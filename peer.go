@@ -20,6 +20,7 @@ import (
 	"ultimatedivision/clubs"
 	"ultimatedivision/console/consoleserver"
 	"ultimatedivision/console/emails"
+	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
@@ -54,6 +55,9 @@ type DB interface {
 
 	// Marketplace provides access to marketplace db.
 	Marketplace() marketplace.DB
+
+	// Matches provides access to matches db.
+	Matches() matches.DB
 
 	// Queue provides access to queue db.
 	Queue() queue.DB
@@ -106,6 +110,10 @@ type Config struct {
 	Queue struct {
 		queue.Config
 	} `json:"queue"`
+
+	Matches struct {
+		matches.Config
+	} `json:"matches"`
 }
 
 // Peer is the representation of a ultimatedivision.
@@ -151,6 +159,11 @@ type Peer struct {
 	Marketplace struct {
 		Service            *marketplace.Service
 		ExpirationLotChore *marketplace.Chore
+	}
+
+	// exposes matches related logic.
+	Matches struct {
+		Service *matches.Service
 	}
 
 	// exposes queue related logic.
@@ -272,6 +285,14 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Database.Marketplace(),
 			peer.Users.Service,
 			peer.Cards.Service,
+		)
+	}
+
+	{ // matches setup
+		peer.Matches.Service = matches.NewService(
+			peer.Database.Matches(),
+			config.Matches.Config,
+			peer.Clubs.Service,
 		)
 	}
 

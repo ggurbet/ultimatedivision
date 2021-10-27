@@ -6,6 +6,7 @@ package rand
 import (
 	"fmt"
 	"math/rand"
+	"time"
 )
 
 // RandomInRange randomizes numbers in the specified range.
@@ -26,4 +27,12 @@ func IsIncludeRange(percent int) bool {
 		return true
 	}
 	return false
+}
+
+// Minute generates minute in given interval.
+func Minute(begin, end int) int {
+	rand.Seed(time.Now().UnixNano())
+	minute := begin + rand.Intn(end-begin+1)
+
+	return minute
 }

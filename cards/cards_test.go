@@ -16,6 +16,7 @@ import (
 
 	"ultimatedivision"
 	"ultimatedivision/cards"
+	"ultimatedivision/clubs"
 	"ultimatedivision/database"
 	"ultimatedivision/database/dbtesting"
 	"ultimatedivision/pkg/pagination"
@@ -171,6 +172,28 @@ func TestCards(t *testing.T) {
 		Throwing:         49,
 	}
 
+	testClub := clubs.Club{
+		ID:        uuid.New(),
+		OwnerID:   user1.ID,
+		Name:      "",
+		CreatedAt: time.Now(),
+	}
+
+	testSquad := clubs.Squad{
+		ID:        uuid.New(),
+		Name:      "",
+		ClubID:    testClub.ID,
+		Formation: 1,
+		Tactic:    1,
+		CaptainID: uuid.Nil,
+	}
+
+	testSquadCard := clubs.SquadCard{
+		SquadID:  testSquad.ID,
+		CardID:   card1.ID,
+		Position: 5,
+	}
+
 	filter1 := cards.Filters{
 		Name:           cards.FilterTactics,
 		Value:          "1",
@@ -197,6 +220,7 @@ func TestCards(t *testing.T) {
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repositoryCards := db.Cards()
 		repositoryUsers := db.Users()
+		repositoryClubs := db.Clubs()
 		id := uuid.New()
 
 		t.Run("get sql no rows", func(t *testing.T) {
@@ -331,6 +355,21 @@ func TestCards(t *testing.T) {
 			card, err := repositoryCards.Get(ctx, card1.ID)
 			assert.NoError(t, err)
 			compareCards(t, card1, card)
+		})
+
+		t.Run("get cards from squad", func(t *testing.T) {
+			_, err := repositoryClubs.Create(ctx, testClub)
+			require.NoError(t, err)
+
+			_, err = repositoryClubs.CreateSquad(ctx, testSquad)
+			require.NoError(t, err)
+
+			err = repositoryClubs.AddSquadCard(ctx, testSquadCard)
+			require.NoError(t, err)
+
+			card, err := repositoryCards.GetSquadCards(ctx, testSquad.ID)
+			require.NoError(t, err)
+			compareCards(t, card[0], card1)
 		})
 
 		t.Run("delete sql no rows", func(t *testing.T) {
