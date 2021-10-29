@@ -4,14 +4,15 @@
 import React from 'react';
 
 import { RoadmapPoint } from './RoadmapPoint';
+import { AnimationImage } from '@components/common/AnimationImage';
+
+import animationFlagData from '@static/images/roadmap/flag-animation/data.json';
 
 import footer from '@static/images/roadmap/bottom.svg';
-import flag from '@static/images/roadmap/flag.svg';
 
 import './index.scss';
 
 export const Roadmap: React.FC = () => {
-
     const dataList = [
         {
             id: 1,
@@ -19,7 +20,7 @@ export const Roadmap: React.FC = () => {
             points: [
                 'Ultimate Division Metaverse MVP launch',
                 'Play to Earn mechanics available to players',
-                'UDT (Ultimate Division Token) introduced'
+                'UDT (Ultimate Division Token) introduced',
             ],
             done: true,
         },
@@ -49,19 +50,20 @@ export const Roadmap: React.FC = () => {
     return (
         <section className="roadmap">
             <div className="roadmap__wrapper">
-                <h2 className="roadmap__title">
-                    Development Roadmap
-                </h2>
+                <h2 className="roadmap__title">Development Roadmap</h2>
                 <div className="roadmap__road">
                     {dataList.map((item) => (
-                        <RoadmapPoint
-                            key={item.id} item={item} />
+                        <RoadmapPoint key={item.id} item={item} />
                     ))}
                 </div>
-                <img
-                    className="roadmap__flag"
-                    src={flag}
-                    alt=""
+                <AnimationImage
+                    className={'roadmap__flag'}
+                    heightFrom={1000}
+                    heightTo={-300}
+                    loop={true}
+                    animationData={animationFlagData}
+                    animationImages={[]}
+                    isNeedScrollListener={false}
                 />
             </div>
             <img
@@ -69,6 +71,6 @@ export const Roadmap: React.FC = () => {
                 src={footer}
                 alt="bottom texture"
             />
-        </section >
+        </section>
     );
 };
