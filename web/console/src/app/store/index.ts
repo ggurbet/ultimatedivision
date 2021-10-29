@@ -7,12 +7,14 @@ import { cardsReducer } from '@/app/store/reducers/cards';
 import { clubReducer } from '@/app/store/reducers/club';
 import { lootboxReducer } from '@/app/store/reducers/lootboxes';
 import { marketplaceReducer } from '@/app/store/reducers/marketplace';
+import { usersReducer } from './reducers/users';
 
 const reducer = combineReducers({
     cardsReducer,
     clubReducer,
     lootboxReducer,
     marketplaceReducer,
+    usersReducer,
 });
 
 export const store = createStore(reducer, applyMiddleware(thunk));

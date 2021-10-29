@@ -35,7 +35,7 @@ export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch
         },
     ];
 
-    const handleAnimation = async () => {
+    const handleAnimation = async() => {
         // TODO: need add id lootbox from BD after be create endpoint fetch lootboxex.
         await dispatch(openLootbox({ id: data.id, type: data.type }));
         handleOpening(true);

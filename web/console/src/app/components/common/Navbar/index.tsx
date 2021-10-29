@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 
 import { RouteConfig } from '@/app/router';
 
-import { DropdownIcon, CloseDropdownIcon } from '@/app/static/img/Navbar';
+import { CloseDropdownIcon, DropdownIcon } from '@/app/static/img/Navbar';
 
 import ultimate from '@static/img/Navbar/ultimate.svg';
 

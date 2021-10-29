@@ -4,6 +4,11 @@
 import { lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+const SignIn = lazy(() => import('@/app/views/SignIn'));
+const SignUp = lazy(() => import('@/app/views/SignUp'));
+const ChangePassword = lazy(() => import('@/app/views/ChangePassword'));
+const ConfirmEmail = lazy(() => import('@/app/views/ConfirmEmail'));
+const RecoverPassword = lazy(() => import('@/app/views/RecoverPassword'));
 const MarketPlace = lazy(() => import('@/app/views/MarketPlacePage'));
 const Club = lazy(() => import('@/app/views/ClubPage'));
 const Card = lazy(() => import('@/app/views/CardPage'));
@@ -30,7 +35,7 @@ export class ComponentRoutes {
         public component: React.FC<any>,
         public exact: boolean,
         public children?: ComponentRoutes[]
-    ) {}
+    ) { }
     /** Method for creating child subroutes path */
     public with(
         child: ComponentRoutes,
@@ -50,6 +55,31 @@ export class ComponentRoutes {
 
 /** Route config implementation */
 export class RouteConfig {
+    public static SignIn: ComponentRoutes = new ComponentRoutes(
+        '/sign-in',
+        SignIn,
+        true
+    );
+    public static SignUp: ComponentRoutes = new ComponentRoutes(
+        '/sign-up',
+        SignUp,
+        true
+    );
+    public static ResetPassword: ComponentRoutes = new ComponentRoutes(
+        '/change-password',
+        ChangePassword,
+        true
+    );
+    public static ConfirmEmail: ComponentRoutes = new ComponentRoutes(
+        '/email/confirm',
+        ConfirmEmail,
+        true,
+    );
+    public static RecoverPassword: ComponentRoutes = new ComponentRoutes(
+        '/recover-password',
+        RecoverPassword,
+        true,
+    );
     public static MarketPlace: ComponentRoutes = new ComponentRoutes(
         '/marketplace',
         MarketPlace,
@@ -132,7 +162,7 @@ export class RouteConfig {
     );
     public static Default: ComponentRoutes = new ComponentRoutes(
         '/',
-        MarketPlace,
+        SignIn,
         true
     );
     public static routes: ComponentRoutes[] = [
@@ -143,6 +173,11 @@ export class RouteConfig {
         RouteConfig.Card,
         RouteConfig.Lot,
         RouteConfig.Store,
+        RouteConfig.SignIn,
+        RouteConfig.SignUp,
+        RouteConfig.ResetPassword,
+        RouteConfig.ConfirmEmail,
+        RouteConfig.RecoverPassword,
         RouteConfig.Whitepaper.addChildren([
             RouteConfig.Summary,
             RouteConfig.GameMechanics,

@@ -11,17 +11,16 @@ const Store = () => {
 
     return (
         <section className="store">
-                {!isOpening ?
-                    <>
-                        <h1 className="store__title">Box</h1>
-                        <LootboxSelection handleOpening={handleOpening} />
-                    </>
-                    :
-                    <LootboxContent handleOpening={handleOpening} />
-                }
+            {!isOpening ?
+                <>
+                    <h1 className="store__title">Box</h1>
+                    <LootboxSelection handleOpening={handleOpening} />
+                </>
+                :
+                <LootboxContent handleOpening={handleOpening} />
+            }
         </section>
     );
 };
-
 
 export default Store;
