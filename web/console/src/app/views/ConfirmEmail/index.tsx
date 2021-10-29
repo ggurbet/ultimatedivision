@@ -7,7 +7,7 @@ import { UserClient } from '@/api/user';
 import { UserService } from '@/user/service';
 
 import { useQueryToken } from '@/app/hooks/useQueryToken';
-import { RouteConfig } from '@/app/router';
+import { AuthRouteConfig } from '@/app/routes';
 
 /** TODO: Rework this view after design solution */
 const ConfirmEmail: React.FC = () => {
@@ -26,7 +26,7 @@ const ConfirmEmail: React.FC = () => {
             await users.checkEmailToken(token);
 
             await setTimeout(() => {
-                location.pathname = RouteConfig.SignIn.path;
+                location.pathname = AuthRouteConfig.SignIn.path;
             }, DELAY);
         } catch (error: any) {
             /** TODO: handles error */

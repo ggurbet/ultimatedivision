@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 
 
 import { registerUser } from '@/app/store/actions/users';
-import { RouteConfig } from '@/app/router';
+import { AuthRouteConfig } from '@/app/routes';
 
 import { Validator } from '@/user/validation';
 
@@ -82,7 +82,7 @@ const SignUp: React.FC = () => {
                 firstName,
                 lastName,
             }));
-            location.pathname = RouteConfig.SignIn.path;
+            location.pathname = AuthRouteConfig.SignIn.path;
         } catch (error) {
             /** TODO: it will be reworked with notification system */
         };
@@ -189,7 +189,7 @@ const SignUp: React.FC = () => {
                         Already have an account?
                         <Link
                             className="register__sign-up__description__information__sign"
-                            to={RouteConfig.SignIn.path}
+                            to={AuthRouteConfig.SignIn.path}
                         >
                             Sign in
                         </Link>

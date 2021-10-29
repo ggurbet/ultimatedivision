@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { RouteConfig } from '@/app/router';
+import { RouteConfig } from '@/app/routes';
 import { DropdownStyle } from '@/app/utils/dropdownStyle';
 import ultimate from '@static/img/Navbar/ultimate.svg';
 import triangle from '@static/img/FootballFieldPage/triangle.svg';
@@ -19,7 +19,7 @@ export const AboutMenu = () => {
 
     const path = useLocation().pathname;
     const shouldBeShowed =
-    path.includes('tokenomics') || path.includes('whitepaper');
+        path.includes('tokenomics') || path.includes('whitepaper');
 
     const menuFields = {
         whitepaper: [
@@ -52,13 +52,13 @@ export const AboutMenu = () => {
                 style={{ height: whitePaperStyle.listHeight }}
             >
                 {RouteConfig.Whitepaper.children &&
-          RouteConfig.Whitepaper.children.map((item, index) =>
-              <li key={index} className="about-menu__whitepaper-item">
-                  <Link to={item.path} className="about-menu__whitepaper-link">
-                      {menuFields.whitepaper[index]}
-                  </Link>
-              </li>
-          )}
+                    RouteConfig.Whitepaper.children.map((item, index) =>
+                        <li key={index} className="about-menu__whitepaper-item">
+                            <Link to={item.path} className="about-menu__whitepaper-link">
+                                {menuFields.whitepaper[index]}
+                            </Link>
+                        </li>
+                    )}
             </ul>
             <div
                 className="about-menu__tokenomics"
@@ -77,13 +77,13 @@ export const AboutMenu = () => {
                 style={{ height: tokenomicsStyle.listHeight }}
             >
                 {RouteConfig.Tokenomics.children &&
-          RouteConfig.Tokenomics.children.map((item, index) =>
-              <li key={index} className="about-menu__tokenomics-item">
-                  <Link to={item.path} className="about-menu__tokenomics-link">
-                      {menuFields.tokenomics[index]}
-                  </Link>
-              </li>
-          )}
+                    RouteConfig.Tokenomics.children.map((item, index) =>
+                        <li key={index} className="about-menu__tokenomics-item">
+                            <Link to={item.path} className="about-menu__tokenomics-link">
+                                {menuFields.tokenomics[index]}
+                            </Link>
+                        </li>
+                    )}
             </ul>
         </div>
         :

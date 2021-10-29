@@ -5,9 +5,8 @@ import { SetStateAction, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-
 import { changeUserPassword } from '@/app/store/actions/users';
-import { RouteConfig } from '@/app/router';
+import { AuthRouteConfig, RouteConfig } from '@/app/routes';
 import { Validator } from '@/user/validation';
 
 import { UserDataArea } from '@components/common/UserDataArea';
@@ -93,7 +92,7 @@ const ChangePassword: React.FC = () => {
             <div className="register__reset">
                 <Link
                     className="register__reset__go-back"
-                    to={RouteConfig.SignIn.path}>
+                    to={AuthRouteConfig.SignIn.path}>
                     <img
                         alt="go back"
                         src={goBack}

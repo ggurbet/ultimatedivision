@@ -4,8 +4,7 @@
 import { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
-import { Navbar } from '@components/common/Navbar';
-import { Routes } from '@/app/router';
+import { Routes } from '@/app/routes';
 import { AboutMenu } from '@components/common/AboutMenu';
 
 /** initial App setup */
@@ -14,7 +13,6 @@ export function App() {
         <Suspense fallback={<div>Loading...</div>}>
             {/** TODO: LoadingPage */}
             <BrowserRouter basename="/">
-                <Navbar />
                 <AboutMenu />
                 <Routes />
             </BrowserRouter>

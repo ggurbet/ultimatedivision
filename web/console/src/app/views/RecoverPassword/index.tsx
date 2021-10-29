@@ -3,16 +3,15 @@
 
 import { SetStateAction, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
 
 import { UserClient } from '@/api/user';
 import { UserService } from '@/user/service';
 import { Validator } from '@/user/validation';
-import { RouteConfig } from '@/app/router';
+import { AuthRouteConfig } from '@/app/routes';
 
 import { useQueryToken } from '@/app/hooks/useQueryToken';
 
-import { recoverPassword } from '@/app/store/actions/users';
+import {recoverUserPassword } from '@/app/store/actions/users';
 
 import { UserDataArea } from '@components/common/UserDataArea';
 
@@ -71,19 +70,9 @@ const RecoverPassword: React.FC = () => {
 
         return isValidForm;
     };
-    /** implements recover of user password */
-    const recoverUserPassword = (password: string) =>
-        async function(dispatch: Dispatch) {
-            try {
-                await users.recoverPassword(password);
-                dispatch(recoverPassword(password));
-                location.pathname = RouteConfig.SignIn.path;
-            } catch (error: any) {
-                /** TODO: it will be reworked with notification system */
-            }
-        };
+
     /** sign in user data */
-    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!validateForm()) {
@@ -92,10 +81,10 @@ const RecoverPassword: React.FC = () => {
 
         try {
             await dispatch(recoverUserPassword(password));
-            location.pathname = RouteConfig.SignIn.path;
-        } catch (error) {
+            location.pathname = AuthRouteConfig.SignIn.path;
+        } catch (error: any) {
             /** TODO: it will be reworked with notification system */
-        };
+        }
     };
     /** user datas for recover password */
     const passwords = [

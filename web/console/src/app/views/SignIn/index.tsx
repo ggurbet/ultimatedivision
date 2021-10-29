@@ -5,7 +5,7 @@ import { SetStateAction, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { RouteConfig } from '@/app/router';
+import { AuthRouteConfig, RouteConfig } from '@/app/routes';
 
 import { Validator } from '@/user/validation';
 
@@ -121,7 +121,7 @@ const SignIn: React.FC = () => {
                             validate={data.validate}
                         />
                         <Link
-                            to={RouteConfig.ResetPassword.path}
+                            to={AuthRouteConfig.ResetPassword.path}
                             className="register__sign-in__sign-form__forgot-password"
                         >
                             Forgot Password?
@@ -163,7 +163,7 @@ const SignIn: React.FC = () => {
                         Don't have an account?
                         <Link
                             className="register__sign-in__description__information__sign"
-                            to={RouteConfig.SignUp.path}
+                            to={AuthRouteConfig.SignUp.path}
                         >
                             Sign up
                         </Link>

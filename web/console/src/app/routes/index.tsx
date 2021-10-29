@@ -17,6 +17,7 @@ const FootballField = lazy(() => import('@/app/views/FootballFieldPage'));
 const WhitePaper = lazy(() => import('@/app/views/WhitePaperPage'));
 const Tokenomics = lazy(() => import('@/app/views/TokenomicsPage'));
 const Store = lazy(() => import('@/app/views/StorePage'));
+const Navbar = lazy(() => import('@/app/components/common/Navbar'));
 
 import Summary from '@components/WhitePaper/Summary';
 import GameMechanics from '@components/WhitePaper/GameMechanics';
@@ -51,10 +52,9 @@ export class ComponentRoutes {
 
         return this;
     }
-}
-
-/** Route config implementation */
-export class RouteConfig {
+};
+/** Route config that implements auth actions */
+export class AuthRouteConfig {
     public static SignIn: ComponentRoutes = new ComponentRoutes(
         '/sign-in',
         SignIn,
@@ -80,6 +80,23 @@ export class RouteConfig {
         RecoverPassword,
         true,
     );
+    public static Default: ComponentRoutes = new ComponentRoutes(
+        '/',
+        SignIn,
+        true
+    );
+    public static routes: ComponentRoutes[] = [
+        AuthRouteConfig.ConfirmEmail,
+        AuthRouteConfig.Default,
+        AuthRouteConfig.RecoverPassword,
+        AuthRouteConfig.ResetPassword,
+        AuthRouteConfig.SignIn,
+        AuthRouteConfig.SignUp,
+    ];
+};
+
+/** Route config implementation */
+export class RouteConfig {
     public static MarketPlace: ComponentRoutes = new ComponentRoutes(
         '/marketplace',
         MarketPlace,
@@ -160,24 +177,13 @@ export class RouteConfig {
         Fund,
         true
     );
-    public static Default: ComponentRoutes = new ComponentRoutes(
-        '/',
-        SignIn,
-        true
-    );
     public static routes: ComponentRoutes[] = [
-        RouteConfig.Default,
         RouteConfig.FootballField,
         RouteConfig.MarketPlace,
         RouteConfig.Club,
         RouteConfig.Card,
         RouteConfig.Lot,
         RouteConfig.Store,
-        RouteConfig.SignIn,
-        RouteConfig.SignUp,
-        RouteConfig.ResetPassword,
-        RouteConfig.ConfirmEmail,
-        RouteConfig.RecoverPassword,
         RouteConfig.Whitepaper.addChildren([
             RouteConfig.Summary,
             RouteConfig.GameMechanics,
@@ -191,11 +197,11 @@ export class RouteConfig {
             RouteConfig.Fund,
         ]),
     ];
-}
+};
 
 export const Routes = () =>
     <Switch>
-        {RouteConfig.routes.map((route, index) =>
+        {AuthRouteConfig.routes.map((route, index) =>
             <Route
                 key={index}
                 path={route.path}
@@ -203,5 +209,15 @@ export const Routes = () =>
                 exact={route.exact}
             />
         )}
-    </Switch>;
-
+        <Route>
+            <Navbar />
+            {RouteConfig.routes.map((route, index) =>
+                <Route
+                    key={index}
+                    path={route.path}
+                    component={route.component}
+                    exact={route.exact}
+                />
+            )}
+        </Route>
+    </Switch >;

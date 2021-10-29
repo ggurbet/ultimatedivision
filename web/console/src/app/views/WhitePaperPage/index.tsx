@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import { Route, Switch } from 'react-router-dom';
-import { ComponentRoutes, RouteConfig } from '@/app/router';
+import { ComponentRoutes, RouteConfig } from '@/app/routes';
 
 import './index.scss';
 
