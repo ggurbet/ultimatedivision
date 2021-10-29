@@ -175,6 +175,20 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, name stri
 		layers = append(layers, layer)
 	}
 
+	// T-shirtType
+	pathToTshirtType := filepath.Join(pathToFaceType, service.config.TshirtFolder)
+	if count, err = imageprocessing.LayerComponentsCount(pathToTshirtType, service.config.TshirtFile); err != nil {
+		return avatar, ErrNoAvatarFile.Wrap(err)
+	}
+	if avatar.Tshirt, err = rand.RandomInRange(count); err != nil {
+		return avatar, ErrAvatar.Wrap(err)
+	}
+
+	if layer, err = imageprocessing.CreateLayer(pathToTshirtType, fmt.Sprintf(service.config.TshirtFile, avatar.Tshirt)); err != nil {
+		return avatar, ErrNoAvatarFile.Wrap(err)
+	}
+	layers = append(layers, layer)
+
 	// BeardType
 	if rand.IsIncludeRange(service.config.PercentageFacialFeatures.Beard) {
 		pathToBeardType := filepath.Join(pathToNoseType, service.config.BeardFolder)
@@ -191,31 +205,12 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, name stri
 		layers = append(layers, layer)
 	}
 
-	// T-shirtType
-	pathToTshirtType := filepath.Join(pathToFaceType, service.config.TshirtFolder)
-	if count, err = imageprocessing.LayerComponentsCount(pathToTshirtType, service.config.TshirtFile); err != nil {
-		return avatar, ErrNoAvatarFile.Wrap(err)
-	}
-	if avatar.Tshirt, err = rand.RandomInRange(count); err != nil {
-		return avatar, ErrAvatar.Wrap(err)
-	}
-
-	if layer, err = imageprocessing.CreateLayer(pathToTshirtType, fmt.Sprintf(service.config.TshirtFile, avatar.Tshirt)); err != nil {
-		return avatar, ErrNoAvatarFile.Wrap(err)
-	}
-	layers = append(layers, layer)
-
 	// EyeLaserType
 	if rand.IsIncludeRange(service.config.PercentageFacialFeatures.EyeLaser) {
-		pathToEyeLaserType := filepath.Join(pathToFaceType, service.config.EyeLaserFolder)
-		if count, err = imageprocessing.LayerComponentsCount(pathToEyeLaserType, service.config.EyeLaserTypeFolder); err != nil {
-			return avatar, ErrNoAvatarFile.Wrap(err)
-		}
-		if avatar.EyeLaserType, err = rand.RandomInRange(count); err != nil {
-			return avatar, ErrAvatar.Wrap(err)
-		}
+		pathToEyeLaserFolder := filepath.Join(pathToFaceType, service.config.EyeLaserFolder)
+		avatar.EyeLaserType = avatar.EyeBrowsType
 
-		pathToEyeLaserType = filepath.Join(pathToEyeLaserType, fmt.Sprintf(service.config.EyeLaserTypeFolder, avatar.EyeLaserType))
+		pathToEyeLaserType := filepath.Join(pathToEyeLaserFolder, fmt.Sprintf(service.config.EyeLaserTypeFolder, avatar.EyeLaserType))
 		if layer, err = imageprocessing.CreateLayer(pathToEyeLaserType, fmt.Sprintf(service.config.EyeLaserTypeFile, avatar.EyeLaserType)); err != nil {
 			return avatar, ErrNoAvatarFile.Wrap(err)
 		}

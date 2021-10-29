@@ -64,7 +64,19 @@ func (service *Service) Generate(ctx context.Context, count int) ([]CardWithLink
 			return nil, ErrCardWithLinkToAvatar.Wrap(err)
 		}
 
-		if avatar, err = service.avatars.Generate(ctx, cardWithAvatar.Card, strconv.Itoa(i)); err != nil {
+		for len(allNames) < count {
+			if err = generateName(service.config.PathToNamesDataset, allNames); err != nil {
+				return nil, ErrCardWithLinkToAvatar.Wrap(err)
+			}
+		}
+
+		for name := range allNames {
+			cardWithAvatar.PlayerName = name
+			delete(allNames, name)
+			break
+		}
+
+		if avatar, err = service.avatars.Generate(ctx, cardWithAvatar.Card, strconv.Itoa(i+1)); err != nil {
 			return nil, ErrCardWithLinkToAvatar.Wrap(err)
 		}
 		cardWithAvatar.OriginalURL = avatar.OriginalURL
@@ -72,22 +84,53 @@ func (service *Service) Generate(ctx context.Context, count int) ([]CardWithLink
 		cardsWithLinkToAvatar = append(cardsWithLinkToAvatar, cardWithAvatar)
 	}
 
-	for len(allNames) < count {
-		err = generateName(service.config.PathToNamesDataset, allNames)
-		if err != nil {
-			return nil, ErrCardWithLinkToAvatar.Wrap(err)
-		}
+	return cardsWithLinkToAvatar, nil
+}
+
+// TestGenerate generates test version avatar cards.
+func (service *Service) TestGenerate(ctx context.Context, count int) ([]avatars.Avatar, error) {
+	var (
+		err     error
+		avatars []avatars.Avatar
+	)
+
+	id := uuid.New()
+	percentageQualities := []int{
+		service.config.PercentageQualities.Wood,
+		service.config.PercentageQualities.Silver,
+		service.config.PercentageQualities.Gold,
+		service.config.PercentageQualities.Diamond,
 	}
 
+	allNames := make(map[string]struct{}, count)
+
 	for i := 0; i < count; i++ {
+		var avatarCard CardWithLinkToAvatar
+		if avatarCard.Card, err = service.cards.Generate(ctx, id, percentageQualities); err != nil {
+			return nil, ErrCardWithLinkToAvatar.Wrap(err)
+		}
+
+		for len(allNames) < count {
+			if err = generateName(service.config.PathToNamesDataset, allNames); err != nil {
+				return nil, ErrCardWithLinkToAvatar.Wrap(err)
+			}
+		}
+
 		for name := range allNames {
-			cardsWithLinkToAvatar[i].PlayerName = name
+			avatarCard.PlayerName = name
 			delete(allNames, name)
 			break
 		}
+
+		avatar, err := service.avatars.Generate(ctx, avatarCard.Card, avatarCard.Card.ID.String())
+		if err != nil {
+			return nil, ErrCardWithLinkToAvatar.Wrap(err)
+		}
+
+		avatars = append(avatars, avatar)
 	}
 
-	return cardsWithLinkToAvatar, nil
+	return avatars, nil
 }
 
 // generateName generates name of card.
@@ -122,36 +165,4 @@ func generateName(path string, names map[string]struct{}) error {
 	names[name] = struct{}{}
 
 	return ErrCardWithLinkToAvatar.Wrap(err)
-}
-
-// TestGenerate generates test version avatar cards.
-func (service *Service) TestGenerate(ctx context.Context, count int) ([]avatars.Avatar, error) {
-	var (
-		err     error
-		avatars []avatars.Avatar
-	)
-
-	id := uuid.New()
-	percentageQualities := []int{
-		service.config.PercentageQualities.Wood,
-		service.config.PercentageQualities.Silver,
-		service.config.PercentageQualities.Gold,
-		service.config.PercentageQualities.Diamond,
-	}
-
-	for i := 0; i < count; i++ {
-		var avatarCard CardWithLinkToAvatar
-		if avatarCard.Card, err = service.cards.Generate(ctx, id, percentageQualities); err != nil {
-			return nil, ErrCardWithLinkToAvatar.Wrap(err)
-		}
-
-		avatar, err := service.avatars.Generate(ctx, avatarCard.Card, avatarCard.Card.ID.String())
-		if err != nil {
-			return nil, ErrCardWithLinkToAvatar.Wrap(err)
-		}
-
-		avatars = append(avatars, avatar)
-	}
-
-	return avatars, nil
 }
