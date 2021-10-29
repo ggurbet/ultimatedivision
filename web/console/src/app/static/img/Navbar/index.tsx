@@ -14,7 +14,9 @@ export function DropdownIcon() {
         </svg>
     );
 };
-/** CloseDropDown Icon */
+
+
+/** Dropdown close icon */
 export function CloseDropdownIcon() {
     return (
         <svg

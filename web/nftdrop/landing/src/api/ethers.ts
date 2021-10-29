@@ -4,7 +4,7 @@
 import { APIClient } from '.';
 
 export class EthersClient extends APIClient {
-    private readonly ROOT_PATH = 'http://localhost:8086/api/v0/whitelist/'
+    private readonly ROOT_PATH = '/api/v0/whitelist/'
 
     public async getAddress(wallet: string) {
         const response = await this.http.get(`${this.ROOT_PATH}${wallet}`);

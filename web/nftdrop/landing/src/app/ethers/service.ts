@@ -17,6 +17,7 @@ export class Service {
     public async getAddress(wallet: string) {
         return await this.client.getAddress(wallet);
     }
+
     /** Gets current wallet address. */
     public async getWallet() {
         const signer = await this.provider.getSigner();
@@ -28,13 +29,12 @@ export class Service {
     public async getLastTokenId(wallet: string, abi: any[]) {
         const address = await this.getAddress(wallet);
         const contract = await new ethers.Contract(
-            address.smartContractAddress.nft,
+            address.contracts.nft,
             abi
         );
         const signer = await this.provider.getSigner();
         const connect = await contract.connect(signer);
         const totalSupply = await connect.functions.totalSupply();
-
         return parseInt(totalSupply[0]._hex, 16);
     }
 
@@ -47,7 +47,7 @@ export class Service {
         const signer = await this.provider.getSigner();
         const address = await this.getAddress(wallet);
         const contract = await new ethers.Contract(
-            address.smartContractAddress.nftSale,
+            address.contracts.nftSale,
             abi
         );
         const connect = await contract.connect(signer);
@@ -58,17 +58,18 @@ export class Service {
             address.password.slice(-2)
         )}${address.password.slice(0, address.password.length - 2)}`;
         const gasLimit = await signer.estimateGas({
-            to: address.smartContractAddress.nftSale,
+            to: address.contracts.nftSale,
             data,
             value: currentPrice[0],
         });
-        const transaction = await signer.sendTransaction({
-            to: address.smartContractAddress.nftSale,
+        await signer.sendTransaction({
+            to: address.contracts.nftSale,
             data,
             gasLimit,
             chainId: 3,
             value: currentPrice[0],
         });
+
     }
 
     public async getBalance(id: string) {
@@ -81,4 +82,5 @@ export class Service {
             console.log(error.message);
         }
     }
+
 }

@@ -12,8 +12,20 @@ import { Description } from '@components/Description';
 import { Metaverse } from '@components/Metaverse';
 import { Authors } from '@components/Authors';
 
+import { ToastContainer } from 'react-toastify';
+
 export const App = () => (
     <main className="main">
+        <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            pauseOnHover
+        />
         <Navbar />
         <Home />
         <LaunchDate />
