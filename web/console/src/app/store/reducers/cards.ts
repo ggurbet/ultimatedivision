@@ -14,7 +14,7 @@ class CardsState {
     /** class implementation */
     constructor(
         public cardsPage: CardsPage,
-        public openedCard: Card,
+        public card: Card,
     ) { };
 };
 
@@ -39,7 +39,7 @@ export const cardsReducer = (cardsState: CardsState = new CardsState(cardsPage, 
     case USER_CARD:
         return {
             ...cardsState,
-            openedCard: action.card,
+            card: action.card,
         };
     default:
         return cardsState;

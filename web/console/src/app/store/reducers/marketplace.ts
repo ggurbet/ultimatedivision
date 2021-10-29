@@ -10,7 +10,7 @@ class MarketplaceState {
     /** default state implementation */
     constructor(
         public marketplacePage: MarketPlacePage,
-        public openedCard: Card,
+        public card: Card,
     ) { };
 };
 
@@ -29,9 +29,9 @@ const page = {
 };
 
 const marketplacePage = new MarketPlacePage([], page);
-const openedCard = new Card();
+const card = new Card();
 
-export const marketplaceReducer = (marketplaceState: MarketplaceState = new MarketplaceState(marketplacePage, openedCard), action: any = {}) => {
+export const marketplaceReducer = (marketplaceState: MarketplaceState = new MarketplaceState(marketplacePage, card), action: any = {}) => {
     switch (action.type) {
     case GET_SELLING_CARDS:
         return {
@@ -41,7 +41,7 @@ export const marketplaceReducer = (marketplaceState: MarketplaceState = new Mark
     case MARKETPLACE_CARD:
         return {
             ...marketplaceState,
-            openedCard: action.card,
+            card: action.card,
         };
     default:
         return marketplaceState;

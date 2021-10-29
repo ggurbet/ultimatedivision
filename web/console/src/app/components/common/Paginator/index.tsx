@@ -41,9 +41,14 @@ export const Paginator: React.FC<{ getCardsOnPage: ({ selectedPage, limit }: Pag
     const POS_STEP_FROM_CURRENT_PAGE: number = 2;
     const FIRST_PAGE: number = 1;
 
-    /** dispatch getCardsOnPage thunk with parameters: page and default limit value */
+    /** inplements opening current cards on selected page */
     async function getCards(selectedPage: number) {
-        await dispatch(getCardsOnPage({ selectedPage, limit: CARDS_ON_PAGE }));
+        try {
+            /** dispatch getCardsOnPage thunk with parameters: page and default limit value */
+            await dispatch(getCardsOnPage({ selectedPage, limit: CARDS_ON_PAGE }));
+        } catch (error: any) {
+            /** TODO: it will be reworked with notification system */
+        };
     };
 
     const pages: number[] = [];
@@ -138,27 +143,27 @@ export const Paginator: React.FC<{ getCardsOnPage: ({ selectedPage, limit }: Pag
     const onPageChange = (type: string, pageNumber: number = currentPage): void => {
         const STEP_FROM_CURRENT_PAGE = 1;
         switch (type) {
-        case 'next page':
-            if (pageNumber < pages.length) {
-                setCurrentPage(pageNumber + STEP_FROM_CURRENT_PAGE);
-            }
-            populatePages();
+            case 'next page':
+                if (pageNumber < pages.length) {
+                    setCurrentPage(pageNumber + STEP_FROM_CURRENT_PAGE);
+                }
+                populatePages();
 
-            return;
-        case 'previous page':
-            if (pageNumber > SECOND_PAGE_INDEX) {
-                setCurrentPage(pageNumber - STEP_FROM_CURRENT_PAGE);
-            }
-            populatePages();
+                return;
+            case 'previous page':
+                if (pageNumber > SECOND_PAGE_INDEX) {
+                    setCurrentPage(pageNumber - STEP_FROM_CURRENT_PAGE);
+                }
+                populatePages();
 
-            return;
-        case 'change page':
-            setCurrentPage(pageNumber);
-            populatePages();
+                return;
+            case 'change page':
+                setCurrentPage(pageNumber);
+                populatePages();
 
-            return;
-        default:
-            populatePages();
+                return;
+            default:
+                populatePages();
         }
     };
 

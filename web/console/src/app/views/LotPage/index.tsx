@@ -4,6 +4,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+
 import { RootState } from '@/app/store';
 import { openMarketplaceCard } from '@/app/store/actions/marketplace';
 import { FootballerCardIllustrations } from '@/app/components/common/Card/CardIllustrations';
@@ -15,12 +16,20 @@ import './index.scss';
 
 const Lot: React.FC = () => {
     const dispatch = useDispatch();
-    const card = useSelector((state: RootState) => state.marketplaceReducer.openedCard);
+    const { card } = useSelector((state: RootState) => state.marketplaceReducer);
 
-    const { id }: {id: string} = useParams();
+    const { id }: { id: string } = useParams();
+    /** implements opening new card */
+    async function openCard() {
+        try {
+            await dispatch(openMarketplaceCard(id));
+        } catch (error: any) {
+            /** TODO: it will be reworked with notification system */
+        };
+    };
 
     useEffect(() => {
-        dispatch(openMarketplaceCard(id));
+        openCard();
     }, []);
 
     return (
