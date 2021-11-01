@@ -14,6 +14,7 @@ import (
 	"ultimatedivision/nftdrop"
 	"ultimatedivision/nftdrop/database/dbtesting"
 	"ultimatedivision/nftdrop/subscribers"
+	"ultimatedivision/pkg/pagination"
 )
 
 func TestEmails(t *testing.T) {
@@ -25,6 +26,11 @@ func TestEmails(t *testing.T) {
 	subscriber2 := subscribers.Subscriber{
 		Email:     "3560876@gmail.com",
 		CreatedAt: time.Now(),
+	}
+
+	cursor := pagination.Cursor{
+		Limit: 2,
+		Page:  1,
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db nftdrop.DB) {
@@ -43,11 +49,11 @@ func TestEmails(t *testing.T) {
 			err := repository.Create(ctx, subscriber2)
 			require.NoError(t, err)
 
-			allUsers, err := repository.List(ctx)
+			allUsers, err := repository.List(ctx, cursor)
 			assert.NoError(t, err)
-			assert.Equal(t, len(allUsers), 2)
-			compareEmails(t, subscriber1, allUsers[0])
-			compareEmails(t, subscriber2, allUsers[1])
+			assert.Equal(t, len(allUsers.Subscribers), 2)
+			compareEmails(t, subscriber1, allUsers.Subscribers[0])
+			compareEmails(t, subscriber2, allUsers.Subscribers[1])
 		})
 
 		t.Run("delete", func(t *testing.T) {

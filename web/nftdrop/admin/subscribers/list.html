@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Portal | Subscribers</title>
+</head>
+<body>
+<table style="width:100%">
+  <thead>
+  <tr>
+    <th>Email</th>
+  </tr>
+  </thead>
+  {{range .Subscribers}}
+  <tr>
+    <td>
+      {{.Email}}
+    </td>
+    <td>
+      <a href="/subscribers/delete/{{.Email}}">Delete</a>
+    </td>
+  </tr>
+  {{end}}
+</table>
+<br>
+<div style='text-align:center'>
+  {{template "pagination" .}}
+</div>
+</body>
+</html>

@@ -12,6 +12,7 @@ import (
 
 	"ultimatedivision/internal/mail"
 	"ultimatedivision/nftdrop/subscribers"
+	"ultimatedivision/pkg/pagination"
 )
 
 // ErrSubscribers indicates that there was an error in the database.
@@ -25,10 +26,14 @@ type subscribersDB struct {
 }
 
 // List returns all subscribers from the data base.
-func (subscribersDB *subscribersDB) List(ctx context.Context) ([]subscribers.Subscriber, error) {
-	rows, err := subscribersDB.conn.QueryContext(ctx, "SELECT email, created_at FROM subscribers")
+func (subscribersDB *subscribersDB) List(ctx context.Context, cursor pagination.Cursor) (subscribers.Page, error) {
+	var subscribersPage subscribers.Page
+	offset := (cursor.Page - 1) * cursor.Limit
+	query := `SELECT email, created_at FROM subscribers LIMIT $1 OFFSET $2`
+
+	rows, err := subscribersDB.conn.QueryContext(ctx, query, cursor.Limit, offset)
 	if err != nil {
-		return nil, ErrSubscribers.Wrap(err)
+		return subscribersPage, ErrSubscribers.Wrap(err)
 	}
 	defer func() {
 		err = errs.Combine(err, rows.Close())
@@ -39,16 +44,18 @@ func (subscribersDB *subscribersDB) List(ctx context.Context) ([]subscribers.Sub
 		var subscriber subscribers.Subscriber
 		err := rows.Scan(&subscriber.Email, &subscriber.CreatedAt)
 		if err != nil {
-			return nil, subscribers.ErrSubscribers.Wrap(err)
+			return subscribersPage, subscribers.ErrSubscribers.Wrap(err)
 		}
 
 		dataSubscribers = append(dataSubscribers, subscriber)
 	}
 	if err = rows.Err(); err != nil {
-		return nil, ErrSubscribers.Wrap(err)
+		return subscribersPage, ErrSubscribers.Wrap(err)
 	}
 
-	return dataSubscribers, nil
+	subscribersPage, err = subscribersDB.listPaginated(ctx, cursor, dataSubscribers)
+
+	return subscribersPage, ErrSubscribers.Wrap(err)
 }
 
 // GetByEmail returns subscriber by email from the data base.
@@ -89,4 +96,44 @@ func (subscribersDB *subscribersDB) Delete(ctx context.Context, email string) er
 	_, err := subscribersDB.conn.ExecContext(ctx, "DELETE FROM subscribers WHERE email=$1", email)
 
 	return ErrSubscribers.Wrap(err)
+}
+
+// listPaginated returns paginated list of subscribers.
+func (subscribersDB *subscribersDB) listPaginated(ctx context.Context, cursor pagination.Cursor, subscribersList []subscribers.Subscriber) (subscribers.Page, error) {
+	var subscribersPage subscribers.Page
+	offset := (cursor.Page - 1) * cursor.Limit
+
+	totalCount, err := subscribersDB.totalCount(ctx)
+	if err != nil {
+		return subscribersPage, ErrSubscribers.Wrap(err)
+	}
+
+	pageCount := totalCount / cursor.Limit
+	if totalCount%cursor.Limit != 0 {
+		pageCount++
+	}
+
+	subscribersPage = subscribers.Page{
+		Subscribers: subscribersList,
+		Page: pagination.Page{
+			Offset:      offset,
+			Limit:       cursor.Limit,
+			CurrentPage: cursor.Page,
+			PageCount:   pageCount,
+			TotalCount:  totalCount,
+		},
+	}
+
+	return subscribersPage, nil
+}
+
+// totalCount counts all the subscribers in the table.
+func (subscribersDB *subscribersDB) totalCount(ctx context.Context) (int, error) {
+	var count int
+	query := `SELECT COUNT(*) FROM subscribers`
+	err := subscribersDB.conn.QueryRowContext(ctx, query).Scan(&count)
+	if errors.Is(err, sql.ErrNoRows) {
+		return 0, subscribers.ErrNoSubscriber.Wrap(err)
+	}
+	return count, ErrSubscribers.Wrap(err)
 }

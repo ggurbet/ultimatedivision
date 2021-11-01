@@ -20,6 +20,7 @@ import (
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/templatefuncs"
 	"ultimatedivision/nftdrop/admin/adminserver/controllers"
+	"ultimatedivision/nftdrop/subscribers"
 	"ultimatedivision/nftdrop/whitelist"
 	"ultimatedivision/pkg/auth"
 )
@@ -54,14 +55,15 @@ type Server struct {
 	cookieAuth  *auth.CookieAuth
 
 	templates struct {
-		auth      controllers.AuthTemplates
-		admin     controllers.AdminTemplates
-		whitelist controllers.WhitelistTemplates
+		auth        controllers.AuthTemplates
+		admins      controllers.AdminTemplates
+		whitelist   controllers.WhitelistTemplates
+		subscribers controllers.SubscribersTemplates
 	}
 }
 
 // NewServer is a constructor for admin web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, whitelist *whitelist.Service) (*Server, error) {
+func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, whitelist *whitelist.Service, subscribers *subscribers.Service) (*Server, error) {
 	server := &Server{
 		log:    log,
 		config: config,
@@ -78,25 +80,31 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 		return nil, Error.Wrap(err)
 	}
 
-	router := mux.NewRouter().StrictSlash(true)
+	router := mux.NewRouter()
 	authController := controllers.NewAuth(server.log, server.authService, server.cookieAuth, server.templates.auth)
 	router.HandleFunc("/login", authController.Login).Methods(http.MethodPost, http.MethodGet)
 	router.HandleFunc("/logout", authController.Logout).Methods(http.MethodPost)
 
-	adminsRouter := router.PathPrefix("/admins").Subrouter().StrictSlash(true)
+	adminsRouter := router.PathPrefix("/admins").Subrouter()
 	adminsRouter.Use(server.withAuth)
-	adminsController := controllers.NewAdmins(log, admins, server.templates.admin)
+	adminsController := controllers.NewAdmins(log, admins, server.templates.admins)
 	adminsRouter.HandleFunc("", adminsController.List).Methods(http.MethodGet)
 	adminsRouter.HandleFunc("/create", adminsController.Create).Methods(http.MethodGet, http.MethodPost)
 	adminsRouter.HandleFunc("/update/{id}", adminsController.Update).Methods(http.MethodGet, http.MethodPost)
 
-	whitelistRouter := router.PathPrefix("/whitelist").Subrouter().StrictSlash(true)
+	whitelistRouter := router.PathPrefix("/whitelist").Subrouter()
 	whitelistRouter.Use(server.withAuth)
 	whitelistController := controllers.NewWhitelist(log, whitelist, server.templates.whitelist)
 	whitelistRouter.HandleFunc("", whitelistController.List).Methods(http.MethodGet)
 	whitelistRouter.HandleFunc("/create", whitelistController.Create).Methods(http.MethodGet, http.MethodPost)
 	whitelistRouter.HandleFunc("/delete/{address}", whitelistController.Delete).Methods(http.MethodGet)
 	whitelistRouter.HandleFunc("/set-password", whitelistController.SetPassword).Methods(http.MethodGet, http.MethodPost)
+
+	subscribersRouter := router.PathPrefix("/subscribers").Subrouter()
+	subscribersRouter.Use(server.withAuth)
+	subscribersController := controllers.NewSubscribers(log, subscribers, server.templates.subscribers)
+	subscribersRouter.HandleFunc("", subscribersController.List).Methods(http.MethodGet)
+	subscribersRouter.HandleFunc("/delete/{email}", subscribersController.Delete).Methods(http.MethodGet)
 
 	server.server = http.Server{
 		Handler: router,
@@ -138,15 +146,15 @@ func (server *Server) initializeTemplates() (err error) {
 		return err
 	}
 
-	server.templates.admin.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "list.html"))
+	server.templates.admins.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "list.html"))
 	if err != nil {
 		return err
 	}
-	server.templates.admin.Create, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "create.html"))
+	server.templates.admins.Create, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "create.html"))
 	if err != nil {
 		return err
 	}
-	server.templates.admin.Update, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "update.html"))
+	server.templates.admins.Update, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "admins", "update.html"))
 	if err != nil {
 		return err
 	}
@@ -166,6 +174,16 @@ func (server *Server) initializeTemplates() (err error) {
 		return err
 	}
 	server.templates.whitelist.SetPassword, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "whitelist", "setPassword.html"))
+	if err != nil {
+		return err
+	}
+	server.templates.subscribers.List, err = template.New("list.html").Funcs(template.FuncMap{
+		"Iter": templatefuncs.Iter,
+		"Inc":  templatefuncs.Inc,
+		"Dec":  templatefuncs.Dec,
+	}).ParseFiles(
+		filepath.Join(server.config.StaticDir, "subscribers", "list.html"),
+		filepath.Join(server.config.StaticDir, "subscribers", "pagination.html"))
 	if err != nil {
 		return err
 	}

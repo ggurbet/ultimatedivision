@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/zeebo/errs"
+
+	"ultimatedivision/pkg/pagination"
 )
 
 // ErrNoSubscriber indicated that subscriber does not exist.
@@ -20,7 +22,7 @@ type DB interface {
 	// Create creates a subscriber and writes to the database.
 	Create(ctx context.Context, email Subscriber) error
 	// List returns all subscriber from the data base.
-	List(ctx context.Context) ([]Subscriber, error)
+	List(ctx context.Context, cursor pagination.Cursor) (Page, error)
 	// Delete deletes a subscriber in the database.
 	Delete(ctx context.Context, email string) error
 	// GetByEmail returns subscriber by email from the data base.
@@ -36,4 +38,15 @@ type Subscriber struct {
 // CreateSubscriberFields for create subscriber.
 type CreateSubscriberFields struct {
 	Email string `json:"email"`
+}
+
+// Page holds subscribers page entity which is used to show listed page of subscribers.
+type Page struct {
+	Subscribers []Subscriber    `json:"subscribers"`
+	Page        pagination.Page `json:"page"`
+}
+
+// Config defines configuration for pagination.
+type Config struct {
+	pagination.Cursor `json:"cursor"`
 }

@@ -57,6 +57,10 @@ type Config struct {
 	Whitelist struct {
 		whitelist.Config
 	} `json:"whitelist"`
+
+	Subscribers struct {
+		subscribers.Config
+	} `json:"subscribers"`
 }
 
 // Peer is the representation of a nftdrop.
@@ -109,7 +113,10 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 	}
 
 	{ // subscribers setup
-		peer.Subscribers.Service = subscribers.NewService(peer.Database.Subscribers())
+		peer.Subscribers.Service = subscribers.NewService(
+			peer.Database.Subscribers(),
+			config.Subscribers.Config,
+		)
 	}
 
 	{ // admins setup
@@ -137,6 +144,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Admins.Auth,
 			peer.Admins.Service,
 			peer.Whitelist.Service,
+			peer.Subscribers.Service,
 		)
 		if err != nil {
 			return nil, err
