@@ -1,8 +1,9 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { Card } from '@/card';
 import { Radar } from 'react-chartjs-2';
+
+import { Card } from '@/card';
 
 import './index.scss';
 

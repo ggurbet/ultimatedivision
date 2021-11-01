@@ -1,13 +1,13 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
+
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { RouteConfig } from '@/app/routes';
-
 import { CloseDropdownIcon, DropdownIcon } from '@/app/static/img/Navbar';
-
 import ultimate from '@static/img/Navbar/ultimate.svg';
+
+import { RouteConfig } from '@/app/routes';
 
 import './index.scss';
 

@@ -3,10 +3,12 @@
 
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FieldControl } from '@/app/types/club';
-import { RootState } from '@/app/store';
-import { DropdownStyle } from '@/app/utils/dropdownStyle';
+
 import triangle from '@static/img/FootballFieldPage/triangle.svg';
+
+import { RootState } from '@/app/store';
+import { FieldControl } from '@/app/types/club';
+import { DropdownStyle } from '@/app/utils/dropdownStyle';
 
 import './index.scss';
 

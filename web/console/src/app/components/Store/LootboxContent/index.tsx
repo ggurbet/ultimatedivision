@@ -2,8 +2,9 @@
 // See LICENSE for copying information.
 
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { LootboxOpening } from './LootboxOpening';
+
 import { LootboxKeeping } from './LootboxKeeping';
+import { LootboxOpening } from './LootboxOpening';
 
 import './index.scss';
 

@@ -1,9 +1,9 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import webkitCards from '@static/images/description/cardsGroup.png';
 import cards from '@static/images/description/cardsGroup.webp';
 import mobileCards from '@static/images/description/mobile-cards.png';
+import webkitCards from '@static/images/description/cardsGroup.png';
 
 import './index.scss';
 

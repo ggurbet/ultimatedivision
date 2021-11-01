@@ -1,12 +1,12 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import webkitField from '@static/images/description/field.png';
-import webkitFieldMobile from '@static/images/description/field-mobile.png';
-import webkitFieldTablet from '@static/images/description/field-tablet.png';
 import field from '@static/images/description/field.webp';
 import fieldMobile from '@static/images/description/field-mobile.webp';
 import fieldTablet from '@static/images/description/field-tablet.webp';
+import webkitField from '@static/images/description/field.png';
+import webkitFieldMobile from '@static/images/description/field-mobile.png';
+import webkitFieldTablet from '@static/images/description/field-tablet.png';
 
 import './index.scss';
 

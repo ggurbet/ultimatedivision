@@ -2,12 +2,15 @@
 // See LICENSE for copying information.
 
 import { Link } from 'react-router-dom';
-import { Lot } from '@/marketplace';
+
 import { PlayerCard } from '@components/common/PlayerCard';
+
 import currentBid
     from '@static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/bid.svg';
 import priceGoldIcon
     from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';
+
+import { Lot } from '@/marketplace';
 
 import './index.scss';
 

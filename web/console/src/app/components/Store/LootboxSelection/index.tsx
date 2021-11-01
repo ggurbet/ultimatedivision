@@ -2,10 +2,13 @@
 // See LICENSE for copying information.
 
 import { Dispatch, SetStateAction } from 'react';
-import { LootboxStats, LootboxTypes } from '@/app/types/lootbox';
+
+import { LootboxCard } from './LootboxCard';
+
 import box from '@static/img/StorePage/BoxCard/box.svg';
 import coolBox from '@static/img/StorePage/BoxCard/coolBox.svg';
-import { LootboxCard } from './LootboxCard';
+
+import { LootboxStats, LootboxTypes } from '@/app/types/lootbox';
 
 import './index.scss';
 

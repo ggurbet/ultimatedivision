@@ -3,11 +3,13 @@
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { FootballFieldControlsArea } from '@/app/components/FootballField/FootballFieldControlsArea';
 import { PlayingAreaFootballerCard } from '@components/FootballField/PlayingAreaFootballerCard';
-import { SquadCard } from '@/club';
-import { Card } from '@/card';
+
 import { RootState } from '@/app/store';
+import { Card } from '@/card';
+import { SquadCard } from '@/club';
 import {
     cardSelectionVisibility,
     choosePosition,
@@ -146,8 +148,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
                                         : undefined
                                 }
                                 key={index}
-                                className={`playing-area__${formation}__${
-                                    card ? 'card' : 'empty-card'
+                                className={`playing-area__${formation}__${card ? 'card' : 'empty-card'
                                 }`}
                                 onClick={() => handleClick(index)}
                                 onDragStart={(e) => dragStart(e, index)}
@@ -155,11 +156,11 @@ export const FootballFieldPlayingArea: React.FC = () => {
                                 draggable={true}
                             >
                                 {card &&
-                  <PlayingAreaFootballerCard
-                      card={card}
-                      index={index}
-                      place={'PlayingArea'}
-                  />
+                                    <PlayingAreaFootballerCard
+                                        card={card}
+                                        index={index}
+                                        place={'PlayingArea'}
+                                    />
                                 }
                             </div>
                         );
@@ -175,13 +176,13 @@ export const FootballFieldPlayingArea: React.FC = () => {
                                 key={index}
                             >
                                 {card &&
-                  <img
-                      // If data exist it has maininfo, but TS do not let me use it even with check
-                      /** TODO: check for undefined will removed after correct Card type */
-                      src={card.style && card.style.shadow}
-                      alt="card shadow"
-                      className={`playing-area__${formation}-shadows__shadow`}
-                  />
+                                    <img
+                                        // If data exist it has maininfo, but TS do not let me use it even with check
+                                        /** TODO: check for undefined will removed after correct Card type */
+                                        src={card.style && card.style.shadow}
+                                        alt="card shadow"
+                                        className={`playing-area__${formation}-shadows__shadow`}
+                                    />
                                 }
                             </div>
                         );

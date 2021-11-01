@@ -1,9 +1,11 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
-import { FieldControl } from '@/app/types/club';
+
 import { FootballFieldControl } from
     '@/app/components/FootballField/FootballFieldControlsArea/FootballFieldControl';
+
 import { setCaptain, setFormation, setTactic } from '@/app/store/actions/club';
+import { FieldControl } from '@/app/types/club';
 
 import './index.scss';
 

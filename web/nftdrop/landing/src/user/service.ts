@@ -1,7 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { User } from '.';
 import { UserClient } from '@/api/user';
 
 /** exposes all user related logic  */

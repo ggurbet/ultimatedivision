@@ -3,8 +3,8 @@
 
 import React from 'react';
 
-import { RoadmapPoint } from './RoadmapPoint';
 import { AnimationImage } from '@components/common/AnimationImage';
+import { RoadmapPoint } from './RoadmapPoint';
 
 import animationFlagData from '@static/images/roadmap/flag-animation/data.json';
 

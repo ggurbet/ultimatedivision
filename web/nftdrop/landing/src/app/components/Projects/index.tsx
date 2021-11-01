@@ -3,14 +3,14 @@
 
 import React from 'react';
 
+import affinidi from '@static/images/projects/affinidi.svg';
+import elixir from '@static/images/projects/elixir.svg';
+import bloom from '@static/images/projects/bloom.svg';
 import consensys from '@static/images/projects/consensys.svg';
+import near from '@static/images/projects/near.svg';
 import nem from '@static/images/projects/nem.svg';
 import storj from '@static/images/projects/storj.svg';
-import near from '@static/images/projects/near.svg';
-import elixir from '@static/images/projects/elixir.svg';
-import affinidi from '@static/images/projects/affinidi.svg';
 import trustana from '@static/images/projects/trustana.svg';
-import bloom from '@static/images/projects/bloom.svg';
 
 import './index.scss';
 

@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 
 import { MintButton } from '@components/common/MintButton';
 
-import NavBarLogo from '@static/images/navbar/navbar-logo.png';
 import { Cross, DropdownNavBar } from '@static/images/navbar/svg';
+import NavBarLogo from '@static/images/navbar/navbar-logo.png';
 
 import './index.scss';
 

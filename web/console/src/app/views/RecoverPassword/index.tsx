@@ -11,7 +11,7 @@ import { AuthRouteConfig } from '@/app/routes';
 
 import { useQueryToken } from '@/app/hooks/useQueryToken';
 
-import {recoverUserPassword } from '@/app/store/actions/users';
+import { recoverUserPassword } from '@/app/store/actions/users';
 
 import { UserDataArea } from '@components/common/UserDataArea';
 
@@ -72,7 +72,7 @@ const RecoverPassword: React.FC = () => {
     };
 
     /** sign in user data */
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!validateForm()) {

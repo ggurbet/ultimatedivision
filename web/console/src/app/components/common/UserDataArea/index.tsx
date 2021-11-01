@@ -6,14 +6,14 @@ import { SetStateAction, useEffect, useState } from 'react';
 import { useDebounce } from '@/app/hooks/useDebounce';
 
 export const UserDataArea: React.FC<{
-    value: string,
-    placeHolder: string,
-    onChange: any,
-    className: string,
-    type: string,
-    error: SetStateAction<string | null>,
-    clearError: any,
-    validate: (value: string) => boolean,
+    value: string;
+    placeHolder: string;
+    onChange: any;
+    className: string;
+    type: string;
+    error: SetStateAction<string | null>;
+    clearError: any;
+    validate: (value: string) => boolean;
 }> = ({
     value,
     placeHolder,

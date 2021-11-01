@@ -35,6 +35,7 @@ export class Service {
         const signer = await this.provider.getSigner();
         const connect = await contract.connect(signer);
         const totalSupply = await connect.functions.totalSupply();
+
         return parseInt(totalSupply[0]._hex, 16);
     }
 
@@ -62,6 +63,7 @@ export class Service {
             data,
             value: currentPrice[0],
         });
+
         await signer.sendTransaction({
             to: address.contracts.nftSale,
             data,

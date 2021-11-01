@@ -1,10 +1,8 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import React from 'react';
-
-import twitter from '@static/images/footer/twitter.svg';
 import discord from '@static/images/footer/discord.svg';
+import twitter from '@static/images/footer/twitter.svg';
 
 import './index.scss';
 

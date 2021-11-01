@@ -1,10 +1,10 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useSelector } from 'react-redux';
 import { Doughnut } from 'react-chartjs-2';
-import { RootState } from '@/app/store';
+
 import { Card } from '@/card';
+
 import currency from '@static/img/FootballerCardPage/currency.svg';
 
 import './index.scss';
@@ -14,7 +14,6 @@ export const FootballerCardPrice: React.FC<{card: Card}> = ({ card }) => {
     const FULL_VALUE_STATISTIC_SCALE = 100;
 
     const priceData = card.cardPrice;
-    // @ts-ignore
     const prpValue: number = priceData.prp;
 
     return (

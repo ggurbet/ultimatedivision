@@ -3,11 +3,11 @@
 
 import React, { SetStateAction, useState } from 'react';
 
-import { Validator } from '@/user/validation';
+import { UserDataArea } from '@components/common/UserDataArea';
+
 import { UserClient } from '@/api/user';
 import { UserService } from '@/user/service';
-
-import { UserDataArea } from '@components/common/UserDataArea';
+import { Validator } from '@/user/validation';
 
 import './index.scss';
 

@@ -1,8 +1,9 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { CardField } from '@/card';
 import { Doughnut } from 'react-chartjs-2';
+
+import { CardField } from '@/card';
 
 import './index.scss';
 

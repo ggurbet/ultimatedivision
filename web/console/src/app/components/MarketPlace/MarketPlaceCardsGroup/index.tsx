@@ -1,8 +1,9 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { Lot } from '@/marketplace';
 import { MarketPlaceFootballerCard } from '@components/MarketPlace/MarketPlaceCardsGroup/MarketPlaceFootballerCard';
+
+import { Lot } from '@/marketplace';
 
 import './index.scss';
 

@@ -3,6 +3,7 @@
 
 import { FootballerCardIllustrationsDiagram }
     from '@/app/components/common/Card/CardIllustrationsDiagram';
+
 import { Card } from '@/card';
 
 import './index.scss';
