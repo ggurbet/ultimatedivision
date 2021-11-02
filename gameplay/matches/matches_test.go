@@ -89,6 +89,16 @@ func TestMatches(t *testing.T) {
 		Squad2ID: testSquad2.ID,
 	}
 
+	testMatchUpdated := matches.Match{
+		ID:          uuid.New(),
+		User1ID:     testUser1.ID,
+		Squad1ID:    testSquad1.ID,
+		User1Points: 3,
+		User2ID:     testUser2.ID,
+		Squad2ID:    testSquad2.ID,
+		User2Points: 0,
+	}
+
 	testMatchGoal1 := matches.MatchGoals{
 		ID:      uuid.New(),
 		MatchID: testMatch.ID,
@@ -163,6 +173,25 @@ func TestMatches(t *testing.T) {
 			matchGoalsDB, err := repositoryMatches.ListMatchGoals(ctx, testMatch.ID)
 			require.NoError(t, err)
 			compareMatchGoals(t, matchGoalsDB, []matches.MatchGoals{testMatchGoal1, testMatchGoal2})
+		})
+
+		t.Run("update sql no rows", func(t *testing.T) {
+			testMatchUpdated.ID = uuid.New()
+			err := repositoryMatches.UpdateMatch(ctx, testMatchUpdated)
+			require.Error(t, err)
+			assert.Equal(t, true, matches.ErrNoMatch.Has(err))
+		})
+
+		t.Run("update", func(t *testing.T) {
+			testMatchUpdated.ID = testMatch.ID
+			err := repositoryMatches.UpdateMatch(ctx, testMatchUpdated)
+			require.NoError(t, err)
+		})
+
+		t.Run("delete sql no rows", func(t *testing.T) {
+			err := repositoryMatches.Delete(ctx, uuid.New())
+			require.Error(t, err)
+			assert.Equal(t, true, matches.ErrNoMatch.Has(err))
 		})
 
 		t.Run("delete", func(t *testing.T) {

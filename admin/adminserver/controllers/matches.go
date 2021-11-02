@@ -187,6 +187,11 @@ func (controller *Matches) Delete(w http.ResponseWriter, r *http.Request) {
 
 	err = controller.matches.Delete(ctx, matchID)
 	if err != nil {
+		if matches.ErrNoMatch.Has(err) {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
 		controller.log.Error("could not delete match", ErrMatches.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

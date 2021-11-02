@@ -25,6 +25,8 @@ type DB interface {
 	Get(ctx context.Context, id uuid.UUID) (Match, error)
 	// ListMatches returns page of matches from the database.
 	ListMatches(ctx context.Context, cursor pagination.Cursor) (Page, error)
+	// UpdateMatch updates the number of points that users received for a played match.
+	UpdateMatch(ctx context.Context, match Match) error
 	// Delete deletes match from the database.
 	Delete(ctx context.Context, id uuid.UUID) error
 	// AddGoals adds new goal in the match.
@@ -97,15 +99,21 @@ type Config struct {
 	} `json:"goalProbabilityByPosition"`
 
 	pagination.Cursor `json:"pagination"`
+
+	NumberOfPointsForWin    int `json:"numberOfPointsForWin"`
+	NumberOfPointsForDraw   int `json:"numberOfPointsForDraw"`
+	NumberOfPointsForLosing int `json:"numberOfPointsForLosing"`
 }
 
 // Match describes match entity.
 type Match struct {
-	ID       uuid.UUID `json:"id"`
-	User1ID  uuid.UUID `json:"user1Id"`
-	Squad1ID uuid.UUID `json:"squad1Id"`
-	User2ID  uuid.UUID `json:"user2Id"`
-	Squad2ID uuid.UUID `json:"squad2Id"`
+	ID          uuid.UUID `json:"id"`
+	User1ID     uuid.UUID `json:"user1Id"`
+	Squad1ID    uuid.UUID `json:"squad1Id"`
+	User1Points int       `json:"user1Points"`
+	User2ID     uuid.UUID `json:"user2Id"`
+	Squad2ID    uuid.UUID `json:"squad2Id"`
+	User2Points int       `json:"user2Points"`
 }
 
 // MatchGoals defines goals scored by clubs.

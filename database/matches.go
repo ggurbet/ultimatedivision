@@ -7,7 +7,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
@@ -31,17 +30,18 @@ type matchesDB struct {
 
 // Create inserts match in the database.
 func (matchesDB *matchesDB) Create(ctx context.Context, match matches.Match) error {
-	query := `INSERT INTO matches(id, user1_id, squad1_id, user2_id, squad2_id)
-              VALUES($1,$2,$3, $4, $5)`
+	query := `INSERT INTO matches(id, user1_id, squad1_id, user1_points, user2_id, squad2_id, user2_points)
+              VALUES($1,$2,$3,$4,$5,$6,$7)`
 
-	_, err := matchesDB.conn.ExecContext(ctx, query, match.ID, match.User1ID, match.Squad1ID, match.User2ID, match.Squad2ID)
+	_, err := matchesDB.conn.ExecContext(ctx, query, match.ID, match.User1ID,
+		match.Squad1ID, match.User1Points, match.User2ID, match.Squad2ID, match.User2Points)
 
 	return ErrMatches.Wrap(err)
 }
 
 // Get returns match from the database.
 func (matchesDB *matchesDB) Get(ctx context.Context, id uuid.UUID) (matches.Match, error) {
-	query := `SELECT id, user1_id, squad1_id, user2_id, squad2_id
+	query := `SELECT id, user1_id, squad1_id, user1_points, user2_id, squad2_id, user2_points
               FROM matches
               WHERE id = $1`
 
@@ -49,7 +49,7 @@ func (matchesDB *matchesDB) Get(ctx context.Context, id uuid.UUID) (matches.Matc
 
 	row := matchesDB.conn.QueryRowContext(ctx, query, id)
 
-	err := row.Scan(&match.ID, &match.User1ID, &match.Squad1ID, &match.User2ID, &match.Squad2ID)
+	err := row.Scan(&match.ID, &match.User1ID, &match.Squad1ID, &match.User1Points, &match.User2ID, &match.Squad2ID, &match.User2Points)
 	if err != nil {
 		if errors.Is(sql.ErrNoRows, err) {
 			return match, matches.ErrNoMatch.Wrap(err)
@@ -66,12 +66,12 @@ func (matchesDB *matchesDB) ListMatches(ctx context.Context, cursor pagination.C
 	var matchesListPage matches.Page
 	offset := (cursor.Page - 1) * cursor.Limit
 
-	query := fmt.Sprintf(`SELECT id, user1_id, squad1_id, user2_id, squad2_id
-                                 FROM matches
-                                 LIMIT %d
-                                 OFFSET %d`, cursor.Limit, offset)
+	query := `SELECT id, user1_id, squad1_id, user1_points, user2_id, squad2_id, user2_points
+	          FROM matches
+	          LIMIT $1
+	          OFFSET $2`
 
-	rows, err := matchesDB.conn.QueryContext(ctx, query)
+	rows, err := matchesDB.conn.QueryContext(ctx, query, cursor.Limit, offset)
 	if err != nil {
 		return matchesListPage, ErrMatches.Wrap(err)
 	}
@@ -83,7 +83,7 @@ func (matchesDB *matchesDB) ListMatches(ctx context.Context, cursor pagination.C
 
 	for rows.Next() {
 		var match matches.Match
-		err = rows.Scan(&match.ID, &match.User1ID, &match.Squad1ID, &match.User2ID, &match.Squad2ID)
+		err = rows.Scan(&match.ID, &match.User1ID, &match.Squad1ID, &match.User1Points, &match.User2ID, &match.Squad2ID, &match.User2Points)
 		if err != nil {
 			return matchesListPage, ErrMatches.Wrap(err)
 		}
@@ -160,10 +160,32 @@ func (matchesDB *matchesDB) Delete(ctx context.Context, id uuid.UUID) error {
 	return ErrMatches.Wrap(err)
 }
 
+// UpdateMatch updates the number of points that users received for a played match.
+func (matchesDB *matchesDB) UpdateMatch(ctx context.Context, match matches.Match) error {
+	query := `UPDATE matches
+	          SET user1_points = $1, user2_points = $2
+	          WHERE id = $3`
+
+	result, err := matchesDB.conn.ExecContext(ctx, query, match.User1Points, match.User2Points, match.ID)
+	if err != nil {
+		return ErrMatches.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if err != nil {
+		return ErrMatches.Wrap(err)
+	}
+	if rowNum == 0 {
+		return matches.ErrNoMatch.New("match does not exist")
+	}
+
+	return ErrMatches.Wrap(err)
+}
+
 // AddGoals adds goals in the match.
 func (matchesDB *matchesDB) AddGoals(ctx context.Context, matchGoals []matches.MatchGoals) error {
 	query := `INSERT INTO match_results(id, match_id, user_id, card_id, minute)
-              VALUES($1,$2,$3,$4,$5)`
+	          VALUES($1,$2,$3,$4,$5)`
 
 	preparedQuery, err := matchesDB.conn.PrepareContext(ctx, query)
 	if err != nil {

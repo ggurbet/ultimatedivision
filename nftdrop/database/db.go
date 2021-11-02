@@ -74,17 +74,17 @@ func (db *database) Close() error {
 	return Error.Wrap(db.conn.Close())
 }
 
-// Whitelist provided access to accounts db.
+// Whitelist provides access to accounts db.
 func (db *database) Whitelist() whitelist.DB {
 	return &whitelistDB{conn: db.conn}
 }
 
-// Admins provided access to accounts db.
+// Admins provides access to accounts db.
 func (db *database) Admins() admins.DB {
 	return &adminsDB{conn: db.conn}
 }
 
-// Subscribers provided access to accounts db.
+// Subscribers provides access to accounts db.
 func (db *database) Subscribers() subscribers.DB {
 	return &subscribersDB{conn: db.conn}
 }

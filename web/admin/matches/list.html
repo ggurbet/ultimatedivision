@@ -22,8 +22,10 @@
     <th>ID</th>
     <th>User1 ID</th>
     <th>Squad1 ID</th>
+    <th>User1 points</th>
     <th>User2 ID</th>
     <th>Squad2 ID</th>
+    <th>User2 points</th>
   </tr>
   </thead>
   {{range .Matches}}
@@ -31,8 +33,10 @@
     <td>{{.ID}}</td>
     <td>{{.User1ID}}</td>
     <td>{{.Squad1ID}}</td>
+    <td>{{.User1Points}}</td>
     <td>{{.User2ID}}</td>
     <td>{{.Squad2ID}}</td>
+    <td>{{.User2Points}}</td>
     <td><a href="/matches/delete/{{.ID}}">Delete match</a></td>
     <td><a href="/matches/{{.ID}}/goals">Get goals</a></td>
   </tr>

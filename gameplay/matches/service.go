@@ -44,7 +44,7 @@ const periodBegin = 0
 const periodEnd = 1
 
 // Play initiates match between users, calls methods to generate result.
-func (service *Service) Play(ctx context.Context, matchID uuid.UUID, squadCards1 []clubs.SquadCard, squadCards2 []clubs.SquadCard, user1, user2 uuid.UUID) error {
+func (service *Service) Play(ctx context.Context, match Match, squadCards1 []clubs.SquadCard, squadCards2 []clubs.SquadCard) error {
 	periods := []int{service.config.Periods.First.Begin, service.config.Periods.First.End,
 		service.config.Periods.Second.Begin, service.config.Periods.Second.End,
 		service.config.Periods.Third.Begin, service.config.Periods.Third.End,
@@ -86,14 +86,14 @@ func (service *Service) Play(ctx context.Context, matchID uuid.UUID, squadCards1
 
 		minute := rand2.Minute(periods[i+periodBegin], periods[i+periodEnd])
 		userID, cardID, err := service.chooseSquad(ctx, goalProbabilityByPosition,
-			squadPowerAccuracy, user1, user2, squadCards1, squadCards2)
+			squadPowerAccuracy, match.User1ID, match.User2ID, squadCards1, squadCards2)
 		if err != nil {
 			return ErrMatches.Wrap(err)
 		}
 
 		goals = append(goals, MatchGoals{
 			ID:      uuid.New(),
-			MatchID: matchID,
+			MatchID: match.ID,
 			UserID:  userID,
 			CardID:  cardID,
 			Minute:  minute,
@@ -105,7 +105,9 @@ func (service *Service) Play(ctx context.Context, matchID uuid.UUID, squadCards1
 		return ErrMatches.Wrap(err)
 	}
 
-	return nil
+	err = service.RankMatch(ctx, match, goals)
+
+	return ErrMatches.Wrap(err)
 }
 
 // choseGoalscorer returns id of cards which scored goal.
@@ -229,7 +231,7 @@ func (service *Service) Create(ctx context.Context, squad1ID uuid.UUID, squad2ID
 		return uuid.Nil, ErrMatches.Wrap(err)
 	}
 
-	err = service.Play(ctx, newMatch.ID, squadCards1, squadCards2, newMatch.User1ID, newMatch.User2ID)
+	err = service.Play(ctx, newMatch, squadCards1, squadCards2)
 
 	return newMatch.ID, ErrMatches.Wrap(err)
 }
@@ -265,4 +267,34 @@ func (service *Service) ListMatchGoals(ctx context.Context, matchID uuid.UUID) (
 	matchGoals, err := service.matches.ListMatchGoals(ctx, matchID)
 
 	return matchGoals, ErrMatches.Wrap(err)
+}
+
+// RankMatch evaluates how many points each user receive per match.
+func (service *Service) RankMatch(ctx context.Context, match Match, matchGoals []MatchGoals) error {
+	var (
+		user1Goals int
+		user2Goals int
+	)
+
+	for _, goal := range matchGoals {
+		if goal.UserID == match.User1ID {
+			user1Goals++
+			continue
+		}
+		user2Goals++
+	}
+
+	switch {
+	case user1Goals > user2Goals:
+		match.User1Points = service.config.NumberOfPointsForWin
+		match.User2Points = service.config.NumberOfPointsForLosing
+	case user1Goals < user2Goals:
+		match.User1Points = service.config.NumberOfPointsForLosing
+		match.User2Points = service.config.NumberOfPointsForWin
+	case user1Goals == user2Goals:
+		match.User1Points = service.config.NumberOfPointsForDraw
+		match.User2Points = service.config.NumberOfPointsForDraw
+	}
+
+	return ErrMatches.Wrap(service.matches.UpdateMatch(ctx, match))
 }
