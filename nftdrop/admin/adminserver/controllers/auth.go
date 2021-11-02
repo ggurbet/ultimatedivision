@@ -75,7 +75,6 @@ func (auth *Auth) Login(w http.ResponseWriter, r *http.Request) {
 
 		response, err := auth.service.Token(ctx, email[0], password[0])
 		if err != nil {
-			auth.log.Error("could not get auth token", AuthError.Wrap(err))
 			switch {
 			case admins.ErrNoAdmin.Has(err):
 				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
