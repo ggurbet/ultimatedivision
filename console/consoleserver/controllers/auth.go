@@ -62,9 +62,15 @@ func (auth *Auth) Register(w http.ResponseWriter, r *http.Request) {
 
 	err = auth.userAuth.Register(ctx, request.Email, request.Password, request.NickName, request.FirstName, request.LastName)
 	if err != nil {
-		auth.log.Error("Unable to register new user", AuthError.Wrap(err))
-		auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
-		return
+		switch {
+		case userauth.ErrAddressAlreadyInUse.Has(err):
+			auth.serveError(w, http.StatusBadRequest, userauth.ErrAddressAlreadyInUse.Wrap(err))
+			return
+		default:
+			auth.log.Error("Unable to register new user", AuthError.Wrap(err))
+			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+			return
+		}
 	}
 }
 

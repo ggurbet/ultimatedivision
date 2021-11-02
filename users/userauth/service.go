@@ -34,6 +34,9 @@ var (
 
 	// ErrPermission should be returned when user permission denied.
 	ErrPermission = errs.Class("permission denied")
+
+	// ErrAddressAlreadyInUse should be returned when users email address is already in use.
+	ErrAddressAlreadyInUse = errs.Class("email address is already in use")
 )
 
 // Service is handling all user authentication logic.
@@ -207,7 +210,7 @@ func (service *Service) Register(ctx context.Context, email, password, nickName,
 	// check if the user email address already exists.
 	_, err := service.users.GetByEmail(ctx, email)
 	if err == nil {
-		return Error.New("This email address is already in use.")
+		return ErrAddressAlreadyInUse.Wrap(err)
 	}
 
 	// check the password is valid.
