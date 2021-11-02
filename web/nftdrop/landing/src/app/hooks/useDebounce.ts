@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 
+/** Hook for deferred action. */
 export const useDebounce = (value: string, delay: number) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
 

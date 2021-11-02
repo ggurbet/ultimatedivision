@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import React, { SetStateAction, useState } from 'react';
+import { SetStateAction, useState } from 'react';
 
 import { UserDataArea } from '@components/common/UserDataArea';
 
@@ -19,7 +19,8 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
         = useState<SetStateAction<null | string>>(null);
     const [successEmailLabel, setSuccessEmailLabel]
         = useState<SetStateAction<null | string>>(null);
-    /** checks if value does't valid then set an error message */
+
+    /** Checks if value does't valid then set an error message. */
     const validateForm: () => boolean = () => {
         let isValidForm = true;
 
@@ -39,10 +40,11 @@ export const Modal: React.FC<{ handleModal: () => void }> = ({
     const user = new UserClient();
     const users = new UserService(user);
 
-    /** describes the logic of user subscription to news */
+    /** Describes the logic of user subscription to news. */
     async function getNotifications() {
         try {
             await users.getNotifications(email);
+
             setEmailError(null);
             setSuccessEmailLabel('The email was sent successfully');
         } catch (error: any) {

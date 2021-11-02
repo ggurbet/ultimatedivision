@@ -15,6 +15,5 @@ export class ServicePlugin {
         } catch (e) {
             return new Service(null);
         }
-
     }
 }

@@ -1,8 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import React from 'react';
-
 import affinidi from '@static/images/projects/affinidi.svg';
 import elixir from '@static/images/projects/elixir.svg';
 import bloom from '@static/images/projects/bloom.svg';
@@ -30,7 +28,6 @@ export const Projects: React.FC = () => {
     return (
         <section className="projects">
             <div className="projects__wrapper">
-
                 <h2 className="projects__title">
                     The game was created by a team involved in the development
                     of well-known crypto projects

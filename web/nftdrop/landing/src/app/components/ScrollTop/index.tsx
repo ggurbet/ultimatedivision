@@ -5,7 +5,7 @@ import './index.scss';
 
 export const ScrollTop: React.FC = () => {
 
-    const handleScroolToTop = () => {
+    const handleScrollToTop = () => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
@@ -13,7 +13,7 @@ export const ScrollTop: React.FC = () => {
     };
 
     return (
-        <div className="scroll-to-top" onClick={() => handleScroolToTop()}>
+        <div className="scroll-to-top" onClick={() => handleScrollToTop()}>
             <svg viewBox="0 0 66 66" fill="none" xmlns="http://www.w3.org/2000/svg"
                 className="scroll-to-top__button">
                 <rect

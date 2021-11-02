@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import lottie from 'lottie-web';
 
 export const AnimationImage: React.FC<{

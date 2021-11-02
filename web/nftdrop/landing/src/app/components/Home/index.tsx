@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { ScrollTop } from '../ScrollTop';
 import { AnimationImage } from '@components/common/AnimationImage';
