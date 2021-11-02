@@ -1,7 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { DescriptionAbout } from '@components/Description/DescriptionAbout';
 import { DescriptionCards } from '@components/Description/DescriptionCards';
 import { DescriptionPay } from '@components/Description/DescriptionPay';
 
@@ -12,9 +11,6 @@ export const Description = () => {
     return (
         <section className="description">
             <div className="description__wrapper">
-                <div className="description__container">
-                    <DescriptionAbout />
-                </div>
                 <div className="description__container">
                     <DescriptionCards />
                 </div>

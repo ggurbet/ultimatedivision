@@ -1,9 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import cards from '@static/images/description/cardsGroup.webp';
-import mobileCards from '@static/images/description/mobile-cards.png';
-import webkitCards from '@static/images/description/cardsGroup.png';
+import cardsVideo from '@static/images/description/players-for-slider/slides.mp4';
 
 import './index.scss';
 
@@ -23,20 +21,11 @@ export const DescriptionCards = () => {
                 </p>
             </div>
             <div className="description-cards__wrapper">
-                <picture>
-                    <source
-                        media="(min-width: 601px)"
-                        srcSet={cards}
-                        type="image/webp"
-                    />
-                    <source media="(max-width: 600px)" srcSet={mobileCards} />
-                    <img
-                        className="description-cards__card"
-                        src={webkitCards}
-                        alt="cards"
-                        loading="lazy"
-                    />
-                </picture>
+                <div className="description-cards__animate-block">
+                    <video autoPlay loop muted>
+                        <source src={cardsVideo} type="video/mp4" />
+                    </video>
+                </div>
             </div>
         </div>
     );
