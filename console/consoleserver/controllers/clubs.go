@@ -205,13 +205,19 @@ func (controller *Clubs) UpdatePosition(w http.ResponseWriter, r *http.Request) 
 	err = controller.clubs.UpdateCardPosition(ctx, squadID, cardID, squadCard.Position)
 	if err != nil {
 		controller.log.Error("could not update card position", ErrClubs.Wrap(err))
+
+		if clubs.ErrNoSquadCard.Has(err) {
+			controller.serveError(w, http.StatusNotFound, ErrClubs.Wrap(err))
+			return
+		}
+
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
 		return
 	}
 }
 
-// UpdateSquad is an endpoint that updates squad tactic, capitan and formation.
-func (controller *Clubs) UpdateSquad(w http.ResponseWriter, r *http.Request) {
+// UpdateTacticCaptain is an endpoint that updates squad tactic, capitan.
+func (controller *Clubs) UpdateTacticCaptain(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 	params := mux.Vars(r)
@@ -228,8 +234,14 @@ func (controller *Clubs) UpdateSquad(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = controller.clubs.UpdateSquad(ctx, squadID, updatedSquad.Formation, updatedSquad.Tactic, updatedSquad.CaptainID); err != nil {
+	if err = controller.clubs.UpdateSquad(ctx, squadID, updatedSquad.Tactic, updatedSquad.CaptainID); err != nil {
 		controller.log.Error("could not update squad", ErrClubs.Wrap(err))
+
+		if clubs.ErrNoSquad.Has(err) {
+			controller.serveError(w, http.StatusNotFound, ErrClubs.Wrap(err))
+			return
+		}
+
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
 		return
 	}
@@ -294,6 +306,12 @@ func (controller *Clubs) Delete(w http.ResponseWriter, r *http.Request) {
 
 	if err = controller.clubs.Delete(ctx, squadID, cardID); err != nil {
 		controller.log.Error("could not delete card from the squad", ErrClubs.Wrap(err))
+
+		if clubs.ErrNoSquadCard.Has(err) {
+			controller.serveError(w, http.StatusNotFound, ErrClubs.Wrap(err))
+			return
+		}
+
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
 		return
 	}
@@ -305,7 +323,7 @@ func (controller *Clubs) ChangeFormation(w http.ResponseWriter, r *http.Request)
 	ctx := r.Context()
 	params := mux.Vars(r)
 
-	newFormationID, err := strconv.Atoi(params["formationID"])
+	newFormationID, err := strconv.Atoi(params["formationId"])
 	if err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
 		return
@@ -313,8 +331,8 @@ func (controller *Clubs) ChangeFormation(w http.ResponseWriter, r *http.Request)
 
 	formation := clubs.Formation(newFormationID)
 
-	if !clubs.Formation(newFormationID).IsValid() {
-		controller.serveError(w, http.StatusBadRequest, ErrClubs.New("Formation ID is not correct"))
+	if !formation.IsValid() {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.New("formation is not correct"))
 		return
 	}
 
@@ -324,15 +342,16 @@ func (controller *Clubs) ChangeFormation(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	data, err := controller.clubs.ChangeFormation(ctx, formation, squadID)
+	err = controller.clubs.ChangeFormation(ctx, formation, squadID)
 	if err != nil {
 		controller.log.Error("could not change formation", ErrClubs.Wrap(err))
-		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
-		return
-	}
 
-	if err = json.NewEncoder(w).Encode(data); err != nil {
-		controller.log.Error("failed to write json response", ErrClubs.Wrap(err))
+		if clubs.ErrNoSquad.Has(err) {
+			controller.serveError(w, http.StatusNotFound, ErrClubs.Wrap(err))
+			return
+		}
+
+		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
 		return
 	}
 }

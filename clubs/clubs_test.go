@@ -170,13 +170,13 @@ func TestTeam(t *testing.T) {
 		})
 
 		t.Run("Update tactic and formation in squad sql no rows", func(t *testing.T) {
-			err := repositoryClubs.UpdateTacticFormationCaptain(ctx, clubs.Squad{ID: id})
+			err := repositoryClubs.UpdateTacticCaptain(ctx, clubs.Squad{ID: id})
 			require.Error(t, err)
 			require.Equal(t, clubs.ErrNoSquad.Has(err), true)
 		})
 
 		t.Run("Update tactic and formation in squad", func(t *testing.T) {
-			err := repositoryClubs.UpdateTacticFormationCaptain(ctx, updatedSquad)
+			err := repositoryClubs.UpdateTacticCaptain(ctx, updatedSquad)
 			require.NoError(t, err)
 		})
 
@@ -187,7 +187,7 @@ func TestTeam(t *testing.T) {
 				clubs.Position(5),
 			}})
 			require.Error(t, err)
-			require.Equal(t, clubs.ErrNoSquad.Has(err), true)
+			require.Equal(t, clubs.ErrNoSquadCard.Has(err), true)
 		})
 
 		t.Run("Update card position in squad", func(t *testing.T) {

@@ -193,12 +193,6 @@ func (controller *Clubs) UpdateSquad(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		newFormation, err := strconv.Atoi(r.FormValue("formation"))
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
 		newTactic, err := strconv.Atoi(r.FormValue("tactic"))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -211,7 +205,7 @@ func (controller *Clubs) UpdateSquad(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if err = controller.clubs.UpdateSquad(ctx, squadID, clubs.Formation(newFormation), clubs.Tactic(newTactic), newCaptainID); err != nil {
+		if err = controller.clubs.UpdateSquad(ctx, squadID, clubs.Tactic(newTactic), newCaptainID); err != nil {
 			controller.log.Error("could not update squad", ErrClubs.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
