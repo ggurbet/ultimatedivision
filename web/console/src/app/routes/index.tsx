@@ -18,6 +18,7 @@ const WhitePaper = lazy(() => import('@/app/views/WhitePaperPage'));
 const Tokenomics = lazy(() => import('@/app/views/TokenomicsPage'));
 const Store = lazy(() => import('@/app/views/StorePage'));
 const Navbar = lazy(() => import('@/app/components/common/Navbar'));
+const Division = lazy(() => import('@/app/views/Division'));
 
 import Summary from '@components/WhitePaper/Summary';
 import GameMechanics from '@components/WhitePaper/GameMechanics';
@@ -112,6 +113,12 @@ export class RouteConfig {
         Card,
         false
     );
+    public static Division: ComponentRoutes = new ComponentRoutes(
+        /** TODO: it will be replaced with id parameter */
+        '/division',
+        Division,
+        true,
+    );
     public static FootballField: ComponentRoutes = new ComponentRoutes(
         '/field',
         FootballField,
@@ -182,6 +189,7 @@ export class RouteConfig {
         RouteConfig.MarketPlace,
         RouteConfig.Club,
         RouteConfig.Card,
+        RouteConfig.Division,
         RouteConfig.Lot,
         RouteConfig.Store,
         RouteConfig.Whitepaper.addChildren([
