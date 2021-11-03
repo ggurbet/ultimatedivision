@@ -17,9 +17,9 @@ import { Squad } from '@/club';
 import './index.scss';
 
 export const FootballFieldCardSelection = () => {
+    const dispatch = useDispatch();
     const squad = useSelector((state: RootState) => state.clubReducer.squad);
     const { cards, page } = useSelector((state: RootState) => state.cardsReducer.cardsPage);
-    const dispatch = useDispatch();
     const fieldSetup = useSelector((state: RootState) => state.clubReducer);
 
     const Y_SCROLL_POINT = 200;

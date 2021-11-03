@@ -75,55 +75,50 @@ export const exchangeCards = (
 
 // Thunks
 
+export const createClub = () =>
+    async function(dispatch: Dispatch) {
+        const clubId = await service.createClub();
+        const squadId = await service.createSquad(clubId);
+        const club = await service.getClub();
+        dispatch(setClub(club));
+    };
+
 export const getClub = () =>
     async function(dispatch: Dispatch) {
-        try {
-            const club = await service.getClub();
-
-            dispatch(setClub(club));
-        } catch (error: any) {
-            try {
-                const clubId = await service.createClub();
-                const squadId = await service.createSquad(clubId);
-                const club = await service.getClub();
-                dispatch(setClub(club));
-            } catch (error: any) {
-                /* eslint-disable */
-        console.log(error.message);
-      }
-    }
-  };
+        const club = await service.getClub();
+        dispatch(setClub(club));
+    };
 
 export const setFormation = (squad: Squad, formation: FormationsType) =>
-  async function (dispatch: Dispatch) {
-    await service.updateSquad({ ...squad, formation: Formations[formation] });
-    const club = await service.getClub();
-    dispatch(setClub(club));
-  };
+    async function(dispatch: Dispatch) {
+        await service.updateSquad({ ...squad, formation: Formations[formation] });
+        const club = await service.getClub();
+        dispatch(setClub(club));
+    };
 export const setCaptain = (squad: Squad, captainId: string) =>
-  async function (dispatch: Dispatch) {
-    await service.updateSquad({ ...squad, captainId });
-    const club = await service.getClub();
-    dispatch(setClub(club));
-  };
+    async function(dispatch: Dispatch) {
+        await service.updateSquad({ ...squad, captainId });
+        const club = await service.getClub();
+        dispatch(setClub(club));
+    };
 export const setTactic = (squad: Squad, tactic: TacticsType) =>
-  async function (dispatch: Dispatch) {
-    await service.updateSquad({ ...squad, tactic: Tactic[tactic] });
-    const club = await service.getClub();
-    dispatch(setClub(club));
-  };
+    async function(dispatch: Dispatch) {
+        await service.updateSquad({ ...squad, tactic: Tactic[tactic] });
+        const club = await service.getClub();
+        dispatch(setClub(club));
+    };
 
 export const addCard = ({
-  squad,
-  cardId,
-  position,
+    squad,
+    cardId,
+    position,
 }: {
-  squad: Squad;
-  cardId: string;
-  position: number;
+    squad: Squad;
+    cardId: string;
+    position: number;
 }) =>
-  async function (dispatch: Dispatch) {
-    await service.addCard({ squad, cardId, position });
-    const club = await service.getClub();
-    dispatch(setClub(club));
-  };
+    async function(dispatch: Dispatch) {
+        await service.addCard({ squad, cardId, position });
+        const club = await service.getClub();
+        dispatch(setClub(club));
+    };

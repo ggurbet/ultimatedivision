@@ -70,7 +70,7 @@ module.exports = {
                 ],
             },
             {
-                test: /\.(s[c]ss|css)$/,
+                test: /\.(scss)$/,
                 exclude: /(node_modules)/,
                 use: [
                     //for dev style-loader, for production
@@ -79,6 +79,13 @@ module.exports = {
                     // MiniCssExtractPlugin.loader,
                     "css-loader",
                     "sass-loader",
+                ],
+            },
+            {
+                test: /\.(css)$/,
+                use: [
+                    "style-loader",
+                    "css-loader",
                 ],
             },
             {

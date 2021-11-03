@@ -19,12 +19,7 @@ const client = new LootboxClient();
 const service = new LootboxService(client);
 /** thunk that handles opening new lootbox */
 export const openLootbox = (lootbox: Lootbox) => async function(dispatch: Dispatch) {
-    try {
-        const opennedLootbox = await service.buy(lootbox);
+    const opennedLootbox = await service.buy(lootbox);
+    opennedLootbox &&
         dispatch(buyLootbox(opennedLootbox.map(card => new Card(card))));
-    }
-    catch (error: any) {
-        /* eslint-disable */
-        console.log(error.message);
-    }
 };
