@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Portal | Divisions</title>
+</head>
+<body>
+<nav>
+  <div>
+    <ul>
+      <li><a href="/divisions/create">Add division</a></li>
+    </ul>
+  </div>
+</nav>
+<table style="width:100%">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>PassingPercent</th>
+    <th>Created at</th>
+    <td>Actions</td>
+  </tr>
+  </thead>
+  {{range .}}
+  <tr>
+    <td>
+      {{.Name}}
+    </td>
+    <td>
+      {{.PassingPercent}}
+    </td>
+    <td>
+      {{.CreatedAt}}
+    </td>
+    <td>
+      <a href="/divisions/delete/{{.ID}}">Delete</a>
+    </td>
+  </tr>
+  {{end}}
+</table>
+</body>
+</html>

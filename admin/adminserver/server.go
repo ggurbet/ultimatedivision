@@ -10,7 +10,6 @@ import (
 	"net"
 	"net/http"
 	"path/filepath"
-	"ultimatedivision/gameplay/matches"
 
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
@@ -22,6 +21,8 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/avatars"
 	"ultimatedivision/clubs"
+	"ultimatedivision/divisions"
+	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/templatefuncs"
 	"ultimatedivision/lootboxes"
@@ -70,6 +71,7 @@ type Server struct {
 		marketplace controllers.MarketplaceTemplates
 		club        controllers.ClubsTemplates
 		queue       controllers.QueueTemplates
+		divisions   controllers.DivisionsTemplates
 		match       controllers.MatchesTemplate
 	}
 
@@ -77,7 +79,10 @@ type Server struct {
 }
 
 // NewServer is a constructor for admin web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service, admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities, avatars *avatars.Service, marketplace *marketplace.Service, lootboxes *lootboxes.Service, clubs *clubs.Service, queue *queue.Service, matches *matches.Service) (*Server, error) {
+func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service,
+	admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities,
+	avatars *avatars.Service, marketplace *marketplace.Service, lootboxes *lootboxes.Service, clubs *clubs.Service,
+	queue *queue.Service, divisions *divisions.Service, matches *matches.Service) (*Server, error) {
 	server := &Server{
 		log:    log,
 		config: config,
@@ -167,6 +172,13 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	matchesRouter.HandleFunc("/", matchesController.ListMatches).Methods(http.MethodGet)
 	matchesRouter.HandleFunc("/delete/{id}", matchesController.Delete).Methods(http.MethodGet)
 	matchesRouter.HandleFunc("/{id}/goals", matchesController.ListMatchGoals).Methods(http.MethodGet)
+
+	divisionsRouter := router.PathPrefix("/divisions").Subrouter()
+	divisionsRouter.Use(server.withAuth)
+	divisionsController := controllers.NewDivisions(log, divisions, server.templates.divisions)
+	divisionsRouter.HandleFunc("", divisionsController.List).Methods(http.MethodGet)
+	divisionsRouter.HandleFunc("/create", divisionsController.Create).Methods(http.MethodGet, http.MethodPost)
+	divisionsRouter.HandleFunc("/delete/{id}", divisionsController.Delete).Methods(http.MethodGet)
 
 	server.server = http.Server{
 		Handler: router,
@@ -339,6 +351,16 @@ func (server *Server) initializeTemplates() (err error) {
 		return err
 	}
 	server.templates.match.ListGoals, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "matches", "listGoals.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.divisions.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "divisions", "list.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.divisions.Create, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "divisions", "create.html"))
 	if err != nil {
 		return err
 	}

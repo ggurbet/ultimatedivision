@@ -18,6 +18,7 @@ import (
 	"ultimatedivision/cards/avatars"
 	"ultimatedivision/clubs"
 	"ultimatedivision/gameplay/matches"
+	"ultimatedivision/divisions"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/queue"
@@ -202,6 +203,12 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             end_time      TIMESTAMP WITH TIME ZONE                                        NOT NULL,
             period        INTEGER                                                         NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS divisions (
+            id              BYTEA   PRIMARY KEY      NOT NULL,
+            name            VARCHAR                  NOT NULL,
+            passing_percent INTEGER                  NOT NULL,
+            created_at      TIMESTAMP WITH TIME ZONE NOT NULL
+        );
         CREATE TABLE IF NOT EXISTS matches (
             id           BYTEA    PRIMARY KEY                             NOT NULL,
             user1_id     BYTEA    REFERENCES users(id) ON DELETE CASCADE  NOT NULL,
@@ -275,4 +282,9 @@ func (db *database) Matches() matches.DB {
 // Queue provides access to accounts db.
 func (db *database) Queue() queue.DB {
 	return &queueHub{hub: NewHub()}
+}
+
+// Divisions provides access to accounts db.
+func (db *database) Divisions() divisions.DB {
+	return &divisionsDB{conn: db.conn}
 }

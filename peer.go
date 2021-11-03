@@ -20,6 +20,7 @@ import (
 	"ultimatedivision/clubs"
 	"ultimatedivision/console/consoleserver"
 	"ultimatedivision/console/emails"
+	"ultimatedivision/divisions"
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/lootboxes"
@@ -61,6 +62,9 @@ type DB interface {
 
 	// Queue provides access to queue db.
 	Queue() queue.DB
+
+	// Divisions provides access to divisions db.
+	Divisions() divisions.DB
 
 	// Close closes underlying db connection.
 	Close() error
@@ -110,6 +114,10 @@ type Config struct {
 	Queue struct {
 		queue.Config
 	} `json:"queue"`
+
+	Divisions struct {
+		divisions.Config
+	} `json:"divisions"`
 
 	Matches struct {
 		matches.Config
@@ -170,6 +178,11 @@ type Peer struct {
 	Queue struct {
 		Service    *queue.Service
 		PlaceChore *queue.Chore
+	}
+
+	// exposes divisions related logic.
+	Divisions struct {
+		Service *divisions.Service
 	}
 
 	// Admin web server server with web UI.
@@ -310,6 +323,12 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
+	{ // divisions setup
+		peer.Divisions.Service = divisions.NewService(
+			peer.Database.Divisions(),
+			config.Divisions.Config)
+	}
+
 	{ // admin setup
 		peer.Admin.Listener, err = net.Listen("tcp", config.Admins.Server.Address)
 		if err != nil {
@@ -330,6 +349,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.LootBoxes.Service,
 			peer.Clubs.Service,
 			peer.Queue.Service,
+			peer.Divisions.Service,
 			peer.Matches.Service,
 		)
 		if err != nil {
