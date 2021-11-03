@@ -199,12 +199,12 @@ func (server *Server) withAuth(handler http.Handler) http.Handler {
 		ctxWithAuth := func(ctx context.Context) context.Context {
 			token, err := server.cookieAuth.GetToken(r)
 			if err != nil {
-				controllers.Redirect(w, r, "/login/", "GET")
+				controllers.Redirect(w, r, "/login", "GET")
 			}
 
 			claims, err := server.authService.Authorize(ctx, token)
 			if err != nil {
-				controllers.Redirect(w, r, "/login/", "GET")
+				controllers.Redirect(w, r, "/login", "GET")
 			}
 
 			return auth.SetClaims(ctx, claims)

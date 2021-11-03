@@ -79,13 +79,13 @@ func (controller *LootBoxes) Open(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	vars := mux.Vars(r)
 
-	userID, err := uuid.Parse(vars["userID"])
+	userID, err := uuid.Parse(vars["userId"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	lootboxID, err := uuid.Parse(vars["lootboxID"])
+	lootboxID, err := uuid.Parse(vars["lootboxId"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

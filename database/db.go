@@ -217,10 +217,6 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             user_id  BYTEA   REFERENCES users(id) ON DELETE CASCADE   NOT NULL,
             card_id  BYTEA   REFERENCES cards(id) ON DELETE CASCADE   NOT NULL,
             minute   INTEGER                                          NOT NULL
-        );
-        CREATE TABLE IF NOT EXISTS places (
-            user_id BYTEA   PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-            status  VARCHAR                                                    NOT NULL
         );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)
