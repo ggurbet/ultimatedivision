@@ -42,7 +42,7 @@ func (service *Service) Create(ctx context.Context, wallet CreateWallet) error {
 			return ErrWhitelist.Wrap(err)
 		}
 
-		password, err = cryptoutils.GenerateSignature(wallet.Address, service.config.NFTSale, privateKeyECDSA)
+		password, err = cryptoutils.GenerateSignature(wallet.Address, service.config.NFTSaleContract, privateKeyECDSA)
 		if err != nil {
 			return ErrWhitelist.Wrap(err)
 		}
@@ -66,11 +66,8 @@ func (service *Service) GetByAddress(ctx context.Context, address cryptoutils.Ad
 	}
 
 	transactionValue := Transaction{
-		Password: whitelist.Password,
-		Contracts: Contracts{
-			NFT:     service.config.NFT,
-			NFTSale: service.config.NFTSale,
-		},
+		Password:        whitelist.Password,
+		NFTSaleContract: service.config.NFTSaleContract,
 	}
 
 	return transactionValue, nil
@@ -118,7 +115,7 @@ func (service *Service) SetPassword(ctx context.Context, privateKey cryptoutils.
 	}
 
 	for _, v := range whitelist {
-		password, err := cryptoutils.GenerateSignature(v.Address, service.config.NFTSale, privateKeyECDSA)
+		password, err := cryptoutils.GenerateSignature(v.Address, service.config.NFTSaleContract, privateKeyECDSA)
 		if err != nil {
 			return ErrWhitelist.Wrap(err)
 		}
