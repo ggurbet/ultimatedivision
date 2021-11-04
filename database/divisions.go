@@ -93,7 +93,7 @@ func (divisionsDB *divisionsDB) Delete(ctx context.Context, id uuid.UUID) error 
 	}
 
 	rowNum, err := result.RowsAffected()
-	if err != nil && rowNum == 0 {
+	if err == nil && rowNum == 0 {
 		return divisions.ErrNoDivision.New("division does not exist")
 	}
 
