@@ -833,13 +833,7 @@ export const NFT_ABI_SALE = [
         'type': 'function'
     },
     {
-        'inputs': [
-            {
-                'internalType': 'uint256',
-                'name': '_tokenId',
-                'type': 'uint256'
-            }
-        ],
+        'inputs': [],
         'name': 'buy',
         'outputs': [],
         'stateMutability': 'payable',
@@ -848,9 +842,9 @@ export const NFT_ABI_SALE = [
     {
         'inputs': [
             {
-                'internalType': 'uint256[]',
-                'name': '_tokenIds',
-                'type': 'uint256[]'
+                'internalType': 'uint256',
+                'name': 'amount',
+                'type': 'uint256'
             }
         ],
         'name': 'buyBatch',
@@ -892,19 +886,6 @@ export const NFT_ABI_SALE = [
     },
     {
         'inputs': [],
-        'name': 'getCurrentPrice',
-        'outputs': [
-            {
-                'internalType': 'uint256',
-                'name': '',
-                'type': 'uint256'
-            }
-        ],
-        'stateMutability': 'view',
-        'type': 'function'
-    },
-    {
-        'inputs': [],
         'name': 'nft',
         'outputs': [
             {
@@ -918,11 +899,6 @@ export const NFT_ABI_SALE = [
     },
     {
         'inputs': [
-            {
-                'internalType': 'uint256',
-                'name': '_tokenId',
-                'type': 'uint256'
-            },
             {
                 'internalType': 'bytes',
                 'name': '_signature',
@@ -967,3 +943,4 @@ export const NFT_ABI_SALE = [
         'type': 'function'
     }
 ];
+
