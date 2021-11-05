@@ -7,6 +7,7 @@ import (
 	"crypto/ecdsa"
 	"encoding/hex"
 	"fmt"
+	"strconv"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -123,9 +124,79 @@ func GenerateSignature(addressWallet Address, addressContract Address, privateKe
 	return "", fmt.Errorf("error private key format")
 }
 
+// GenerateSignatureWithToken generates signature for user's wallet with token.
+func GenerateSignatureWithToken(addressWallet Address, addressContract Address, tokenID int, privateKey *ecdsa.PrivateKey) (Signature, error) {
+	if !addressWallet.IsValidAddress() {
+		return "", fmt.Errorf("invalid address of user's wallet")
+	}
+	if !addressContract.IsValidAddress() {
+		return "", fmt.Errorf("invalid address of contract")
+	}
+
+	addressWalletByte, err := hex.DecodeString(string(addressWallet)[2:])
+	if err != nil {
+		return "", err
+	}
+
+	addressContractByte, err := hex.DecodeString(string(addressContract)[2:])
+	if err != nil {
+		return "", err
+	}
+
+	ethereumSignedMessage, err := hex.DecodeString(EthereumSignedMessageHash)
+	if err != nil {
+		return "", err
+	}
+
+	tokenIDString := strconv.Itoa(tokenID)
+	var zeroString string
+	for i := 0; i < (64 - len(tokenIDString)); i++ {
+		zeroString += "0"
+	}
+
+	tokenIDStringWithZeros := zeroString + tokenIDString
+	tokenIDByte, err := hex.DecodeString(tokenIDStringWithZeros)
+	if err != nil {
+		return "", err
+	}
+
+	createSignature := CreateSignature{
+		EthereumSignedMessage: ethereumSignedMessage,
+		AddressWallet:         addressWalletByte,
+		AddressContract:       addressContractByte,
+		PrivateKey:            privateKey,
+	}
+
+	signature, err := makeSignatureWithToken(createSignature, tokenIDByte)
+	if err != nil {
+		return "", err
+	}
+
+	signatureWithoutEnd := string(signature)[:len(signature)-1]
+	signatureString := hex.EncodeToString(signature)
+	signatureLastSymbol := signatureString[len(signatureString)-1:]
+
+	if signatureLastSymbol == fmt.Sprintf("%d", PrivateKeyVZero) {
+		return Signature(hex.EncodeToString(append([]byte(signatureWithoutEnd), []byte{byte(PrivateKeyVTwentySeven)}...))), nil
+	}
+
+	if signatureLastSymbol == fmt.Sprintf("%d", PrivateKeyVOne) {
+		return Signature(hex.EncodeToString(append([]byte(signatureWithoutEnd), []byte{byte(PrivateKeyVTwentyEight)}...))), nil
+	}
+
+	return "", fmt.Errorf("error private key format")
+}
+
 // makeSignature makes signature from addresses and private key.
 func makeSignature(createSignature CreateSignature) ([]byte, error) {
 	dataSignature := crypto.Keccak256Hash(append(createSignature.EthereumSignedMessage, crypto.Keccak256Hash(append(createSignature.AddressWallet, createSignature.AddressContract...)).Bytes()...))
+	signature, err := crypto.Sign(dataSignature.Bytes(), createSignature.PrivateKey)
+	return signature, err
+}
+
+// makeSignatureWithToken makes signature from addresses, private key and token id.
+func makeSignatureWithToken(createSignature CreateSignature, tokenID []byte) ([]byte, error) {
+	dataSignature := crypto.Keccak256Hash(append(createSignature.EthereumSignedMessage, crypto.Keccak256Hash(append(createSignature.AddressWallet, append(createSignature.AddressContract, tokenID...)...)).Bytes()...))
 	signature, err := crypto.Sign(dataSignature.Bytes(), createSignature.PrivateKey)
 	return signature, err
 }
