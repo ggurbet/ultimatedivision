@@ -31,8 +31,12 @@ type DB interface {
 	CreateSquad(ctx context.Context, squad Squad) (uuid.UUID, error)
 	// GetByUserID returns club owned by the user.
 	GetByUserID(ctx context.Context, userID uuid.UUID) (Club, error)
+	// Get returns club.
+	Get(ctx context.Context, clubID uuid.UUID) (Club, error)
+	// GetSquadByClubID returns squad by club id.
+	GetSquadByClubID(ctx context.Context, clubID uuid.UUID) (Squad, error)
 	// GetSquad returns squad.
-	GetSquad(ctx context.Context, clubID uuid.UUID) (Squad, error)
+	GetSquad(ctx context.Context, squadID uuid.UUID) (Squad, error)
 	// GetFormation returns formation of the squad.
 	GetFormation(ctx context.Context, squadID uuid.UUID) (Formation, error)
 	// GetCaptainID returns id of captain.
@@ -75,6 +79,9 @@ type SquadCard struct {
 	CardID   uuid.UUID `json:"cardId"`
 	Position Position  `json:"position"`
 }
+
+// SquadSize defines number of cards in the full squad.
+const SquadSize int = 11
 
 // Formation defines a list of possible formations.
 type Formation int

@@ -121,7 +121,7 @@ func (controller *Clubs) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	club, err := controller.clubs.Get(ctx, claims.UserID)
+	club, err := controller.clubs.GetByUserID(ctx, claims.UserID)
 	if err != nil {
 		controller.log.Error("could not get user club", ErrClubs.Wrap(err))
 
@@ -134,7 +134,7 @@ func (controller *Clubs) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	squad, err := controller.clubs.GetSquad(ctx, club.ID)
+	squad, err := controller.clubs.GetSquadByClubID(ctx, club.ID)
 	if err != nil {
 		controller.log.Error("could not get squad", ErrClubs.Wrap(err))
 

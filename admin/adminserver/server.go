@@ -152,7 +152,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	clubsRouter.HandleFunc("/create/{userId}", clubsController.Create).Methods(http.MethodGet)
 	clubsRouter.HandleFunc("/{userId}", clubsController.Get).Methods(http.MethodGet)
 	clubsRouter.HandleFunc("/{clubId}/squad/create", clubsController.CreateSquad).Methods(http.MethodGet)
-	clubsRouter.HandleFunc("/{clubId}/squad", clubsController.GetSquad).Methods(http.MethodGet)
+	clubsRouter.HandleFunc("/{clubId}/squad", clubsController.GetSquadByClubID).Methods(http.MethodGet)
 	clubsRouter.HandleFunc("/{clubId}/squad/{squadId}/update", clubsController.UpdateSquad).Methods(http.MethodGet, http.MethodPost)
 	clubsRouter.HandleFunc("/squad/{squadId}", clubsController.ListSquadCards).Methods(http.MethodGet)
 	clubsRouter.HandleFunc("/squad/{squadId}/squad-cards", clubsController.Add).Methods(http.MethodGet, http.MethodPost)

@@ -68,15 +68,16 @@ func (controller *Queue) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := queue.Client{
-		UserID: claims.UserID,
-		Conn:   conn,
+	if err = conn.ReadJSON(&request); err != nil {
+		controller.log.Error("could not read JSON from websocket", ErrQueue.Wrap(err))
+		controller.serveError(conn, http.StatusBadRequest, err.Error())
+		return
 	}
 
-	if err = client.Conn.ReadJSON(&request); err != nil {
-		controller.log.Error("could not read JSON from websocket", ErrQueue.Wrap(err))
-		controller.serveError(client.Conn, http.StatusBadRequest, err.Error())
-		return
+	client := queue.Client{
+		UserID:     claims.UserID,
+		Connection: conn,
+		SquadID:    request.SquadID,
 	}
 
 	switch request.Action {
@@ -84,29 +85,32 @@ func (controller *Queue) Create(w http.ResponseWriter, r *http.Request) {
 		if _, err = controller.queue.Get(client.UserID); err != nil {
 			if err = controller.queue.Create(ctx, client); err != nil {
 				controller.log.Error("could not create user's queue", ErrQueue.Wrap(err))
-				controller.serveError(client.Conn, http.StatusInternalServerError, err.Error())
+				controller.serveError(client.Connection, http.StatusInternalServerError, err.Error())
 				return
 			}
-			controller.serveError(client.Conn, http.StatusOK, "you added!")
+			controller.serveError(client.Connection, http.StatusOK, "you added!")
 			return
 		}
-		controller.serveError(client.Conn, http.StatusBadRequest, "you have already been added!")
+		controller.serveError(client.Connection, http.StatusBadRequest, "you have already been added!")
 		return
 	case queue.ActionFinishSearch:
 		if _, err = controller.queue.Get(client.UserID); err == nil {
-			controller.queue.Finish(client.UserID)
+			if err = controller.queue.Finish(client.UserID); err != nil {
+				controller.log.Error("could not finish search", ErrQueue.Wrap(err))
+				controller.serveError(client.Connection, http.StatusInternalServerError, err.Error())
+			}
 			defer func() {
-				controller.log.Error("could not close websocket", ErrQueue.Wrap(client.Conn.Close()))
+				controller.log.Error("could not close websocket", ErrQueue.Wrap(client.Connection.Close()))
 			}()
 
-			controller.serveError(client.Conn, http.StatusOK, "you leaved!")
+			controller.serveError(client.Connection, http.StatusOK, "you leaved!")
 			return
 		}
-		controller.serveError(client.Conn, http.StatusBadRequest, "you don't have been added!")
+		controller.serveError(client.Connection, http.StatusBadRequest, "you have not been added!")
 		return
 	default:
 		controller.log.Error("wrong action", ErrQueue.Wrap(err))
-		controller.serveError(client.Conn, http.StatusBadRequest, "wrong action")
+		controller.serveError(client.Connection, http.StatusBadRequest, "wrong action")
 		return
 	}
 }

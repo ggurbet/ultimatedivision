@@ -43,8 +43,8 @@ func TestQueue(t *testing.T) {
 		CreatedAt:    time.Now(),
 	}
 
-	queueClient1 := queue.Client{UserID: user1.ID, Conn: nil}
-	queueClient2 := queue.Client{UserID: user2.ID, Conn: nil}
+	queueClient1 := queue.Client{UserID: user1.ID, Connection: nil}
+	queueClient2 := queue.Client{UserID: user2.ID, Connection: nil}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repositoryQueue := db.Queue()
@@ -81,7 +81,8 @@ func TestQueue(t *testing.T) {
 		})
 
 		t.Run("delete", func(t *testing.T) {
-			repositoryQueue.Delete(queueClient1.UserID)
+			err := repositoryQueue.Delete(queueClient1.UserID)
+			require.NoError(t, err)
 
 			queueList := repositoryQueue.List()
 			assert.Equal(t, len(queueList), 1)

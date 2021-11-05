@@ -25,36 +25,36 @@ type queueHub struct {
 
 // Create adds client in the hub of queue.
 func (queueHub *queueHub) Create(client queue.Client) {
-	queueHub.hub.Queue[client.UserID] = client.Conn
+	queueHub.hub.Queue = append(queueHub.hub.Queue, client)
 }
 
 // Get returns client from the hub of queue.
 func (queueHub *queueHub) Get(userID uuid.UUID) (queue.Client, error) {
-	var client queue.Client
-	if _, ok := queueHub.hub.Queue[userID]; !ok {
-		return client, queue.ErrNoClient.New("not found user's websocket connection")
+	for _, client := range queueHub.hub.Queue {
+		if client.UserID == userID {
+			return client, nil
+		}
 	}
-	client = queue.Client{
-		UserID: userID,
-		Conn:   queueHub.hub.Queue[userID],
-	}
-	return client, nil
+	// TODO: change error
+	return queue.Client{}, queue.ErrNoClient.New("not found user's values")
 }
 
 // List returns clients from the hub of queue.
 func (queueHub *queueHub) List() []queue.Client {
-	clients := []queue.Client{}
-	for userID, conn := range queueHub.hub.Queue {
-		client := queue.Client{
-			UserID: userID,
-			Conn:   conn,
-		}
-		clients = append(clients, client)
-	}
-	return clients
+	return queueHub.hub.Queue
 }
 
 // Delete deletes record client in the hub of queue.
-func (queueHub *queueHub) Delete(userID uuid.UUID) {
-	delete(queueHub.hub.Queue, userID)
+func (queueHub *queueHub) Delete(userID uuid.UUID) error {
+	for k, client := range queueHub.hub.Queue {
+		if client.UserID == userID {
+			if k+1 == len(queueHub.hub.Queue) {
+				queueHub.hub.Queue = queueHub.hub.Queue[:k]
+				return nil
+			}
+			queueHub.hub.Queue = append(queueHub.hub.Queue[:k], queueHub.hub.Queue[k+1:]...)
+			return nil
+		}
+	}
+	return queue.ErrNoClient.New("not found user's values")
 }

@@ -226,8 +226,7 @@ func (service *Service) Create(ctx context.Context, squad1ID uuid.UUID, squad2ID
 		Squad2ID: squad2ID,
 	}
 
-	err = service.matches.Create(ctx, newMatch)
-	if err != nil {
+	if err = service.matches.Create(ctx, newMatch); err != nil {
 		return uuid.Nil, ErrMatches.Wrap(err)
 	}
 
@@ -267,6 +266,12 @@ func (service *Service) ListMatchGoals(ctx context.Context, matchID uuid.UUID) (
 	matchGoals, err := service.matches.ListMatchGoals(ctx, matchID)
 
 	return matchGoals, ErrMatches.Wrap(err)
+}
+
+// GetMatchResult returns goals of each user in the match.
+func (service *Service) GetMatchResult(ctx context.Context, matchID uuid.UUID) ([]MatchResult, error) {
+	resultMatch, err := service.matches.GetMatchResult(ctx, matchID)
+	return resultMatch, ErrMatches.Wrap(err)
 }
 
 // RankMatch evaluates how many points each user receive per match.

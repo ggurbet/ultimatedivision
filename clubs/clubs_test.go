@@ -124,13 +124,13 @@ func TestTeam(t *testing.T) {
 		})
 
 		t.Run("Get squad sql no rows", func(t *testing.T) {
-			_, err := repositoryClubs.GetSquad(ctx, id)
+			_, err := repositoryClubs.GetSquadByClubID(ctx, id)
 			require.Error(t, err)
 			require.Equal(t, clubs.ErrNoSquad.Has(err), true)
 		})
 
 		t.Run("Get squad", func(t *testing.T) {
-			squadDB, err := repositoryClubs.GetSquad(ctx, testClub.ID)
+			squadDB, err := repositoryClubs.GetSquadByClubID(ctx, testClub.ID)
 			require.NoError(t, err)
 
 			compareSquads(t, squadDB, testSquad)

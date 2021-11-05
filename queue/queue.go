@@ -28,22 +28,25 @@ type DB interface {
 	// Create adds client in database.
 	Create(client Client)
 	// Get returns client from database.
-	Get(UserID uuid.UUID) (Client, error)
+	Get(userID uuid.UUID) (Client, error)
 	// List returns clients from database.
 	List() []Client
 	// Delete deletes client record in database.
-	Delete(UserID uuid.UUID)
+	Delete(userID uuid.UUID) error
 }
 
 // Client entity describes the value of connect with the client.
 type Client struct {
-	UserID uuid.UUID
-	Conn   *websocket.Conn
+	UserID     uuid.UUID
+	Connection *websocket.Conn
+	SquadID    uuid.UUID
+	DivisionID uuid.UUID
 }
 
 // Request entity describes values sent by client.
 type Request struct {
-	Action Action `json:"action"`
+	Action  Action    `json:"action"`
+	SquadID uuid.UUID `json:"squadId"`
 }
 
 // Action defines list of possible clients action.
@@ -62,8 +65,8 @@ const (
 
 // Response entity describes values sent to user.
 type Response struct {
-	Status  int    `json:"status"`
-	Message string `json:"message"`
+	Status  int         `json:"status"`
+	Message interface{} `json:"message"`
 }
 
 // Config defines configuration for queue.
@@ -74,7 +77,7 @@ type Config struct {
 // ReadJSON reads request sent by client.
 func (client *Client) ReadJSON() (Request, error) {
 	var request Request
-	if err := client.Conn.ReadJSON(&request); err != nil {
+	if err := client.Connection.ReadJSON(&request); err != nil {
 		if err = client.WriteJSON(http.StatusBadRequest, err.Error()); err != nil {
 			return request, ErrWrite.Wrap(ErrQueue.Wrap(err))
 		}
@@ -84,8 +87,8 @@ func (client *Client) ReadJSON() (Request, error) {
 }
 
 // WriteJSON writes response to client.
-func (client *Client) WriteJSON(status int, message string) error {
-	if err := client.Conn.WriteJSON(Response{Status: status, Message: message}); err != nil {
+func (client *Client) WriteJSON(status int, message interface{}) error {
+	if err := client.Connection.WriteJSON(Response{Status: status, Message: message}); err != nil {
 		return ErrWrite.Wrap(ErrQueue.Wrap(err))
 	}
 	return nil

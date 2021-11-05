@@ -9,6 +9,8 @@ import (
 
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/clubs"
+	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/sync"
 )
@@ -25,14 +27,16 @@ type Chore struct {
 	log     logger.Logger
 	service *Service
 	Loop    *sync.Cycle
+	matches *matches.Service
 }
 
 // NewChore instantiates Chore.
-func NewChore(log logger.Logger, config Config, service *Service) *Chore {
+func NewChore(log logger.Logger, config Config, service *Service, matches *matches.Service) *Chore {
 	return &Chore{
 		log:     log,
 		service: service,
 		Loop:    sync.NewCycle(config.PlaceRenewalInterval),
+		matches: matches,
 	}
 }
 
@@ -42,20 +46,15 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 		clients := chore.service.List()
 		if len(clients) >= 2 {
 			for k := range clients {
-				if k%2 != 0 || (clients[k] == Client{} && clients[k+1] == Client{}) {
+				isEvenNumber := (k%2 != 0)
+				isEmptyClients := (clients[k] == Client{} && clients[k+1] == Client{})
+				isEqualDivisions := (clients[k].DivisionID != clients[k+1].DivisionID)
+				if isEvenNumber || isEmptyClients || isEqualDivisions {
 					continue
 				}
 
-				firstUser := clients[k]
-				secondUser := clients[k+1]
-				firstClient := Client{
-					UserID: firstUser.UserID,
-					Conn:   firstUser.Conn,
-				}
-				secondClient := Client{
-					UserID: secondUser.UserID,
-					Conn:   secondUser.Conn,
-				}
+				firstClient := clients[k]
+				secondClient := clients[k+1]
 
 				if err := firstClient.WriteJSON(http.StatusOK, "you confirm play?"); err != nil {
 					return ChoreError.Wrap(err)
@@ -94,21 +93,66 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 					continue
 				}
 
-				chore.service.Finish(firstClient.UserID)
-				chore.service.Finish(secondClient.UserID)
+				squadCardsFirstClient, err := chore.service.clubs.ListSquadCards(ctx, firstClient.SquadID)
+				if err != nil {
+					return ChoreError.Wrap(err)
+				}
+				if len(squadCardsFirstClient) != clubs.SquadSize {
+					if err := firstClient.WriteJSON(http.StatusInternalServerError, "squad is not full"); err != nil {
+						return ChoreError.Wrap(err)
+					}
+				}
+
+				squadCardsSecondClient, err := chore.service.clubs.ListSquadCards(ctx, secondClient.SquadID)
+				if err != nil {
+					return ChoreError.Wrap(err)
+				}
+				if len(squadCardsSecondClient) != clubs.SquadSize {
+					if err := secondClient.WriteJSON(http.StatusInternalServerError, "squad is not full"); err != nil {
+						return ChoreError.Wrap(err)
+					}
+				}
+
+				matchesID, err := chore.matches.Create(ctx, firstClient.SquadID, secondClient.SquadID, firstClient.UserID, secondClient.UserID)
+				if err != nil {
+					if err := firstClient.WriteJSON(http.StatusInternalServerError, "match error"); err != nil {
+						return ChoreError.Wrap(err)
+					}
+					if err := secondClient.WriteJSON(http.StatusInternalServerError, "match error"); err != nil {
+						return ChoreError.Wrap(err)
+					}
+				}
+
+				resultMatch, err := chore.matches.GetMatchResult(ctx, matchesID)
+				if err != nil {
+					if err := secondClient.WriteJSON(http.StatusInternalServerError, "could not get result of match"); err != nil {
+						return ChoreError.Wrap(err)
+					}
+				}
+				if err := firstClient.WriteJSON(http.StatusOK, resultMatch); err != nil {
+					return ChoreError.Wrap(err)
+				}
+				if err := secondClient.WriteJSON(http.StatusOK, resultMatch); err != nil {
+					return ChoreError.Wrap(err)
+				}
+
+				if err = chore.service.Finish(firstClient.UserID); err != nil {
+					return ChoreError.Wrap(err)
+				}
+				if err = chore.service.Finish(secondClient.UserID); err != nil {
+					return ChoreError.Wrap(err)
+				}
 
 				defer func() {
-					if err = firstClient.Conn.Close(); err != nil {
+					if err = firstClient.Connection.Close(); err != nil {
 						chore.log.Error("could not close websocket", ErrQueue.Wrap(err))
 					}
 				}()
 				defer func() {
-					if err = secondClient.Conn.Close(); err != nil {
+					if err = secondClient.Connection.Close(); err != nil {
 						chore.log.Error("could not close websocket", ErrQueue.Wrap(err))
 					}
 				}()
-
-				// TODO: add to match and send result
 			}
 		}
 		return ChoreError.Wrap(err)

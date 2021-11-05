@@ -17,9 +17,6 @@ import (
 // ErrClubs indicates that there was an error in the service.
 var ErrClubs = errs.Class("clubs service error")
 
-// squadSize defines number of cards in the full squad.
-const squadSize = 11
-
 // Service is handling clubs related logic.
 //
 // architecture: Service
@@ -78,7 +75,7 @@ func (service *Service) AddSquadCard(ctx context.Context, squadID uuid.UUID, new
 		return ErrClubs.Wrap(err)
 	}
 
-	if len(squadCards) == squadSize {
+	if len(squadCards) == SquadSize {
 		return ErrClubs.New("squad is full")
 	}
 
@@ -167,9 +164,15 @@ func (service *Service) UpdateCardPosition(ctx context.Context, squadID uuid.UUI
 	return ErrClubs.Wrap(service.clubs.UpdatePositions(ctx, updatedCards))
 }
 
-// GetSquad returns squad of club.
-func (service *Service) GetSquad(ctx context.Context, clubID uuid.UUID) (Squad, error) {
-	squad, err := service.clubs.GetSquad(ctx, clubID)
+// GetSquadByClubID returns squad of club.
+func (service *Service) GetSquadByClubID(ctx context.Context, clubID uuid.UUID) (Squad, error) {
+	squad, err := service.clubs.GetSquadByClubID(ctx, clubID)
+	return squad, ErrClubs.Wrap(err)
+}
+
+// GetSquad returns squad.
+func (service *Service) GetSquad(ctx context.Context, squadID uuid.UUID) (Squad, error) {
+	squad, err := service.clubs.GetSquad(ctx, squadID)
 	return squad, ErrClubs.Wrap(err)
 }
 
@@ -187,8 +190,8 @@ func (service *Service) ListSquadCards(ctx context.Context, squadID uuid.UUID) (
 
 	squadCards = convertPositions(squadCards, formation)
 
-	if len(squadCards) < squadSize {
-		for i := 0; i < squadSize; i++ {
+	if len(squadCards) < SquadSize {
+		for i := 0; i < SquadSize; i++ {
 			var isPositionInTheSquad bool
 			for _, card := range squadCards {
 				if card.Position == Position(i) {
@@ -215,9 +218,15 @@ func (service *Service) ListSquadCards(ctx context.Context, squadID uuid.UUID) (
 	return squadCards, ErrClubs.Wrap(err)
 }
 
-// Get returns user club.
-func (service *Service) Get(ctx context.Context, userID uuid.UUID) (Club, error) {
+// GetByUserID returns user club.
+func (service *Service) GetByUserID(ctx context.Context, userID uuid.UUID) (Club, error) {
 	club, err := service.clubs.GetByUserID(ctx, userID)
+	return club, ErrClubs.Wrap(err)
+}
+
+// Get returns club.
+func (service *Service) Get(ctx context.Context, clubID uuid.UUID) (Club, error) {
+	club, err := service.clubs.Get(ctx, clubID)
 	return club, ErrClubs.Wrap(err)
 }
 

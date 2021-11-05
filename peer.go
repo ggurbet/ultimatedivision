@@ -314,12 +314,14 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			config.Queue.Config,
 			peer.Database.Queue(),
 			peer.Users.Service,
+			peer.Clubs.Service,
 		)
 
 		peer.Queue.PlaceChore = queue.NewChore(
 			peer.Log,
 			config.Queue.Config,
 			peer.Queue.Service,
+			peer.Matches.Service,
 		)
 	}
 

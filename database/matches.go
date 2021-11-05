@@ -244,3 +244,37 @@ func (matchesDB *matchesDB) ListMatchGoals(ctx context.Context, matchID uuid.UUI
 
 	return goals, ErrMatches.Wrap(err)
 }
+
+// GetMatchResult returns goals of each user in the match from db.
+func (matchesDB *matchesDB) GetMatchResult(ctx context.Context, matchID uuid.UUID) ([]matches.MatchResult, error) {
+	query := `SELECT user_id, COUNT(user_id)
+              FROM match_results
+              WHERE match_id = $1
+              GROUP BY user_id`
+
+	rows, err := matchesDB.conn.QueryContext(ctx, query, matchID)
+	if err != nil {
+		return nil, ErrMatches.Wrap(err)
+	}
+
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	var goals []matches.MatchResult
+
+	for rows.Next() {
+		var goal matches.MatchResult
+		err = rows.Scan(&goal.UserID, &goal.QuantityGoals)
+		if err != nil {
+			return nil, ErrMatches.Wrap(err)
+		}
+
+		goals = append(goals, goal)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, ErrMatches.Wrap(err)
+	}
+
+	return goals, ErrMatches.Wrap(err)
+}

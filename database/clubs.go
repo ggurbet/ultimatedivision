@@ -126,13 +126,56 @@ func (clubsDB *clubsDB) GetByUserID(ctx context.Context, userID uuid.UUID) (club
 	return club, nil
 }
 
-// GetSquad returns squad from database.
-func (clubsDB *clubsDB) GetSquad(ctx context.Context, clubID uuid.UUID) (clubs.Squad, error) {
+// Get returns club.
+func (clubsDB *clubsDB) Get(ctx context.Context, clubID uuid.UUID) (clubs.Club, error) {
+	query := `SELECT id, owner_id, club_name, created_at
+			  FROM clubs
+			  WHERE id = $1`
+
+	row := clubsDB.conn.QueryRowContext(ctx, query, clubID)
+
+	var club clubs.Club
+	err := row.Scan(&club.ID, &club.OwnerID, &club.Name, &club.CreatedAt)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return club, clubs.ErrNoClub.Wrap(err)
+		}
+
+		return club, clubs.ErrClubs.Wrap(err)
+	}
+
+	return club, nil
+}
+
+// GetSquadByClubID returns squad from database.
+func (clubsDB *clubsDB) GetSquadByClubID(ctx context.Context, clubID uuid.UUID) (clubs.Squad, error) {
 	query := `SELECT id, squad_name, club_id, tactic, formation, captain_id
 			  FROM squads
 			  WHERE club_id = $1`
 
 	row := clubsDB.conn.QueryRowContext(ctx, query, clubID)
+
+	var squad clubs.Squad
+
+	err := row.Scan(&squad.ID, &squad.Name, &squad.ClubID, &squad.Tactic, &squad.Formation, &squad.CaptainID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return squad, clubs.ErrNoSquad.Wrap(err)
+		}
+
+		return squad, ErrClubs.Wrap(err)
+	}
+
+	return squad, nil
+}
+
+// GetSquad returns squad from database.
+func (clubsDB *clubsDB) GetSquad(ctx context.Context, squadID uuid.UUID) (clubs.Squad, error) {
+	query := `SELECT id, squad_name, club_id, tactic, formation, captain_id
+			  FROM squads
+			  WHERE id = $1`
+
+	row := clubsDB.conn.QueryRowContext(ctx, query, squadID)
 
 	var squad clubs.Squad
 
