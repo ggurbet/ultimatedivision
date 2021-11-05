@@ -28,7 +28,7 @@ type tempMasterDB struct {
 }
 
 // DefaultTestConn default test conn string that is expected to work with postgres server.
-const DefaultTestConn = "postgres://postgres:123456@localhost/nftdropdb_test?sslmode=disable"
+const DefaultTestConn = "postgres://postgres:123456@localhost/ultimatedivisiondb_test?sslmode=disable"
 
 // Run method will establish connection with db, create tables in random schema, run tests.
 func Run(t *testing.T, test func(ctx context.Context, t *testing.T, db nftdrop.DB)) {
