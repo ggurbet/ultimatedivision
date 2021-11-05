@@ -44,12 +44,17 @@ func NewChore(log logger.Logger, config Config, service *Service, matches *match
 func (chore *Chore) Run(ctx context.Context) (err error) {
 	return chore.Loop.Run(ctx, func(ctx context.Context) error {
 		clients := chore.service.List()
+
 		if len(clients) >= 2 {
 			for k := range clients {
 				isEvenNumber := (k%2 != 0)
+				if isEvenNumber {
+					continue
+				}
+
 				isEmptyClients := (clients[k] == Client{} && clients[k+1] == Client{})
 				isEqualDivisions := (clients[k].DivisionID != clients[k+1].DivisionID)
-				if isEvenNumber || isEmptyClients || isEqualDivisions {
+				if isEmptyClients || isEqualDivisions {
 					continue
 				}
 
