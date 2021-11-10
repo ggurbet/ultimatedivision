@@ -477,13 +477,14 @@
                 &__password-check,
                 &__confirm {
                     line-height: 40px;
-                    font-size: 14px;
+                    font-size: 12px;
                     margin-top: 30px;
                 }
 
                 &__confirm {
                     width: 100%;
                     margin-bottom: 20px;
+                    font-size: 16px;
                 }
 
                 &__remember-me {
@@ -602,6 +603,120 @@
                 &__password-check,
                 &__confirm {
                     margin-top: 7.5px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-height: $phoneBreakPoint - 50px) {
+
+    .register {
+
+        &__represent,
+        &__represent-recover,
+        &__represent-reset {
+            display: none;
+        }
+
+        &__sign-in,
+        &__sign-up,
+        &__reset,
+        &__recover {
+            width: 100%;
+            margin: auto;
+            text-align: center;
+            padding: 0;
+
+            &__description {
+
+                &__information {
+                    margin: 20px auto;
+                }
+            }
+
+            &__title,
+            &__go-back {
+                margin-top: 5%;
+            }
+
+            &__sign-form {
+                margin: auto;
+                width: 50%;
+
+                &__remember-me {
+                    float: left;
+                }
+
+                &__forgot-password {
+                    bottom: 105px;
+                }
+
+                &__email,
+                &__name,
+                &__surname,
+                &__password,
+                &__email-error,
+                &__name-error,
+                &__surname-error,
+                &__password-error,
+                &__email-check,
+                &__name-check,
+                &__surname-check,
+                &__password-check,
+                &__confirm {
+                    line-height: 40px;
+                    font-size: 12px;
+                }
+
+                &__confirm {
+                    font-size: 16px;
+                }
+
+                &__email-error,
+                &__name-error,
+                &__surname-error,
+                &__password-error {
+                    margin-top: 5px;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-height: $phoneBreakPoint - 200px) {
+
+    .register {
+
+        &__sign-in,
+        &__sign-up,
+        &__reset,
+        &__recover {
+
+            &__sign-form {
+
+                &__forgot-password {
+                    bottom: 120px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-height: $phoneBreakPoint - 250px) {
+
+    .register {
+
+        &__sign-in,
+        &__sign-up,
+        &__reset,
+        &__recover {
+
+            &__sign-form {
+
+                &__forgot-password {
+                    bottom: 140px;
                 }
             }
         }
