@@ -210,7 +210,7 @@ func (service *Service) Register(ctx context.Context, email, password, nickName,
 	// check if the user email address already exists.
 	_, err := service.users.GetByEmail(ctx, email)
 	if err == nil {
-		return ErrAddressAlreadyInUse.Wrap(err)
+		return ErrAddressAlreadyInUse.New("Email address is already in use.")
 	}
 
 	// check the password is valid.
