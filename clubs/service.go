@@ -373,14 +373,17 @@ func (service *Service) EffectiveCardForPosition(ctx context.Context, position P
 // CardsWithNewPositions returns cards with new position by new formation.
 func (service *Service) CardsWithNewPositions(ctx context.Context, cards []SquadCard, positions []Position) (map[Position]uuid.UUID, error) {
 	positionMap := make(map[Position]uuid.UUID)
-
+	maxCards := SquadSize
 	for _, position := range positions {
 		card, index, err := service.EffectiveCardForPosition(ctx, position, cards)
 		if err != nil {
 			return positionMap, ErrClubs.Wrap(err)
 		}
 		positionMap[position] = card.ID
-		cards = RemoveIndex(cards, index)
+		if len(cards) == maxCards {
+			cards = RemoveIndex(cards, index)
+		}
+		maxCards--
 	}
 
 	return positionMap, nil
