@@ -29,8 +29,8 @@ type DB interface {
 	Create(ctx context.Context, club Club) (uuid.UUID, error)
 	// CreateSquad creates squad for clubs in the database.
 	CreateSquad(ctx context.Context, squad Squad) (uuid.UUID, error)
-	// GetByUserID returns club owned by the user.
-	GetByUserID(ctx context.Context, userID uuid.UUID) (Club, error)
+	// ListByUserID returns clubs owned by the user.
+	ListByUserID(ctx context.Context, userID uuid.UUID) ([]Club, error)
 	// Get returns club.
 	Get(ctx context.Context, clubID uuid.UUID) (Club, error)
 	// GetSquadByClubID returns squad by club id.
@@ -49,10 +49,27 @@ type DB interface {
 	DeleteSquadCard(ctx context.Context, squadID, cardID uuid.UUID) error
 	// UpdateTacticCaptain updates tactic and capitan in the squad.
 	UpdateTacticCaptain(ctx context.Context, squad Squad) error
+	// UpdateStatuses update statuses of users clubs.
+	UpdateStatuses(ctx context.Context, allClubs []Club) error
 	// UpdatePositions updates positions of cards in the squad.
 	UpdatePositions(ctx context.Context, squadCards []SquadCard) error
 	// UpdateFormation updates formation in the squad.
 	UpdateFormation(ctx context.Context, newFormation Formation, squadID uuid.UUID) error
+}
+
+// Status defines list of possible club statuses.
+type Status int
+
+const (
+	// StatusInactive indicates that club is inactive.
+	StatusInactive Status = 0
+	// StatusActive indicates that club is active.
+	StatusActive Status = 1
+)
+
+// IsValid checks if status of club valid.
+func (status Status) IsValid() bool {
+	return status == StatusActive || status == StatusInactive
 }
 
 // Club defines club entity.
@@ -60,6 +77,7 @@ type Club struct {
 	ID        uuid.UUID `json:"id"`
 	OwnerID   uuid.UUID `json:"-"`
 	Name      string    `json:"name"`
+	Status    Status    `json:"status"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 

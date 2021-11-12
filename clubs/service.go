@@ -49,8 +49,19 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID) (uuid.UUID
 		CreatedAt: time.Now().UTC(),
 	}
 
-	clubID, err := service.clubs.Create(ctx, newClub)
+	allClubs, err := service.ListByUserID(ctx, userID)
+	if err != nil {
+		return uuid.Nil, ErrClubs.Wrap(err)
+	}
 
+	switch {
+	case len(allClubs) == 0:
+		newClub.Status = StatusActive
+	default:
+		newClub.Status = StatusInactive
+	}
+
+	clubID, err := service.clubs.Create(ctx, newClub)
 	return clubID, ErrClubs.Wrap(err)
 }
 
@@ -218,9 +229,9 @@ func (service *Service) ListSquadCards(ctx context.Context, squadID uuid.UUID) (
 	return squadCards, ErrClubs.Wrap(err)
 }
 
-// GetByUserID returns user club.
-func (service *Service) GetByUserID(ctx context.Context, userID uuid.UUID) (Club, error) {
-	club, err := service.clubs.GetByUserID(ctx, userID)
+// ListByUserID returns user's clubs.
+func (service *Service) ListByUserID(ctx context.Context, userID uuid.UUID) ([]Club, error) {
+	club, err := service.clubs.ListByUserID(ctx, userID)
 	return club, ErrClubs.Wrap(err)
 }
 
@@ -304,6 +315,25 @@ func (service *Service) CalculateEffectivenessOfSquad(ctx context.Context, squad
 	}
 
 	return effectiveness, nil
+}
+
+// UpdateStatus updates status of club.
+func (service *Service) UpdateStatus(ctx context.Context, userID, clubID uuid.UUID, newStatus Status) error {
+	allUserClubs, err := service.clubs.ListByUserID(ctx, userID)
+	if err != nil {
+		return ErrClubs.Wrap(err)
+	}
+
+	for i := 0; i < len(allUserClubs); i++ {
+		if allUserClubs[i].ID != clubID {
+			allUserClubs[i].Status = StatusInactive
+			continue
+		}
+
+		allUserClubs[i].Status = StatusActive
+	}
+
+	return ErrClubs.Wrap(service.clubs.UpdateStatuses(ctx, allUserClubs))
 }
 
 // RemoveIndex removes element from the slice.

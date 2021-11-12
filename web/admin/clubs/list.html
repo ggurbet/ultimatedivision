@@ -5,23 +5,18 @@
   <title>Admin Portal | Clubs</title>
 </head>
 <body>
-<nav>
-  <div>
-    <ul>
-      <li><a href="/clubs/create/{{.OwnerID}}">Create club</a></li>
-    </ul>
-  </div>
-</nav>
 <table style="width:100%">
   <thead>
   <tr>
     <th>ID</th>
     <th>Owner ID</th>
     <th>Name</th>
+    <th>Status</th>
     <th>Created At</th>
     <th>Operations</th>
   </tr>
   </thead>
+  {{range .}}
   <tr>
     <td>
       {{.ID}}
@@ -33,13 +28,18 @@
       {{.Name}}
     </td>
     <td>
+      {{.Status}}
+    </td>
+    <td>
       {{.CreatedAt}}
     </td>
     <td>
+      <a href = "/clubs/{{.OwnerID}}/{{.ID}}">Make Active</a>
       <a href = "/clubs/{{.ID}}/squad">Get squad</a>
       <a href = "/clubs/{{.ID}}/squad/create">Create squad</a>
     </td>
   </tr>
+  {{end}}
 </table>
 </body>
 </html>

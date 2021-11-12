@@ -37,13 +37,13 @@ func (clubsDB *clubsDB) Create(ctx context.Context, club clubs.Club) (uuid.UUID,
 		return uuid.Nil, ErrClubs.Wrap(err)
 	}
 
-	query := `INSERT INTO clubs(id, owner_id, club_name, created_at)
-              VALUES($1,$2,$3,$4)
+	query := `INSERT INTO clubs(id, owner_id, club_name, status, created_at)
+              VALUES($1,$2,$3,$4,$5)
               RETURNING id`
 
 	var clubID uuid.UUID
 	err = clubsDB.conn.QueryRowContext(ctx, query,
-		club.ID, club.OwnerID, club.Name, club.CreatedAt).Scan(&clubID)
+		club.ID, club.OwnerID, club.Name, club.Status, club.CreatedAt).Scan(&clubID)
 	if err != nil {
 		err = tx.Rollback()
 		if err != nil {
@@ -104,38 +104,48 @@ func (clubsDB *clubsDB) DeleteSquadCard(ctx context.Context, squadID, cardID uui
 	return ErrClubs.Wrap(err)
 }
 
-// GetByUserID returns club owned by the user.
-func (clubsDB *clubsDB) GetByUserID(ctx context.Context, userID uuid.UUID) (clubs.Club, error) {
-	query := `SELECT id, owner_id, club_name, created_at
+// ListByUserID returns clubs owned by the user.
+func (clubsDB *clubsDB) ListByUserID(ctx context.Context, userID uuid.UUID) ([]clubs.Club, error) {
+	query := `SELECT id, owner_id, club_name, status, created_at
 			  FROM clubs
 			  WHERE owner_id = $1`
 
-	row := clubsDB.conn.QueryRowContext(ctx, query, userID)
-
-	var club clubs.Club
-
-	err := row.Scan(&club.ID, &club.OwnerID, &club.Name, &club.CreatedAt)
+	rows, err := clubsDB.conn.QueryContext(ctx, query, userID)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return club, clubs.ErrNoClub.Wrap(err)
+		return nil, ErrClubs.Wrap(err)
+	}
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	var allClubs []clubs.Club
+
+	for rows.Next() {
+		var club clubs.Club
+		err = rows.Scan(&club.ID, &club.OwnerID, &club.Name, &club.Status, &club.CreatedAt)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				return allClubs, clubs.ErrNoClub.Wrap(err)
+			}
+			return allClubs, clubs.ErrClubs.Wrap(err)
 		}
 
-		return club, clubs.ErrClubs.Wrap(err)
+		allClubs = append(allClubs, club)
 	}
 
-	return club, nil
+	return allClubs, nil
 }
 
 // Get returns club.
 func (clubsDB *clubsDB) Get(ctx context.Context, clubID uuid.UUID) (clubs.Club, error) {
-	query := `SELECT id, owner_id, club_name, created_at
+	query := `SELECT id, owner_id, club_name, status, created_at
 			  FROM clubs
 			  WHERE id = $1`
 
 	row := clubsDB.conn.QueryRowContext(ctx, query, clubID)
 
 	var club clubs.Club
-	err := row.Scan(&club.ID, &club.OwnerID, &club.Name, &club.CreatedAt)
+	err := row.Scan(&club.ID, &club.OwnerID, &club.Name, &club.Status, &club.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return club, clubs.ErrNoClub.Wrap(err)
@@ -277,6 +287,39 @@ func (clubsDB *clubsDB) GetFormation(ctx context.Context, squadID uuid.UUID) (cl
 	}
 
 	return formation, ErrClubs.Wrap(err)
+}
+
+// UpdateStatuses updates statuses of user clubs.
+func (clubsDB *clubsDB) UpdateStatuses(ctx context.Context, allClubs []clubs.Club) error {
+	query := `UPDATE clubs
+			  SET status = $1
+			  WHERE id = $2`
+
+	preparedQuery, err := clubsDB.conn.PrepareContext(ctx, query)
+	if err != nil {
+		return ErrClubs.Wrap(err)
+	}
+	defer func() {
+		err = preparedQuery.Close()
+	}()
+
+	for _, club := range allClubs {
+		result, err := preparedQuery.ExecContext(ctx, club.Status, club.ID)
+		if err != nil {
+			return ErrClubs.Wrap(err)
+		}
+
+		rowNum, err := result.RowsAffected()
+		if rowNum == 0 {
+			return clubs.ErrNoClub.New("club does not exist")
+		}
+
+		if err != nil {
+			return ErrClubs.Wrap(err)
+		}
+	}
+
+	return ErrClubs.Wrap(err)
 }
 
 // UpdatePositions updates positions of cards in the squad.

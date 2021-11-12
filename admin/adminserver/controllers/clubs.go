@@ -71,8 +71,8 @@ func (controller *Clubs) Create(w http.ResponseWriter, r *http.Request) {
 	Redirect(w, r, "/clubs/"+id.String(), http.MethodGet)
 }
 
-// Get is an endpoint that provides a web page with users club.
-func (controller *Clubs) Get(w http.ResponseWriter, r *http.Request) {
+// List is an endpoint that provides a web page with users clubs.
+func (controller *Clubs) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	params := mux.Vars(r)
 
@@ -82,7 +82,7 @@ func (controller *Clubs) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	club, err := controller.clubs.GetByUserID(ctx, userID)
+	allClubs, err := controller.clubs.ListByUserID(ctx, userID)
 	if err != nil {
 		controller.log.Error("could not get club", ErrClubs.Wrap(err))
 		switch {
@@ -94,7 +94,7 @@ func (controller *Clubs) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = controller.templates.List.Execute(w, club); err != nil {
+	if err = controller.templates.List.Execute(w, allClubs); err != nil {
 		controller.log.Error("could not parse template", ErrClubs.Wrap(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -149,6 +149,37 @@ func (controller *Clubs) GetSquadByClubID(w http.ResponseWriter, r *http.Request
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+// UpdateStatus is an endpoint that updates club status.
+func (controller *Clubs) UpdateStatus(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	params := mux.Vars(r)
+
+	userID, err := uuid.Parse(params["userId"])
+	if err != nil {
+		http.Error(w, "could parse user id", http.StatusBadRequest)
+		return
+	}
+
+	clubID, err := uuid.Parse(params["clubId"])
+	if err != nil {
+		http.Error(w, "could parse club id", http.StatusBadRequest)
+		return
+	}
+
+	if err = controller.clubs.UpdateStatus(ctx, userID, clubID, clubs.StatusActive); err != nil {
+		controller.log.Error("could not change status", ErrClubs.Wrap(err))
+		switch {
+		case clubs.ErrNoClub.Has(err):
+			http.Error(w, "club does not exist", http.StatusNotFound)
+		default:
+			http.Error(w, "could not change status", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	Redirect(w, r, "/clubs/"+userID.String(), http.MethodGet)
 }
 
 // UpdateSquad is an endpoint that updates squad.

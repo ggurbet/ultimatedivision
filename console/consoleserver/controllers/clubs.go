@@ -56,7 +56,7 @@ type UpdateRequest struct {
 
 // ClubResponse is a struct for response clubs, squad and squadCards.
 type ClubResponse struct {
-	Clubs      clubs.Club        `json:"clubs"`
+	clubs.Club
 	Squad      clubs.Squad       `json:"squad"`
 	SquadCards []clubs.SquadCard `json:"squadCards"`
 }
@@ -121,7 +121,7 @@ func (controller *Clubs) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	club, err := controller.clubs.GetByUserID(ctx, claims.UserID)
+	allClubs, err := controller.clubs.ListByUserID(ctx, claims.UserID)
 	if err != nil {
 		controller.log.Error("could not get user club", ErrClubs.Wrap(err))
 
@@ -134,40 +134,90 @@ func (controller *Clubs) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	squad, err := controller.clubs.GetSquadByClubID(ctx, club.ID)
-	if err != nil {
-		controller.log.Error("could not get squad", ErrClubs.Wrap(err))
+	var userClubs []ClubResponse
 
-		if clubs.ErrNoSquad.Has(err) {
-			controller.serveError(w, http.StatusNotFound, ErrClubs.Wrap(err))
+	for _, club := range allClubs {
+		squad, err := controller.clubs.GetSquadByClubID(ctx, club.ID)
+		if err != nil {
+			controller.log.Error("could not get squad", ErrClubs.Wrap(err))
+
+			if clubs.ErrNoSquad.Has(err) {
+				controller.serveError(w, http.StatusNotFound, ErrClubs.Wrap(err))
+				return
+			}
+
+			controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
 			return
 		}
 
-		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
-		return
-	}
+		squadCards, err := controller.clubs.ListSquadCards(ctx, squad.ID)
+		if err != nil {
+			controller.log.Error("could not get squad cards", ErrClubs.Wrap(err))
 
-	squadCards, err := controller.clubs.ListSquadCards(ctx, squad.ID)
-	if err != nil {
-		controller.log.Error("could not get squad cards", ErrClubs.Wrap(err))
+			if clubs.ErrNoSquad.Has(err) {
+				controller.serveError(w, http.StatusNotFound, ErrClubs.Wrap(err))
+				return
+			}
 
-		if clubs.ErrNoSquad.Has(err) {
-			controller.serveError(w, http.StatusNotFound, ErrClubs.Wrap(err))
+			controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
 			return
 		}
 
-		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
-		return
+		userClub := ClubResponse{
+			club,
+			squad,
+			squadCards,
+		}
+
+		userClubs = append(userClubs, userClub)
 	}
 
-	userTeam := ClubResponse{
-		Clubs:      club,
-		Squad:      squad,
-		SquadCards: squadCards,
-	}
-
-	if err = json.NewEncoder(w).Encode(userTeam); err != nil {
+	if err = json.NewEncoder(w).Encode(userClubs); err != nil {
 		controller.log.Error("failed to write json response", ErrClubs.Wrap(err))
+		return
+	}
+}
+
+// UpdateStatus is an endpoint that updates status of users club.
+func (controller *Clubs) UpdateStatus(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+	params := mux.Vars(r)
+
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusUnauthorized, ErrClubs.Wrap(err))
+		return
+	}
+
+	clubID, err := uuid.Parse(params["clubId"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
+		return
+	}
+
+	var club clubs.Club
+
+	if err = json.NewDecoder(r.Body).Decode(&club); err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
+		return
+	}
+
+	if !club.Status.IsValid() {
+		controller.serveError(w, http.StatusBadRequest, ErrClubs.New("invalid status"))
+		return
+	}
+
+	err = controller.clubs.UpdateStatus(ctx, claims.UserID, clubID, club.Status)
+	if err != nil {
+		controller.log.Error("could not update club status", ErrClubs.Wrap(err))
+
+		if clubs.ErrNoClub.Has(err) {
+			controller.serveError(w, http.StatusNotFound, ErrClubs.Wrap(err))
+			return
+		}
+
+		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
 		return
 	}
 }
