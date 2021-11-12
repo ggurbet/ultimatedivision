@@ -1,15 +1,16 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-package avatarcards
+package cardavatars
 
 import (
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/avatars"
+	"ultimatedivision/cards/nfts"
 )
 
-// CardWithLinkToAvatar describes card entity with link to avatar.
-type CardWithLinkToAvatar struct {
+// CardAvatars describes card entity with link to avatar.
+type CardAvatars struct {
 	cards.Card
 	OriginalURL string `json:"originalUrl"`
 }
@@ -19,7 +20,7 @@ type Config struct {
 	CardConfig           cards.Config              `json:"cardConfig"`
 	PercentageQualities  cards.PercentageQualities `json:"percentageQualities"`
 	AvatarConfig         avatars.Config            `json:"avatarConfig"`
+	NFTConfig            nfts.Config               `json:"nftConfig"`
 	PathToOutputJSONFile string                    `json:"pathToOutputJsonFile"`
-	NameOutputJSONFile   string                    `json:"nameOutputJsonFile"`
 	PathToNamesDataset   string                    `json:"pathToNamesDataset"`
 }

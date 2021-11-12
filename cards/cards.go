@@ -155,7 +155,7 @@ const (
 	StatusSale Status = 1
 )
 
-// Type defines the list of possible card Types.
+// Type defines the list of possible card types.
 type Type string
 
 const (

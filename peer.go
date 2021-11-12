@@ -267,6 +267,13 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
+	{ // cards setup
+		peer.Cards.Service = cards.NewService(
+			peer.Database.Cards(),
+			config.Cards.Config,
+		)
+	}
+
 	{ // avatars setup
 		peer.Avatars.Service = avatars.NewService(
 			peer.Database.Avatars(),
@@ -280,13 +287,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Cards.Service,
 			peer.Avatars.Service,
 			peer.Users.Service,
-		)
-	}
-
-	{ // cards setup
-		peer.Cards.Service = cards.NewService(
-			peer.Database.Cards(),
-			config.Cards.Config,
+			peer.Database.NFTs(),
 		)
 	}
 
@@ -398,6 +399,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Users.Auth,
 			peer.Users.Service,
 			peer.Queue.Service,
+			peer.NFTs.Service,
 		)
 	}
 

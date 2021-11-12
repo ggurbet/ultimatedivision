@@ -7,18 +7,16 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/avatars"
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/pkg/nft"
 	"ultimatedivision/users"
 )
 
 // ErrNFTWaitList indicated that there was an error in service.
-var ErrNFTWaitList = errs.Class("NFTs service error")
+var ErrNFTWaitList = errs.Class("ErrNFTWaitList service error")
 
 // Service is handling NFTs related logic.
 //
@@ -32,23 +30,28 @@ type Service struct {
 }
 
 // NewService is a constructor for NFTs service.
-func NewService(config Config, cards *cards.Service, avatars *avatars.Service, users *users.Service) *Service {
+func NewService(config Config, cards *cards.Service, avatars *avatars.Service, users *users.Service, nfts DB) *Service {
 	return &Service{
 		config:  config,
 		cards:   cards,
 		avatars: avatars,
 		users:   users,
+		nfts:    nfts,
 	}
 }
 
 // Create creates nft token.
-func (service *Service) Create(ctx context.Context, cardID uuid.UUID, wallet cryptoutils.Address, userID uuid.UUID) error {
-	card, err := service.cards.Get(ctx, cardID)
+func (service *Service) Create(ctx context.Context, createNFT CreateNFT) error {
+	card, err := service.cards.Get(ctx, createNFT.CardID)
 	if err != nil {
 		return ErrNFTWaitList.Wrap(err)
 	}
 
-	avatar, err := service.avatars.Get(ctx, cardID)
+	if card.UserID != createNFT.UserID {
+		return ErrNFTWaitList.New("it isn't user`s card")
+	}
+
+	avatar, err := service.avatars.Get(ctx, createNFT.CardID)
 	if err != nil {
 		return ErrNFTWaitList.Wrap(err)
 	}
@@ -61,10 +64,13 @@ func (service *Service) Create(ctx context.Context, cardID uuid.UUID, wallet cry
 	}
 
 	// TODO: save nft metadata to file storage
+	// TODO: add transaction
 
-	// TODO: add user in queue and update wallet address
+	if err = service.users.UpdateWalletAddress(ctx, createNFT.WalletAddress, createNFT.UserID); err != nil {
+		return ErrNFTWaitList.Wrap(err)
+	}
 
-	return nil
+	return service.nfts.Create(ctx, createNFT.CardID, createNFT.WalletAddress)
 }
 
 // Generate generates values for nft token.

@@ -9,6 +9,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
+
+	"ultimatedivision/pkg/cryptoutils"
 )
 
 // ErrUsers indicates that there was an error in the service.
@@ -99,4 +101,9 @@ func (service *Service) GetNickNameByID(ctx context.Context, id uuid.UUID) (stri
 	nickname, err := service.users.GetNickNameByID(ctx, id)
 
 	return nickname, ErrUsers.Wrap(err)
+}
+
+// UpdateWalletAddress updates wallet address.
+func (service *Service) UpdateWalletAddress(ctx context.Context, wallet cryptoutils.Address, id uuid.UUID) error {
+	return ErrUsers.Wrap(service.users.UpdateWalletAddress(ctx, wallet, id))
 }

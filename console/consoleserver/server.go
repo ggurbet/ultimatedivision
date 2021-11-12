@@ -16,6 +16,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"ultimatedivision/cards"
+	"ultimatedivision/cards/nfts"
 	"ultimatedivision/clubs"
 	"ultimatedivision/console/consoleserver/controllers"
 	"ultimatedivision/internal/logger"
@@ -63,7 +64,7 @@ type Server struct {
 }
 
 // NewServer is a constructor for console web server.
-func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service, marketplace *marketplace.Service, clubs *clubs.Service, userAuth *userauth.Service, users *users.Service, queue *queue.Service) *Server {
+func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service, marketplace *marketplace.Service, clubs *clubs.Service, userAuth *userauth.Service, users *users.Service, queue *queue.Service, nfts *nfts.Service) *Server {
 	server := &Server{
 		log:         log,
 		config:      config,
@@ -82,6 +83,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	lootBoxesController := controllers.NewLootBoxes(log, lootBoxes)
 	marketplaceController := controllers.NewMarketplace(log, marketplace)
 	queueController := controllers.NewQueue(log, queue)
+	nftsController := controllers.NewNFTs(log, nfts)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/register", authController.RegisterTemplateHandler).Methods(http.MethodGet)
@@ -138,6 +140,10 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	queueRouter := apiRouter.PathPrefix("/queue").Subrouter()
 	queueRouter.Use(server.withAuth)
 	queueRouter.HandleFunc("", queueController.Create).Methods(http.MethodGet)
+
+	nftWaitListRouter := apiRouter.PathPrefix("/nft-waitlist").Subrouter()
+	nftWaitListRouter.Use(server.withAuth)
+	nftWaitListRouter.HandleFunc("", nftsController.Create).Methods(http.MethodPost)
 
 	fs := http.FileServer(http.Dir(server.config.StaticDir))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static", fs))

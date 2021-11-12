@@ -14,6 +14,7 @@ import (
 
 	"ultimatedivision"
 	"ultimatedivision/database/dbtesting"
+	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/users"
 )
 
@@ -77,6 +78,13 @@ func TestUsers(t *testing.T) {
 			compareUsers(t, user2, allUsers[1])
 		})
 
+		t.Run("get users nickname", func(t *testing.T) {
+			nickname, err := repository.GetNickNameByID(ctx, user2.ID)
+			require.NoError(t, err)
+
+			assert.Equal(t, user2.NickName, nickname)
+		})
+
 		t.Run("update sql no rows", func(t *testing.T) {
 			err := repository.Update(ctx, users.StatusSuspended, id)
 			require.Error(t, err)
@@ -92,6 +100,17 @@ func TestUsers(t *testing.T) {
 			assert.Equal(t, users.StatusSuspended, userFromDB.Status)
 		})
 
+		t.Run("update wallet address sql no rows", func(t *testing.T) {
+			err := repository.UpdateWalletAddress(ctx, cryptoutils.Address("wallet_address"), uuid.New())
+			require.Error(t, err)
+			assert.Equal(t, true, users.ErrNoUser.Has(err))
+		})
+
+		t.Run("update wallet address", func(t *testing.T) {
+			err := repository.UpdateWalletAddress(ctx, "wallet_address", user1.ID)
+			require.NoError(t, err)
+		})
+
 		t.Run("delete sql no rows", func(t *testing.T) {
 			err := repository.Delete(ctx, id)
 			require.Error(t, err)
@@ -101,13 +120,6 @@ func TestUsers(t *testing.T) {
 		t.Run("delete", func(t *testing.T) {
 			err := repository.Delete(ctx, user1.ID)
 			require.NoError(t, err)
-		})
-
-		t.Run("get users nickname", func(t *testing.T) {
-			nickname, err := repository.GetNickNameByID(ctx, user2.ID)
-			require.NoError(t, err)
-
-			assert.Equal(t, user2.NickName, nickname)
 		})
 	})
 }
