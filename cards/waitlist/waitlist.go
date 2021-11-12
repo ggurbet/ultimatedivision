@@ -31,6 +31,8 @@ type DB interface {
 	ListWithoutPassword(ctx context.Context) ([]Item, error)
 	// Delete deletes nft from wait list by id of token.
 	Delete(ctx context.Context, tokenIDs []int) error
+	// Update updates signature to nft token.
+	Update(ctx context.Context, tokenID int, password cryptoutils.Signature) error
 }
 
 // Item entity describes item fot wait list nfts.

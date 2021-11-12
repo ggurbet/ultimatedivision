@@ -216,6 +216,17 @@ func TestWaitList(t *testing.T) {
 			assert.Equal(t, 2, largestTokenID)
 		})
 
+		t.Run("Update sql no rows", func(t *testing.T) {
+			err := repositoryWaitList.Update(ctx, -1, "password")
+			require.Error(t, err)
+			assert.Equal(t, true, waitlist.ErrNoItem.Has(err))
+		})
+
+		t.Run("Update", func(t *testing.T) {
+			err := repositoryWaitList.Update(ctx, 1, "password")
+			require.NoError(t, err)
+		})
+
 		t.Run("Delete sql no rows", func(t *testing.T) {
 			err := repositoryWaitList.Delete(ctx, []int{-1})
 			require.Error(t, err)

@@ -7,14 +7,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zeebo/errs"
-
 	"ultimatedivision/cards"
 	"ultimatedivision/pkg/nft"
 )
-
-// ErrNFTs indicated that there was an error in service.
-var ErrNFTs = errs.Class("NFTs service error")
 
 // Service is handling NFTs related logic.
 //

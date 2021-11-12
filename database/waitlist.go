@@ -158,3 +158,24 @@ func (waitlistDB *waitlistDB) Delete(ctx context.Context, tokenIDs []int) error 
 
 	return nil
 }
+
+// Update updates signature to nft token.
+func (waitlistDB *waitlistDB) Update(ctx context.Context, tokenID int, password cryptoutils.Signature) error {
+	query := `UPDATE waitlist
+	          SET password = $1
+	          WHERE token_id = $2`
+
+	result, err := waitlistDB.conn.ExecContext(ctx, query, password, tokenID)
+	if err != nil {
+		return ErrWaitlist.Wrap(err)
+	}
+	rowNum, err := result.RowsAffected()
+	if err != nil {
+		return ErrWaitlist.Wrap(err)
+	}
+	if rowNum == 0 {
+		return waitlist.ErrNoItem.New("nft token does not exist")
+	}
+
+	return nil
+}

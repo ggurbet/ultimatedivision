@@ -11,6 +11,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/avatars"
 	"ultimatedivision/cards/nfts"
+	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/users"
 )
 
@@ -96,4 +97,9 @@ func (service *Service) ListWithoutPassword(ctx context.Context) ([]Item, error)
 // Delete deletes nft for wait list.
 func (service *Service) Delete(ctx context.Context, tokenIDs []int) error {
 	return ErrWaitlist.Wrap(service.waitList.Delete(ctx, tokenIDs))
+}
+
+// Update updates signature to nft token.
+func (service *Service) Update(ctx context.Context, tokenID int, password cryptoutils.Signature) error {
+	return ErrWaitlist.Wrap(service.waitList.Update(ctx, tokenID, password))
 }
