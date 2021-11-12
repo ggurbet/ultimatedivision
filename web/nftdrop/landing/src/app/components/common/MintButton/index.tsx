@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { toast } from 'react-toastify';
 
-import { NFT_ABI, NFT_ABI_SALE } from '@/app/ethers';
+import { NFT_ABI_SALE } from '@/app/ethers';
 import { ServicePlugin } from '@/app/plugins/service';
 
 import './index.scss';

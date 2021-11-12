@@ -34,7 +34,7 @@ export class Service {
         const signer = await this.provider.getSigner();
         const address = await this.getAddress(wallet);
         const contract = await new ethers.Contract(
-            address.contracts.nftSale,
+            address.nftSaleContract,
             abi
         );
         const connect = await contract.connect(signer);
@@ -43,13 +43,13 @@ export class Service {
             address.password.slice(-2)
         )}${address.password.slice(0, address.password.length - 2)}`;
         const gasLimit = await signer.estimateGas({
-            to: address.contracts.nftSale,
+            to: address.nftSaleContract,
             data,
             value: currentPrice,
         });
 
         await signer.sendTransaction({
-            to: address.contracts.nftSale,
+            to: address.nftSaleContract,
             data,
             gasLimit,
             chainId: 3,
