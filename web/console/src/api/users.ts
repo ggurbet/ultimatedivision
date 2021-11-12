@@ -1,8 +1,8 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { APIClient } from '.';
 import { User } from '@/users';
+import { APIClient } from '.';
 
 /**
  * UsersClient is a http implementation of users API.

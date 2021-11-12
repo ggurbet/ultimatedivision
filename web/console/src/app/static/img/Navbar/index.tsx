@@ -15,7 +15,6 @@ export function DropdownIcon() {
     );
 };
 
-
 /** Dropdown close icon */
 export function CloseDropdownIcon() {
     return (

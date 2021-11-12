@@ -11,4 +11,3 @@ export class FieldControl {
         public options: string[] = [],
     ) { }
 };
-

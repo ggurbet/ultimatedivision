@@ -1,23 +1,55 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { DragEvent } from 'react';
+import { DragEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+
 import { FootballFieldCardSelection } from
     '@components/FootballField/FootballFieldCardSelection';
 import { FootballFieldPlayingArea } from
     '@components/FootballField/FotballFieldPlayingArea';
+
 import { RootState } from '@/app/store';
-import { getClub, removeCard } from '@/app/store/actions/club';
+import { createClub, deleteCard, getClub } from '@/app/store/actions/clubs';
+import { CardEditIdentificators } from '@/api/club';
+import { NotFoundError } from '@/api';
 
 import './index.scss';
 
 const FootballField: React.FC = () => {
     const dispatch = useDispatch();
-    dispatch(getClub());
-    const fieldSetup = useSelector((state: RootState) => state.clubReducer.options);
-    const cardSelectionVisibility = useSelector((state: RootState) => state.clubReducer.options.showCardSeletion);
+    useEffect(() => {
+        (async function setClub() {
+            try {
+                await dispatch(getClub());
+            } catch (error: any) {
+                if (!(error instanceof NotFoundError)) {
+                    toast.error('Something went wrong', {
+                        position: toast.POSITION.TOP_RIGHT,
+                        theme: 'colored',
+                    });
 
+                    return;
+                }
+                try {
+                    await dispatch(createClub());
+                } catch (error: any) {
+                    toast.error('Something went wrong', {
+                        position: toast.POSITION.TOP_RIGHT,
+                        theme: 'colored',
+                    });
+                }
+            }
+        })();
+    }, []);
+    const dragStartIndex = useSelector(
+        (state: RootState) => state.clubsReducer.options.dragStart
+    );
+
+    const squad = useSelector((state: RootState) => state.clubsReducer.squad);
+    const club = useSelector((state: RootState) => state.clubsReducer);
+    const cardSelectionVisibility = useSelector((state: RootState) => state.clubsReducer.options.showCardSeletion);
 
     /** prevent default user agent action */
     function dragOverHandler(e: DragEvent<HTMLDivElement>) {
@@ -27,7 +59,8 @@ const FootballField: React.FC = () => {
     /** TO DO: ADD TYPE FOR Event */
     function drop(e: any) {
         if (e.target.className === 'football-field__wrapper') {
-            dispatch(removeCard(fieldSetup.dragStart));
+            dragStartIndex &&
+                dispatch(deleteCard(new CardEditIdentificators(squad.clubId, squad.id, club.squadCards[dragStartIndex].cardId)));
         }
     };
 

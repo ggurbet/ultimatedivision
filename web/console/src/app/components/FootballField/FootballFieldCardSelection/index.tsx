@@ -10,25 +10,28 @@ import { FilterField } from
 
 import { RootState } from '@/app/store';
 import { listOfCards } from '@/app/store/actions/cards';
-import { addCard, cardSelectionVisibility } from '@/app/store/actions/club';
+import { addCard, cardSelectionVisibility } from '@/app/store/actions/clubs';
 import { Card } from '@/card';
-import { Squad } from '@/club';
+import { CardEditIdentificators } from '@/api/club';
 
 import './index.scss';
 
 export const FootballFieldCardSelection = () => {
     const dispatch = useDispatch();
-    const squad = useSelector((state: RootState) => state.clubReducer.squad);
+    const squad = useSelector((state: RootState) => state.clubsReducer.squad);
     const { cards, page } = useSelector((state: RootState) => state.cardsReducer.cardsPage);
-    const fieldSetup = useSelector((state: RootState) => state.clubReducer);
+    const fieldSetup = useSelector((state: RootState) => state.clubsReducer);
 
     const Y_SCROLL_POINT = 200;
     const X_SCROLL_POINT = 0;
     const DELAY = 10;
 
     /** Add card to field, and hide card selection component */
-    function handleClick(squad: Squad, cardId: string, position: number) {
-        dispatch(addCard({ squad, cardId, position }));
+    function setCard(cardId: string) {
+        dispatch(
+            addCard(
+                new CardEditIdentificators(squad.clubId, squad.id, cardId, fieldSetup.options.chosedCard)
+            ));
         dispatch(cardSelectionVisibility(false));
         setTimeout(() => {
             window.scroll(X_SCROLL_POINT, Y_SCROLL_POINT);
@@ -43,7 +46,7 @@ export const FootballFieldCardSelection = () => {
                     <div
                         key={index}
                         className="card-selection__card"
-                        onClick={() => handleClick(squad, card.id, fieldSetup.options.chosedCard)}
+                        onClick={() => setCard(card.id)}
                     >
                         <PlayerCard
                             card={card}

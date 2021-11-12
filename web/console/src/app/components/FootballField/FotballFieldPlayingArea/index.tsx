@@ -7,33 +7,37 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FootballFieldControlsArea } from '@/app/components/FootballField/FootballFieldControlsArea';
 import { PlayingAreaFootballerCard } from '@components/FootballField/PlayingAreaFootballerCard';
 
+import { CardEditIdentificators } from '@/api/club';
 import { RootState } from '@/app/store';
 import { Card } from '@/card';
 import { SquadCard } from '@/club';
 import {
     cardSelectionVisibility,
+    changeCardPosition,
     choosePosition,
-    exchangeCards,
-    removeCard,
+    deleteCard,
     setDragStart,
-    setDragTarget,
-} from '@/app/store/actions/club';
+    swapCards,
+} from '@/app/store/actions/clubs';
 
 import './index.scss';
 
 export const FootballFieldPlayingArea: React.FC = () => {
+    const dispatch = useDispatch();
     const { cards } = useSelector(
         (state: RootState) => state.cardsReducer.cardsPage
     );
     const formation = useSelector(
-        (state: RootState) => state.clubReducer.squad.formation
+        (state: RootState) => state.clubsReducer.squad.formation
     );
     const dragStartIndex = useSelector(
-        (state: RootState) => state.clubReducer.options.dragStart
+        (state: RootState) => state.clubsReducer.options.dragStart
     );
 
-    const dispatch = useDispatch();
-    const fieldSetup = useSelector((state: RootState) => state.clubReducer);
+    const club = useSelector((state: RootState) => state.clubsReducer);
+    const squad = useSelector((state: RootState) => state.clubsReducer.squad);
+
+    const fieldSetup = useSelector((state: RootState) => state.clubsReducer);
 
     /** MouseMove event Position */
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -86,17 +90,22 @@ export const FootballFieldPlayingArea: React.FC = () => {
         handleDrag(true);
         dispatch(setDragStart(index));
     }
-    /** eslint-disable */
     /** getting second drag index  and exchanging with first index*/
     function onMouseUp(e: React.MouseEvent<HTMLDivElement>, index: number = DEFAULT_VALUE): void {
         e.stopPropagation();
-
         if (isDragging && dragStartIndex !== null) {
-            dispatch(setDragTarget(index));
-            dispatch(exchangeCards(dragStartIndex, fieldSetup.options.dragTarget));
+            const cards = fieldSetup.squadCards;
+            getCard(cards[index].cardId) ?
+                dispatch(swapCards(
+                    new CardEditIdentificators(squad.clubId, squad.id, cards[dragStartIndex].cardId, index),
+                    new CardEditIdentificators(squad.clubId, squad.id, cards[index].cardId, dragStartIndex)
+                ))
+                :
+                dispatch(changeCardPosition(
+                    new CardEditIdentificators(squad.clubId, squad.id, cards[dragStartIndex].cardId, index),
+                ));
         }
 
-        dispatch(setDragTarget());
         dispatch(setDragStart());
         handleDrag(false);
     }
@@ -110,7 +119,10 @@ export const FootballFieldPlayingArea: React.FC = () => {
     /** deleting card when release beyond playing area */
     function removeFromArea() {
         if (isDragging) {
-            dispatch(removeCard(dragStartIndex));
+            dragStartIndex &&
+                dispatch(deleteCard(
+                    new CardEditIdentificators(squad.clubId, squad.id, club.squadCards[dragStartIndex].cardId, dragStartIndex))
+                );
             dispatch(setDragStart());
             handleDrag(false);
         }
@@ -149,7 +161,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
                                 }
                                 key={index}
                                 className={`playing-area__${formation}__${card ? 'card' : 'empty-card'
-                                }`}
+                                    }`}
                                 onClick={() => handleClick(index)}
                                 onDragStart={(e) => dragStart(e, index)}
                                 onMouseUp={(e) => onMouseUp(e, index)}

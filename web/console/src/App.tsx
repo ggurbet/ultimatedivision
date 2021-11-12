@@ -3,6 +3,7 @@
 
 import { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import { AboutMenu } from '@components/common/AboutMenu';
 import { Notification } from '@components/common/Notification';

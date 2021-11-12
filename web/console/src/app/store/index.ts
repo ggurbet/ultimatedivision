@@ -4,14 +4,14 @@
 import thunk from 'redux-thunk';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { cardsReducer } from '@/app/store/reducers/cards';
-import { clubReducer } from '@/app/store/reducers/club';
+import { clubsReducer } from '@/app/store/reducers/clubs';
 import { lootboxReducer } from '@/app/store/reducers/lootboxes';
 import { marketplaceReducer } from '@/app/store/reducers/marketplace';
 import { usersReducer } from './reducers/users';
 
 const reducer = combineReducers({
     cardsReducer,
-    clubReducer,
+    clubsReducer,
     lootboxReducer,
     marketplaceReducer,
     usersReducer,
