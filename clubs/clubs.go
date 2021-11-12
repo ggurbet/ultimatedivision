@@ -74,11 +74,12 @@ func (status Status) IsValid() bool {
 
 // Club defines club entity.
 type Club struct {
-	ID        uuid.UUID `json:"id"`
-	OwnerID   uuid.UUID `json:"-"`
-	Name      string    `json:"name"`
-	Status    Status    `json:"status"`
-	CreatedAt time.Time `json:"createdAt"`
+	ID         uuid.UUID `json:"id"`
+	OwnerID    uuid.UUID `json:"-"`
+	Name       string    `json:"name"`
+	Status     Status    `json:"status"`
+	DivisionID uuid.UUID `json:"divisionId"`
+	CreatedAt  time.Time `json:"createdAt"`
 }
 
 // Squad describes squads of clubs.

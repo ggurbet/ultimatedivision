@@ -43,6 +43,12 @@ const periodBegin = 0
 // periodEnd defines index of the ending of period.
 const periodEnd = 1
 
+// minNumberOfGames defines minimal number of matches to participate in weekly competition.
+const minNumberOfMatches = 3
+
+// minNumberOfGames defines maximal number of matches in weekly competition.
+const maxNumberOfMatches = 30
+
 // Play initiates match between users, calls methods to generate result.
 func (service *Service) Play(ctx context.Context, match Match, squadCards1 []clubs.SquadCard, squadCards2 []clubs.SquadCard) error {
 	periods := []int{service.config.Periods.First.Begin, service.config.Periods.First.End,
@@ -207,7 +213,7 @@ func (service *Service) chooseSquad(ctx context.Context, goalByPosition map[club
 }
 
 // Create creates new match.
-func (service *Service) Create(ctx context.Context, squad1ID uuid.UUID, squad2ID uuid.UUID, user1ID, user2ID uuid.UUID) (uuid.UUID, error) {
+func (service *Service) Create(ctx context.Context, squad1ID uuid.UUID, squad2ID uuid.UUID, user1ID, user2ID uuid.UUID, seasonID int) (uuid.UUID, error) {
 	squadCards1, err := service.clubs.ListSquadCards(ctx, squad1ID)
 	if err != nil {
 		return uuid.Nil, ErrMatches.Wrap(err)
@@ -224,6 +230,7 @@ func (service *Service) Create(ctx context.Context, squad1ID uuid.UUID, squad2ID
 		Squad1ID: squad1ID,
 		User2ID:  user2ID,
 		Squad2ID: squad2ID,
+		SeasonID: seasonID,
 	}
 
 	if err = service.matches.Create(ctx, newMatch); err != nil {
@@ -274,6 +281,12 @@ func (service *Service) GetMatchResult(ctx context.Context, matchID uuid.UUID) (
 	return resultMatch, ErrMatches.Wrap(err)
 }
 
+// ListSquadMatches returns all club matches in season.
+func (service *Service) ListSquadMatches(ctx context.Context, seasonID int, squadID uuid.UUID) ([]Match, error) {
+	allMatches, err := service.matches.ListSquadMatches(ctx, squadID, seasonID)
+	return allMatches, ErrMatches.Wrap(err)
+}
+
 // RankMatch evaluates how many points each user receive per match.
 func (service *Service) RankMatch(ctx context.Context, match Match, matchGoals []MatchGoals) error {
 	var (
@@ -302,4 +315,77 @@ func (service *Service) RankMatch(ctx context.Context, match Match, matchGoals [
 	}
 
 	return ErrMatches.Wrap(service.matches.UpdateMatch(ctx, match))
+}
+
+// GetStatistic returns statistic of club in season.
+func (service *Service) GetStatistic(ctx context.Context, clubID uuid.UUID, seasonID int) (Statistic, error) {
+	var statistic Statistic
+
+	club, err := service.clubs.Get(ctx, clubID)
+	if err != nil {
+		return statistic, ErrMatches.Wrap(err)
+	}
+
+	squad, err := service.clubs.GetSquadByClubID(ctx, clubID)
+	if err != nil {
+		return statistic, ErrMatches.Wrap(err)
+	}
+
+	allMatches, err := service.ListSquadMatches(ctx, seasonID, squad.ID)
+	if err != nil {
+		return statistic, ErrMatches.Wrap(err)
+	}
+
+	if len(allMatches) < minNumberOfMatches {
+		return statistic, nil
+	}
+
+	if len(allMatches) > maxNumberOfMatches {
+		allMatches = allMatches[:maxNumberOfMatches]
+	}
+
+	var (
+		goalScored    int
+		goalsConceded int
+	)
+
+	for _, match := range allMatches {
+		statistic.MatchPlayed++
+
+		if match.User1ID == club.OwnerID {
+			switch {
+			case match.User1Points == service.config.NumberOfPointsForWin:
+				statistic.Wins++
+			case match.User1Points == service.config.NumberOfPointsForDraw:
+				statistic.Draws++
+			case match.User1Points == service.config.NumberOfPointsForLosing:
+				statistic.Losses++
+			}
+		} else {
+			switch {
+			case match.User2Points == service.config.NumberOfPointsForWin:
+				statistic.Wins++
+			case match.User2Points == service.config.NumberOfPointsForDraw:
+				statistic.Draws++
+			case match.User2Points == service.config.NumberOfPointsForLosing:
+				statistic.Losses++
+			}
+		}
+
+		matchGoals, err := service.ListMatchGoals(ctx, match.ID)
+		if err != nil {
+			return statistic, ErrMatches.Wrap(err)
+		}
+		for _, goal := range matchGoals {
+			if goal.UserID == club.OwnerID {
+				goalScored++
+				continue
+			}
+			goalsConceded++
+		}
+	}
+
+	statistic.GoalDifference = goalScored - goalsConceded
+
+	return statistic, nil
 }

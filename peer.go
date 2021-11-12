@@ -376,6 +376,8 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			config.Queue.Config,
 			peer.Queue.Service,
 			peer.Matches.Service,
+			peer.Seasons.Service,
+			peer.Clubs.Service,
 		)
 	}
 
@@ -420,6 +422,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Queue.Service,
 			peer.Divisions.Service,
 			peer.Matches.Service,
+			peer.Seasons.Service,
 		)
 		if err != nil {
 			return nil, err

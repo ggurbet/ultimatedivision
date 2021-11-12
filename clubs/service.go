@@ -43,10 +43,11 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID) (uuid.UUID
 	}
 
 	newClub := Club{
-		ID:        uuid.New(),
-		OwnerID:   userID,
-		Name:      nickname,
-		CreatedAt: time.Now().UTC(),
+		ID:         uuid.New(),
+		OwnerID:    userID,
+		Name:       nickname,
+		CreatedAt:  time.Now().UTC(),
+		DivisionID: uuid.Nil,
 	}
 
 	allClubs, err := service.ListByUserID(ctx, userID)

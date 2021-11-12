@@ -30,18 +30,18 @@ type matchesDB struct {
 
 // Create inserts match in the database.
 func (matchesDB *matchesDB) Create(ctx context.Context, match matches.Match) error {
-	query := `INSERT INTO matches(id, user1_id, squad1_id, user1_points, user2_id, squad2_id, user2_points)
-              VALUES($1,$2,$3,$4,$5,$6,$7)`
+	query := `INSERT INTO matches(id, user1_id, squad1_id, user1_points, user2_id, squad2_id, user2_points, season_id)
+              VALUES($1,$2,$3,$4,$5,$6,$7,$8)`
 
 	_, err := matchesDB.conn.ExecContext(ctx, query, match.ID, match.User1ID,
-		match.Squad1ID, match.User1Points, match.User2ID, match.Squad2ID, match.User2Points)
+		match.Squad1ID, match.User1Points, match.User2ID, match.Squad2ID, match.User2Points, match.SeasonID)
 
 	return ErrMatches.Wrap(err)
 }
 
 // Get returns match from the database.
 func (matchesDB *matchesDB) Get(ctx context.Context, id uuid.UUID) (matches.Match, error) {
-	query := `SELECT id, user1_id, squad1_id, user1_points, user2_id, squad2_id, user2_points
+	query := `SELECT id, user1_id, squad1_id, user1_points, user2_id, squad2_id, user2_points, season_id
               FROM matches
               WHERE id = $1`
 
@@ -49,7 +49,8 @@ func (matchesDB *matchesDB) Get(ctx context.Context, id uuid.UUID) (matches.Matc
 
 	row := matchesDB.conn.QueryRowContext(ctx, query, id)
 
-	err := row.Scan(&match.ID, &match.User1ID, &match.Squad1ID, &match.User1Points, &match.User2ID, &match.Squad2ID, &match.User2Points)
+	err := row.Scan(&match.ID, &match.User1ID, &match.Squad1ID, &match.User1Points,
+		&match.User2ID, &match.Squad2ID, &match.User2Points, &match.SeasonID)
 	if err != nil {
 		if errors.Is(sql.ErrNoRows, err) {
 			return match, matches.ErrNoMatch.Wrap(err)
@@ -66,7 +67,7 @@ func (matchesDB *matchesDB) ListMatches(ctx context.Context, cursor pagination.C
 	var matchesListPage matches.Page
 	offset := (cursor.Page - 1) * cursor.Limit
 
-	query := `SELECT id, user1_id, squad1_id, user1_points, user2_id, squad2_id, user2_points
+	query := `SELECT id, user1_id, squad1_id, user1_points, user2_id, squad2_id, user2_points, season_id
 	          FROM matches
 	          LIMIT $1
 	          OFFSET $2`
@@ -83,7 +84,7 @@ func (matchesDB *matchesDB) ListMatches(ctx context.Context, cursor pagination.C
 
 	for rows.Next() {
 		var match matches.Match
-		err = rows.Scan(&match.ID, &match.User1ID, &match.Squad1ID, &match.User1Points, &match.User2ID, &match.Squad2ID, &match.User2Points)
+		err = rows.Scan(&match.ID, &match.User1ID, &match.Squad1ID, &match.User1Points, &match.User2ID, &match.Squad2ID, &match.User2Points, &match.SeasonID)
 		if err != nil {
 			return matchesListPage, ErrMatches.Wrap(err)
 		}
@@ -209,6 +210,40 @@ func (matchesDB *matchesDB) AddGoals(ctx context.Context, matchGoals []matches.M
 	}
 
 	return ErrMatches.Wrap(err)
+}
+
+// ListSquadMatches returns all matches played by squad in season.
+func (matchesDB *matchesDB) ListSquadMatches(ctx context.Context, squadID uuid.UUID, seasonID int) ([]matches.Match, error) {
+	query := `SELECT id, user1_id, squad1_id, user1_points, user2_id, squad2_id, user2_points, season_id
+              FROM matches
+              WHERE season_id = $1 AND squad1_id = $2 OR squad2_id = $2`
+
+	rows, err := matchesDB.conn.QueryContext(ctx, query, seasonID, squadID)
+	if err != nil {
+		return nil, ErrMatches.Wrap(err)
+	}
+
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	var allMatches []matches.Match
+
+	for rows.Next() {
+		var match matches.Match
+		err = rows.Scan(&match.ID, &match.User1ID, &match.Squad1ID, &match.User1Points,
+			&match.User2ID, &match.Squad2ID, &match.User2Points, &match.SeasonID)
+		if err != nil {
+			return nil, ErrMatches.Wrap(err)
+		}
+
+		allMatches = append(allMatches, match)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, ErrMatches.Wrap(err)
+	}
+
+	return allMatches, ErrMatches.Wrap(err)
 }
 
 // ListMatchGoals returns all goals from the match from the database.

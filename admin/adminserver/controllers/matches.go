@@ -12,9 +12,11 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/clubs"
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/pagination"
+	"ultimatedivision/seasons"
 )
 
 // ErrMatches is an internal error type for matches controller.
@@ -32,12 +34,14 @@ type Matches struct {
 	log logger.Logger
 
 	matches *matches.Service
+	clubs   *clubs.Service
+	seasons *seasons.Service
 
 	templates MatchesTemplate
 }
 
 // NewMatches is a constructor for matches controller.
-func NewMatches(log logger.Logger, matches *matches.Service, templates MatchesTemplate) *Matches {
+func NewMatches(log logger.Logger, matches *matches.Service, templates MatchesTemplate, clubs *clubs.Service, seasons *seasons.Service) *Matches {
 	matchesController := &Matches{
 		log:       log,
 		matches:   matches,
@@ -90,7 +94,25 @@ func (controller *Matches) Create(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		_, err = controller.matches.Create(ctx, squad1ID, squad2ID, user1ID, user2ID)
+		squad, err := controller.clubs.GetSquad(ctx, squad1ID)
+		if err != nil {
+			http.Error(w, "could not get squad", http.StatusInternalServerError)
+			return
+		}
+
+		firstClientClub, err := controller.clubs.Get(ctx, squad.ClubID)
+		if err != nil {
+			http.Error(w, "could not get club", http.StatusInternalServerError)
+			return
+		}
+
+		season, err := controller.seasons.GetSeasonByDivisionID(ctx, firstClientClub.DivisionID)
+		if err != nil {
+			http.Error(w, "could not get club", http.StatusInternalServerError)
+			return
+		}
+
+		_, err = controller.matches.Create(ctx, squad1ID, squad2ID, user1ID, user2ID, season.ID)
 		if err != nil {
 			controller.log.Error("could not create match", ErrMatches.Wrap(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)

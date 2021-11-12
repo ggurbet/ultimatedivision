@@ -16,8 +16,10 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/clubs"
 	"ultimatedivision/database/dbtesting"
+	"ultimatedivision/divisions"
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/pkg/pagination"
+	"ultimatedivision/seasons"
 	"ultimatedivision/users"
 )
 
@@ -51,11 +53,26 @@ func TestMatches(t *testing.T) {
 		UserID: testUser1.ID,
 	}
 
+	division1 := divisions.Division{
+		ID:             uuid.New(),
+		Name:           "10",
+		PassingPercent: 10,
+		CreatedAt:      time.Now().UTC(),
+	}
+
+	season1 := seasons.Season{
+		ID:         1,
+		DivisionID: division1.ID,
+		StartedAt:  time.Now().UTC(),
+		EndedAt:    time.Time{},
+	}
+
 	testClub1 := clubs.Club{
-		ID:        uuid.New(),
-		OwnerID:   testUser1.ID,
-		Name:      testUser1.NickName,
-		CreatedAt: time.Now().UTC(),
+		ID:         uuid.New(),
+		OwnerID:    testUser1.ID,
+		Name:       testUser1.NickName,
+		DivisionID: division1.ID,
+		CreatedAt:  time.Now().UTC(),
 	}
 
 	testSquad1 := clubs.Squad{
@@ -67,10 +84,11 @@ func TestMatches(t *testing.T) {
 	}
 
 	testClub2 := clubs.Club{
-		ID:        uuid.New(),
-		OwnerID:   testUser1.ID,
-		Name:      testUser1.NickName,
-		CreatedAt: time.Now().UTC(),
+		ID:         uuid.New(),
+		OwnerID:    testUser2.ID,
+		Name:       testUser2.NickName,
+		DivisionID: division1.ID,
+		CreatedAt:  time.Now().UTC(),
 	}
 
 	testSquad2 := clubs.Squad{
@@ -87,6 +105,7 @@ func TestMatches(t *testing.T) {
 		Squad1ID: testSquad1.ID,
 		User2ID:  testUser2.ID,
 		Squad2ID: testSquad2.ID,
+		SeasonID: season1.ID,
 	}
 
 	testMatchUpdated := matches.Match{
@@ -97,6 +116,7 @@ func TestMatches(t *testing.T) {
 		User2ID:     testUser2.ID,
 		Squad2ID:    testSquad2.ID,
 		User2Points: 0,
+		SeasonID:    season1.ID,
 	}
 
 	testMatchGoal1 := matches.MatchGoals{
@@ -115,6 +135,11 @@ func TestMatches(t *testing.T) {
 		Minute:  41,
 	}
 
+	testResult := []matches.MatchResult{{
+		UserID:        testUser1.ID,
+		QuantityGoals: 2,
+	}}
+
 	newCursor := pagination.Cursor{
 		Limit: 10,
 		Page:  1,
@@ -125,12 +150,20 @@ func TestMatches(t *testing.T) {
 		repositoryUsers := db.Users()
 		repositoryClubs := db.Clubs()
 		repositoryMatches := db.Matches()
+		repositoryDivisions := db.Divisions()
+		repositorySeasons := db.Seasons()
 
 		t.Run("Create", func(t *testing.T) {
 			err := repositoryUsers.Create(ctx, testUser1)
 			require.NoError(t, err)
 
 			err = repositoryUsers.Create(ctx, testUser2)
+			require.NoError(t, err)
+
+			err = repositoryDivisions.Create(ctx, division1)
+			require.NoError(t, err)
+
+			err = repositorySeasons.Create(ctx, season1)
 			require.NoError(t, err)
 
 			_, err = repositoryClubs.Create(ctx, testClub1)
@@ -155,6 +188,12 @@ func TestMatches(t *testing.T) {
 			compareMatchesSlice(t, allMatchesDB.Matches, []matches.Match{testMatch})
 		})
 
+		t.Run("List squad matches", func(t *testing.T) {
+			allMatches, err := repositoryMatches.ListSquadMatches(ctx, testSquad1.ID, season1.ID)
+			require.NoError(t, err)
+			compareMatchesSlice(t, allMatches, []matches.Match{testMatch})
+		})
+
 		t.Run("Get", func(t *testing.T) {
 			matchDB, err := repositoryMatches.Get(ctx, testMatch.ID)
 			require.NoError(t, err)
@@ -173,6 +212,12 @@ func TestMatches(t *testing.T) {
 			matchGoalsDB, err := repositoryMatches.ListMatchGoals(ctx, testMatch.ID)
 			require.NoError(t, err)
 			compareMatchGoals(t, matchGoalsDB, []matches.MatchGoals{testMatchGoal1, testMatchGoal2})
+		})
+
+		t.Run("list result", func(t *testing.T) {
+			matchResult, err := repositoryMatches.GetMatchResult(ctx, testMatch.ID)
+			require.NoError(t, err)
+			compareMatchResults(t, matchResult, testResult)
 		})
 
 		t.Run("update sql no rows", func(t *testing.T) {
@@ -206,6 +251,15 @@ func TestMatches(t *testing.T) {
 
 		})
 	})
+}
+
+func compareMatchResults(t *testing.T, matchResultDB, matchResult []matches.MatchResult) {
+	assert.Equal(t, len(matchResultDB), len(matchResult))
+
+	for i := 0; i < len(matchResultDB); i++ {
+		assert.Equal(t, matchResultDB[i].UserID, matchResult[i].UserID)
+		assert.Equal(t, matchResultDB[i].QuantityGoals, matchResult[i].QuantityGoals)
+	}
 }
 
 func compareMatches(t *testing.T, matchDB, matchTest matches.Match) {
@@ -263,11 +317,26 @@ func TestMatchService(t *testing.T) {
 		CreatedAt:    time.Now(),
 	}
 
+	division1 := divisions.Division{
+		ID:             uuid.New(),
+		Name:           "10",
+		PassingPercent: 10,
+		CreatedAt:      time.Now().UTC(),
+	}
+
+	season1 := seasons.Season{
+		ID:         1,
+		DivisionID: division1.ID,
+		StartedAt:  time.Now().UTC(),
+		EndedAt:    time.Time{},
+	}
+
 	testClub1 := clubs.Club{
-		ID:        uuid.New(),
-		OwnerID:   testUser1.ID,
-		Name:      testUser1.NickName,
-		CreatedAt: time.Now().UTC(),
+		ID:         uuid.New(),
+		OwnerID:    testUser1.ID,
+		Name:       testUser1.NickName,
+		DivisionID: division1.ID,
+		CreatedAt:  time.Now().UTC(),
 	}
 
 	testSquad1 := clubs.Squad{
@@ -279,10 +348,11 @@ func TestMatchService(t *testing.T) {
 	}
 
 	testClub2 := clubs.Club{
-		ID:        uuid.New(),
-		OwnerID:   testUser1.ID,
-		Name:      testUser1.NickName,
-		CreatedAt: time.Now().UTC(),
+		ID:         uuid.New(),
+		OwnerID:    testUser1.ID,
+		Name:       testUser1.NickName,
+		DivisionID: division1.ID,
+		CreatedAt:  time.Now().UTC(),
 	}
 
 	testSquad2 := clubs.Squad{
@@ -298,6 +368,7 @@ func TestMatchService(t *testing.T) {
 		User2ID:  testUser2.ID,
 		Squad1ID: testSquad1.ID,
 		Squad2ID: testSquad2.ID,
+		SeasonID: season1.ID,
 	}
 
 	newCursor := pagination.Cursor{
@@ -310,6 +381,8 @@ func TestMatchService(t *testing.T) {
 		repositoryUsers := db.Users()
 		repositoryClubs := db.Clubs()
 		repositoryMatches := db.Matches()
+		repositorySeasons := db.Seasons()
+		repositoryDivisions := db.Divisions()
 
 		cardsService := cards.NewService(repositoryCards, cards.Config{})
 		usersService := users.NewService(repositoryUsers)
@@ -325,6 +398,12 @@ func TestMatchService(t *testing.T) {
 			err = repositoryUsers.Create(ctx, testUser2)
 			require.NoError(t, err)
 
+			err = repositoryDivisions.Create(ctx, division1)
+			require.NoError(t, err)
+
+			err = repositorySeasons.Create(ctx, season1)
+			require.NoError(t, err)
+
 			_, err = repositoryClubs.Create(ctx, testClub1)
 			require.NoError(t, err)
 
@@ -337,7 +416,7 @@ func TestMatchService(t *testing.T) {
 			_, err = repositoryClubs.CreateSquad(ctx, testSquad2)
 			require.NoError(t, err)
 
-			matchID, err = matchesService.Create(ctx, testSquad1.ID, testSquad2.ID, testUser1.ID, testUser2.ID)
+			matchID, err = matchesService.Create(ctx, testSquad1.ID, testSquad2.ID, testUser1.ID, testUser2.ID, season1.ID)
 			require.NoError(t, err)
 		})
 

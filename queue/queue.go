@@ -40,7 +40,6 @@ type Client struct {
 	UserID     uuid.UUID
 	Connection *websocket.Conn
 	SquadID    uuid.UUID
-	DivisionID uuid.UUID
 }
 
 // Request entity describes values sent by client.

@@ -16,6 +16,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/clubs"
 	"ultimatedivision/database/dbtesting"
+	"ultimatedivision/divisions"
 	"ultimatedivision/users"
 )
 
@@ -32,20 +33,29 @@ func TestTeam(t *testing.T) {
 		CreatedAt:    time.Now().UTC(),
 	}
 
+	division1 := divisions.Division{
+		ID:             uuid.New(),
+		Name:           "10",
+		PassingPercent: 10,
+		CreatedAt:      time.Now().UTC(),
+	}
+
 	testClub1 := clubs.Club{
-		ID:        uuid.New(),
-		OwnerID:   testUser.ID,
-		Name:      testUser.NickName,
-		Status:    clubs.StatusActive,
-		CreatedAt: time.Now().UTC(),
+		ID:         uuid.New(),
+		OwnerID:    testUser.ID,
+		Name:       testUser.NickName,
+		Status:     clubs.StatusActive,
+		DivisionID: division1.ID,
+		CreatedAt:  time.Now().UTC(),
 	}
 
 	testClub2 := clubs.Club{
-		ID:        uuid.New(),
-		OwnerID:   testUser.ID,
-		Name:      testUser.NickName,
-		Status:    clubs.StatusInactive,
-		CreatedAt: time.Now().UTC(),
+		ID:         uuid.New(),
+		OwnerID:    testUser.ID,
+		Name:       testUser.NickName,
+		Status:     clubs.StatusInactive,
+		DivisionID: division1.ID,
+		CreatedAt:  time.Now().UTC(),
 	}
 
 	updatedTestClub1 := clubs.Club{
@@ -118,10 +128,14 @@ func TestTeam(t *testing.T) {
 		repositoryClubs := db.Clubs()
 		repositoryCards := db.Cards()
 		repositoryUsers := db.Users()
+		repositoryDivisions := db.Divisions()
 		id := uuid.New()
 
 		t.Run("Create club", func(t *testing.T) {
 			err := repositoryUsers.Create(ctx, testUser)
+			require.NoError(t, err)
+
+			err = repositoryDivisions.Create(ctx, division1)
 			require.NoError(t, err)
 
 			clubID, err := repositoryClubs.Create(ctx, testClub1)

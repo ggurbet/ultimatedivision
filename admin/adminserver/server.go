@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"path/filepath"
+	"ultimatedivision/seasons"
 
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
@@ -82,7 +83,7 @@ type Server struct {
 func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service,
 	admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities,
 	avatars *avatars.Service, marketplace *marketplace.Service, lootboxes *lootboxes.Service, clubs *clubs.Service,
-	queue *queue.Service, divisions *divisions.Service, matches *matches.Service) (*Server, error) {
+	queue *queue.Service, divisions *divisions.Service, matches *matches.Service, seasons *seasons.Service) (*Server, error) {
 	server := &Server{
 		log:    log,
 		config: config,
@@ -168,7 +169,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 
 	matchesRouter := router.PathPrefix("/matches").Subrouter()
 	matchesRouter.Use(server.withAuth)
-	matchesController := controllers.NewMatches(log, matches, server.templates.match)
+	matchesController := controllers.NewMatches(log, matches, server.templates.match, clubs, seasons)
 	matchesRouter.HandleFunc("/create", matchesController.Create).Methods(http.MethodGet, http.MethodPost)
 	matchesRouter.HandleFunc("/", matchesController.ListMatches).Methods(http.MethodGet)
 	matchesRouter.HandleFunc("/delete/{id}", matchesController.Delete).Methods(http.MethodGet)

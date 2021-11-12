@@ -25,6 +25,8 @@ type DB interface {
 	Get(ctx context.Context, id uuid.UUID) (Match, error)
 	// ListMatches returns page of matches from the database.
 	ListMatches(ctx context.Context, cursor pagination.Cursor) (Page, error)
+	// ListSquadMatches returns all matches played by squad in season.
+	ListSquadMatches(ctx context.Context, squadID uuid.UUID, seasonID int) ([]Match, error)
 	// UpdateMatch updates the number of points that users received for a played match.
 	UpdateMatch(ctx context.Context, match Match) error
 	// Delete deletes match from the database.
@@ -116,6 +118,7 @@ type Match struct {
 	User2ID     uuid.UUID `json:"user2Id"`
 	Squad2ID    uuid.UUID `json:"squad2Id"`
 	User2Points int       `json:"user2Points"`
+	SeasonID    int       `json:"seasonId"`
 }
 
 // MatchGoals defines goals scored by clubs.
@@ -137,4 +140,14 @@ type MatchResult struct {
 type Page struct {
 	Matches []Match         `json:"matches"`
 	Page    pagination.Page `json:"page"`
+}
+
+// Statistic defined statistic of club in season.
+type Statistic struct {
+	MatchPlayed    int `json:"matchPlayed"`
+	Wins           int `json:"wins"`
+	Losses         int `json:"losses"`
+	Draws          int `json:"draws"`
+	GoalDifference int `json:"goalDifference"`
+	Points         int `json:"points"`
 }

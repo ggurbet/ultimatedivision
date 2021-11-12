@@ -11,7 +11,7 @@ import (
 	"github.com/zeebo/errs"
 )
 
-// ErrNoAdmin indicates that user does not exist.
+// ErrNoAdmin indicates that admin does not exist.
 var ErrNoAdmin = errs.Class("admin does not exist")
 
 // DB is exposing access to admins db.

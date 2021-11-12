@@ -165,12 +165,19 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             password_hash BYTEA                    NOT NULL,
             created_at    TIMESTAMP WITH TIME ZONE NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS divisions (
+            id              BYTEA   PRIMARY KEY      NOT NULL,
+            name            VARCHAR                  NOT NULL,
+            passing_percent INTEGER                  NOT NULL,
+            created_at      TIMESTAMP WITH TIME ZONE NOT NULL
+        );
         CREATE TABLE IF NOT EXISTS clubs (
-            id         BYTEA     PRIMARY KEY                            NOT NULL,
-            owner_id   BYTEA     REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-            club_name  VARCHAR                                          NOT NULL,
-            status     INTEGER                                          NOT NULL,
-            created_at TIMESTAMP WITH TIME ZONE                         NOT NULL
+            id          BYTEA     PRIMARY KEY                                NOT NULL,
+            owner_id    BYTEA     REFERENCES users(id) ON DELETE CASCADE     NOT NULL,
+            club_name   VARCHAR                                              NOT NULL,
+            status      INTEGER                                              NOT NULL,
+            division_id BYTEA,
+            created_at  TIMESTAMP WITH TIME ZONE                             NOT NULL
         );
         CREATE TABLE IF NOT EXISTS squads (
             id            BYTEA   PRIMARY KEY                            NOT NULL,
@@ -206,12 +213,6 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             end_time      TIMESTAMP WITH TIME ZONE                                        NOT NULL,
             period        INTEGER                                                         NOT NULL
         );
-        CREATE TABLE IF NOT EXISTS divisions (
-            id              BYTEA   PRIMARY KEY      NOT NULL,
-            name            VARCHAR                  NOT NULL,
-            passing_percent INTEGER                  NOT NULL,
-            created_at      TIMESTAMP WITH TIME ZONE NOT NULL
-        );
         CREATE TABLE IF NOT EXISTS seasons(
             id          SERIAL PRIMARY KEY       NOT NULL,
             division_id BYTEA                    NOT NULL,
@@ -220,13 +221,14 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             FOREIGN KEY (division_id) REFERENCES divisions (id) ON DELETE CASCADE
         );
         CREATE TABLE IF NOT EXISTS matches (
-            id           BYTEA    PRIMARY KEY                             NOT NULL,
-            user1_id     BYTEA    REFERENCES users(id) ON DELETE CASCADE  NOT NULL,
-            squad1_id    BYTEA    REFERENCES squads(id) ON DELETE CASCADE NOT NULL,
+            id           BYTEA   PRIMARY KEY                              NOT NULL,
+            user1_id     BYTEA   REFERENCES users(id) ON DELETE CASCADE   NOT NULL,
+            squad1_id    BYTEA   REFERENCES squads(id) ON DELETE CASCADE  NOT NULL,
             user1_points INTEGER                                          NOT NULL,
-            user2_id     BYTEA    REFERENCES users(id) ON DELETE CASCADE  NOT NULL,
-            squad2_id    BYTEA    REFERENCES squads(id) ON DELETE CASCADE NOT NULL,
-            user2_points INTEGER                                          NOT NULL
+            user2_id     BYTEA   REFERENCES users(id) ON DELETE CASCADE   NOT NULL,
+            squad2_id    BYTEA   REFERENCES squads(id) ON DELETE CASCADE  NOT NULL,
+            user2_points INTEGER                                          NOT NULL,
+            season_id    INTEGER REFERENCES seasons(id) ON DELETE CASCADE NOT NULL
         );
         CREATE TABLE IF NOT EXISTS match_results(
             id       BYTEA   PRIMARY KEY                              NOT NULL,
