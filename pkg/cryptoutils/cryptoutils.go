@@ -50,6 +50,16 @@ const (
 	PrivateKeyVTwentyEight PrivateKeyV = 28
 )
 
+// Chain defines the list of possible chains in blockchain.
+type Chain string
+
+const (
+	// ChainEthereum indicates that chain is ethereum.
+	ChainEthereum Chain = "ethereum"
+	// ChainPolygon indicates that chain is polygon.
+	ChainPolygon Chain = "polygon"
+)
+
 // IsValidAddress checks if the address is valid.
 func (address Address) IsValidAddress() bool {
 	return common.IsHexAddress(string(address))

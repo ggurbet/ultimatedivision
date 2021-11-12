@@ -55,14 +55,11 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) error {
 		return ErrWaitlist.Wrap(err)
 	}
 
-	// TODO: save avatar
+	// TODO: save avatar in file storage
 
-	_, err = service.nfts.Generate(ctx, card, avatar.OriginalURL)
-	if err != nil {
-		return ErrWaitlist.Wrap(err)
-	}
+	service.nfts.Generate(ctx, card, avatar.OriginalURL)
 
-	// TODO: save nft
+	// TODO: save metadata in file storage
 	// TODO: add transaction
 
 	if err = service.users.UpdateWalletAddress(ctx, createNFT.WalletAddress, createNFT.UserID); err != nil {

@@ -32,8 +32,13 @@ func NewService(config Config, nfts DB) *Service {
 	}
 }
 
+// Create creates nft in the database.
+func (service *Service) Create(ctx context.Context, nft NFT) error {
+	return ErrNFTs.Wrap(service.nfts.Create(ctx, nft))
+}
+
 // Generate generates values for nft token.
-func (service *Service) Generate(ctx context.Context, card cards.Card, avatarURL string) (nft.NFT, error) {
+func (service *Service) Generate(ctx context.Context, card cards.Card, avatarURL string) nft.NFT {
 	var attributes []nft.Attribute
 
 	attributes = append(attributes, nft.Attribute{TraitType: "Id", Value: card.ID.String()})
@@ -100,5 +105,12 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, avatarURL
 		Image:       avatarURL,
 		Name:        card.PlayerName,
 	}
-	return nft, nil
+
+	return nft
+}
+
+// List returns nfts from database.
+func (service *Service) List(ctx context.Context) ([]NFT, error) {
+	nfts, err := service.nfts.List(ctx)
+	return nfts, ErrNFTs.Wrap(err)
 }

@@ -63,12 +63,7 @@ func (service *Service) Generate(ctx context.Context, nameFile int, playerName s
 		return nft.NFT{}, ErrCardAvatars.Wrap(err)
 	}
 
-	nftCard, err := service.nfts.Generate(ctx, card, avatar.OriginalURL)
-	if err != nil {
-		return nft.NFT{}, ErrCardAvatars.Wrap(err)
-	}
-
-	return nftCard, nil
+	return service.nfts.Generate(ctx, card, avatar.OriginalURL), nil
 }
 
 // TestGenerate generates test version avatar cards.
