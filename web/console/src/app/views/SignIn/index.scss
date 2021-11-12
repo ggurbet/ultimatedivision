@@ -166,14 +166,51 @@
                 font-size: 20px;
             }
 
+            &__checkbox-wrapper {
+                margin-top: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
             &__remember-me {
-                margin-top: 20px;
+                position: absolute;
+                opacity: 0;
+
+                & + label {
+                    position: relative;
+                    cursor: pointer;
+                    color: $signInMainTextColor;
+                    padding: 0;
+                }
+
+                & + label:before {
+                    content: "";
+                    margin-right: 5px;
+                    display: inline-block;
+                    vertical-align: text-top;
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 8px;
+                    border: 1px solid $signInMainTextColor;
+                }
+
+                &:checked + label:after {
+                    content: "";
+                    position: absolute;
+                    display: inline-block;
+                    margin-right: 5px;
+                    width: 16px;
+                    height: 16px;
+                    left: 0;
+                    top: 0;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-image: url("@static/img/registerPage/check.svg");
+                }
             }
 
             &__forgot-password {
-                position: absolute;
-                bottom: 85px;
-                right: 0;
                 color: $signInMainTextColor;
                 text-decoration: none;
                 cursor: pointer;
@@ -280,10 +317,13 @@
 
                 &__remember-me {
                     border-radius: 4px;
+
+                    & + label {
+                        font-size: 14px;
+                    }
                 }
 
                 &__forgot-password {
-                    bottom: 110px;
                     font-size: 14px;
                 }
 
@@ -382,10 +422,6 @@
                     margin-top: 10px;
                     line-height: 24px;
                     font-size: 12px;
-                }
-
-                &__forgot-password {
-                    bottom: 95px;
                 }
             }
         }
@@ -499,14 +535,6 @@
 
                 &__remember-me {
                     margin-top: 10px;
-                }
-
-                &__forgot-password {
-                    margin-top: 20px;
-                    float: right;
-                    text-decoration: none;
-                    font-size: 12px;
-                    bottom: 140px;
                 }
             }
         }
@@ -654,14 +682,6 @@
                 margin: auto;
                 width: 50%;
 
-                &__remember-me {
-                    float: left;
-                }
-
-                &__forgot-password {
-                    bottom: 105px;
-                }
-
                 &__email,
                 &__name,
                 &__surname,
@@ -689,44 +709,6 @@
                 &__password-error {
                     margin-top: 5px;
                     font-size: 12px;
-                }
-            }
-        }
-    }
-}
-
-@media (max-height: $phoneBreakPoint - 200px) {
-
-    .register {
-
-        &__sign-in,
-        &__sign-up,
-        &__reset,
-        &__recover {
-
-            &__sign-form {
-
-                &__forgot-password {
-                    bottom: 120px;
-                }
-            }
-        }
-    }
-}
-
-@media (max-height: $phoneBreakPoint - 250px) {
-
-    .register {
-
-        &__sign-in,
-        &__sign-up,
-        &__reset,
-        &__recover {
-
-            &__sign-form {
-
-                &__forgot-password {
-                    bottom: 140px;
                 }
             }
         }
