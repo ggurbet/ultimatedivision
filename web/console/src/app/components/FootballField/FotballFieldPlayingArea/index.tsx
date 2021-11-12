@@ -9,7 +9,7 @@ import { PlayingAreaFootballerCard } from '@components/FootballField/PlayingArea
 
 import { CardEditIdentificators } from '@/api/club';
 import { RootState } from '@/app/store';
-import { Card } from '@/card';
+import { CardWithStats } from '@/card';
 import { SquadCard } from '@/club';
 import {
     cardSelectionVisibility,
@@ -73,7 +73,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
 
     /** returns card data for card */
     function getCard(id: string) {
-        return cards.find((card: Card) => card.id === id);
+        return cards.find((card: CardWithStats) => card.id === id);
     }
 
     /** Add card position, and shows card selection */

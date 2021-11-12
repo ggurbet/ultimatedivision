@@ -30,7 +30,7 @@ export class LootboxClient extends APIClient {
 
         const cards = await responseCards.json();
 
-        if(!cards) {
+        if (!cards) {
             this.handleError(cards);
         }
 

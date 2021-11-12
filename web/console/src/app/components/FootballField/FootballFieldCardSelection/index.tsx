@@ -10,8 +10,8 @@ import { FilterField } from
 
 import { RootState } from '@/app/store';
 import { listOfCards } from '@/app/store/actions/cards';
+import { CardWithStats } from '@/card';
 import { addCard, cardSelectionVisibility } from '@/app/store/actions/clubs';
-import { Card } from '@/card';
 import { CardEditIdentificators } from '@/api/club';
 
 import './index.scss';
@@ -42,7 +42,7 @@ export const FootballFieldCardSelection = () => {
         <div id="cardList" className="card-selection">
             <FilterField />
             <div className="card-selection__list">
-                {cards.map((card: Card, index: number) =>
+                {cards.map((card: CardWithStats, index: number) =>
                     <div
                         key={index}
                         className="card-selection__card"

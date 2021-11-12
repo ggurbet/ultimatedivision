@@ -3,11 +3,11 @@
 
 import { Radar } from 'react-chartjs-2';
 
-import { Card } from '@/card';
+import { CardWithStats } from '@/card';
 
 import './index.scss';
 
-export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({
+export const FootballerCardIllustrationsRadar: React.FC<{ card: CardWithStats }> = ({
     card,
 }) => {
     const stats = card.statsArea;
@@ -66,16 +66,16 @@ export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({
                             },
                             angleLines: {
                                 /* eslint-disable */
-                borderDash: [7, 8],
-                color: "#515180",
-              },
-              grid: {
-                color: "#515180",
-              },
-            },
-          },
-        }}
-      />
-    </div>
-  );
+                                borderDash: [7, 8],
+                                color: "#515180",
+                            },
+                            grid: {
+                                color: "#515180",
+                            },
+                        },
+                    },
+                }}
+            />
+        </div>
+    );
 };

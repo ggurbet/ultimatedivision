@@ -21,26 +21,7 @@ export class MarketplaceClient extends APIClient {
             await this.handleError(response);
         };
 
-        const marketplaceJSON = await response.json();
-
-        return new MarketPlacePage(
-            marketplaceJSON.lots.map((lot: Lot) => new Lot(
-                lot.id,
-                lot.itemId,
-                lot.type,
-                lot.userId,
-                lot.shopperId,
-                lot.status,
-                lot.startPrice,
-                lot.maxPrice,
-                lot.currentPrice,
-                lot.startTime,
-                lot.endTime,
-                lot.period,
-                lot.card,
-            )),
-            marketplaceJSON.page,
-        );
+        return await response.json();
     };
 
     /** implements opening lot */
@@ -52,23 +33,7 @@ export class MarketplaceClient extends APIClient {
             await this.handleError(response);
         };
 
-        const lotJSON = await response.json();
-
-        return new Lot(
-            lotJSON.id,
-            lotJSON.itemId,
-            lotJSON.type,
-            lotJSON.userId,
-            lotJSON.shopperId,
-            lotJSON.status,
-            lotJSON.startPrice,
-            lotJSON.maxPrice,
-            lotJSON.currentPrice,
-            lotJSON.startTime,
-            lotJSON.endTime,
-            lotJSON.period,
-            lotJSON.card,
-        );
+        return await response.json();
     };
 
     /** implements creating lot (selling card) */
@@ -82,33 +47,14 @@ export class MarketplaceClient extends APIClient {
     };
 
     /** method returns filtered lot list */
-    public async filteredList(filterParam: string): Promise<MarketPlacePage> {
-        const path = `${this.ROOT_PATH}/lots/?${filterParam}`;
+    public async filteredList(lowRange: string, topRange: string): Promise<MarketPlacePage> {
+        const path = `${this.ROOT_PATH}/lots/?${lowRange}&${topRange}`;
         const response = await this.http.get(path);
 
         if (!response.ok) {
             await this.handleError(response);
         };
 
-        const marketplaceJSON = await response.json();
-
-        return new MarketPlacePage(
-            marketplaceJSON.lots.map((lot: Lot) => new Lot(
-                lot.id,
-                lot.itemId,
-                lot.type,
-                lot.userId,
-                lot.shopperId,
-                lot.status,
-                lot.startPrice,
-                lot.maxPrice,
-                lot.currentPrice,
-                lot.startTime,
-                lot.endTime,
-                lot.period,
-                lot.card,
-            )),
-            marketplaceJSON.page,
-        );
+        return await response.json();
     };
 };

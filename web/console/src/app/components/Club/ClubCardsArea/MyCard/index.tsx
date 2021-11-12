@@ -12,11 +12,11 @@ import priceGoldIcon from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';
 
 import { createLot } from '@/app/store/actions/marketplace';
 import { CreatedLot } from '@/app/types/marketplace';
-import { Card } from '@/card';
+import { CardWithStats } from '@/card';
 
 import './index.scss';
 
-export const MyCard: React.FC<{ card: Card }> = ({ card }) => {
+export const MyCard: React.FC<{ card: CardWithStats }> = ({ card }) => {
     const dispatch = useDispatch();
 
     const [controlVisibility, changeControlVisibility] = useState<boolean>(false);

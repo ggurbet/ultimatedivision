@@ -3,13 +3,6 @@
 
 const DEFAULT_VALUE = 0;
 
-/** backend club */
-export class Club {
-    public id: string = '';
-    public name: string = '';
-    public createdAt: string = '';
-}
-
 /** backend squad */
 export class Squad {
     public id: string = '';
@@ -26,7 +19,20 @@ export class SquadCard {
     public position: number = DEFAULT_VALUE;
 }
 
-/** foe drag and drop implementation */
+
+/** backend club */
+export interface Club {
+    // TODO : change interface after backend changes
+    clubs: {
+        id: string;
+        name: string;
+        createdAt: string;
+    };
+    squad: Squad;
+    squadCards: SquadCard[];
+}
+
+/** for drag and drop implementation */
 export class Options {
     /** options implementation */
     constructor(
@@ -39,7 +45,12 @@ export class Options {
 
 /** club reducer state  */
 export class ClubState {
-    public clubs: Club = new Club();
+    // clubs field will be deleted afted backend changes
+    public clubs: Club['clubs'] = {
+        id: '',
+        name: '',
+        createdAt: '',
+    };
     public squad: Squad = new Squad();
     public squadCards: SquadCard[] = [];
     public options: Options = new Options();
@@ -56,7 +67,6 @@ export type FormationsType =
     | '4-1-3-2'
     | '5-3-2'
     | '4-5-2';
-
 export type TacticsType = 'attack' | 'defence' | 'balanced';
 
 /* eslint-disable no-magic-numbers */

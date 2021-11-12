@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { Card, CardsPage } from '@/card';
+import { Card, CardWithStats, CardsPage } from '@/card';
 
 import { APIClient } from '@/api/index';
 
@@ -20,12 +20,7 @@ export class CardClient extends APIClient {
             await this.handleError(response);
         };
 
-        const cardsJSON = await response.json();
-
-        return new CardsPage(
-            cardsJSON.cards.map((card: Partial<Card>) => new Card(card)),
-            cardsJSON.page,
-        );
+        return await response.json();
     };
 
     /** method calls get method from APIClient */
@@ -37,25 +32,18 @@ export class CardClient extends APIClient {
             await this.handleError(response);
         };
 
-        const cardJSON = await response.json();
-
-        return new Card(cardJSON);
+        return await response.json();
     };
 
     /** method returns filtered card list */
-    public async filteredList(filterParam: string): Promise<CardsPage> {
-        const path = `${this.ROOT_PATH}/?${filterParam}`;
+    public async filteredList(lowRange: string, topRange: string): Promise<CardsPage> {
+        const path = `${this.ROOT_PATH}/?${lowRange}&${topRange}`;
         const response = await this.http.get(path);
 
         if (!response.ok) {
             await this.handleError(response);
         };
 
-        const cardsJSON = await response.json();
-
-        return new CardsPage(
-            cardsJSON.cards.map((card: Partial<Card>) => new Card(card)),
-            cardsJSON.page,
-        );
+        return await response.json();
     };
 };

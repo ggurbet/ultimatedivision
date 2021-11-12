@@ -3,13 +3,13 @@
 
 import { Doughnut } from 'react-chartjs-2';
 
-import { Card } from '@/card';
+import { CardWithStats } from '@/card';
 
 import currency from '@static/img/FootballerCardPage/currency.svg';
 
 import './index.scss';
 
-export const FootballerCardPrice: React.FC<{card: Card}> = ({ card }) => {
+export const FootballerCardPrice: React.FC<{ card: CardWithStats }> = ({ card }) => {
     const FIRST_CARD_INDEX = 0;
     const FULL_VALUE_STATISTIC_SCALE = 100;
 
