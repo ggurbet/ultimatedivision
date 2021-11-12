@@ -24,20 +24,10 @@ type DB interface {
 // NFT entity describes values released nft token.
 type NFT struct {
 	CardID        uuid.UUID           `json:"cardId"`
-	Chain         Сhain               `json:"chain"`
+	Chain         cryptoutils.Сhain   `json:"chain"`
 	TokenID       int                 `json:"tokenId"`
 	WalletAddress cryptoutils.Address `json:"walletAddress"`
 }
-
-// Сhain defines the list of possible chains in blockchain.
-type Сhain string
-
-const (
-	// ChainEthereum indicates that chain is ethereum.
-	ChainEthereum Сhain = "ethereum"
-	// ChainPolygon indicates that chain is polygon.
-	ChainPolygon Сhain = "polygon"
-)
 
 // MaxValueGameParameter indicates that max value game parameter is 100.
 const MaxValueGameParameter = 100

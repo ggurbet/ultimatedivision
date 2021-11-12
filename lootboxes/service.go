@@ -11,6 +11,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
+	"ultimatedivision/cards/avatars"
 )
 
 // ErrLootBoxes indicates that there was an error in the service.
@@ -23,14 +24,16 @@ type Service struct {
 	config    Config
 	lootboxes DB
 	cards     *cards.Service
+	avatars   *avatars.Service
 }
 
 // NewService is a constructor for lootboxes service.
-func NewService(config Config, lootboxes DB, cards *cards.Service) *Service {
+func NewService(config Config, lootboxes DB, cards *cards.Service, avatars *avatars.Service) *Service {
 	return &Service{
 		config:    config,
 		lootboxes: lootboxes,
 		cards:     cards,
+		avatars:   avatars,
 	}
 }
 
@@ -67,6 +70,15 @@ func (service *Service) Open(ctx context.Context, userID, lootboxID uuid.UUID) (
 	for i := 0; i < cardsNum; i++ {
 		card, err := service.cards.Create(ctx, userID, probabilities, strconv.Itoa(i+1))
 		if err != nil {
+			return lootBoxCards, ErrLootBoxes.Wrap(err)
+		}
+
+		avatar, err := service.avatars.Generate(ctx, card, i+1)
+		if err != nil {
+			return lootBoxCards, ErrLootBoxes.Wrap(err)
+		}
+
+		if err := service.avatars.Create(ctx, avatar); err != nil {
 			return lootBoxCards, ErrLootBoxes.Wrap(err)
 		}
 
