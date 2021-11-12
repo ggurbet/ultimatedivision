@@ -3,21 +3,21 @@
 
 import { Dispatch } from 'redux';
 
-import { User } from '@/user';
-import { UserClient } from '@/api/user';
-import { UserService } from '@/user/service';
+import { User } from '@/users';
+import { UsersClient } from '@/api/users';
+import { UsersService } from '@/users/service';
 
 /** action types implementation */
 export const REGISTER = 'REGISTER';
 export const LOGIN = 'LOGIN';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 export const RECOVER_PASSWORD = 'RECOVER_PASSWORD';
-/** implement registration of new user */
+/** register action contains type and data for user registration */
 export const register = (user: User) => ({
     type: REGISTER,
     user,
 });
-/** get registred user by id */
+/** login action contains type and data for user login */
 export const login = (email: string, password: string) => ({
     type: LOGIN,
     user: {
@@ -25,7 +25,7 @@ export const login = (email: string, password: string) => ({
         password,
     },
 });
-/** changing user password */
+/** changePassword action contains type and data for changes password */
 export const changePassword = (password: string, newPassword: string) => ({
     type: CHANGE_PASSWORD,
     passwords: {
@@ -33,39 +33,39 @@ export const changePassword = (password: string, newPassword: string) => ({
         newPassword,
     },
 });
-/** recover user password */
+/** recoverPassword action contains type and data for recover password */
 export const recoverPassword = (password: string) => ({
     type: RECOVER_PASSWORD,
     password,
 });
 
-const client = new UserClient();
-const users = new UserService(client);
+const usersClient = new UsersClient();
+const usersService = new UsersService(usersClient);
 
 /** thunk that implements user registration */
 export const registerUser = (user: User) =>
     async function(dispatch: Dispatch) {
-        await users.register(user);
+        await usersService.register(user);
         dispatch(register(user));
     };
 
 /** thunk that implements user login */
 export const loginUser = (email: string, password: string) =>
     async function(dispatch: Dispatch) {
-        await users.login(email, password);
+        await usersService.login(email, password);
         dispatch(login(email, password));
     };
 
-/** thunk that implements user changing password */
+/** thunk that implements changes user password */
 export const changeUserPassword = (password: string, newPassword: string) =>
     async function(dispatch: Dispatch) {
-        await users.changePassword(password, newPassword);
+        await usersService.changePassword(password, newPassword);
         dispatch(changePassword(password, newPassword));
     };
 
-/** thunk that implements user reset password */
+/** thunk that implements resets user password */
 export const recoverUserPassword = (password: string) =>
     async function(dispatch: Dispatch) {
-        await users.recoverPassword(password);
+        await usersService.recoverPassword(password);
         dispatch(recoverPassword(password));
     };

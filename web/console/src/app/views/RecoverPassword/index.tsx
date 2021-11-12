@@ -3,39 +3,45 @@
 
 import { SetStateAction, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-
-import { UserClient } from '@/api/user';
-import { UserService } from '@/user/service';
-import { Validator } from '@/user/validation';
-import { AuthRouteConfig } from '@/app/routes';
-
-import { useQueryToken } from '@/app/hooks/useQueryToken';
-
-import { recoverUserPassword } from '@/app/store/actions/users';
+import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { UserDataArea } from '@components/common/UserDataArea';
 
 import ultimate from '@static/img/registerPage/ultimate.svg';
 
+import { UsersClient } from '@/api/users';
+import { useQueryToken } from '@/app/hooks/useQueryToken';
+import { AuthRouteConfig } from '@/app/routes';
+import { recoverUserPassword } from '@/app/store/actions/users';
+import { UsersService } from '@/users/service';
+import { Validator } from '@/users/validation';
+
 import './index.scss';
 
-const RecoverPassword: React.FC = () => {
+const ResetPassword: React.FC = () => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const token = useQueryToken();
 
     const [errorMessage, setErrorMessage]
         = useState<SetStateAction<null | string>>(null);
 
-    const userClient = new UserClient();
-    const users = new UserService(userClient);
+    const usersClient = new UsersClient();
+    const usersService = new UsersService(usersClient);
 
     /** catches error if token is not valid */
     async function checkRecoverToken() {
         try {
-            await users.checkRecoverToken(token);
+            await usersService.checkRecoverToken(token);
+            toast.success('Successfully! Please, change your password.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
         } catch (error: any) {
-            /** TODO: handles error */
-            setErrorMessage('Cannot get access');
+            toast.error('The token has not been verified. Please, check your mail.', {
+                position: toast.POSITION.TOP_RIGHT,
+                theme: 'colored',
+            });
         };
     };
     useEffect(() => {
@@ -51,26 +57,28 @@ const RecoverPassword: React.FC = () => {
         = useState<SetStateAction<null | string>>(null);
     /** checks if values does't valid then set an error messages */
     const validateForm: () => boolean = () => {
-        let isValidForm = true;
+        let isFormValid = true;
 
-        if (!Validator.password(password)) {
+        if (!Validator.isPassword(password)) {
             setPasswordError('Password is not valid');
-            isValidForm = false;
+            isFormValid = false;
         };
 
-        if (!Validator.password(confirmedPassword)) {
+        if (!Validator.isPassword(confirmedPassword)) {
             setConfirmedPasswordError('Confirmed password is not valid');
-            isValidForm = false;
+            isFormValid = false;
         };
 
         if (password !== confirmedPassword) {
             setConfirmedPasswordError('Passwords does not match, please try again');
-            isValidForm = false;
+            isFormValid = false;
         }
 
-        return isValidForm;
+        return isFormValid;
     };
 
+    /** DELAY is the delay time in milliseconds for redirect to SignIn page. */
+    const DELAY: number = 3000;
     /** sign in user data */
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -81,9 +89,17 @@ const RecoverPassword: React.FC = () => {
 
         try {
             await dispatch(recoverUserPassword(password));
-            location.pathname = AuthRouteConfig.SignIn.path;
+            toast.success('Successfully! You will be redirected after 3 seconds', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            await setTimeout(() => {
+                history.push(AuthRouteConfig.SignIn.path);
+            }, DELAY);
         } catch (error: any) {
-            /** TODO: it will be reworked with notification system */
+            toast.error('Please, make sure your password is correct.', {
+                position: toast.POSITION.TOP_RIGHT,
+                theme: 'colored',
+            });
         }
     };
     /** user datas for recover password */
@@ -96,7 +112,7 @@ const RecoverPassword: React.FC = () => {
             type: 'password',
             error: passwordError,
             clearError: setPasswordError,
-            validate: Validator.password,
+            validate: Validator.isPassword,
         },
         {
             value: confirmedPassword,
@@ -106,7 +122,7 @@ const RecoverPassword: React.FC = () => {
             type: 'password',
             error: confirmedPasswordError,
             clearError: setConfirmedPasswordError,
-            validate: Validator.password,
+            validate: Validator.isPassword,
         },
     ];
 
@@ -151,4 +167,4 @@ const RecoverPassword: React.FC = () => {
     );
 };
 
-export default RecoverPassword;
+export default ResetPassword;

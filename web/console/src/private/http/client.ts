@@ -39,7 +39,7 @@ export class HttpClient {
      * @param path
      * @param _auth indicates if authentication is needed
      */
-    public async get(path: string, _auth = true): Promise<Response> {
+    public async get(path: string, body?: string, _auth = true): Promise<Response> {
         return await this.do('GET', path);
     }
 

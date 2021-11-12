@@ -2,18 +2,18 @@
 // See LICENSE for copying information.
 
 import { SetStateAction, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-
-
-import { registerUser } from '@/app/store/actions/users';
-import { AuthRouteConfig } from '@/app/routes';
-
-import { Validator } from '@/user/validation';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { UserDataArea } from '@components/common/UserDataArea';
 
 import ultimate from '@static/img/registerPage/ultimate.svg';
+
+import { BadRequestError } from '@/api';
+import { AuthRouteConfig } from '@/app/routes';
+import { registerUser } from '@/app/store/actions/users';
+import { Validator } from '@/users/validation';
 
 import './index.scss';
 
@@ -37,34 +37,34 @@ const SignUp: React.FC = () => {
         = useState<SetStateAction<null | string>>(null);
     /** checks if values does't valid then set an error messages */
     const validateForm: () => boolean = () => {
-        let isValidForm = true;
+        let isFormValid = true;
 
-        if (!Validator.email(email)) {
+        if (!Validator.isEmail(email)) {
             setEmailError('Email is not valid');
-            isValidForm = false;
+            isFormValid = false;
         };
 
-        if (!Validator.password(password)) {
+        if (!Validator.isPassword(password)) {
             setPasswordError('Password is not valid');
-            isValidForm = false;
+            isFormValid = false;
         };
 
-        if (!Validator.field(lastName)) {
+        if (!Validator.isName(lastName)) {
             setLastNameError('LastName is not valid');
-            isValidForm = false;
+            isFormValid = false;
         };
 
-        if (!Validator.field(firstName)) {
+        if (!Validator.isName(firstName)) {
             setFirstNameError('FirstName is not valid');
-            isValidForm = false;
+            isFormValid = false;
         };
 
-        if (!Validator.field(nickName)) {
+        if (!Validator.isName(nickName)) {
             setNickNameError('NickName is not valid');
-            isValidForm = false;
+            isFormValid = false;
         };
 
-        return isValidForm;
+        return isFormValid;
     };
 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
@@ -82,9 +82,18 @@ const SignUp: React.FC = () => {
                 firstName,
                 lastName,
             }));
-            location.pathname = AuthRouteConfig.SignIn.path;
-        } catch (error) {
-            /** TODO: it will be reworked with notification system */
+            toast.success('Successfully! Please, check your mail box and confirm email.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        } catch (error: any) {
+            let errorMessage = 'Someting wrong, please, try again.';
+            if (error instanceof BadRequestError) {
+                errorMessage = 'Email is already in use.';
+            };
+            toast.error(errorMessage, {
+                position: toast.POSITION.TOP_RIGHT,
+                theme: 'colored',
+            });
         };
     };
 
@@ -98,7 +107,7 @@ const SignUp: React.FC = () => {
             type: 'text',
             error: firstNameError,
             clearError: setFirstNameError,
-            validate: Validator.field,
+            validate: Validator.isName,
         },
         {
             value: lastName,
@@ -108,17 +117,17 @@ const SignUp: React.FC = () => {
             type: 'text',
             error: lastNameError,
             clearError: setLastNameError,
-            validate: Validator.field,
+            validate: Validator.isName,
         },
         {
             value: email,
             placeHolder: 'E-mail',
             onChange: setEmail,
             className: 'register__sign-up__sign-form__email',
-            type: 'email',
+            type: 'text',
             error: emailError,
             clearError: setEmailError,
-            validate: Validator.email,
+            validate: Validator.isEmail,
         },
         {
             value: password,
@@ -128,7 +137,7 @@ const SignUp: React.FC = () => {
             type: 'password',
             error: passwordError,
             clearError: setPasswordError,
-            validate: Validator.password,
+            validate: Validator.isPassword,
         },
         {
             value: nickName,
@@ -138,7 +147,7 @@ const SignUp: React.FC = () => {
             type: 'text',
             error: nickNameError,
             clearError: setNickNameError,
-            validate: Validator.field,
+            validate: Validator.isName,
         },
     ];
 

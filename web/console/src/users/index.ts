@@ -1,9 +1,9 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-/** user domain entity implementation */
+/** User describes user domain entity. */
 export class User {
-    /** base user domain entiry constructor */
+    /** User domain entity contains email, password, nickName, firstName, lastName. */
     public constructor(
         public email: string,
         public password: string,

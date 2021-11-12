@@ -66,7 +66,7 @@ export class AuthRouteConfig {
         SignUp,
         true
     );
-    public static ResetPassword: ComponentRoutes = new ComponentRoutes(
+    public static ChangePassword: ComponentRoutes = new ComponentRoutes(
         '/change-password',
         ChangePassword,
         true
@@ -76,8 +76,8 @@ export class AuthRouteConfig {
         ConfirmEmail,
         true,
     );
-    public static RecoverPassword: ComponentRoutes = new ComponentRoutes(
-        '/recover-password',
+    public static ResetPassword: ComponentRoutes = new ComponentRoutes(
+        '/reset-password',
         RecoverPassword,
         true,
     );
@@ -89,8 +89,8 @@ export class AuthRouteConfig {
     public static routes: ComponentRoutes[] = [
         AuthRouteConfig.ConfirmEmail,
         AuthRouteConfig.Default,
-        AuthRouteConfig.RecoverPassword,
         AuthRouteConfig.ResetPassword,
+        AuthRouteConfig.ChangePassword,
         AuthRouteConfig.SignIn,
         AuthRouteConfig.SignUp,
     ];

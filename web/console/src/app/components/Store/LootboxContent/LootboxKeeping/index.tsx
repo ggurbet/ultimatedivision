@@ -3,7 +3,7 @@
 
 import { Dispatch, SetStateAction } from 'react';
 import { useSelector } from 'react-redux';
-import Slider from "react-slick";
+import Slider from 'react-slick';
 
 import { MyCard } from '@/app/components/Club/ClubCardsArea/MyCard';
 
@@ -31,8 +31,9 @@ export const LootboxKeeping: React.FC<{ handleOpening: Dispatch<SetStateAction<b
         infinite: true,
         speed: 500,
         slidesToShow: 1,
-        slidesToScroll: 1
+        slidesToScroll: 1,
     };
+
     return (
         <div className="box-keeping">
             <div className="box-keeping__wrapper">

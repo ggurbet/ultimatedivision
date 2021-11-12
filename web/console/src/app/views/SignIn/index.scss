@@ -131,7 +131,7 @@
 
                 &__error {
                     color: $signInErrorColor;
-                    font-size: 10px;
+                    font-size: 14px;
                 }
             }
 
@@ -162,6 +162,8 @@
                 margin-right: 20px;
                 font-family: "BebasNeue", sans-serif;
                 font-weight: bold;
+                cursor: pointer;
+                font-size: 20px;
             }
 
             &__remember-me {
@@ -170,7 +172,7 @@
 
             &__forgot-password {
                 position: absolute;
-                bottom: 65px;
+                bottom: 85px;
                 right: 0;
                 color: $signInMainTextColor;
                 text-decoration: none;
@@ -199,7 +201,15 @@
     &__recover {
 
         &__title {
-            margin-top: 30%;
+            margin-top: 25%;
+        }
+
+        &__sign-form {
+            margin-top: 10%;
+
+            &__confirm {
+                margin-top: 40px;
+            }
         }
     }
 }

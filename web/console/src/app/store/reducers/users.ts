@@ -1,8 +1,8 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { UserClient } from '@/api/user';
-import { UserService } from '@/user/service';
+import { UsersClient } from '@/api/users';
+import { UsersService } from '@/users/service';
 
 import {
     CHANGE_PASSWORD,
@@ -10,24 +10,26 @@ import {
     RECOVER_PASSWORD,
 } from '../actions/users';
 
-/** implementation of user state */
+/**
+ * UsersState is a representation of users reducer state.
+ */
 export class UsersState {
-    public readonly userService: UserService;
+    public readonly userService: UsersService;
     public user = {
         email: '',
         password: '',
     };
-    /** implements user service */
-    public constructor(userService: UserService) {
+    /** UsersState contains service implementation of users  */
+    public constructor(userService: UsersService) {
         this.userService = userService;
     };
 };
 
-const client = new UserClient();
-const service = new UserService(client);
+const usersClient = new UsersClient();
+const usersService = new UsersService(usersClient);
 
 export const usersReducer = (
-    state = new UsersState(service),
+    state = new UsersState(usersService),
     action: any = {}
 ) => {
     const user = state.user;
