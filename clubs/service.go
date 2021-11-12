@@ -11,6 +11,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
+	"ultimatedivision/divisions"
 	"ultimatedivision/users"
 )
 
@@ -21,17 +22,19 @@ var ErrClubs = errs.Class("clubs service error")
 //
 // architecture: Service
 type Service struct {
-	clubs DB
-	users *users.Service
-	cards *cards.Service
+	clubs     DB
+	users     *users.Service
+	cards     *cards.Service
+	divisions divisions.DB
 }
 
 // NewService is a constructor for clubs service.
-func NewService(clubs DB, users *users.Service, cards *cards.Service) *Service {
+func NewService(clubs DB, users *users.Service, cards *cards.Service, divisions divisions.DB) *Service {
 	return &Service{
-		clubs: clubs,
-		users: users,
-		cards: cards,
+		clubs:     clubs,
+		users:     users,
+		cards:     cards,
+		divisions: divisions,
 	}
 }
 
@@ -42,12 +45,17 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID) (uuid.UUID
 		return uuid.New(), ErrClubs.Wrap(err)
 	}
 
+	division, err := service.divisions.GetLastDivision(ctx)
+	if err != nil {
+		return uuid.Nil, ErrClubs.Wrap(err)
+	}
+
 	newClub := Club{
 		ID:         uuid.New(),
 		OwnerID:    userID,
 		Name:       nickname,
 		CreatedAt:  time.Now().UTC(),
-		DivisionID: uuid.Nil,
+		DivisionID: division.ID,
 	}
 
 	allClubs, err := service.ListByUserID(ctx, userID)

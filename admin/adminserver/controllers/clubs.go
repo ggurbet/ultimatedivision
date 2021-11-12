@@ -158,13 +158,13 @@ func (controller *Clubs) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 
 	userID, err := uuid.Parse(params["userId"])
 	if err != nil {
-		http.Error(w, "could parse user id", http.StatusBadRequest)
+		http.Error(w, "could not parse user id", http.StatusBadRequest)
 		return
 	}
 
 	clubID, err := uuid.Parse(params["clubId"])
 	if err != nil {
-		http.Error(w, "could parse club id", http.StatusBadRequest)
+		http.Error(w, "could not parse club id", http.StatusBadRequest)
 		return
 	}
 

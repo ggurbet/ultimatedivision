@@ -85,6 +85,25 @@ func (divisionsDB *divisionsDB) Get(ctx context.Context, id uuid.UUID) (division
 	return division, ErrDivisions.Wrap(err)
 }
 
+// Get returns division by id from the data base.
+func (divisionsDB *divisionsDB) GetLastDivision(ctx context.Context) (divisions.Division, error) {
+	query := `SELECT * FROM divisions WHERE name=(SELECT MAX(name) FROM divisions)`
+	var division divisions.Division
+
+	row := divisionsDB.conn.QueryRowContext(ctx, query)
+
+	err := row.Scan(&division.ID, &division.Name, &division.PassingPercent, &division.CreatedAt)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return division, divisions.ErrNoDivision.Wrap(err)
+		}
+
+		return division, ErrDivisions.Wrap(err)
+	}
+
+	return division, ErrDivisions.Wrap(err)
+}
+
 // Delete deletes a division in the database.
 func (divisionsDB *divisionsDB) Delete(ctx context.Context, id uuid.UUID) error {
 	result, err := divisionsDB.conn.ExecContext(ctx, "DELETE FROM divisions WHERE id=$1", id)

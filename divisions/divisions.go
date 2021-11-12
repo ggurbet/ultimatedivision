@@ -24,6 +24,8 @@ type DB interface {
 	List(ctx context.Context) ([]Division, error)
 	// Get returns division by id from the data base.
 	Get(ctx context.Context, id uuid.UUID) (Division, error)
+	// GetLastDivision returns last division from the data base.
+	GetLastDivision(ctx context.Context) (Division, error)
 	// Delete deletes a division in the database.
 	Delete(ctx context.Context, id uuid.UUID) error
 }

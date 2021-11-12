@@ -43,7 +43,7 @@ func (clubsDB *clubsDB) Create(ctx context.Context, club clubs.Club) (uuid.UUID,
 
 	var clubID uuid.UUID
 	err = clubsDB.conn.QueryRowContext(ctx, query,
-		club.ID, club.OwnerID, club.Name, club.Status, club.DivisionID, club.CreatedAt).Scan(&clubID)
+		club.ID, club.OwnerID, club.Name, club.Status, club.ID, club.CreatedAt).Scan(&clubID)
 	if err != nil {
 		err = tx.Rollback()
 		if err != nil {
