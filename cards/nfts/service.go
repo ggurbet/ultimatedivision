@@ -10,71 +10,30 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
-	"ultimatedivision/cards/avatars"
 	"ultimatedivision/pkg/nft"
-	"ultimatedivision/users"
 )
 
-// ErrNFTWaitList indicated that there was an error in service.
-var ErrNFTWaitList = errs.Class("ErrNFTWaitList service error")
+// ErrNFTs indicated that there was an error in service.
+var ErrNFTs = errs.Class("NFTs service error")
 
 // Service is handling NFTs related logic.
 //
 // architecture: Service
 type Service struct {
-	config  Config
-	cards   *cards.Service
-	avatars *avatars.Service
-	users   *users.Service
-	nfts    DB
+	config Config
+	nfts   DB
 }
 
 // NewService is a constructor for NFTs service.
-func NewService(config Config, cards *cards.Service, avatars *avatars.Service, users *users.Service, nfts DB) *Service {
+func NewService(config Config, nfts DB) *Service {
 	return &Service{
-		config:  config,
-		cards:   cards,
-		avatars: avatars,
-		users:   users,
-		nfts:    nfts,
+		config: config,
+		nfts:   nfts,
 	}
-}
-
-// Create creates nft token.
-func (service *Service) Create(ctx context.Context, createNFT CreateNFT) error {
-	card, err := service.cards.Get(ctx, createNFT.CardID)
-	if err != nil {
-		return ErrNFTWaitList.Wrap(err)
-	}
-
-	if card.UserID != createNFT.UserID {
-		return ErrNFTWaitList.New("it isn't user`s card")
-	}
-
-	avatar, err := service.avatars.Get(ctx, createNFT.CardID)
-	if err != nil {
-		return ErrNFTWaitList.Wrap(err)
-	}
-
-	// TODO: save avatar to file storage
-
-	_, err = service.Generate(ctx, card, avatar.OriginalURL, service.config.ExternalURL)
-	if err != nil {
-		return ErrNFTWaitList.Wrap(err)
-	}
-
-	// TODO: save nft metadata to file storage
-	// TODO: add transaction
-
-	if err = service.users.UpdateWalletAddress(ctx, createNFT.WalletAddress, createNFT.UserID); err != nil {
-		return ErrNFTWaitList.Wrap(err)
-	}
-
-	return service.nfts.Create(ctx, createNFT.CardID, createNFT.WalletAddress)
 }
 
 // Generate generates values for nft token.
-func (service *Service) Generate(ctx context.Context, card cards.Card, avatarURL, externalURL string) (nft.NFT, error) {
+func (service *Service) Generate(ctx context.Context, card cards.Card, avatarURL string) (nft.NFT, error) {
 	var attributes []nft.Attribute
 
 	attributes = append(attributes, nft.Attribute{TraitType: "Id", Value: card.ID.String()})
@@ -137,38 +96,9 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, avatarURL
 	nft := nft.NFT{
 		Attributes:  attributes,
 		Description: service.config.Description,
-		ExternalURL: externalURL,
+		ExternalURL: service.config.ExternalURL + card.ID.String(),
 		Image:       avatarURL,
 		Name:        card.PlayerName,
 	}
 	return nft, nil
-}
-
-// List returns all nfts.
-func (service *Service) List(ctx context.Context) ([]NFTWaitListItem, error) {
-	allNFT, err := service.nfts.List(ctx)
-	return allNFT, ErrNFTWaitList.Wrap(err)
-}
-
-// Get returns nft by token id.
-func (service *Service) Get(ctx context.Context, tokenID int) (NFTWaitListItem, error) {
-	nft, err := service.nfts.Get(ctx, tokenID)
-	return nft, ErrNFTWaitList.Wrap(err)
-}
-
-// GetLastTokenID returns id of latest nft.
-func (service *Service) GetLastTokenID(ctx context.Context) (int, error) {
-	lastID, err := service.nfts.GetLast(ctx)
-	return lastID, ErrNFTWaitList.Wrap(err)
-}
-
-// ListWithoutPassword returns nfts without password.
-func (service *Service) ListWithoutPassword(ctx context.Context) ([]NFTWaitListItem, error) {
-	nftWithoutPassword, err := service.nfts.ListWithoutPassword(ctx)
-	return nftWithoutPassword, ErrNFTWaitList.Wrap(err)
-}
-
-// Delete deletes nfts.
-func (service *Service) Delete(ctx context.Context, tokenIDs []int) error {
-	return ErrNFTWaitList.Wrap(service.nfts.Delete(ctx, tokenIDs))
 }

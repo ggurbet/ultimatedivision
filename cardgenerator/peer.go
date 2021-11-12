@@ -77,9 +77,6 @@ func New(logger logger.Logger, config Config, cardsTotal int) (peer *Peer, err e
 	{ // nfts setup
 		peer.NFTs.Service = nfts.NewService(
 			config.CardAvatars.NFTConfig,
-			peer.Cards.Service,
-			peer.Avatars.Service,
-			nil,
 			nil,
 		)
 	}

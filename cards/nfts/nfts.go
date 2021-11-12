@@ -20,26 +20,28 @@ var ErrNoNFT = errs.Class("nft does not exist")
 // architecture: DB
 type DB interface {
 	// Create creates nft token in the database.
-	Create(ctx context.Context, cardID uuid.UUID, wallet cryptoutils.Address) error
-	// Get returns nft token by card id.
-	Get(ctx context.Context, tokenID int) (NFTWaitListItem, error)
-	// GetLast returns id of last inserted token.
-	GetLast(ctx context.Context) (int, error)
-	// List returns all nft token from wait list from database.
-	List(ctx context.Context) ([]NFTWaitListItem, error)
-	// ListWithoutPassword returns all nft tokens without password from database.
-	ListWithoutPassword(ctx context.Context) ([]NFTWaitListItem, error)
-	// Delete deletes nft from wait list by id of token.
-	Delete(ctx context.Context, tokenIDs []int) error
+	Create(ctx context.Context, nft NFT) error
+	// List returns all nft token from database.
+	List(ctx context.Context) ([]NFT, error)
 }
 
-// NFTWaitListItem describes list of nft tokens entity.
-type NFTWaitListItem struct {
-	TokenID  int                   `json:"tokenId"`
-	CardID   uuid.UUID             `json:"cardId"`
-	Wallet   cryptoutils.Address   `json:"wallet"`
-	Password cryptoutils.Signature `json:"password"`
+// NFT entity describes values released nft token.
+type NFT struct {
+	TokenID       int                 `json:"tokenId"`
+	Сhain         Сhain               `json:"chain"`
+	CardID        uuid.UUID           `json:"cardId"`
+	WalletAddress cryptoutils.Address `json:"walletAddress"`
 }
+
+// Сhain defines the list of possible chains in blockchain.
+type Сhain string
+
+const (
+	// СhainEthereum indicates that chain is ethereum.
+	СhainEthereum Сhain = "ethereum"
+	// СhainPolygon indicates that chain is polygon.
+	СhainPolygon Сhain = "polygon"
+)
 
 // MaxValueGameParameter indicates that max value game parameter is 100.
 const MaxValueGameParameter = 100
@@ -48,11 +50,4 @@ const MaxValueGameParameter = 100
 type Config struct {
 	Description string `json:"description"`
 	ExternalURL string `json:"externalUrl"`
-}
-
-// CreateNFT holds data required for creation of NFT token from a card.
-type CreateNFT struct {
-	CardID        uuid.UUID           `json:"cardId"`
-	WalletAddress cryptoutils.Address `json:"walletAddress"`
-	UserID        uuid.UUID           `json:"userId"`
 }

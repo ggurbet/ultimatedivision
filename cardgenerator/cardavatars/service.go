@@ -5,7 +5,6 @@ package cardavatars
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"math/rand"
 	"os"
@@ -64,7 +63,7 @@ func (service *Service) Generate(ctx context.Context, nameFile int, playerName s
 		return nft.NFT{}, ErrCardAvatars.Wrap(err)
 	}
 
-	nftCard, err := service.nfts.Generate(ctx, card, avatar.OriginalURL, fmt.Sprintf(service.config.NFTConfig.ExternalURL, nameFile+1))
+	nftCard, err := service.nfts.Generate(ctx, card, avatar.OriginalURL)
 	if err != nil {
 		return nft.NFT{}, ErrCardAvatars.Wrap(err)
 	}

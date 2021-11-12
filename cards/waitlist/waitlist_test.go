@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-package nfts_test
+package waitlist_test
 
 import (
 	"context"
@@ -14,12 +14,12 @@ import (
 
 	"ultimatedivision"
 	"ultimatedivision/cards"
-	"ultimatedivision/cards/nfts"
+	"ultimatedivision/cards/waitlist"
 	"ultimatedivision/database/dbtesting"
 	"ultimatedivision/users"
 )
 
-func TestNFTs(t *testing.T) {
+func TestWaitList(t *testing.T) {
 	user1 := users.User{
 		ID:           uuid.New(),
 		Email:        "3560876@gmail.com",
@@ -155,13 +155,13 @@ func TestNFTs(t *testing.T) {
 		Throwing:         49,
 	}
 
-	nft1 := nfts.NFTWaitListItem{
+	nft1 := waitlist.Item{
 		TokenID: 1,
 		CardID:  card1.ID,
 		Wallet:  "0x96216849c49358b10257cb55b28ea603c874b05e",
 	}
 
-	nft2 := nfts.NFTWaitListItem{
+	nft2 := waitlist.Item{
 		TokenID: 2,
 		CardID:  card2.ID,
 		Wallet:  "0x96216849c49358B10254cb55b28eA603c874b05E",
@@ -170,7 +170,7 @@ func TestNFTs(t *testing.T) {
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repositoryUsers := db.Users()
 		repositoryCards := db.Cards()
-		repositoryNFTs := db.NFTs()
+		repositoryWaitList := db.WaitList()
 
 		t.Run("Create", func(t *testing.T) {
 			err := repositoryUsers.Create(ctx, user1)
@@ -182,54 +182,54 @@ func TestNFTs(t *testing.T) {
 			err = repositoryCards.Create(ctx, card2)
 			require.NoError(t, err)
 
-			err = repositoryNFTs.Create(ctx, nft1.CardID, nft1.Wallet)
+			err = repositoryWaitList.Create(ctx, nft1.CardID, nft1.Wallet)
 			require.NoError(t, err)
 
-			err = repositoryNFTs.Create(ctx, nft2.CardID, nft2.Wallet)
+			err = repositoryWaitList.Create(ctx, nft2.CardID, nft2.Wallet)
 			require.NoError(t, err)
 		})
 
 		t.Run("List", func(t *testing.T) {
-			nftList, err := repositoryNFTs.List(ctx)
+			nftList, err := repositoryWaitList.List(ctx)
 			require.NoError(t, err)
 
-			compareNFTsSlice(t, nftList, []nfts.NFTWaitListItem{nft1, nft2})
+			compareNFTsSlice(t, nftList, []waitlist.Item{nft1, nft2})
 		})
 
 		t.Run("List without password", func(t *testing.T) {
-			nftList, err := repositoryNFTs.ListWithoutPassword(ctx)
+			nftList, err := repositoryWaitList.ListWithoutPassword(ctx)
 			require.NoError(t, err)
 
-			compareNFTsSlice(t, nftList, []nfts.NFTWaitListItem{nft1, nft2})
+			compareNFTsSlice(t, nftList, []waitlist.Item{nft1, nft2})
 		})
 
 		t.Run("Get", func(t *testing.T) {
-			nftDB, err := repositoryNFTs.Get(ctx, 1)
+			nftDB, err := repositoryWaitList.Get(ctx, 1)
 			require.NoError(t, err)
 
 			compareNFTs(t, nftDB, nft1)
 		})
 
 		t.Run("Get last token id", func(t *testing.T) {
-			largestTokenID, err := repositoryNFTs.GetLast(ctx)
+			largestTokenID, err := repositoryWaitList.GetLast(ctx)
 			require.NoError(t, err)
 			assert.Equal(t, 2, largestTokenID)
 		})
 
 		t.Run("Delete sql no rows", func(t *testing.T) {
-			err := repositoryNFTs.Delete(ctx, []int{-1})
+			err := repositoryWaitList.Delete(ctx, []int{-1})
 			require.Error(t, err)
-			assert.Equal(t, true, nfts.ErrNoNFT.Has(err))
+			assert.Equal(t, true, waitlist.ErrNoItem.Has(err))
 		})
 
 		t.Run("Delete", func(t *testing.T) {
-			err := repositoryNFTs.Delete(ctx, []int{1, 2})
+			err := repositoryWaitList.Delete(ctx, []int{1, 2})
 			require.NoError(t, err)
 		})
 	})
 }
 
-func compareNFTsSlice(t *testing.T, nft1, nft2 []nfts.NFTWaitListItem) {
+func compareNFTsSlice(t *testing.T, nft1, nft2 []waitlist.Item) {
 	assert.Equal(t, len(nft1), len(nft2))
 
 	for i := 0; i < len(nft1); i++ {
@@ -239,7 +239,7 @@ func compareNFTsSlice(t *testing.T, nft1, nft2 []nfts.NFTWaitListItem) {
 	}
 }
 
-func compareNFTs(t *testing.T, nft1, nft2 nfts.NFTWaitListItem) {
+func compareNFTs(t *testing.T, nft1, nft2 waitlist.Item) {
 	assert.Equal(t, nft1.TokenID, nft2.TokenID)
 	assert.Equal(t, nft1.CardID, nft2.CardID)
 	assert.Equal(t, nft1.Wallet, nft2.Wallet)
