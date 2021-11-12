@@ -14,6 +14,7 @@ import (
 	"ultimatedivision/admin/admins"
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/avatars"
+	"ultimatedivision/cards/nfts"
 	"ultimatedivision/clubs"
 	"ultimatedivision/divisions"
 	"ultimatedivision/gameplay/matches"
@@ -223,6 +224,12 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             user_id  BYTEA   REFERENCES users(id) ON DELETE CASCADE   NOT NULL,
             card_id  BYTEA   REFERENCES cards(id) ON DELETE CASCADE   NOT NULL,
             minute   INTEGER                                          NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS nfts_waitlist(
+            token_id       SERIAL  PRIMARY KEY                            NOT NULL,
+            card_id        BYTEA   REFERENCES cards(id) ON DELETE CASCADE NOT NULL,
+            wallet_address VARCHAR                                        NOT NULL,
+            password       VARCHAR                                        NOT NULL
         );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)
@@ -286,4 +293,9 @@ func (db *database) Queue() queue.DB {
 // Divisions provides access to accounts db.
 func (db *database) Divisions() divisions.DB {
 	return &divisionsDB{conn: db.conn}
+}
+
+// NFTs provides access to accounts db.
+func (db *database) NFTs() nfts.DB {
+	return &nftsDB{conn: db.conn}
 }

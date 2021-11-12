@@ -17,6 +17,7 @@ import (
 	"ultimatedivision/admin/adminserver"
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/avatars"
+	"ultimatedivision/cards/nfts"
 	"ultimatedivision/clubs"
 	"ultimatedivision/console/consoleserver"
 	"ultimatedivision/console/emails"
@@ -47,6 +48,9 @@ type DB interface {
 
 	// Avatars provides access to avatars db.
 	Avatars() avatars.DB
+
+	// NFTs provides access to nfts db.
+	NFTs() nfts.DB
 
 	// Clubs provides access to clubs db.
 	Clubs() clubs.DB
@@ -103,6 +107,10 @@ type Config struct {
 		avatars.Config
 	} `json:"avatars"`
 
+	NFTs struct {
+		nfts.Config
+	} `json:"nfts"`
+
 	LootBoxes struct {
 		Config lootboxes.Config `json:"lootBoxes"`
 	} `json:"lootBoxes"`
@@ -151,6 +159,11 @@ type Peer struct {
 	// exposes avatars related logic.
 	Avatars struct {
 		Service *avatars.Service
+	}
+
+	// exposes nfts related logic.
+	NFTs struct {
+		Service *nfts.Service
 	}
 
 	// exposes clubs related logic.
@@ -254,10 +267,19 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // Avatars setup
+	{ // avatars setup
 		peer.Avatars.Service = avatars.NewService(
 			peer.Database.Avatars(),
 			config.Avatars.Config,
+		)
+	}
+
+	{ // nfts setup
+		peer.NFTs.Service = nfts.NewService(
+			config.NFTs.Config,
+			peer.Cards.Service,
+			peer.Avatars.Service,
+			peer.Users.Service,
 		)
 	}
 
