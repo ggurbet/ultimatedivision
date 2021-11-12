@@ -33,11 +33,6 @@
         text-decoration: none;
         font-size: 18px;
         line-height: 22px;
-
-        &:hover {
-            text-decoration: none;
-            color: $roadmapHighlightColor;
-        }
     }
 
     &__social {
@@ -74,14 +69,25 @@
         height: 20px;
         transition: all 0.3s;
         margin-top: 5px;
-
-        &:hover {
-            transform: scale(1.2);
-        }
     }
 
     &__bottom {
         height: 5px;
+    }
+}
+
+@media (min-width: $desktopBreakPoint) {
+
+    .footer {
+
+        &__link:hover {
+            text-decoration: none;
+            color: $roadmapHighlightColor;
+        }
+
+        &__social-img:hover {
+            transform: scale(1.2);
+        }
     }
 }
 

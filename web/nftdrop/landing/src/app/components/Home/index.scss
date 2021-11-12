@@ -59,27 +59,6 @@
             margin-top: 4px;
             //sorry
         }
-
-        &:hover {
-            background: linear-gradient(
-                95.3deg,
-                rgba(0, 0, 0, 0.2) 4.05%,
-                rgba(0, 0, 0, 0) 87.48%
-            ),
-                linear-gradient(0deg, #0df55c, #0df55c);
-        }
-    }
-
-    &__twitter {
-
-        &:hover {
-            background: linear-gradient(
-                95.3deg,
-                rgba(0, 0, 0, 0.2) 4.05%,
-                rgba(0, 0, 0, 0) 87.48%
-            ),
-                linear-gradient(0deg, #0df55c, #0df55c);
-        }
     }
 
     &__buttons-wrapper {
@@ -155,6 +134,30 @@
 
     .visible {
         display: block;
+    }
+}
+
+@media (min-width: $desktopBreakPoint) {
+
+    .home {
+
+        &__discord:hover {
+            background: linear-gradient(
+                95.3deg,
+                rgba(0, 0, 0, 0.2) 4.05%,
+                rgba(0, 0, 0, 0) 87.48%
+            ),
+                linear-gradient(0deg, #0df55c, #0df55c);
+        }
+
+        &__twitter:hover {
+            background: linear-gradient(
+                95.3deg,
+                rgba(0, 0, 0, 0.2) 4.05%,
+                rgba(0, 0, 0, 0) 87.48%
+            ),
+                linear-gradient(0deg, #0df55c, #0df55c);
+        }
     }
 }
 
