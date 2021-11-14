@@ -59,7 +59,7 @@ const SignUp: React.FC = () => {
             isFormValid = false;
         };
 
-        if (!Validator.isName(nickName)) {
+        if (!Validator.isNickName(nickName)) {
             setNickNameError('NickName is not valid');
             isFormValid = false;
         };
@@ -147,7 +147,7 @@ const SignUp: React.FC = () => {
             type: 'text',
             error: nickNameError,
             clearError: setNickNameError,
-            validate: Validator.isName,
+            validate: Validator.isNickName,
         },
     ];
 

@@ -222,6 +222,7 @@
 
             &__logos {
                 float: right;
+                margin-top: 20px;
 
                 &__google,
                 &__facebook {
@@ -333,6 +334,7 @@
 
                 &__logos {
                     float: unset;
+                    margin-top: unset;
 
                     &__google,
                     &__facebook {
