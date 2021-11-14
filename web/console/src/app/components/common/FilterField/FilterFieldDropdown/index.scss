@@ -17,7 +17,7 @@
         vertical-align: middle;
     }
 
-    &__dropdown {
+    &__dropdown-active {
         position: absolute;
         top: 30px;
         min-width: 100px;
@@ -37,6 +37,10 @@
             background-color: $highlightBackground;
             transform: rotate(45deg);
         }
+    }
+
+    &__dropdown-inactive {
+        display: none;
     }
 }
 

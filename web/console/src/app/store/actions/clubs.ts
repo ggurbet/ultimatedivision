@@ -71,7 +71,7 @@ export const exchangeCards = (
 // Thunks
 
 export const createClub = () =>
-    async function (dispatch: Dispatch) {
+    async function(dispatch: Dispatch) {
         const clubId = await service.createClub();
         const squadId = await service.createSquad(clubId);
         const club = await service.getClub();
@@ -79,55 +79,55 @@ export const createClub = () =>
     };
 
 export const getClub = () =>
-    async function (dispatch: Dispatch) {
+    async function(dispatch: Dispatch) {
         const club = await service.getClub();
         dispatch(setClub(club));
     };
 
 export const setFormation = (squad: Squad, formation: FormationsType) =>
-    async function (dispatch: Dispatch) {
+    async function(dispatch: Dispatch) {
         await service.updateFormation(squad, Formations[formation]);
         const club = await service.getClub();
         dispatch(setClub(club));
     };
 
 export const setCaptain = (squad: Squad, captainId: string) =>
-    async function (dispatch: Dispatch) {
+    async function(dispatch: Dispatch) {
         await service.updateCaptain(squad, captainId);
         const club = await service.getClub();
         dispatch(setClub(club));
     };
 
 export const setTactic = (squad: Squad, tactic: TacticsType) =>
-    async function (dispatch: Dispatch) {
+    async function(dispatch: Dispatch) {
         await service.updateTactic(squad, Tactic[tactic]);
         const club = await service.getClub();
         dispatch(setClub(club));
     };
 
 export const addCard = (path: CardEditIdentificators) =>
-    async function (dispatch: Dispatch) {
+    async function(dispatch: Dispatch) {
         await service.addCard(path);
         const club = await service.getClub();
         dispatch(setClub(club));
     };
 
 export const deleteCard = (path: CardEditIdentificators) =>
-    async function (dispatch: Dispatch) {
+    async function(dispatch: Dispatch) {
         await service.deleteCard(path);
         const club = await service.getClub();
         dispatch(setClub(club));
     };
 
 export const changeCardPosition = (cardItentificators: CardEditIdentificators) =>
-    async function (dispatch: Dispatch) {
+    async function(dispatch: Dispatch) {
         await service.changeCardPosition(cardItentificators);
         const club = await service.getClub();
         dispatch(setClub(club));
     };
 
 export const swapCards = (currentCard: CardEditIdentificators, existCard: CardEditIdentificators) =>
-    async function (dispatch: Dispatch) {
+    async function(dispatch: Dispatch) {
         await service.changeCardPosition(currentCard);
         await service.changeCardPosition(existCard);
         const club = await service.getClub();

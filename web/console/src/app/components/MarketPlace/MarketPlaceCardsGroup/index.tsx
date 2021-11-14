@@ -15,3 +15,4 @@ export const MarketPlaceCardsGroup: React.FC<{ lots: Lot[] }> = ({ lots }) =>
             )}
         </div>
     </div>;
+

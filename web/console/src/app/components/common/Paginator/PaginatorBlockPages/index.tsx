@@ -9,11 +9,14 @@ export const PaginatorBlockPages: React.FC<{
     <ul className="ultimatedivision-paginator__pages">
         {blockPages.map((page, index) =>
             <li
-                className={`ultimatedivision-paginator__pages__item${currentPage === page ? '-active' : ''}`}
+                className={`ultimatedivision-paginator__pages__item${
+                    currentPage === page ? '-active' : ''
+                }`}
                 key={index}
                 onClick={() => onPageChange('change page', page)}
             >
                 {page}
-            </li>,
+            </li>
         )}
     </ul>;
+

@@ -19,6 +19,7 @@ const ConfirmEmail: React.FC = () => {
 
     /** DELAY is the delay time in milliseconds for redirect to SignIn page. */
     const DELAY: number = 3000;
+
     /** catches error if token is not valid */
     async function checkEmailToken() {
         try {

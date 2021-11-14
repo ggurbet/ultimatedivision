@@ -39,8 +39,8 @@ export const FootballerCardIllustrations: React.FC<{ card: CardWithStats }> = ({
                     >
                         {
                             /**
-               * get only average value of player's game property
-               */
+                             * get only average value of player's game property
+                             */
                             `${property.abbreviated} ${property.average} `
                         }
                     </li>

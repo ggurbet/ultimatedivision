@@ -26,40 +26,45 @@ export const UserDataArea: React.FC<{
 }) => {
     const DELAY: number = 500;
     /**
-        * The value string from input returned by the useDebounce method after 500 milliseconds.
-        */
+     * The value string from input returned by the useDebounce method after 500 milliseconds.
+     */
     const debouncedValue: string = useDebounce(value, DELAY);
 
     /** inline styles for valid input field */
     const [successLabelClassName, setSuccessLabelClassName] =
-            useState<string>('');
+        useState<string>('');
 
     useEffect(() => {
         if (!validate(debouncedValue)) {
             setSuccessLabelClassName('');
         } else {
             setSuccessLabelClassName('-check');
-        };
+        }
     }, [debouncedValue]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
-        clearError &&
-                clearError(null);
+        clearError && clearError(null);
     };
 
     return (
         <div className={`${className}__ wrapper`}>
             <input
-                className={error ? `${className}-error` : `${className}${successLabelClassName}`}
+                className={
+                    error
+                        ? `${className}-error`
+                        : `${className}${successLabelClassName}`
+                }
                 value={value}
                 placeholder={placeHolder}
                 onChange={handleChange}
                 type={type}
             />
-            {error && <label className={`${className}__error`} htmlFor={value}>
-                {error}
-            </label>}
+            {error &&
+                <label className={`${className}__error`} htmlFor={value}>
+                    {error}
+                </label>
+            }
         </div>
     );
 };

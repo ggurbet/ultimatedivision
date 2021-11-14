@@ -27,8 +27,8 @@ export const PlayerCard: React.FC<{ card: CardWithStats; parentClassName: string
                 <li className={`${parentClassName}__list__item`} key={index}>
                     {
                         /**
-             * get only average value of player's game property
-             */
+                         * get only average value of player's game property
+                         */
                         `${property.abbreviated} ${property.average} `
                     }
                 </li>

@@ -18,8 +18,12 @@ import { LootboxStats } from '@/app/types/lootbox';
 
 import './index.scss';
 
-export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch<SetStateAction<boolean>> }> = ({ data, handleOpening }) => {
+export const LootboxCard: React.FC<{
+    data: LootboxStats;
+    handleOpening: Dispatch<SetStateAction<boolean>>;
+}> = ({ data, handleOpening }) => {
     const dispatch = useDispatch();
+
     const qualities = [
         {
             name: 'Wood',
@@ -43,6 +47,7 @@ export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch
         // TODO: need add id lootbox from BD after be create endpoint fetch lootboxex.
         try {
             await dispatch(openLootbox({ id: data.id, type: data.type }));
+
             handleOpening(true);
         } catch (error: any) {
             toast.error('Failed to open lootbox', {
@@ -56,13 +61,17 @@ export const LootboxCard: React.FC<{ data: LootboxStats; handleOpening: Dispatch
         <div className="box-card">
             <div className="box-card__wrapper">
                 <div className="box-card__description">
-                    <img
-                        className="box-card__icon"
-                        src={data.icon} alt="box" />
-                    <h2 className="box-card__title">{data.type === 'Regular Box' ? 'Regular Box' : 'Cool box'}</h2>
+                    <img className="box-card__icon" src={data.icon} alt="box" />
+                    <h2 className="box-card__title">
+                        {data.type === 'Regular Box'
+                            ? 'Regular Box'
+                            : 'Cool box'}
+                    </h2>
                     <div className="box-card__quantity">
                         <span className="box-card__quantity-label">Cards</span>
-                        <span className="box-card__quantity-value">{data.quantity}</span>
+                        <span className="box-card__quantity-value">
+                            {data.quantity}
+                        </span>
                     </div>
                 </div>
                 <div className="box-card__qualities">

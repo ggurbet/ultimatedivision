@@ -3,9 +3,11 @@
 
 import './index.scss';
 
-export const LootboxCardQuality: React.FC<{label: {name: string; icon: string}; chance: number}> = ({ label, chance }) =>
+export const LootboxCardQuality: React.FC<{
+    label: { name: string; icon: string };
+    chance: number;
+}> = ({ label, chance }) =>
     <div className="box-card-quality">
-
         <div className="box-card-quality__wrapper">
             <div className="box-card-quality__label">
                 <img
@@ -13,13 +15,9 @@ export const LootboxCardQuality: React.FC<{label: {name: string; icon: string}; 
                     src={label.icon}
                     alt="quality icon"
                 />
-                <span
-                    className="box-card-quality__text"
-                >{label.name}</span>
+                <span className="box-card-quality__text">{label.name}</span>
             </div>
-            <span className="box-card-quality__value">{
-                `${chance}%`
-            }</span>
+            <span className="box-card-quality__value">{`${chance}%`}</span>
         </div>
         <div className="box-card-quality__diagram">
             <div
@@ -27,6 +25,5 @@ export const LootboxCardQuality: React.FC<{label: {name: string; icon: string}; 
                 style={{ width: `${chance}%` }}
             />
         </div>
-
     </div>;
 

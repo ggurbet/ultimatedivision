@@ -86,12 +86,18 @@ export const FootballFieldPlayingArea: React.FC = () => {
     }
 
     /** getting dragged card index and changing state to allow mouseUp */
-    function dragStart(e: React.MouseEvent<HTMLDivElement>, index: number = DEFAULT_VALUE): void {
+    function dragStart(
+        e: React.MouseEvent<HTMLDivElement>,
+        index: number = DEFAULT_VALUE
+    ): void {
         handleDrag(true);
         dispatch(setDragStart(index));
     }
     /** getting second drag index  and exchanging with first index*/
-    function onMouseUp(e: React.MouseEvent<HTMLDivElement>, index: number = DEFAULT_VALUE): void {
+    function onMouseUp(
+        e: React.MouseEvent<HTMLDivElement>,
+        index: number = DEFAULT_VALUE
+    ): void {
         e.stopPropagation();
         if (isDragging && dragStartIndex !== null) {
             const cards = fieldSetup.squadCards;
@@ -143,62 +149,66 @@ export const FootballFieldPlayingArea: React.FC = () => {
                     className={`playing-area__${formation}`}
                     onMouseUp={mouseUpOnArea}
                 >
-                    {fieldSetup.squadCards.map((fieldCard: SquadCard, index: number) => {
-                        const card = getCard(fieldCard.cardId);
-                        const equality = dragStartIndex === index;
+                    {fieldSetup.squadCards.map(
+                        (fieldCard: SquadCard, index: number) => {
+                            const card = getCard(fieldCard.cardId);
+                            const equality = dragStartIndex === index;
 
-                        return (
-                            <div
-                                style={
-                                    equality
-                                        ? {
+                            return (
+                                <div
+                                    style={
+                                        equality ? {
                                             left: x - outerOffset.x,
                                             top: y - OFFSET_TOP,
                                             zIndex: 5,
                                             pointerEvents: 'none',
                                         }
-                                        : undefined
-                                }
-                                key={index}
-                                className={`playing-area__${formation}__${card ? 'card' : 'empty-card'
+                                            : undefined
+                                    }
+                                    key={index}
+                                    className={`playing-area__${formation}__${card ? 'card' : 'empty-card'
                                     }`}
-                                onClick={() => handleClick(index)}
-                                onDragStart={(e) => dragStart(e, index)}
-                                onMouseUp={(e) => onMouseUp(e, index)}
-                                draggable={true}
-                            >
-                                {card &&
+                                    onClick={() => handleClick(index)}
+                                    onDragStart={(e) => dragStart(e, index)}
+                                    onMouseUp={(e) => onMouseUp(e, index)}
+                                    draggable={true}
+                                >
+                                    {card &&
                                     <PlayingAreaFootballerCard
                                         card={card}
                                         index={index}
                                         place={'PlayingArea'}
                                     />
-                                }
-                            </div>
-                        );
-                    })}
+                                    }
+                                </div>
+                            );
+                        })}
                 </div>
                 <div className={`playing-area__${formation}-shadows`}>
-                    {fieldSetup.squadCards.map((fieldCard: SquadCard, index: number) => {
-                        const card = getCard(fieldCard.cardId);
+                    {fieldSetup.squadCards.map(
+                        (fieldCard: SquadCard, index: number) => {
+                            const card = getCard(fieldCard.cardId);
 
-                        return (
-                            <div
-                                className={`playing-area__${formation}-shadows__card`}
-                                key={index}
-                            >
-                                {card &&
-                                    <img
-                                        // If data exist it has maininfo, but TS do not let me use it even with check
-                                        /** TODO: check for undefined will removed after correct Card type */
-                                        src={card.style && card.style.shadow}
-                                        alt="card shadow"
-                                        className={`playing-area__${formation}-shadows__shadow`}
-                                    />
-                                }
-                            </div>
-                        );
-                    })}
+                            return (
+                                <div
+                                    className={`playing-area__${formation}-shadows__card`}
+                                    key={index}
+                                >
+                                    {card &&
+                                        <img
+                                            // If data exist it has maininfo, but TS do not let me use it even with check
+                                            /** TODO: check for undefined will removed after correct Card type */
+                                            src={
+                                                card.style && card.style.shadow
+                                            }
+                                            alt="card shadow"
+                                            className={`playing-area__${formation}-shadows__shadow`}
+                                        />
+                                    }
+                                </div>
+                            );
+                        }
+                    )}
                 </div>
             </div>
             <FootballFieldControlsArea />

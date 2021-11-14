@@ -39,8 +39,7 @@ const Navbar: React.FC = () => {
             >
                 {isDropdownActive ? <CloseDropdownIcon /> : <DropdownIcon />}
             </div>
-            <ul
-                className={`ultimatedivision-navbar__list${visibleClassName}`}>
+            <ul className={`ultimatedivision-navbar__list${visibleClassName}`}>
                 {navbarItems.map((item, index) =>
                     <li
                         key={index}

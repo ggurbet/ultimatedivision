@@ -5,8 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Paginator } from '@components/common/Paginator';
 import { PlayerCard } from '@components/common/PlayerCard';
-import { FilterField } from
-    '@components/FootballField/FootballFieldCardSelection/FilterField';
+import { FilterField } from '@components/FootballField/FootballFieldCardSelection/FilterField';
 
 import { RootState } from '@/app/store';
 import { listOfCards } from '@/app/store/actions/cards';
@@ -52,7 +51,7 @@ export const FootballFieldCardSelection = () => {
                             card={card}
                             parentClassName={'card-selection__card'}
                         />
-                    </div>,
+                    </div>
                 )}
             </div>
             <Paginator

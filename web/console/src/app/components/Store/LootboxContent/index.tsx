@@ -8,7 +8,9 @@ import { LootboxOpening } from './LootboxOpening';
 
 import './index.scss';
 
-export const LootboxContent: React.FC<{ handleOpening: Dispatch<SetStateAction<boolean>> }> = ({ handleOpening }) => {
+export const LootboxContent: React.FC<{
+    handleOpening: Dispatch<SetStateAction<boolean>>;
+}> = ({ handleOpening }) => {
     const [isAnimated, handleAnimation] = useState(true);
 
     useEffect(() => {
@@ -26,4 +28,3 @@ export const LootboxContent: React.FC<{ handleOpening: Dispatch<SetStateAction<b
         </div>
     );
 };
-

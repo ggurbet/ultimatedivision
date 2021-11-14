@@ -20,7 +20,6 @@ export const FilterField: React.FC = () => {
             title: 'Player`s position',
             src: rectangle,
         },
-
     ];
 
     return (
@@ -29,7 +28,8 @@ export const FilterField: React.FC = () => {
                 <ul className="football-field-filter__list">
                     <li className="football-field-filter__list__item">
                         <form action="" className="football-field-filter__form">
-                            <button type="submit"
+                            <button
+                                type="submit"
                                 className="football-field-filter__submit"
                             >
                                 <img
@@ -46,15 +46,17 @@ export const FilterField: React.FC = () => {
                         </form>
                     </li>
                     {filterFieldTitles.map((item, index) =>
-                        <li key={index}
-                            className="football-field-filter__list__item">
+                        <li
+                            key={index}
+                            className="football-field-filter__list__item"
+                        >
                             {item.title}
                             <img
                                 src={item.src}
                                 alt="Filter icon"
                                 className="football-field-filter__list__item__picture"
                             />
-                        </li>,
+                        </li>
                     )}
                 </ul>
             </div>

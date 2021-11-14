@@ -5,13 +5,12 @@ import { CardStats } from '@/card';
 
 import './index.scss';
 
-export const FootballerCardStats: React.FC<{ props: CardStats }> = ({ props }) =>
+export const FootballerCardStats: React.FC<{ props: CardStats }> = ({
+    props,
+}) =>
     <div className="footballer-card-stats-item">
-        <div
-            className="footballer-card-stats-item__heading"
-        >
-            <span className="footballer-card-stats-item__heading-name"
-            >
+        <div className="footballer-card-stats-item__heading">
+            <span className="footballer-card-stats-item__heading-name">
                 {props.title}
             </span>
             <span
@@ -28,19 +27,14 @@ export const FootballerCardStats: React.FC<{ props: CardStats }> = ({ props }) =
             ></div>
         </div>
         {props.fields.map((item, index) =>
-            <div
-                key={index}
-                className="footballer-card-stats-item__row"
-            >
-                <span className="footballer-card-stats-item__row-name"
-                >
+            <div key={index} className="footballer-card-stats-item__row">
+                <span className="footballer-card-stats-item__row-name">
                     {item.label}
                 </span>
-                <span
-                    className="footballer-card-stats-item__row-value"
-                >
+                <span className="footballer-card-stats-item__row-value">
                     {item.value}
                 </span>
-            </div>,
+            </div>
         )}
     </div>;
+

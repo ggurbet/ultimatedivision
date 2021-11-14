@@ -10,38 +10,38 @@ import currency from '@static/img/FootballerCardPage/currency.svg';
 import './index.scss';
 
 export const FootballerCardPrice: React.FC<{ card: CardWithStats }> = ({ card }) => {
-    const FIRST_CARD_INDEX = 0;
+
     const FULL_VALUE_STATISTIC_SCALE = 100;
 
     const priceData = card.cardPrice;
     const prpValue: number = priceData.prp;
+
+    const chartOptions = [
+        {
+            data: [prpValue, FULL_VALUE_STATISTIC_SCALE - prpValue],
+            backgroundColor: [`${priceData.color}`, '#5E5EAA'],
+            borderColor: ['transparent'],
+            cutout: '80%',
+            rotation: 90,
+            esponsive: true,
+            maintainAspectRatio: true,
+        },
+    ];
 
     return (
         <div className="footballer-card-price">
             <div className="footballer-card-price__wrapper">
                 <div className="footballer-card-price__diagram">
                     <p className="footballer-card-price__diagram-value">
-                        PRP: <span className="footballer-card-price__diagram-value-quantity">
+                        PRP:{' '}
+                        <span className="footballer-card-price__diagram-value-quantity">
                             {prpValue}%
                         </span>
                     </p>
                     <Doughnut
                         type={Doughnut}
                         data={{
-                            datasets: [{
-                                data: [prpValue, FULL_VALUE_STATISTIC_SCALE - prpValue],
-                                backgroundColor: [
-                                    `${priceData.color}`,
-                                    '#5E5EAA',
-                                ],
-                                borderColor: [
-                                    'transparent',
-                                ],
-                                cutout: '80%',
-                                rotation: 90,
-                                esponsive: true,
-                                maintainAspectRatio: true,
-                            }],
+                            datasets: chartOptions,
                         }}
                     />
                 </div>
@@ -58,16 +58,14 @@ export const FootballerCardPrice: React.FC<{ card: CardWithStats }> = ({ card })
                     </h2>
                     <div className="footballer-card-price__additional-info">
                         <div>
-                            Price updated: <span
-                                className="footballer-card-price__value"
-                            >
+                            Price updated:{' '}
+                            <span className="footballer-card-price__value">
                                 {priceData.updated} mins ago
                             </span>
                         </div>
                         <div>
-                            PR: <span
-                                className="footballer-card-price__value"
-                            >
+                            PR:{' '}
+                            <span className="footballer-card-price__value">
                                 {priceData.pr}
                             </span>
                         </div>
