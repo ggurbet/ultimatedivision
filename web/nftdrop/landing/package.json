@@ -17,6 +17,7 @@
         "lint": "eslint --fix --ext .js,.jsx,.tsx,.ts src/",
         "start": "webpack serve --open",
         "build": "webpack --mode production",
+        "dev": "webpack --mode development",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
