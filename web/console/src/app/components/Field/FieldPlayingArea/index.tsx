@@ -4,8 +4,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { FootballFieldControlsArea } from '@/app/components/FootballField/FootballFieldControlsArea';
-import { PlayingAreaFootballerCard } from '@components/FootballField/PlayingAreaFootballerCard';
+import { FieldControlsArea } from '@/app/components/Field/FieldControlsArea';
+import { FootballerCard } from '@/app/components/Field/FootballerCard';
 
 import { CardEditIdentificators } from '@/api/club';
 import { RootState } from '@/app/store';
@@ -22,7 +22,7 @@ import {
 
 import './index.scss';
 
-export const FootballFieldPlayingArea: React.FC = () => {
+export const FieldPlayingArea: React.FC = () => {
     const dispatch = useDispatch();
     const { cards } = useSelector(
         (state: RootState) => state.cardsReducer.cardsPage
@@ -174,7 +174,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
                                     draggable={true}
                                 >
                                     {card &&
-                                    <PlayingAreaFootballerCard
+                                    <FootballerCard
                                         card={card}
                                         index={index}
                                         place={'PlayingArea'}
@@ -211,7 +211,7 @@ export const FootballFieldPlayingArea: React.FC = () => {
                     )}
                 </div>
             </div>
-            <FootballFieldControlsArea />
+            <FieldControlsArea />
         </div>
     );
 };

@@ -13,7 +13,7 @@ import { RootState } from '@/app/store';
 
 import './index.scss';
 
-export const PlayingAreaFootballerCard: React.FC<{ card: CardWithStats; index?: number; place?: string }> = ({ card }) => {
+export const FootballerCard: React.FC<{ card: CardWithStats; index?: number; place?: string }> = ({ card }) => {
     const dispatch = useDispatch();
     const squad = useSelector((state: RootState) => state.clubsReducer.squad);
     const [isVisibile, setIsVisibile] = useState(false);
@@ -32,14 +32,14 @@ export const PlayingAreaFootballerCard: React.FC<{ card: CardWithStats; index?: 
     }
 
     return (
-        <div onClick={handleVisibility} className="football-field-card">
+        <div onClick={handleVisibility} className="footballer-card">
             <div
                 className={`football-field-card__wrapper${visibilityBlock}`}
             ></div>
-            <PlayerCard card={card} parentClassName="football-field-card" />
+            <PlayerCard card={card} parentClassName="footballer-card" />
             <div
                 onClick={handleDeletion}
-                className={`football-field-card__control${visibilityBlock}`}
+                className={`footballer-card__control${visibilityBlock}`}
             >
                 &#10006; delete a player
             </div>

@@ -5,10 +5,10 @@ import { DragEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { FootballFieldCardSelection } from
-    '@components/FootballField/FootballFieldCardSelection';
-import { FootballFieldPlayingArea } from
-    '@components/FootballField/FotballFieldPlayingArea';
+import { FieldCardSelection } from
+    '@/app/components/Field/FieldCardSelection';
+import { FieldPlayingArea } from
+    '@/app/components/Field/FieldPlayingArea';
 
 import { RootState } from '@/app/store';
 import { createClub, deleteCard, getClub } from '@/app/store/actions/clubs';
@@ -70,12 +70,12 @@ const FootballField: React.FC = () => {
             onDragOver={e => dragOverHandler(e)}
         >
             <h1 className="football-field__title">Football Field</h1>
-            <FootballFieldPlayingArea />
+            <FieldPlayingArea />
             <div
                 style={{ height: cardSelectionVisibility ? 'unset' : '0' }}
                 className="football-field__wrapper"
             >
-                < FootballFieldCardSelection />
+                <FieldCardSelection />
             </div>
         </div>
     );

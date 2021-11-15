@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-import triangle from '@static/img/FootballFieldPage/triangle.svg';
+import triangle from '@static/img/FieldPage/triangle.svg';
 
 import { RouteConfig } from '@/app/routes';
 import { DropdownStyle } from '@/app/utils/dropdownStyle';

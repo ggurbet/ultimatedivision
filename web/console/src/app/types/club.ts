@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 /** class for each control in option selection on field */
-export class FieldControl {
+export class Control {
     /** includes id, title and options parameters */
     constructor(
         public id: string = '',

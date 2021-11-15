@@ -1,16 +1,16 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { FootballFieldControl } from '@/app/components/FootballField/FootballFieldControlsArea/FootballFieldControl';
+import { FieldControl } from '@/app/components/Field/FieldControlsArea/FieldControl';
 
 import { setCaptain, setFormation, setTactic } from '@/app/store/actions/clubs';
-import { FieldControl } from '@/app/types/club';
+import { Control } from '@/app/types/club';
 
 import './index.scss';
 
-export const FootballFieldControlsArea: React.FC = () => {
+export const FieldControlsArea: React.FC = () => {
     const CONTROLS_FIELDS = [
-        new FieldControl('0', 'formation', setFormation, [
+        new Control('0', 'formation', setFormation, [
             '4-4-2',
             '4-2-4',
             '4-2-2-2',
@@ -22,12 +22,12 @@ export const FootballFieldControlsArea: React.FC = () => {
             '5-3-2',
             '4-5-2',
         ]),
-        new FieldControl('1', 'tactics', setTactic, [
+        new Control('1', 'tactics', setTactic, [
             'attack',
             'defence',
             'balanced',
         ]),
-        new FieldControl('2', 'captain', setCaptain, [
+        new Control('2', 'captain', setCaptain, [
             'Captain 1',
             'Captain 2',
             'Captain 3',
@@ -35,10 +35,10 @@ export const FootballFieldControlsArea: React.FC = () => {
     ];
 
     return (
-        <div className="football-field-controls-area">
-            <h2 className="football-field-controls-area__title">information</h2>
+        <div className="field-controls-area">
+            <h2 className="field-controls-area__title">information</h2>
             {CONTROLS_FIELDS.map((item, index) =>
-                <FootballFieldControl key={index} props={item} />
+                <FieldControl key={index} props={item} />
             )}
         </div>
     );

@@ -1,6 +1,6 @@
 @import "@/index.scss";
 
-.football-field-controls-area {
+.field-controls-area {
     margin: 0 0 0 auto;
     padding: 5px;
     background: $highlightBackground;
@@ -17,12 +17,12 @@
         text-transform: uppercase;
     }
 
-    &.football-field-information-option &:first-child {
+    &.field-information-option &:first-child {
         border: 1px solid red;
     }
 }
 
-.football-field-control {
+.field-control {
 
     &__heading {
         font-weight: 500;
@@ -43,7 +43,7 @@
 
 @media screen and (max-width: $desktopBreakPoint) {
 
-    .football-field-controls-area {
+    .field-controls-area {
 
         &__title {
             font-size: 28px;
@@ -53,7 +53,7 @@
 
 @media screen and (max-width: $tabletBreakPoint) {
 
-    .football-field-controls-area {
+    .field-controls-area {
         width: 100%;
         margin: 5% 0;
         max-width: none;
@@ -66,7 +66,7 @@
 
 @media screen and (max-width: $phoneBreakPoint) {
 
-    .football-field-controls-area {
+    .field-controls-area {
 
         &__title {
             font-size: 24px;

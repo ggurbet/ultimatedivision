@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Paginator } from '@components/common/Paginator';
 import { PlayerCard } from '@components/common/PlayerCard';
-import { FilterField } from '@components/FootballField/FootballFieldCardSelection/FilterField';
+import { FilterField } from '@/app/components/Field/FieldCardSelection/FilterField';
 
 import { RootState } from '@/app/store';
 import { listOfCards } from '@/app/store/actions/cards';
@@ -15,7 +15,7 @@ import { CardEditIdentificators } from '@/api/club';
 
 import './index.scss';
 
-export const FootballFieldCardSelection = () => {
+export const FieldCardSelection = () => {
     const dispatch = useDispatch();
     const squad = useSelector((state: RootState) => state.clubsReducer.squad);
     const { cards, page } = useSelector((state: RootState) => state.cardsReducer.cardsPage);
