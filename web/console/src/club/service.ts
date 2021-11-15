@@ -59,4 +59,8 @@ export class ClubService {
     public async updateFormation(squad: Squad, formation: number): Promise<void> {
         return await this.club.updateFormation(squad, formation);
     }
+    /** chandes active club */
+    public async changeActiveClub(id: string): Promise<void> {
+        return await this.club.changeActiveClub(id);
+    }
 };

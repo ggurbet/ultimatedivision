@@ -109,4 +109,14 @@ export class ClubsClient extends APIClient {
             await this.handleError(response);
         }
     }
+    /** chandes active club */
+    public async changeActiveClub(id: string): Promise<void> {
+        const response = await this.http.patch(
+            `${this.ROOT_PATH}/clubs/${id}`,
+            JSON.stringify({ 'status': 1 })
+        );
+        if (!response.ok) {
+            await this.handleError(response);
+        }
+    }
 }

@@ -133,3 +133,10 @@ export const swapCards = (currentCard: CardEditIdentificators, existCard: CardEd
         const club = await service.getClub();
         dispatch(setClub(club));
     };
+
+export const changeActiveClub = (id: string) =>
+    async function(dispatch: Dispatch) {
+        await service.changeActiveClub(id);
+        const club = await service.getClub();
+        dispatch(setClub(club));
+    };

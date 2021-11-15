@@ -23,7 +23,7 @@ const client = new CardClient();
 const service = new CardService(client);
 
 /** thunk for creating user cards list */
-export const listOfCards = ({ selectedPage, limit }: Pagination) => async function (dispatch: Dispatch) {
+export const listOfCards = ({ selectedPage, limit }: Pagination) => async function(dispatch: Dispatch) {
     const response = await service.list({ selectedPage, limit });
     const page = response.page;
     const cards = response.cards;
@@ -31,14 +31,14 @@ export const listOfCards = ({ selectedPage, limit }: Pagination) => async functi
     dispatch(getCards({ cards, page }));
 };
 /** thunk for opening fotballerCardPage with reload possibility */
-export const openUserCard = (id: string) => async function (dispatch: Dispatch) {
+export const openUserCard = (id: string) => async function(dispatch: Dispatch) {
     const card = await service.getCardById(id);
 
     dispatch(userCard(new CardWithStats(card)));
 };
 
 /** thunk returns filtered cards */
-export const filteredCards = (lowRange: string, topRange: string) => async function (dispatch: Dispatch) {
+export const filteredCards = (lowRange: string, topRange: string) => async function(dispatch: Dispatch) {
     const response = await service.filteredList(lowRange, topRange);
     const cards = response.cards;
     const page = response.page;

@@ -33,17 +33,17 @@ const card = new CardWithStats();
 
 export const marketplaceReducer = (marketplaceState: MarketplaceState = new MarketplaceState(marketplacePage, card), action: any = {}) => {
     switch (action.type) {
-        case GET_SELLING_CARDS:
-            return {
-                ...marketplaceState,
-                marketplacePage: action.marketplacePage,
-            };
-        case MARKETPLACE_CARD:
-            return {
-                ...marketplaceState,
-                card: action.card,
-            };
-        default:
-            return marketplaceState;
+    case GET_SELLING_CARDS:
+        return {
+            ...marketplaceState,
+            marketplacePage: action.marketplacePage,
+        };
+    case MARKETPLACE_CARD:
+        return {
+            ...marketplaceState,
+            card: action.card,
+        };
+    default:
+        return marketplaceState;
     }
 };

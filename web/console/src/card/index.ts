@@ -25,8 +25,8 @@ import star from '@static/img/FootballerCardPage/star.svg';
 
 /** class for our getters to get label and value while mapping */
 export class CardField {
-  /** label and value for mapping */
-  constructor(public label: string, public value: string | number) { }
+    /** label and value for mapping */
+    constructor(public label: string, public value: string | number) { }
 }
 
 /* eslint-disable */

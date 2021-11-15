@@ -10,7 +10,6 @@ import currency from '@static/img/FootballerCardPage/currency.svg';
 import './index.scss';
 
 export const FootballerCardPrice: React.FC<{ card: CardWithStats }> = ({ card }) => {
-
     const FULL_VALUE_STATISTIC_SCALE = 100;
 
     const priceData = card.cardPrice;

@@ -31,17 +31,17 @@ const openedCard = new CardWithStats();
 
 export const cardsReducer = (cardsState: CardsState = new CardsState(cardsPage, openedCard), action: any = {}) => {
     switch (action.type) {
-        case GET_USER_CARDS:
-            return {
-                ...cardsState,
-                cardsPage: action.cardsPage,
-            };
-        case USER_CARD:
-            return {
-                ...cardsState,
-                card: action.card,
-            };
-        default:
-            return cardsState;
+    case GET_USER_CARDS:
+        return {
+            ...cardsState,
+            cardsPage: action.cardsPage,
+        };
+    case USER_CARD:
+        return {
+            ...cardsState,
+            card: action.card,
+        };
+    default:
+        return cardsState;
     };
 };
