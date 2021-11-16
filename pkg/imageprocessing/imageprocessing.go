@@ -74,7 +74,12 @@ func Layering(layers []image.Image, width, height int) *image.RGBA {
 }
 
 // SaveImage saves image by path.
-func SaveImage(fullPath string, baseImage image.Image) error {
+func SaveImage(path, fullPath string, baseImage image.Image) error {
+	err := os.MkdirAll(path, os.ModePerm)
+	if err != nil {
+		return err
+	}
+
 	resultImage, err := os.Create(fullPath)
 	if err != nil {
 		return err

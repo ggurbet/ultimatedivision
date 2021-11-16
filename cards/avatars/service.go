@@ -379,7 +379,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, name int)
 	}
 
 	avatar.OriginalURL = fmt.Sprintf(service.config.PathToOutputAvatarsRemote, name)
-	if err = imageprocessing.SaveImage(filepath.Join(service.config.PathToOutputAvatarsLocal, strconv.Itoa(name)+"."+string(TypeImagePNG)), originalImageWithLabelGk); err != nil {
+	if err = imageprocessing.SaveImage(service.config.PathToOutputAvatarsLocal, filepath.Join(service.config.PathToOutputAvatarsLocal, strconv.Itoa(name)+"."+string(TypeImagePNG)), originalImageWithLabelGk); err != nil {
 		return avatar, ErrAvatar.Wrap(err)
 	}
 	return avatar, nil
