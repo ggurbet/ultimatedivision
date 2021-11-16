@@ -1,0 +1,15 @@
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
+
+@import "@/index.scss";
+
+.match {
+    display: flex;
+    flex-direction: column;
+    background: #181829;
+
+    .wrapper {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+}

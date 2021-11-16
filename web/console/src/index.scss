@@ -7,6 +7,7 @@
 @font-face {
     font-family: "Montserrat";
     src: url("@static/fonts/Montserrat-Regular.ttf") format("truetype");
+    font-display: swap;
 }
 
 @font-face {
@@ -14,6 +15,15 @@
     src: url("@static/fonts/BebasNeue-Regular.ttf") format("truetype");
     font-style: normal;
     font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Digital Numbers";
+    src: url("@static/fonts/DigitalNumbers-Regular.ttf") format("truetype");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
 }
 
 html {

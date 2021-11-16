@@ -1,0 +1,98 @@
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
+
+@import "@/index.scss";
+
+.match__score {
+    display: flex;
+    // TODO: Need change backgroud with gradient.
+    background-image: url("@static/img/match/background.svg");
+    background-size: cover;
+    height: 100%;
+
+    &__board {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 468.92px;
+        height: 274.8px;
+        margin: 100px auto 0 auto;
+        background: rgba(100, 91, 169, 0.15);
+        border: 3.02532px solid #3ccf5d;
+        box-sizing: border-box;
+        border-radius: 25.211px;
+
+        &-team-1,
+        &-team-2,
+        &-dash {
+            z-index: 1;
+        }
+
+        &__timer {
+            position: absolute;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 151.27px;
+            height: 87.73px;
+            left: calc(50% - 151.27px / 2 + 1.5px);
+            top: -50px;
+            padding-top: 8px;
+            background: radial-gradient(
+                    67.26% 64.29% at 48.63% 117.86%,
+                    rgba(24, 227, 255, 0.7) 0%,
+                    rgba(44, 87, 198, 0) 100%
+                ),
+                radial-gradient(
+                    174.95% 157.22% at 43.8% 72.11%,
+                    rgba(46, 46, 80, 0) 0%,
+                    rgba(57, 89, 137, 0.9) 100%
+                ),
+                radial-gradient(
+                    132.39% 69.83% at 48.63% 50%,
+                    #3a3a70 0%,
+                    #303052 100%
+                );
+            box-shadow: inset 0 6.05063px 45.3797px rgba(0, 0, 0, 0.5);
+            border-radius: 57px;
+            // TODO: Need add border gradient.
+            border: 1px solid;
+            font-family: "BebasNeue", sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 48.4051px;
+            line-height: 58px;
+            color: #fff;
+        }
+
+        &__result {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Digital Numbers", sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 173.956px;
+            line-height: 225px;
+            color: #fff;
+        }
+
+        &__gradient {
+            position: absolute;
+            width: 100%;
+            height: 268px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            border-radius: 25.211px;
+            background: linear-gradient(
+                260.42deg,
+                #ff00cb 14.71%,
+                #00a3ff 96.59%
+            );
+            opacity: 0.1;
+        }
+    }
+}
