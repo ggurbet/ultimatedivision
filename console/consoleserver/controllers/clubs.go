@@ -172,6 +172,11 @@ func (controller *Clubs) Get(w http.ResponseWriter, r *http.Request) {
 		userClubs = append(userClubs, userClub)
 	}
 
+	if len(userClubs) == 0 {
+		controller.serveError(w, http.StatusNotFound, ErrClubs.New("club's does not exist"))
+		return
+	}
+
 	if err = json.NewEncoder(w).Encode(userClubs); err != nil {
 		controller.log.Error("failed to write json response", ErrClubs.Wrap(err))
 		return

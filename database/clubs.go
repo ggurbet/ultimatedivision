@@ -125,7 +125,7 @@ func (clubsDB *clubsDB) ListByUserID(ctx context.Context, userID uuid.UUID) ([]c
 		err = rows.Scan(&club.ID, &club.OwnerID, &club.Name, &club.Status, &club.CreatedAt)
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
-				return allClubs, clubs.ErrNoClub.Wrap(err)
+				return allClubs, clubs.ErrNoClub.New("club does not exist")
 			}
 			return allClubs, clubs.ErrClubs.Wrap(err)
 		}
