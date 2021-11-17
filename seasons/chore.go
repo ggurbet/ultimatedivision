@@ -57,3 +57,8 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 		return ChoreError.Wrap(err)
 	})
 }
+
+// Close closes the chore for re-check the expiration time of the season.
+func (chore *Chore) Close() {
+	chore.Loop.Close()
+}

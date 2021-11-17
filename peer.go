@@ -485,6 +485,9 @@ func (peer *Peer) Close() error {
 
 	errlist.Add(peer.Admin.Endpoint.Close())
 	errlist.Add(peer.Console.Endpoint.Close())
+	peer.Marketplace.ExpirationLotChore.Close()
+	peer.Queue.PlaceChore.Close()
+	peer.Seasons.ExpirationSeasons.Close()
 
 	return errlist.Err()
 }
