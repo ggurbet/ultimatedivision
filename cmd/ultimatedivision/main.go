@@ -5,6 +5,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"io/ioutil"
 	"os"
@@ -51,6 +52,12 @@ var (
 		RunE:        cmdRun,
 		Annotations: map[string]string{"type": "run"},
 	}
+	seedCmd = &cobra.Command{
+		Use:         "seed",
+		Short:       "created test data in DB",
+		RunE:        seedRun,
+		Annotations: map[string]string{"type": "run"},
+	}
 	destroyCmd = &cobra.Command{
 		Use:         "destroy",
 		Short:       "deletes config folder",
@@ -66,6 +73,7 @@ var (
 func init() {
 	rootCmd.AddCommand(setupCmd)
 	rootCmd.AddCommand(runCmd)
+	rootCmd.AddCommand(seedCmd)
 	rootCmd.AddCommand(destroyCmd)
 }
 
@@ -148,6 +156,34 @@ func cmdRun(cmd *cobra.Command, args []string) (err error) {
 	closeError := peer.Close()
 
 	return Error.Wrap(errs.Combine(runError, closeError))
+}
+
+// TODO: remove for production.
+func seedRun(cmd *cobra.Command, args []string) (err error) {
+	ctx := context.Background()
+	runCfg, err = readConfig()
+	if err != nil {
+		return Error.Wrap(err)
+	}
+	conn, err := sql.Open("postgres", runCfg.Database)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+
+	err = database.CreateUser(ctx, conn)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+	err = database.CreateAdmin(ctx, conn)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+	err = database.CreateDivisions(ctx, conn)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+
+	return nil
 }
 
 func cmdDestroy(cmd *cobra.Command, args []string) (err error) {

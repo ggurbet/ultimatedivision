@@ -33,7 +33,7 @@ type DB interface {
 // Division describes divisions entity.
 type Division struct {
 	ID             uuid.UUID `json:"id"`
-	Name           string    `json:"name"`
+	Name           int       `json:"name"`
 	PassingPercent int       `json:"passingPercent"`
 	CreatedAt      time.Time `json:"createdAt"`
 }

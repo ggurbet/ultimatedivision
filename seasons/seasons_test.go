@@ -21,13 +21,13 @@ import (
 func TestSeasons(t *testing.T) {
 	division1 := divisions.Division{
 		ID:             uuid.New(),
-		Name:           "10",
+		Name:           10,
 		PassingPercent: 10,
 		CreatedAt:      time.Now().UTC(),
 	}
 	division2 := divisions.Division{
 		ID:             uuid.New(),
-		Name:           "9",
+		Name:           9,
 		PassingPercent: 10,
 		CreatedAt:      time.Now().UTC(),
 	}

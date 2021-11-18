@@ -6,6 +6,7 @@ package controllers
 import (
 	"html/template"
 	"net/http"
+	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -83,8 +84,8 @@ func (controller *Divisions) Create(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		name := r.FormValue("name")
-		if name == "" {
+		name, err := strconv.Atoi(r.FormValue("name"))
+		if err != nil {
 			http.Error(w, "name is empty", http.StatusBadRequest)
 			return
 		}

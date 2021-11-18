@@ -9,7 +9,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // ErrAdmins indicates that there was an error in the service.
@@ -27,12 +26,6 @@ func NewService(admins DB) *Service {
 	return &Service{
 		admins: admins,
 	}
-}
-
-// encodePassword is method to encode password.
-func (service *Service) encodePassword(password []byte) ([]byte, error) {
-	hash, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-	return hash, ErrAdmins.Wrap(err)
 }
 
 // List returns all admins from DB.
@@ -56,11 +49,10 @@ func (service *Service) Create(ctx context.Context, email string, password []byt
 		CreatedAt:    time.Now().UTC(),
 	}
 
-	passwordHash, err := service.encodePassword(password)
+	err := admin.EncodePass()
 	if err != nil {
 		return ErrAdmins.Wrap(err)
 	}
-	admin.PasswordHash = passwordHash
 
 	return ErrAdmins.Wrap(service.admins.Create(ctx, admin))
 }
@@ -72,7 +64,7 @@ func (service *Service) Update(ctx context.Context, id uuid.UUID, newPassword []
 		return ErrAdmins.Wrap(err)
 	}
 
-	admin.PasswordHash, err = service.encodePassword(newPassword)
+	err = admin.EncodePass()
 	if err != nil {
 		return ErrAdmins.Wrap(err)
 	}

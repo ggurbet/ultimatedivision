@@ -31,7 +31,7 @@ func NewService(divisions DB, config Config) *Service {
 }
 
 // Create creates a division.
-func (service *Service) Create(ctx context.Context, name string) error {
+func (service *Service) Create(ctx context.Context, name int) error {
 	division := Division{
 		ID:             uuid.New(),
 		Name:           name,
