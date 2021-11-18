@@ -103,7 +103,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	router := mux.NewRouter()
 	authController := controllers.NewAuth(server.log, server.authService, server.cookieAuth, server.templates.auth)
 	router.HandleFunc("/login", authController.Login).Methods(http.MethodPost, http.MethodGet)
-	router.HandleFunc("/logout", authController.Logout).Methods(http.MethodPost)
+	router.HandleFunc("/logout", authController.Logout).Methods(http.MethodGet)
 
 	adminsRouter := router.PathPrefix("/admins").Subrouter()
 	adminsRouter.Use(server.withAuth)
@@ -171,7 +171,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	matchesRouter.Use(server.withAuth)
 	matchesController := controllers.NewMatches(log, matches, server.templates.match, clubs, seasons)
 	matchesRouter.HandleFunc("/create", matchesController.Create).Methods(http.MethodGet, http.MethodPost)
-	matchesRouter.HandleFunc("/", matchesController.ListMatches).Methods(http.MethodGet)
+	matchesRouter.HandleFunc("", matchesController.ListMatches).Methods(http.MethodGet)
 	matchesRouter.HandleFunc("/delete/{id}", matchesController.Delete).Methods(http.MethodGet)
 	matchesRouter.HandleFunc("/{id}/goals", matchesController.ListMatchGoals).Methods(http.MethodGet)
 

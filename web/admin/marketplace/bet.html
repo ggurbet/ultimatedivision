@@ -5,74 +5,125 @@
     <title>Place bet lot</title>
 </head>
 <body>
-    <nav>
-        <div>
-            <ul>
-                <li><a href="/admins">Admins</a></li>
-                <li><a href="/users">Users</a></li>
-                <li><a href="/cards">Cards</a></li>
-                <li><a href="/marketplace/">Marketplace</a></li>
-            </ul>
-        </div>
-    </nav>
-    <form action="/marketplace/bet/{{.ID}}" method="post">
-        <table>
-			<tr>
-                <td>
-                    User:
-                </td>
-                <td>
-                    <select size="3" name="userId">
-                        <option selected disabled>Select user</option>
-                        {{range .Users}}
-                            <option value="{{.ID}}">{{.NickName}}</option>
-                        {{end}}
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Amount:
-                </td>
-                <td>
-                    <input type="number" name="betAmount" step="0.01" min="0">
-                </td>
-            </tr>
-        </table>
+<nav>
+    <div>
+        <ul class='buttons'>
+            <li><a href="/users">Users</a></li>
+            <li><a href="/admins">Admins</a></li>
+            <li><a href="/cards">Cards</a></li>
+            <li><a href="/marketplace">Marketplace</a></li>
+            <li><a href="/divisions">Divisions</a></li>
+            <li><a href="/queue">Queue</a></li>
+            <li><a href="/matches">Matches</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+<div class = "wrapper">
+    <form action="/marketplace/bet/{{.ID}}" method="post" class="bet-form">
+        <label for="userId">Choose user</label>
+        <select size="3" name="userId" id="userId">
+            <option selected disabled>Select user</option>
+            {{range .Users}}
+            <option value="{{.ID}}">{{.NickName}}</option>
+            {{end}}
+        </select>
+        <label for="betAmount">Choose amount</label>
+        <input type="number" name="betAmount" id="betAmount" step="0.01" min="0">
         <input type="submit" value="Place bet">
     </form>
+</div>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .buttons li {
+        cursor: pointer;
+        border: 3px solid transparent;
+        border-radius: 10px;
+        background: rgb(45, 60, 77);
+    }
+
+    .buttons a {
+        display: block;
+        padding: 10px;
+        color: white;
+    }
+
+    .buttons li:hover {
+        border: 3px solid rgb(45, 60, 77);
+        background: transparent;
+    }
+
+    .buttons li:hover a {
+        color: #000;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .bet-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 20px;
+        border-radius: 10px;
+        background: rgb(136, 167, 202);
+    }
+
+    .bet-form label {
+        margin: 10px;
+        font-weight: 700;
+    }
+
+    .bet-form input {
+        padding: 7px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+    }
+
+    .bet-form input[type='submit'] {
+        padding: 10px 15px;
+        margin: 10px auto;
+        outline: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        background: rgb(45, 60, 77);
+        color: white;
+        border: none;
+    }
+
+    .bet-form input[type='submit']:hover {
+        background: rgb(45, 60, 77);
+        background: linear-gradient(204deg, rgba(45, 60, 77, 1) 0%, rgba(81, 105, 131, 1) 100%);
+    }
+</style>
 </body>
 </html>
-
-<style>
-	ul {
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
-		overflow: hidden;
-		background-color: #333333;
-	}
-	li {
-		float: left;
-	}
-	li a {
-		display: block;
-		color: white;
-		text-align: center;
-		padding: 16px;
-		text-decoration: none;
-	}
-	li a:hover {
-		background-color: #111111;
-	}
-	.validation-summary-errors ul {
-		background-color: white;
-	}
-	.validation-summary-errors li {
-		margin: 15px;
-		color: red;
-	}
-	th {
-		text-align: left;
-	}
-</style>

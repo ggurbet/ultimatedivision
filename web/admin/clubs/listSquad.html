@@ -5,8 +5,22 @@
     <title>Admin Portal | Squads</title>
 </head>
 <body>
+<nav>
+    <div>
+        <ul class='buttons'>
+            <li><a href ="/clubs/{{.ClubID}}/squad/create">Create Squad</a></li>
+            <li><a href="/admins">Admins</a></li>
+            <li><a href="/users">Users</a></li>
+            <li><a href="/cards">Cards</a></li>
+            <li><a href="/marketplace">Marketplace</a></li>
+            <li><a href="/divisions">Divisions</a></li>
+            <li><a href="/queue">Queue</a></li>
+            <li><a href="/matches">Matches</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+</nav>
 <table style="width:100%">
-    <a href = "/clubs/{{.ClubID}}/squad/create">Create</a>
     <thead>
     <tr>
         <th>ID</th>
@@ -37,12 +51,83 @@
         <td>
             {{.CaptainID}}
         </td>
-        <td>
+        <td class = 'actions'>
             <a href = "/clubs/{{.ClubID}}/squad/{{.ID}}/update">Update</a>
             <a href = "/clubs/squad/{{.ID}}">List cards</a>
             <a href = "/clubs/squad/{{.ID}}/squad-cards">Add card to the squad</a>
         </td>
     </tr>
 </table>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .buttons li {
+        cursor: pointer;
+        border: 3px solid transparent;
+        border-radius: 10px;
+        background: rgb(45, 60, 77);
+    }
+
+    .buttons a {
+        display: block;
+        padding: 10px;
+        color: white;
+    }
+
+    .buttons li:hover {
+        border: 3px solid rgb(45, 60, 77);
+        background: transparent;
+    }
+
+    .buttons li:hover a {
+        color: #000;
+    }
+
+    table {
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+    }
+
+    table,
+    td {
+        border: 1px solid black;
+    }
+
+    th {
+        padding: 10px;
+        border: 1px solid white;
+        font-size: 18px;
+        background: rgb(45, 60, 77);
+        color: white;
+    }
+
+    .actions {
+        width: 20%;
+    }
+
+    .actions a {
+        display: inline-block;
+        margin: 5px auto;
+        width: 100%;
+        color: black;
+    }
+</style>
 </body>
 </html>

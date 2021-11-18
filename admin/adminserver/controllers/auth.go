@@ -96,4 +96,5 @@ func (auth *Auth) Login(w http.ResponseWriter, r *http.Request) {
 // Logout is an endpoint to log out and remove auth cookie from browser.
 func (auth *Auth) Logout(w http.ResponseWriter, r *http.Request) {
 	auth.cookie.RemoveTokenCookie(w)
+	Redirect(w, r, "/login", "GET")
 }
