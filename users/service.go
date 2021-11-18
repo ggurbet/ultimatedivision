@@ -5,6 +5,7 @@ package users
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -42,6 +43,12 @@ func (service *Service) Get(ctx context.Context, userID uuid.UUID) (User, error)
 // GetByEmail returns user by email from DB.
 func (service *Service) GetByEmail(ctx context.Context, email string) (User, error) {
 	user, err := service.users.GetByEmail(ctx, email)
+	return user, ErrUsers.Wrap(err)
+}
+
+// GetByWalletAddress returns user by wallet address from the data base.
+func (service *Service) GetByWalletAddress(ctx context.Context, walletAddress cryptoutils.Address) (User, error) {
+	user, err := service.users.GetByWalletAddress(ctx, walletAddress)
 	return user, ErrUsers.Wrap(err)
 }
 
@@ -105,5 +112,6 @@ func (service *Service) GetNickNameByID(ctx context.Context, id uuid.UUID) (stri
 
 // UpdateWalletAddress updates wallet address.
 func (service *Service) UpdateWalletAddress(ctx context.Context, wallet cryptoutils.Address, id uuid.UUID) error {
+	wallet = cryptoutils.Address(strings.ToLower(string(wallet)))
 	return ErrUsers.Wrap(service.users.UpdateWalletAddress(ctx, wallet, id))
 }

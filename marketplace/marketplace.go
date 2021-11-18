@@ -30,7 +30,7 @@ type DB interface {
 	ListActiveLots(ctx context.Context, cursor pagination.Cursor) (Page, error)
 	// ListActiveLotsByItemID returns active lots from the data base by item id.
 	ListActiveLotsByItemID(ctx context.Context, itemIds []uuid.UUID, cursor pagination.Cursor) (Page, error)
-	// ListExpiredLot returns active lots where end time lower than or equal to time now UTC from the data base.
+	// ListExpiredLot returns lots where end time lower than or equal to time now UTC from the data base.
 	ListExpiredLot(ctx context.Context) ([]Lot, error)
 	// UpdateShopperIDLot updates shopper id of lot in the database.
 	UpdateShopperIDLot(ctx context.Context, id, shopperID uuid.UUID) error

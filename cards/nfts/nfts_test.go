@@ -160,14 +160,14 @@ func TestNFTs(t *testing.T) {
 		CardID:        card1.ID,
 		TokenID:       1,
 		Chain:         cryptoutils.ChainEthereum,
-		WalletAddress: "0x96216849c49358b10257cb55b28ea603c874b05e",
+		WalletAddress: cryptoutils.Address("0x96216849c49358b10257cb55b28ea603c874b05e"),
 	}
 
 	nft2 := nfts.NFT{
 		CardID:        card2.ID,
 		TokenID:       2,
 		Chain:         cryptoutils.ChainPolygon,
-		WalletAddress: "0x96216849c49358B10254cb55b28eA603c874b05E",
+		WalletAddress: cryptoutils.Address("0x96216849c49358B10254cb55b28eA603c874b05E"),
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {

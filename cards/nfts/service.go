@@ -6,10 +6,13 @@ package nfts
 import (
 	"context"
 	"fmt"
+	"strings"
 
+	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
+	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/pkg/nft"
 )
 
@@ -34,6 +37,7 @@ func NewService(config Config, nfts DB) *Service {
 
 // Create creates nft in the database.
 func (service *Service) Create(ctx context.Context, nft NFT) error {
+	nft.WalletAddress = cryptoutils.Address(strings.ToLower(string(nft.WalletAddress)))
 	return ErrNFTs.Wrap(service.nfts.Create(ctx, nft))
 }
 
@@ -113,4 +117,9 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, avatarURL
 func (service *Service) List(ctx context.Context) ([]NFT, error) {
 	nfts, err := service.nfts.List(ctx)
 	return nfts, ErrNFTs.Wrap(err)
+}
+
+// Update updates users wallet address for nft token in the database.
+func (service *Service) Update(ctx context.Context, walletAddress cryptoutils.Address, cardID uuid.UUID) error {
+	return ErrNFTs.Wrap(service.nfts.Update(ctx, walletAddress, cardID))
 }

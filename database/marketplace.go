@@ -235,7 +235,7 @@ func (marketplaceDB *marketplaceDB) totalActiveCount(ctx context.Context) (int, 
 	return count, ErrMarketplace.Wrap(err)
 }
 
-// ListExpiredLot returns active lots where end time lower than or equal to time now UTC from the data base.
+// ListExpiredLot returns lots where end time lower than or equal to time now UTC from the data base.
 func (marketplaceDB *marketplaceDB) ListExpiredLot(ctx context.Context) ([]marketplace.Lot, error) {
 	query :=
 		`SELECT 

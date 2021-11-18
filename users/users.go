@@ -28,6 +28,8 @@ type DB interface {
 	Get(ctx context.Context, id uuid.UUID) (User, error)
 	// GetByEmail returns user by email from the data base.
 	GetByEmail(ctx context.Context, email string) (User, error)
+	// GetByWalletAddress returns user by wallet address from the data base.
+	GetByWalletAddress(ctx context.Context, walletAddress cryptoutils.Address) (User, error)
 	// Create creates a user and writes to the database.
 	Create(ctx context.Context, user User) error
 	// Update updates a status in the database.

@@ -89,6 +89,23 @@ func (usersDB *usersDB) GetByEmail(ctx context.Context, email string) (users.Use
 	return user, ErrUsers.Wrap(err)
 }
 
+// GetByWalletAddress returns user by wallet address from the data base.
+func (usersDB *usersDB) GetByWalletAddress(ctx context.Context, walletAddress cryptoutils.Address) (users.User, error) {
+	var user users.User
+
+	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, last_login, status, created_at FROM users WHERE wallet_address = $1", walletAddress)
+
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.LastLogin, &user.Status, &user.CreatedAt)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return user, users.ErrNoUser.Wrap(err)
+		}
+		return user, ErrUsers.Wrap(err)
+	}
+
+	return user, ErrUsers.Wrap(err)
+}
+
 // Create creates a user and writes to the database.
 func (usersDB *usersDB) Create(ctx context.Context, user users.User) error {
 	emailNormalized := mail.Normalize(user.Email)

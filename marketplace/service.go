@@ -162,7 +162,7 @@ func (service *Service) ListActiveLotsByPlayerName(ctx context.Context, filter c
 	return lotsPage, ErrMarketplace.Wrap(err)
 }
 
-// ListExpiredLot returns active lots from DB.
+// ListExpiredLot returns not active lots from DB.
 func (service *Service) ListExpiredLot(ctx context.Context) ([]Lot, error) {
 	lots, err := service.marketplace.ListExpiredLot(ctx)
 	return lots, ErrMarketplace.Wrap(err)
