@@ -5,6 +5,7 @@ package waitlist
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
@@ -21,8 +22,8 @@ var ErrNoItem = errs.Class("item for wait list does not exist")
 type DB interface {
 	// Create creates nft for wait list in the database.
 	Create(ctx context.Context, cardID uuid.UUID, wallet cryptoutils.Address) error
-	// Get returns nft for wait list by card id.
-	Get(ctx context.Context, tokenID int) (Item, error)
+	// GetByCardID returns nft for wait list by card id.
+	GetByCardID(ctx context.Context, cardID uuid.UUID) (Item, error)
 	// GetLast returns id of last inserted token.
 	GetLast(ctx context.Context) (int, error)
 	// List returns all nft tokens from wait list from database.
@@ -48,4 +49,17 @@ type CreateNFT struct {
 	CardID        uuid.UUID           `json:"cardId"`
 	WalletAddress cryptoutils.Address `json:"walletAddress"`
 	UserID        uuid.UUID           `json:"userId"`
+}
+
+// Transaction entity describes password wallet, smart contracts address and token id.
+type Transaction struct {
+	Password             cryptoutils.Signature `json:"password"`
+	cryptoutils.Contract `json:"contract"`
+	TokenID              int `json:"tokenId"`
+}
+
+// Config defines values needed by create wait list.
+type Config struct {
+	WaitListRenewalInterval time.Duration `json:"waitListRenewalInterval"`
+	cryptoutils.Contract    `json:"contract"`
 }

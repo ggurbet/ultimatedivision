@@ -53,7 +53,7 @@ func (controller *WaitList) Create(w http.ResponseWriter, r *http.Request) {
 	}
 	createNFT.UserID = claims.UserID
 
-	err = controller.waitList.Create(ctx, createNFT)
+	transaction, err := controller.waitList.Create(ctx, createNFT)
 	if err != nil {
 		controller.log.Error("could not create nft token", ErrWaitList.Wrap(err))
 
@@ -63,6 +63,11 @@ func (controller *WaitList) Create(w http.ResponseWriter, r *http.Request) {
 		}
 
 		controller.serveError(w, http.StatusInternalServerError, ErrWaitList.Wrap(err))
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(transaction); err != nil {
+		controller.log.Error("failed to write json response", ErrWaitList.Wrap(err))
 		return
 	}
 }

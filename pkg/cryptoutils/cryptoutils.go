@@ -52,6 +52,12 @@ const (
 	PrivateKeyVTwentyEight PrivateKeyV = 28
 )
 
+// Contract entity describes addresses of contract and method.
+type Contract struct {
+	Address       Address `json:"address"`
+	AddressMethod Hex     `json:"addressMethod"`
+}
+
 // Сhain defines the list of possible chains in blockchain.
 type Сhain string
 

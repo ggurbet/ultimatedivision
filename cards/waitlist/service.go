@@ -5,7 +5,9 @@ package waitlist
 
 import (
 	"context"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
@@ -22,6 +24,7 @@ var ErrWaitlist = errs.Class("waitlist service error")
 //
 // architecture: Service
 type Service struct {
+	config   Config
 	waitList DB
 	cards    *cards.Service
 	avatars  *avatars.Service
@@ -30,8 +33,9 @@ type Service struct {
 }
 
 // NewService is a constructor for waitlist service.
-func NewService(waitList DB, cards *cards.Service, avatars *avatars.Service, users *users.Service, nfts *nfts.Service) *Service {
+func NewService(config Config, waitList DB, cards *cards.Service, avatars *avatars.Service, users *users.Service, nfts *nfts.Service) *Service {
 	return &Service{
+		config:   config,
 		waitList: waitList,
 		cards:    cards,
 		avatars:  avatars,
@@ -41,19 +45,29 @@ func NewService(waitList DB, cards *cards.Service, avatars *avatars.Service, use
 }
 
 // Create creates nft for wait list.
-func (service *Service) Create(ctx context.Context, createNFT CreateNFT) error {
+func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transaction, error) {
+	var transaction Transaction
 	card, err := service.cards.Get(ctx, createNFT.CardID)
 	if err != nil {
-		return ErrWaitlist.Wrap(err)
+		return transaction, ErrWaitlist.Wrap(err)
 	}
 
 	if card.UserID != createNFT.UserID {
-		return ErrWaitlist.New("it isn't user`s card")
+		return transaction, ErrWaitlist.New("it isn't user`s card")
+	}
+
+	if item, err := service.GetByCardID(ctx, createNFT.CardID); item.Password != "" && err == nil {
+		transaction = Transaction{
+			Password: item.Password,
+			Contract: service.config.Contract,
+			TokenID:  item.TokenID,
+		}
+		return transaction, nil
 	}
 
 	avatar, err := service.avatars.Get(ctx, createNFT.CardID)
 	if err != nil {
-		return ErrWaitlist.Wrap(err)
+		return transaction, ErrWaitlist.Wrap(err)
 	}
 
 	// TODO: save avatar in file storage
@@ -64,10 +78,25 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) error {
 	// TODO: add transaction
 
 	if err = service.users.UpdateWalletAddress(ctx, createNFT.WalletAddress, createNFT.UserID); err != nil {
-		return ErrWaitlist.Wrap(err)
+		return transaction, ErrWaitlist.Wrap(err)
 	}
 
-	return service.waitList.Create(ctx, createNFT.CardID, createNFT.WalletAddress)
+	if err = service.waitList.Create(ctx, createNFT.CardID, createNFT.WalletAddress); err != nil {
+		return transaction, ErrWaitlist.Wrap(err)
+	}
+
+	for range time.NewTicker(time.Millisecond * service.config.WaitListRenewalInterval).C {
+		if item, err := service.GetByCardID(ctx, createNFT.CardID); item.Password != "" && err == nil {
+			transaction = Transaction{
+				Password: item.Password,
+				Contract: service.config.Contract,
+				TokenID:  item.TokenID,
+			}
+			break
+		}
+	}
+
+	return transaction, err
 }
 
 // List returns all nft for wait list.
@@ -76,9 +105,9 @@ func (service *Service) List(ctx context.Context) ([]Item, error) {
 	return allNFT, ErrWaitlist.Wrap(err)
 }
 
-// Get returns nft for wait list by token id.
-func (service *Service) Get(ctx context.Context, tokenID int) (Item, error) {
-	nft, err := service.waitList.Get(ctx, tokenID)
+// GetByCardID returns nft for wait list by card id.
+func (service *Service) GetByCardID(ctx context.Context, cardID uuid.UUID) (Item, error) {
+	nft, err := service.waitList.GetByCardID(ctx, cardID)
 	return nft, ErrWaitlist.Wrap(err)
 }
 

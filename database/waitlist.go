@@ -95,20 +95,20 @@ func (waitlistDB *waitlistDB) ListWithoutPassword(ctx context.Context) ([]waitli
 	return WaitListWithoutPassword, ErrWaitlist.Wrap(rows.Err())
 }
 
-// Get returns nft for wait list by card id.
-func (waitlistDB *waitlistDB) Get(ctx context.Context, tokenID int) (waitlist.Item, error) {
+// GetByCardID returns nft for wait list by card id.
+func (waitlistDB *waitlistDB) GetByCardID(ctx context.Context, cardID uuid.UUID) (waitlist.Item, error) {
 	query := `SELECT *
 	          FROM waitlist
-	          WHERE token_id = $1`
+	          WHERE card_id = $1`
 
-	var WaitList waitlist.Item
+	var item waitlist.Item
 
-	err := waitlistDB.conn.QueryRowContext(ctx, query, tokenID).Scan(&WaitList.TokenID, &WaitList.CardID, &WaitList.Wallet, &WaitList.Password)
+	err := waitlistDB.conn.QueryRowContext(ctx, query, cardID).Scan(&item.TokenID, &item.CardID, &item.Wallet, &item.Password)
 	if errors.Is(err, sql.ErrNoRows) {
-		return WaitList, waitlist.ErrNoItem.Wrap(err)
+		return item, waitlist.ErrNoItem.Wrap(err)
 	}
 
-	return WaitList, ErrWaitlist.Wrap(err)
+	return item, ErrWaitlist.Wrap(err)
 }
 
 // GetLast returns id of last inserted nft for wait list.

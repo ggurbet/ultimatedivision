@@ -41,7 +41,7 @@ func NewChore(log logger.Logger, config ChoreConfig, db waitlist.DB) *Chore {
 	return &Chore{
 		log:    log,
 		loop:   sync.NewCycle(config.RenewalInterval),
-		nfts:   waitlist.NewService(db, nil, nil, nil, nil),
+		nfts:   waitlist.NewService(waitlist.Config{}, db, nil, nil, nil, nil),
 		config: config,
 	}
 }

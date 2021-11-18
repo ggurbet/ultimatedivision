@@ -115,6 +115,10 @@ type Config struct {
 		avatars.Config
 	} `json:"avatars"`
 
+	WaitList struct {
+		waitlist.Config
+	} `json:"waitlist"`
+
 	NFTs struct {
 		nfts.Config
 	} `json:"nfts"`
@@ -321,6 +325,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 
 	{ // waitlist setup
 		peer.WaitList.Service = waitlist.NewService(
+			config.WaitList.Config,
 			peer.Database.WaitList(),
 			peer.Cards.Service,
 			peer.Avatars.Service,
