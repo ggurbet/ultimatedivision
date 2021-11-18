@@ -21,8 +21,8 @@ export class ClubService {
     };
 
     /** returns club with existing squads */
-    public async getClub(): Promise<Club> {
-        return await this.club.getClub();
+    public async getClubs(): Promise<Club[]> {
+        return await this.club.getClubs();
     };
 
     /** creates squad in selected club */

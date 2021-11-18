@@ -52,11 +52,11 @@
             position: absolute;
             width: 100px;
             height: 146px;
-            transition: transform 0.3s;
             z-index: 2;
             cursor: crosshair;
 
             &:hover {
+                transition: transform 0.3s;
                 transform: scale(1.1);
             }
 

@@ -28,17 +28,13 @@ export const FieldPlayingArea: React.FC = () => {
         (state: RootState) => state.cardsReducer.cardsPage
     );
     const formation = useSelector(
-        (state: RootState) => state.clubsReducer.squad.formation
+        (state: RootState) => state.clubsReducer.activeClub.squad.formation
     );
     const dragStartIndex = useSelector(
         (state: RootState) => state.clubsReducer.options.dragStart
     );
-
-    const club = useSelector((state: RootState) => state.clubsReducer);
-    const squad = useSelector((state: RootState) => state.clubsReducer.squad);
-
-    const fieldSetup = useSelector((state: RootState) => state.clubsReducer);
-
+    const club = useSelector((state: RootState) => state.clubsReducer.activeClub);
+    const squad = useSelector((state: RootState) => state.clubsReducer.activeClub.squad);
     /** MouseMove event Position */
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     /** This var created to not allow mouseUpEvent without Dragging before it */
@@ -58,12 +54,10 @@ export const FieldPlayingArea: React.FC = () => {
         const playingArea = document.getElementById('playingArea');
         if (playingArea) {
             const position = playingArea.getBoundingClientRect();
-            const HALF_OF_CARD_WIDTH = 60;
-            const HALF_OF_CARD_HEIGHT = 100;
 
             handleOffset({
-                x: position.x + HALF_OF_CARD_WIDTH,
-                y: position.y + HALF_OF_CARD_HEIGHT,
+                x: position.x,
+                y: position.y,
             });
         }
     }, []);
@@ -100,7 +94,7 @@ export const FieldPlayingArea: React.FC = () => {
     ): void {
         e.stopPropagation();
         if (isDragging && dragStartIndex !== null) {
-            const cards = fieldSetup.squadCards;
+            const cards = club.squadCards;
             getCard(cards[index].cardId) ?
                 dispatch(swapCards(
                     new CardEditIdentificators(squad.clubId, squad.id, cards[dragStartIndex].cardId, index),
@@ -149,7 +143,7 @@ export const FieldPlayingArea: React.FC = () => {
                     className={`playing-area__${formation}`}
                     onMouseUp={mouseUpOnArea}
                 >
-                    {fieldSetup.squadCards.map(
+                    {club.squadCards.map(
                         (fieldCard: SquadCard, index: number) => {
                             const card = getCard(fieldCard.cardId);
                             const equality = dragStartIndex === index;
@@ -160,6 +154,7 @@ export const FieldPlayingArea: React.FC = () => {
                                         equality ? {
                                             left: x - outerOffset.x,
                                             top: y - OFFSET_TOP,
+                                            transform: 'translateX(-55%)',
                                             zIndex: 5,
                                             pointerEvents: 'none',
                                         }
@@ -185,7 +180,7 @@ export const FieldPlayingArea: React.FC = () => {
                         })}
                 </div>
                 <div className={`playing-area__${formation}-shadows`}>
-                    {fieldSetup.squadCards.map(
+                    {club.squadCards.map(
                         (fieldCard: SquadCard, index: number) => {
                             const card = getCard(fieldCard.cardId);
 
@@ -198,9 +193,7 @@ export const FieldPlayingArea: React.FC = () => {
                                         <img
                                             // If data exist it has maininfo, but TS do not let me use it even with check
                                             /** TODO: check for undefined will removed after correct Card type */
-                                            src={
-                                                card.style && card.style.shadow
-                                            }
+                                            src={card.style.shadow}
                                             alt="card shadow"
                                             className={`playing-area__${formation}-shadows__shadow`}
                                         />

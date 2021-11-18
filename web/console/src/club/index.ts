@@ -2,8 +2,9 @@
 // See LICENSE for copying information.
 
 const DEFAULT_VALUE = 0;
+const ACTIVE_STATUS_VALUE = 1;
 
-/** backend squad */
+/** Squad defines squad entity. */
 export class Squad {
     public id: string = '';
     public clubId: string = '';
@@ -12,29 +13,29 @@ export class Squad {
     public captainId: string = '';
 }
 
-/** backend card  */
+/** SquadCard defines squad card entity.  */
 export class SquadCard {
     public squadId: string = '';
     public cardId: string = '';
     public position: number = DEFAULT_VALUE;
 }
 
-
-/** backend club */
-export interface Club {
-    // TODO : change interface after backend changes
-    clubs: {
-        id: string;
-        name: string;
-        createdAt: string;
-    };
-    squad: Squad;
-    squadCards: SquadCard[];
+/** Club defines club entity. */
+export class Club {
+    public id: string = '';
+    public name: string = '';
+    public createdAt: string = '';
+    public squad: Squad = new Squad();
+    public squadCards: SquadCard[] = [];
+    public status: number = ACTIVE_STATUS_VALUE;
 }
 
-/** for drag and drop implementation */
+/** Class defines fields for drag and drop */
 export class Options {
-    /** options implementation */
+    /** chosedCard for adding card on field
+     * showCardSelection for showing/hiding list of cards
+     * dragStart and dragTarget for changing card position or swapping cards
+    */
     constructor(
         public chosedCard: number = DEFAULT_VALUE,
         public showCardSeletion: boolean = false,
@@ -43,16 +44,10 @@ export class Options {
     ) { }
 }
 
-/** club reducer state  */
+/** club reducer initial state  */
 export class ClubState {
-    // clubs field will be deleted afted backend changes
-    public clubs: Club['clubs'] = {
-        id: '',
-        name: '',
-        createdAt: '',
-    };
-    public squad: Squad = new Squad();
-    public squadCards: SquadCard[] = [];
+    public clubs: Club[] = [];
+    public activeClub = new Club();
     public options: Options = new Options();
 }
 

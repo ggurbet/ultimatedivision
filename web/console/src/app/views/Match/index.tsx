@@ -3,7 +3,7 @@
 
 import { MatchScore } from './MatchScore';
 import { PlayingField } from './PlayingField';
-import { PlayersScore } from "./PlayersScore";
+import { PlayersScore } from './PlayersScore';
 
 import './index.scss';
 

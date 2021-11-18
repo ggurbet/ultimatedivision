@@ -1,42 +1,40 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { ClubState } from '@/club';
+import { Club, ClubState } from '@/club';
 
 import {
-    ADD_CARD,
     CARD_POSITION,
-    CREATE_CLUB,
+    SET_CLUBS,
     DRAG_START,
     SELECTION_VISIBILITY,
 } from '@/app/store/actions/clubs';
+
+const ACTIVE_STATUS_VALUE = 1;
 
 /** TODO: replace by initial object */
 const clubState = new ClubState();
 
 export const clubsReducer = (state = clubState, action: any = {}) => {
-    const options = state.options;
-    const cards = state.squadCards;
-
     switch (action.type) {
-    case CREATE_CLUB:
-        state = Object.assign(clubState, action.club);
-        break;
+    case SET_CLUBS:
+        return {
+            ...state,
+            clubs: action.clubs,
+            activeClub: action.clubs.find((club:Club) => club.status === ACTIVE_STATUS_VALUE),
+        };
     case SELECTION_VISIBILITY:
-        options.showCardSeletion = action.isVisible;
+        state.options.showCardSeletion = action.isVisible;
         break;
     case CARD_POSITION:
-        options.chosedCard = action.index;
-        break;
-    case ADD_CARD:
-        cards[action.fieldCard.index].cardId = action.fieldCard.card.cardId;
+        state.options.chosedCard = action.index;
         break;
     case DRAG_START:
-        options.dragStart = action.index;
+        state.options.dragStart = action.index;
         break;
     default:
         break;
     }
 
-    return state;
+    return { ...state };
 };

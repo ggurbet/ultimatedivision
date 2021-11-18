@@ -13,7 +13,7 @@ import { DropdownStyle } from '@/app/utils/dropdownStyle';
 import './index.scss';
 
 export const FieldControl: React.FC<{ props: Control }> = ({ props }) => {
-    const squad = useSelector((state: RootState) => state.clubsReducer.squad);
+    const squad = useSelector((state: RootState) => state.clubsReducer.activeClub.squad);
     const [optionVisibility, changeVisibility] = useState(false);
     const optionStyle = new DropdownStyle(optionVisibility);
 

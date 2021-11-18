@@ -15,7 +15,7 @@ import './index.scss';
 
 export const FootballerCard: React.FC<{ card: CardWithStats; index?: number; place?: string }> = ({ card }) => {
     const dispatch = useDispatch();
-    const squad = useSelector((state: RootState) => state.clubsReducer.squad);
+    const squad = useSelector((state: RootState) => state.clubsReducer.activeClub.squad);
     const [isVisibile, setIsVisibile] = useState(false);
     const visibilityBlock = isVisibile ? '-active' : '-inactive';
 

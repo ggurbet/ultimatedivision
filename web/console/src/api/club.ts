@@ -31,7 +31,7 @@ export class ClubsClient extends APIClient {
         return await response.json();
     }
     /** gets club from api */
-    public async getClub(): Promise<Club> {
+    public async getClubs(): Promise<Club[]> {
         const response = await this.http.get(`${this.ROOT_PATH}/clubs`);
         if (!response.ok) {
             await this.handleError(response);
