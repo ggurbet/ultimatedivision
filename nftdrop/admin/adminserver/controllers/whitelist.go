@@ -89,7 +89,7 @@ func (controller *Whitelist) Create(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		Redirect(w, r, "", http.MethodGet)
+		Redirect(w, r, "/whitelist", http.MethodGet)
 	}
 }
 
