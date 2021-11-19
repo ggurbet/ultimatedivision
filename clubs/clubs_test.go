@@ -175,6 +175,13 @@ func TestTeam(t *testing.T) {
 			compareSquads(t, squadDB, testSquad)
 		})
 
+		t.Run("Get club", func(t *testing.T) {
+			clubDB, err := repositoryClubs.Get(ctx, testSquad.ClubID)
+			require.NoError(t, err)
+
+			compareClubs(t, clubDB, testClub1)
+		})
+
 		t.Run("get formation sql no rows", func(t *testing.T) {
 			_, err := repositoryClubs.GetFormation(ctx, id)
 			require.Error(t, err)

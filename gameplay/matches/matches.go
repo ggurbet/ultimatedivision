@@ -9,6 +9,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/clubs"
+	"ultimatedivision/divisions"
 	"ultimatedivision/pkg/pagination"
 )
 
@@ -26,7 +28,7 @@ type DB interface {
 	// ListMatches returns page of matches from the database.
 	ListMatches(ctx context.Context, cursor pagination.Cursor) (Page, error)
 	// ListSquadMatches returns all matches played by squad in season.
-	ListSquadMatches(ctx context.Context, squadID uuid.UUID, seasonID int) ([]Match, error)
+	ListSquadMatches(ctx context.Context, seasonID int) ([]Match, error)
 	// UpdateMatch updates the number of points that users received for a played match.
 	UpdateMatch(ctx context.Context, match Match) error
 	// Delete deletes match from the database.
@@ -144,10 +146,17 @@ type Page struct {
 
 // Statistic defined statistic of club in season.
 type Statistic struct {
-	MatchPlayed    int `json:"matchPlayed"`
-	Wins           int `json:"wins"`
-	Losses         int `json:"losses"`
-	Draws          int `json:"draws"`
-	GoalDifference int `json:"goalDifference"`
-	Points         int `json:"points"`
+	Club           clubs.Club `json:"club"`
+	MatchPlayed    int        `json:"matchPlayed"`
+	Wins           int        `json:"wins"`
+	Losses         int        `json:"losses"`
+	Draws          int        `json:"draws"`
+	GoalDifference int        `json:"goalDifference"`
+	Points         int        `json:"points"`
+}
+
+// ResultStatistics defined statistics of clubs in season.
+type ResultStatistics struct {
+	Division   divisions.Division `json:"division"`
+	Statistics []Statistic        `json:"statistics"`
 }

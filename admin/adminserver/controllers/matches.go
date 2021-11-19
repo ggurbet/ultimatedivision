@@ -46,6 +46,8 @@ func NewMatches(log logger.Logger, matches *matches.Service, templates MatchesTe
 		log:       log,
 		matches:   matches,
 		templates: templates,
+		clubs:     clubs,
+		seasons:   seasons,
 	}
 
 	return matchesController
@@ -94,15 +96,32 @@ func (controller *Matches) Create(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		squad, err := controller.clubs.GetSquad(ctx, squad1ID)
+		squad1, err := controller.clubs.GetSquad(ctx, squad1ID)
 		if err != nil {
 			http.Error(w, "could not get squad", http.StatusInternalServerError)
 			return
 		}
 
-		firstClientClub, err := controller.clubs.Get(ctx, squad.ClubID)
+		squad2, err := controller.clubs.GetSquad(ctx, squad2ID)
+		if err != nil {
+			http.Error(w, "could not get squad", http.StatusInternalServerError)
+			return
+		}
+
+		firstClientClub, err := controller.clubs.Get(ctx, squad1.ClubID)
 		if err != nil {
 			http.Error(w, "could not get club", http.StatusInternalServerError)
+			return
+		}
+
+		secondClientClub, err := controller.clubs.Get(ctx, squad2.ClubID)
+		if err != nil {
+			http.Error(w, "could not get club", http.StatusInternalServerError)
+			return
+		}
+		// @TODO transfer it to queue
+		if firstClientClub.DivisionID != secondClientClub.DivisionID {
+			http.Error(w, "clubs are in different divisions", http.StatusInternalServerError)
 			return
 		}
 

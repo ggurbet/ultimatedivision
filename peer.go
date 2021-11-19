@@ -369,11 +369,32 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
+	{ // divisions setup
+		peer.Divisions.Service = divisions.NewService(
+			peer.Database.Divisions(),
+			config.Divisions.Config)
+	}
+
+	{ // seasons setup
+		peer.Seasons.Service = seasons.NewService(
+			peer.Database.Seasons(),
+			config.Seasons.Config,
+			peer.Divisions.Service,
+		)
+
+		peer.Seasons.ExpirationSeasons = seasons.NewChore(
+			config.Seasons.Config,
+			peer.Seasons.Service,
+		)
+	}
+
 	{ // matches setup
 		peer.Matches.Service = matches.NewService(
 			peer.Database.Matches(),
 			config.Matches.Config,
 			peer.Clubs.Service,
+			peer.Seasons.Service,
+			peer.Divisions.Service,
 		)
 	}
 
@@ -392,25 +413,6 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Matches.Service,
 			peer.Seasons.Service,
 			peer.Clubs.Service,
-		)
-	}
-
-	{ // divisions setup
-		peer.Divisions.Service = divisions.NewService(
-			peer.Database.Divisions(),
-			config.Divisions.Config)
-	}
-
-	{ // seasons setup
-		peer.Seasons.Service = seasons.NewService(
-			peer.Database.Seasons(),
-			config.Seasons.Config,
-			peer.Divisions.Service,
-		)
-
-		peer.Seasons.ExpirationSeasons = seasons.NewChore(
-			config.Seasons.Config,
-			peer.Seasons.Service,
 		)
 	}
 
@@ -462,6 +464,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Queue.Service,
 			peer.Seasons.Service,
 			peer.WaitList.Service,
+			peer.Matches.Service,
 		)
 	}
 

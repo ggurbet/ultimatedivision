@@ -213,12 +213,12 @@ func (matchesDB *matchesDB) AddGoals(ctx context.Context, matchGoals []matches.M
 }
 
 // ListSquadMatches returns all matches played by squad in season.
-func (matchesDB *matchesDB) ListSquadMatches(ctx context.Context, squadID uuid.UUID, seasonID int) ([]matches.Match, error) {
+func (matchesDB *matchesDB) ListSquadMatches(ctx context.Context, seasonID int) ([]matches.Match, error) {
 	query := `SELECT id, user1_id, squad1_id, user1_points, user2_id, squad2_id, user2_points, season_id
               FROM matches
-              WHERE season_id = $1 AND squad1_id = $2 OR squad2_id = $2`
+              WHERE season_id = $1`
 
-	rows, err := matchesDB.conn.QueryContext(ctx, query, seasonID, squadID)
+	rows, err := matchesDB.conn.QueryContext(ctx, query, seasonID)
 	if err != nil {
 		return nil, ErrMatches.Wrap(err)
 	}

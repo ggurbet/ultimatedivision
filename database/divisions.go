@@ -85,6 +85,25 @@ func (divisionsDB *divisionsDB) Get(ctx context.Context, id uuid.UUID) (division
 	return division, ErrDivisions.Wrap(err)
 }
 
+// GetByName returns division by name from the data base.
+func (divisionsDB *divisionsDB) GetByName(ctx context.Context, divisionName int) (divisions.Division, error) {
+	query := `SELECT id, name, passing_percent, created_at FROM divisions WHERE name=$1`
+	var division divisions.Division
+
+	row := divisionsDB.conn.QueryRowContext(ctx, query, divisionName)
+
+	err := row.Scan(&division.ID, &division.Name, &division.PassingPercent, &division.CreatedAt)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return division, divisions.ErrNoDivision.Wrap(err)
+		}
+
+		return division, ErrDivisions.Wrap(err)
+	}
+
+	return division, ErrDivisions.Wrap(err)
+}
+
 // Get returns division by id from the data base.
 func (divisionsDB *divisionsDB) GetLastDivision(ctx context.Context) (divisions.Division, error) {
 	query := `SELECT * FROM divisions WHERE name=(SELECT MAX(name) FROM divisions)`

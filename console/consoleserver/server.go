@@ -19,6 +19,7 @@ import (
 	"ultimatedivision/cards/waitlist"
 	"ultimatedivision/clubs"
 	"ultimatedivision/console/consoleserver/controllers"
+	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
@@ -67,7 +68,7 @@ type Server struct {
 // NewServer is a constructor for console web server.
 func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service,
 	marketplace *marketplace.Service, clubs *clubs.Service, userAuth *userauth.Service, users *users.Service,
-	queue *queue.Service, seasons *seasons.Service, waitList *waitlist.Service) *Server {
+	queue *queue.Service, seasons *seasons.Service, waitList *waitlist.Service, matches *matches.Service) *Server {
 	server := &Server{
 		log:         log,
 		config:      config,
@@ -88,6 +89,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	queueController := controllers.NewQueue(log, queue)
 	seasonsController := controllers.NewSeasons(log, seasons)
 	waitListController := controllers.NewWaitList(log, waitList)
+	matchesController := controllers.NewMatches(log, matches)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/register", authController.RegisterTemplateHandler).Methods(http.MethodGet)
@@ -148,6 +150,11 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	seasonsRouter := apiRouter.PathPrefix("/seasons").Subrouter()
 	seasonsRouter.Use(server.withAuth)
 	seasonsRouter.HandleFunc("/current", seasonsController.GetCurrentSeasons).Methods(http.MethodGet)
+
+	matchesRouter := apiRouter.PathPrefix("/matches").Subrouter()
+	matchesRouter.Use(server.withAuth)
+	matchesRouter.HandleFunc("/statistics", matchesController.GetAllClubsStatistics).Methods(http.MethodGet)
+	matchesRouter.HandleFunc("/club", matchesController.UpdatesClubsToNewDivision).Methods(http.MethodPut)
 
 	waitListRouter := apiRouter.PathPrefix("/nft-waitlist").Subrouter()
 	waitListRouter.Use(server.withAuth)

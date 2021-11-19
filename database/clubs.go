@@ -61,6 +61,37 @@ func (clubsDB *clubsDB) Create(ctx context.Context, club clubs.Club) (uuid.UUID,
 	return clubID, ErrClubs.Wrap(err)
 }
 
+// List returns all clubs.
+func (clubsDB *clubsDB) List(ctx context.Context) ([]clubs.Club, error) {
+	query := `SELECT id, owner_id, club_name, status, division_id, created_at
+			  FROM clubs`
+
+	rows, err := clubsDB.conn.QueryContext(ctx, query)
+	if err != nil {
+		return nil, ErrClubs.Wrap(err)
+	}
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	var allClubs []clubs.Club
+
+	for rows.Next() {
+		var club clubs.Club
+		err = rows.Scan(&club.ID, &club.OwnerID, &club.Name, &club.Status, &club.DivisionID, &club.CreatedAt)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				return allClubs, clubs.ErrNoClub.Wrap(err)
+			}
+			return allClubs, clubs.ErrClubs.Wrap(err)
+		}
+
+		allClubs = append(allClubs, club)
+	}
+
+	return allClubs, nil
+}
+
 // CreateSquad creates squad for clubs in the database.
 func (clubsDB *clubsDB) CreateSquad(ctx context.Context, squad clubs.Squad) (uuid.UUID, error) {
 	query := `INSERT INTO squads(id, squad_name, club_id, tactic, formation, captain_id)
@@ -375,4 +406,22 @@ func (clubsDB *clubsDB) GetCaptainID(ctx context.Context, squadID uuid.UUID) (uu
 	}
 
 	return id, nil
+}
+
+// UpdateClubToNewDivision updates club to new division.
+func (clubsDB *clubsDB) UpdateClubToNewDivision(ctx context.Context, clubID uuid.UUID, newDivisionID uuid.UUID) error {
+	query := `UPDATE clubs
+			  SET division_id = $1
+			  WHERE id = $2`
+
+	result, err := clubsDB.conn.ExecContext(ctx, query, newDivisionID, clubID)
+	if err != nil {
+		return ErrClubs.Wrap(err)
+	}
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return clubs.ErrNoClub.New("club does not exist")
+	}
+
+	return ErrSquad.Wrap(err)
 }
