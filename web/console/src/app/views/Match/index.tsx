@@ -3,7 +3,7 @@
 
 import { MatchScore } from './MatchScore';
 import { PlayingField } from './PlayingField';
-import { PlayersScore } from './PlayersScore';
+import { GoalScorers } from './GoalScorers';
 
 import './index.scss';
 
@@ -11,7 +11,7 @@ const Match: React.FC = () =>
     <div className="match">
         <div className="wrapper">
             <MatchScore />
-            <PlayersScore />
+            <GoalScorers />
             <PlayingField />
         </div>
     </div>;

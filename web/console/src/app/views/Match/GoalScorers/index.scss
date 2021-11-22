@@ -3,7 +3,7 @@
 
 @import "@/index.scss";
 
-.match__players-score {
+.match__goal-scorers {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -15,6 +15,29 @@
         display: flex;
         flex-direction: column;
         padding: 5px;
+
+        .scores-scroll {
+            height: 265px;
+            overflow-y: scroll;
+        }
+
+        .scores-scroll::-webkit-scrollbar-track {
+            border-radius: 10px;
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            background-color: #616197;
+        }
+
+        .scores-scroll::-webkit-scrollbar {
+            width: 7px;
+            height: 5px;
+            background-color: #404070;
+        }
+
+        .scores-scroll::-webkit-scrollbar-thumb {
+            border-radius: 2px;
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            background-color: #808094;
+        }
     }
 
     &__team-2 {
@@ -64,6 +87,19 @@
             font-size: 28.5217px;
             line-height: 34px;
             color: #fff;
+        }
+
+        &__goal-time {
+            margin: auto 16px auto auto;
+            font-family: "BebasNeue", sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 24px;
+            line-height: 29px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #ffffff;
         }
 
         &__goals {
