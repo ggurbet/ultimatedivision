@@ -5,6 +5,7 @@ package clubs
 
 import (
 	"context"
+	"sort"
 	"time"
 
 	"github.com/google/uuid"
@@ -419,6 +420,15 @@ func (service *Service) EffectiveCardForPosition(ctx context.Context, position P
 func (service *Service) CardsWithNewPositions(ctx context.Context, cards []SquadCard, positions []Position) (map[Position]uuid.UUID, error) {
 	positionMap := make(map[Position]uuid.UUID)
 	maxCards := SquadSize
+
+	sort.Slice(cards, func(i, j int) bool {
+		return cards[i].Position < cards[j].Position
+	})
+
+	sort.Slice(positions, func(i, j int) bool {
+		return positions[i] < positions[j]
+	})
+
 	for _, position := range positions {
 		card, index, err := service.EffectiveCardForPosition(ctx, position, cards)
 		if err != nil {
