@@ -8,6 +8,7 @@ import {
     SET_CLUBS,
     DRAG_START,
     SELECTION_VISIBILITY,
+    START_SEARCHING_MATCH,
 } from '@/app/store/actions/clubs';
 
 const ACTIVE_STATUS_VALUE = 1;
@@ -32,6 +33,11 @@ export const clubsReducer = (state = clubState, action: any = {}) => {
     case DRAG_START:
         state.options.dragStart = action.index;
         break;
+    case START_SEARCHING_MATCH:
+        return {
+            ...state,
+            isSearchingMatch: action.isSearchingMatch,
+        };
     default:
         break;
     }

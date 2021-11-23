@@ -1,14 +1,21 @@
 @import "@/index.scss";
 
+.scroll-hidden {
+    overflow: hidden;
+}
+
 .match-finder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     position: absolute;
-    z-index: 6;
+    z-index: 12;
     left: 0;
     right: 0;
     top: 300px;
     text-align: center;
     width: 344px;
-    height: 200px;
+    height: 240px;
     padding: 24px;
     border-radius: 10px;
     margin: auto;
@@ -16,6 +23,17 @@
     font-family: "BebasNeue", sans-serif;
     color: $matchFinderTextColor;
     
+    &__wrapper {
+        position: fixed;
+        z-index: 11;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(#0b2774c7, #030024d8);
+        backdrop-filter: blur(8px);
+    }
+
     &__title {
         font-size: 40px;
         font-weight: 100;
@@ -74,7 +92,7 @@
             }
 
             &__cancel {
-                width: 152px;
+                width: 156px;
                 margin-top: 8px;
             }
         }
@@ -85,7 +103,7 @@
     .match-finder {
         top: 150px;
         width: 344px;
-        height: 200px;
+        height: 220px;
         
         &__form {
             flex-direction: row;

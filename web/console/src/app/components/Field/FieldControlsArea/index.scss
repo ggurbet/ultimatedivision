@@ -1,14 +1,30 @@
 @import "@/index.scss";
 
 .field-controls-area {
-    margin: 0 0 0 auto;
     padding: 5px;
     background: $highlightBackground;
-    width: 25%;
-    height: 100%;
-    max-width: 400px;
     border-radius: 5px;
     font-family: "Montserrat", sans-serif;
+    
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 25%;
+        max-width: 400px;
+        margin: 0 0 0 auto;
+    }
+
+    &__play {
+        width: 100%;
+        background: linear-gradient($fieldMainLinearGradientColor 100%, $feildSecondLinearGradientColor 100%);
+        height: 33px;
+        font-size: 16px;
+        font-family: "BebasNeue", sans-serif;
+        font-weight: 100;
+        border: none;
+        margin-bottom: 15px;
+        cursor: pointer;
+    }
 
     &__title {
         margin: 24px 0 24px 24px;
@@ -55,8 +71,13 @@
 
     .field-controls-area {
         width: 100%;
-        margin: 5% 0;
+        margin: 1% 0;
         max-width: none;
+
+        &__wrapper {
+            width: 100%;
+            max-width: unset;
+        }
 
         &__title {
             font-size: 24px;

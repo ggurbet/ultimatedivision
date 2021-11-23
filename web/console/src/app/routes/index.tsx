@@ -29,6 +29,7 @@ import Fund from '@components/Tokenomics/Fund';
 import PlayToEarn from '@components/Tokenomics/PlayToEarn';
 import Spending from '@components/Tokenomics/Spending';
 import Staking from '@components/Tokenomics/Staking';
+import MatchFinder from '@components/common/MatchFinder';
 
 /** Route base config implementation */
 export class ComponentRoutes {
@@ -38,7 +39,7 @@ export class ComponentRoutes {
         public component: React.FC<any>,
         public exact: boolean,
         public children?: ComponentRoutes[]
-    ) {}
+    ) { }
     /** Method for creating child subroutes path */
     public with(
         child: ComponentRoutes,
@@ -227,6 +228,7 @@ export const Routes = () =>
         )}
         <Route>
             <Navbar />
+            <MatchFinder />
             {RouteConfig.routes.map((route, index) =>
                 <Route
                     key={index}
@@ -237,4 +239,3 @@ export const Routes = () =>
             )}
         </Route>
     </Switch>;
-

@@ -49,6 +49,7 @@ export class ClubState {
     public clubs: Club[] = [];
     public activeClub = new Club();
     public options: Options = new Options();
+    public isSearchingMatch: boolean = false;
 }
 
 export type FormationsType =

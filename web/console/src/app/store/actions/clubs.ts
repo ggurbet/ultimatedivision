@@ -1,8 +1,9 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import { Dispatch } from 'redux';
+
 import { CardEditIdentificators, ClubsClient } from '@/api/club';
-import Card from '@/app/views/CardPage';
 import {
     Club,
     Formations,
@@ -12,7 +13,6 @@ import {
     TacticsType,
 } from '@/club';
 import { ClubService } from '@/club/service';
-import { Dispatch } from 'redux';
 
 export const SET_CLUBS = 'SET_CLUBS';
 export const FORMATION = 'FORMATION';
@@ -25,6 +25,7 @@ export const REMOVE_CARD = 'REMOVE_CARD';
 export const DRAG_START = 'DRAG_START';
 export const DRAG_TARGET = 'DRAG_TARGET';
 export const EXCHANGE_CARDS = 'EXCHANGE_CARDS';
+export const START_SEARCHING_MATCH = 'START_SEARCHING_MATCH';
 
 type dragParamType = number | null;
 const DEFAULT_CARD_INDEX = null;
@@ -56,6 +57,12 @@ export const setDragStart = (index: dragParamType = DEFAULT_CARD_INDEX) => ({
 export const setDragTarget = (index: dragParamType = DEFAULT_CARD_INDEX) => ({
     type: DRAG_TARGET,
     index,
+});
+
+/** shows MatchFinder component that exposes logic of searching matches */
+export const startSearchingMatch = (isSearchingMatch: boolean) => ({
+    type: START_SEARCHING_MATCH,
+    isSearchingMatch,
 });
 
 export const exchangeCards = (
