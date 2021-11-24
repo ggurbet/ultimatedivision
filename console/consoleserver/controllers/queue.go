@@ -82,16 +82,12 @@ func (controller *Queue) Create(w http.ResponseWriter, r *http.Request) {
 
 	switch request.Action {
 	case queue.ActionStartSearch:
-		if _, err = controller.queue.Get(client.UserID); err != nil {
-			if err = controller.queue.Create(ctx, client); err != nil {
-				controller.log.Error("could not create user's queue", ErrQueue.Wrap(err))
-				controller.serveError(client.Connection, http.StatusInternalServerError, err.Error())
-				return
-			}
-			controller.serveError(client.Connection, http.StatusOK, "you added!")
+		if err = controller.queue.Create(ctx, client); err != nil {
+			controller.log.Error("could not create user's queue", ErrQueue.Wrap(err))
+			controller.serveError(client.Connection, http.StatusInternalServerError, err.Error())
 			return
 		}
-		controller.serveError(client.Connection, http.StatusBadRequest, "you have already been added!")
+		controller.serveError(client.Connection, http.StatusOK, "you added!")
 		return
 	case queue.ActionFinishSearch:
 		if _, err = controller.queue.Get(client.UserID); err == nil {
