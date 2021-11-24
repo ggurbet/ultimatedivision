@@ -113,6 +113,12 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, avatarURL
 	return nft
 }
 
+// Get returns nft by token id and chain from database.
+func (service *Service) Get(ctx context.Context, tokenID int64, chain cryptoutils.Chain) (NFT, error) {
+	nft, err := service.nfts.Get(ctx, tokenID, chain)
+	return nft, ErrNFTs.Wrap(err)
+}
+
 // List returns nfts from database.
 func (service *Service) List(ctx context.Context) ([]NFT, error) {
 	nfts, err := service.nfts.List(ctx)
@@ -120,6 +126,11 @@ func (service *Service) List(ctx context.Context) ([]NFT, error) {
 }
 
 // Update updates users wallet address for nft token in the database.
-func (service *Service) Update(ctx context.Context, walletAddress cryptoutils.Address, cardID uuid.UUID) error {
-	return ErrNFTs.Wrap(service.nfts.Update(ctx, walletAddress, cardID))
+func (service *Service) Update(ctx context.Context, nft NFT) error {
+	return ErrNFTs.Wrap(service.nfts.Update(ctx, nft))
+}
+
+// Delete deletes nft token in the database.
+func (service *Service) Delete(ctx context.Context, cardID uuid.UUID) error {
+	return ErrNFTs.Wrap(service.nfts.Delete(ctx, cardID))
 }

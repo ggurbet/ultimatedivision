@@ -27,7 +27,7 @@ func TestCryptoUtils(t *testing.T) {
 		"privateKey":      "5aefce0a2d473f59578fa7dee6a122d6509af1e0f79fcbee700dfcfeddabe4cc",
 		"signature":       "c2ab46d5981fe2fe951a63240af99a639ca13ea9afa1ee640d418690eae178215571ef9d318cc5b79d2c9e184e036f513aea7edcd6517cca75c4790d9ead45fc1b",
 	}
-	tokenID := 2
+	var tokenID int64 = 2
 
 	t.Run("GenerateSignature", func(t *testing.T) {
 		privateKeyECDSA, err := crypto.HexToECDSA(value1["privateKey"])

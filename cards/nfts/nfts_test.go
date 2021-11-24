@@ -192,11 +192,39 @@ func TestNFTs(t *testing.T) {
 			require.NoError(t, err)
 		})
 
+		t.Run("Get", func(t *testing.T) {
+			nftGet, err := repositoryNFTs.Get(ctx, nft1.TokenID, nft1.Chain)
+			require.NoError(t, err)
+
+			compareNFTsSlice(t, []nfts.NFT{nftGet}, []nfts.NFT{nft1})
+		})
+
 		t.Run("List", func(t *testing.T) {
 			nftList, err := repositoryNFTs.List(ctx)
 			require.NoError(t, err)
 
 			compareNFTsSlice(t, nftList, []nfts.NFT{nft1, nft2})
+		})
+
+		t.Run("Update", func(t *testing.T) {
+			nft1.WalletAddress = "0x"
+			err := repositoryNFTs.Update(ctx, nft1)
+			require.NoError(t, err)
+
+			nftGet, err := repositoryNFTs.Get(ctx, nft1.TokenID, nft1.Chain)
+			require.NoError(t, err)
+
+			compareNFTsSlice(t, []nfts.NFT{nftGet}, []nfts.NFT{nft1})
+		})
+
+		t.Run("Delete", func(t *testing.T) {
+			err := repositoryNFTs.Delete(ctx, card1.ID)
+			require.NoError(t, err)
+
+			nftList, err := repositoryNFTs.List(ctx)
+			require.NoError(t, err)
+
+			compareNFTsSlice(t, nftList, []nfts.NFT{nft2})
 		})
 	})
 }

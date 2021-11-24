@@ -6,6 +6,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
@@ -36,6 +37,27 @@ func (nftsDB *nftsDB) Create(ctx context.Context, nft nfts.NFT) error {
 	return ErrNFTs.Wrap(err)
 }
 
+// Get returns nft by token id and chain from database.
+func (nftsDB *nftsDB) Get(ctx context.Context, tokenID int64, chain cryptoutils.Chain) (nfts.NFT, error) {
+	query := `
+		SELECT 
+			card_id, token_id, chain, wallet_address 
+		FROM 
+			nfts
+		WHERE 
+			token_id = $1 AND chain = $2`
+
+	var nft nfts.NFT
+	row := nftsDB.conn.QueryRowContext(ctx, query, tokenID, chain)
+
+	err := row.Scan(&nft.CardID, &nft.TokenID, &nft.Chain, &nft.WalletAddress)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nft, nfts.ErrNoNFTs.Wrap(err)
+	}
+
+	return nft, ErrNFTs.Wrap(err)
+}
+
 // List returns nfts from database.
 func (nftsDB *nftsDB) List(ctx context.Context) ([]nfts.NFT, error) {
 	var nftList []nfts.NFT
@@ -62,12 +84,12 @@ func (nftsDB *nftsDB) List(ctx context.Context) ([]nfts.NFT, error) {
 }
 
 // Update updates users wallet address for nft token in the database.
-func (nftsDB *nftsDB) Update(ctx context.Context, walletAddress cryptoutils.Address, cardID uuid.UUID) error {
+func (nftsDB *nftsDB) Update(ctx context.Context, nft nfts.NFT) error {
 	query := `UPDATE nfts
 	          SET wallet_address = $1
-	          WHERE card_id = $2`
+	          WHERE chain = $2 AND token_id = $3`
 
-	result, err := nftsDB.conn.ExecContext(ctx, query, walletAddress, cardID)
+	result, err := nftsDB.conn.ExecContext(ctx, query, nft.WalletAddress, nft.Chain, nft.TokenID)
 	if err != nil {
 		return ErrNFTs.Wrap(err)
 	}
@@ -77,6 +99,21 @@ func (nftsDB *nftsDB) Update(ctx context.Context, walletAddress cryptoutils.Addr
 		return ErrNFTs.Wrap(err)
 	}
 	if rowNum == 0 {
+		return nfts.ErrNoNFTs.New("nft does not exist")
+	}
+
+	return ErrNFTs.Wrap(err)
+}
+
+// Delete deletes nft token in the database.
+func (nftsDB *nftsDB) Delete(ctx context.Context, cardID uuid.UUID) error {
+	result, err := nftsDB.conn.ExecContext(ctx, "DELETE FROM nfts WHERE card_id = $1", cardID)
+	if err != nil {
+		return ErrNFTs.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if err == nil && rowNum == 0 {
 		return nfts.ErrNoNFTs.New("nft does not exist")
 	}
 
