@@ -10,7 +10,6 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/clubs"
-	"ultimatedivision/divisions"
 	"ultimatedivision/pkg/pagination"
 )
 
@@ -153,10 +152,4 @@ type Statistic struct {
 	Draws          int        `json:"draws"`
 	GoalDifference int        `json:"goalDifference"`
 	Points         int        `json:"points"`
-}
-
-// ResultStatistics defined statistics of clubs in season.
-type ResultStatistics struct {
-	Division   divisions.Division `json:"division"`
-	Statistics []Statistic        `json:"statistics"`
 }

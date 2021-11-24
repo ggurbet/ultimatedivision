@@ -138,7 +138,7 @@ func (controller *Matches) Create(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		Redirect(w, r, "", http.MethodGet)
+		Redirect(w, r, "/matches", http.MethodGet)
 	}
 }
 

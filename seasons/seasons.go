@@ -9,6 +9,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
+
+	"ultimatedivision/divisions"
+	"ultimatedivision/gameplay/matches"
 )
 
 // ErrNoSeason indicated that season does not exist.
@@ -48,4 +51,10 @@ type Season struct {
 // Config defines configuration for seasons.
 type Config struct {
 	SeasonTime time.Duration `json:"seasonTime"`
+}
+
+// SeasonStatistics returns statistics of clubs in season.
+type SeasonStatistics struct {
+	Division   divisions.Division  `json:"division"`
+	Statistics []matches.Statistic `json:"statistics"`
 }

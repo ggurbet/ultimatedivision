@@ -40,6 +40,11 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 			return ChoreError.Wrap(err)
 		}
 
+		err = chore.seasons.UpdateClubsToNewDivision(ctx)
+		if err != nil {
+			return ChoreError.Wrap(err)
+		}
+
 		for _, season := range seasons {
 			if season.EndedAt.IsZero() {
 				err := chore.seasons.EndSeason(ctx, season.ID)

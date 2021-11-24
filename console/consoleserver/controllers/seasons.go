@@ -52,6 +52,48 @@ func (controller *Seasons) GetCurrentSeasons(w http.ResponseWriter, r *http.Requ
 	}
 }
 
+// GetAllClubsStatistics returns all clubs statistics by division.
+func (controller *Seasons) GetAllClubsStatistics(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	clubsStatistics, err := controller.seasons.GetAllClubsStatistics(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusInternalServerError, ErrSeasons.Wrap(err))
+		return
+	}
+
+	var statistic seasons.SeasonStatistics
+	for division, statistics := range clubsStatistics {
+		statistic = seasons.SeasonStatistics{
+			Division:   division,
+			Statistics: statistics,
+		}
+	}
+
+	if err := json.NewEncoder(w).Encode(statistic); err != nil {
+		controller.log.Error("failed to write json response", ErrSeasons.Wrap(err))
+		return
+	}
+}
+
+// UpdatesClubsToNewDivision updates clubs to new division.
+func (controller *Seasons) UpdatesClubsToNewDivision(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	err := controller.seasons.UpdateClubsToNewDivision(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusInternalServerError, ErrSeasons.Wrap(err))
+		return
+	}
+
+	if err := json.NewEncoder(w).Encode("OK"); err != nil {
+		controller.log.Error("failed to write json response", ErrSeasons.Wrap(err))
+		return
+	}
+}
+
 // serveError replies to request with specific code and error.
 func (controller *Seasons) serveError(w http.ResponseWriter, status int, err error) {
 	w.WriteHeader(status)
