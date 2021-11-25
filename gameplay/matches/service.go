@@ -278,7 +278,32 @@ func (service *Service) ListMatchGoals(ctx context.Context, matchID uuid.UUID) (
 // GetMatchResult returns goals of each user in the match.
 func (service *Service) GetMatchResult(ctx context.Context, matchID uuid.UUID) ([]MatchResult, error) {
 	resultMatch, err := service.matches.GetMatchResult(ctx, matchID)
-	return resultMatch, ErrMatches.Wrap(err)
+	if err != nil {
+		return nil, ErrMatches.Wrap(err)
+	}
+
+	if len(resultMatch) == 2 {
+		return resultMatch, nil
+	}
+
+	match, err := service.matches.Get(ctx, matchID)
+	if err != nil {
+		return nil, ErrMatches.Wrap(err)
+	}
+
+	var results []MatchResult
+	results = append(results, MatchResult{UserID: match.User1ID})
+	results = append(results, MatchResult{UserID: match.User2ID})
+
+	for k, result := range results {
+		for _, res := range resultMatch {
+			if result.UserID == res.UserID {
+				results[k].QuantityGoals = res.QuantityGoals
+			}
+		}
+	}
+
+	return results, nil
 }
 
 // ListSquadMatches returns all club matches in season.
