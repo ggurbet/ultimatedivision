@@ -16,7 +16,6 @@ import {
     changeCardPosition,
     choosePosition,
     deleteCard,
-    startSearchingMatch,
     setDragStart,
     swapCards,
 } from '@/app/store/actions/clubs';
@@ -38,7 +37,6 @@ export const FieldPlayingArea: React.FC = () => {
     const club = useSelector((state: RootState) => state.clubsReducer.activeClub);
     const squad = useSelector((state: RootState) => state.clubsReducer.activeClub.squad);
 
-    const [isPossibleToStartMatch, setIsPossibleToStartMatch] = useState<boolean>(true);
     /** MouseMove event Position */
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     /** This var created to not allow mouseUpEvent without Dragging before it */
@@ -52,15 +50,6 @@ export const FieldPlayingArea: React.FC = () => {
     const Y_SCROLL_POINT = 1200;
     const X_SCROLL_POINT = 0;
     const DELAY = 100;
-
-    /** shows matchFinder component */
-    const showMatchFinder = () => {
-        dispatch(startSearchingMatch(true));
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-        });
-    };
 
     /** with getBoundingClientRect() we gettins outer padding of playingArea on any screen width and scale */
     useEffect(() => {
@@ -217,15 +206,7 @@ export const FieldPlayingArea: React.FC = () => {
                     )}
                 </div>
             </div>
-            <div className="field-controls-area__wrapper">
-                {isPossibleToStartMatch && <input
-                    type="button"
-                    value="Play"
-                    className="field-controls-area__play"
-                    onClick={showMatchFinder}
-                />}
-                <FieldControlsArea />
-            </div>
+            <FieldControlsArea />
         </div>
     );
 };
