@@ -14,16 +14,16 @@ import './index.scss';
 const Navbar: React.FC = () => {
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false);
 
-    const visibleClassName = isDropdownActive ? "-active" : "";
+    const visibleClassName = isDropdownActive ? '-active' : '';
 
     /** TODO: DIVISIONS will be replaced with id parameter */
     const navbarItems: Array<{ name: string; path: string }> = [
-        { name: "HOME", path: RouteConfig.Summary.path },
-        { name: "STORE", path: RouteConfig.Store.path },
-        { name: "MARKETPLACE", path: RouteConfig.MarketPlace.path },
-        { name: "CARDS", path: RouteConfig.Club.path },
-        { name: "FIELD", path: RouteConfig.Field.path },
-        { name: "DIVISIONS", path: RouteConfig.Division.path },
+        { name: 'HOME', path: RouteConfig.Summary.path },
+        { name: 'STORE', path: RouteConfig.Store.path },
+        { name: 'MARKETPLACE', path: RouteConfig.MarketPlace.path },
+        { name: 'CARDS', path: RouteConfig.Club.path },
+        { name: 'FIELD', path: RouteConfig.Field.path },
+        { name: 'DIVISIONS', path: RouteConfig.Division.path },
     ];
 
     return (
@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
                 {isDropdownActive ? <CloseDropdownIcon /> : <DropdownIcon />}
             </div>
             <ul className={`ultimatedivision-navbar__list${visibleClassName}`}>
-                {navbarItems.map((item, index) => (
+                {navbarItems.map((item, index) =>
                     <li
                         key={index}
                         className={`ultimatedivision-navbar__list${visibleClassName}__item`}
@@ -56,7 +56,7 @@ const Navbar: React.FC = () => {
                             {item.name}
                         </NavLink>
                     </li>
-                ))}
+                )}
             </ul>
         </div>
     );

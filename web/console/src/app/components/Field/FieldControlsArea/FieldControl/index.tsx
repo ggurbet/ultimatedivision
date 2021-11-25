@@ -8,7 +8,7 @@ import triangle from '@static/img/FieldPage/triangle.svg';
 
 import { RootState } from '@/app/store';
 import { Control } from '@/app/types/club';
-import { DropdownStyle } from '@/app/utils/dropdownStyle';
+import { DropdownStyle } from '@/app/internal/dropdownStyle';
 
 import './index.scss';
 

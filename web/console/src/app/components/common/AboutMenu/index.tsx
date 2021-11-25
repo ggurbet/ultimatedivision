@@ -7,7 +7,7 @@ import { Link, useLocation } from 'react-router-dom';
 import triangle from '@static/img/FieldPage/triangle.svg';
 
 import { RouteConfig } from '@/app/routes';
-import { DropdownStyle } from '@/app/utils/dropdownStyle';
+import { DropdownStyle } from '@/app/internal/dropdownStyle';
 
 import './index.scss';
 
