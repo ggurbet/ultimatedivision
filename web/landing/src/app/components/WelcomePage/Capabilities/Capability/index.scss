@@ -1,0 +1,93 @@
+@import "/src/index.scss";
+@import "aos/dist/aos.css";
+
+.capability {
+    background-color: #232222;
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    margin: auto;
+    margin-bottom: 20px;
+    padding: 20px 0;
+
+    &__title {
+        color: #3ccf5d;
+        text-align: left;
+        font-size: 36px;
+        margin-bottom: 0;
+        margin-top: 33px;
+        font-weight: normal;
+        font-style: normal;
+        transition: font-size 0.3s;
+    }
+
+    &__icon {
+        display: flex;
+        margin-left: 45px;
+    }
+
+    &__image {
+        margin: auto;
+        transition: width 0.3s, heigth 0.3s;
+    }
+
+    &__description {
+        transition: font-size 0.3s;
+    }
+
+    &__information {
+        display: flex;
+        flex-direction: column;
+        font-size: 16px;
+        text-align: left;
+        color: white;
+        margin: 0 75px 25px 75px;
+    }
+
+    @media (max-width: $desktopBreakPoint) {
+        flex-direction: column;
+
+        &__icon {
+            margin: 20px auto;
+        }
+
+        &__title {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        &__information {
+            margin: 0 20px;
+            text-align: center;
+        }
+    }
+
+    @media (max-width: $phoneBreakPoint) {
+        padding: 0 20px 20px;
+        width: 80%;
+        max-width: 300px;
+
+        &__image {
+            width: 74px;
+            height: 74px;
+            margin: auto;
+        }
+
+        &__title {
+            font-size: 21px;
+        }
+
+        &__description {
+            font-size: 12px;
+            text-align: center;
+        }
+    }
+}
+
+[data-aos="fade-left-capability"] {
+    transform: translate3d(300px, 0, 0);
+
+    &.aos-animate {
+        transform: translate3d(0, 0, 0);
+    }
+}

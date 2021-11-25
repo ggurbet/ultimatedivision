@@ -1,0 +1,14 @@
+@import "@static/styles/reset";
+@import "@static/styles/variables";
+@import "@static/styles/extends";
+
+@font-face {
+    font-family: "BebasNeue";
+    src: url("@static/fonts/BebasNeue-Regular.ttf");
+    font-style: normal;
+    font-weight: lighter;
+}
+
+html {
+    font-family: "BebasNeue";
+}

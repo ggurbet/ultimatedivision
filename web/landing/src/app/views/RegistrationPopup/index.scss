@@ -1,0 +1,63 @@
+@import "/src/index.scss";
+@import "@/app/views/SignIn/index.scss";
+
+.pop-up-registration {
+    background-color: rgba(0, 0, 0, 0.685);
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4;
+    overflow: hidden;
+
+    &__wrapper {
+        position: absolute;
+        top: 150px;
+        background-color: white;
+        height: 80vh;
+        overflow: hidden;
+
+        &__close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
+        }
+    }
+
+    @media (max-width: $desktopBreakPoint) {
+
+        &__wrapper {
+            width: 80%;
+            top: 100px;
+        }
+    }
+
+    @media (max-width: $tabletBreakPoint) {
+
+        &__wrapper {
+            width: 90%;
+            top: 100px;
+        }
+    }
+
+    @media (max-width: $phoneBreakPoint) {
+
+        &__wrapper {
+            height: 60vh;
+            width: 80%;
+            top: 100px;
+        }
+    }
+
+    @media (max-width: $phoneBreakPoint - 150px) {
+
+        &__wrapper {
+            top: 50px;
+            height: 50vh;
+        }
+    }
+}

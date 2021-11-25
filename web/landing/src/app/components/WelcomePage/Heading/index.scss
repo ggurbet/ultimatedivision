@@ -1,0 +1,14 @@
+@import "/src/index.scss";
+
+.heading {
+    background-image: url("@static/images/Heading/Rectangle.png");
+    background-size: cover;
+    background-position: center;
+    margin: auto;
+    padding: 70px 0 120px 0;
+    overflow-x: hidden;
+
+    @media (max-width: $phoneBreakPoint) {
+        padding: 50px 0 50px 0;
+    }
+}
