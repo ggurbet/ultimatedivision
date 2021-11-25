@@ -104,7 +104,7 @@ func (divisionsDB *divisionsDB) GetByName(ctx context.Context, divisionName int)
 	return division, ErrDivisions.Wrap(err)
 }
 
-// Get returns division by id from the data base.
+// GetLastDivision returns division last division from the database.
 func (divisionsDB *divisionsDB) GetLastDivision(ctx context.Context) (divisions.Division, error) {
 	query := `SELECT * FROM divisions WHERE name=(SELECT MAX(name) FROM divisions)`
 	var division divisions.Division

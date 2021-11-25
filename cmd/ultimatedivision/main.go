@@ -58,6 +58,12 @@ var (
 		RunE:        seedRun,
 		Annotations: map[string]string{"type": "run"},
 	}
+	matchCmd = &cobra.Command{
+		Use:         "match",
+		Short:       "play matches",
+		RunE:        matchRun,
+		Annotations: map[string]string{"type": "run"},
+	}
 	destroyCmd = &cobra.Command{
 		Use:         "destroy",
 		Short:       "deletes config folder",
@@ -74,6 +80,7 @@ func init() {
 	rootCmd.AddCommand(setupCmd)
 	rootCmd.AddCommand(runCmd)
 	rootCmd.AddCommand(seedCmd)
+	rootCmd.AddCommand(matchCmd)
 	rootCmd.AddCommand(destroyCmd)
 }
 
@@ -170,6 +177,8 @@ func seedRun(cmd *cobra.Command, args []string) (err error) {
 		return Error.Wrap(err)
 	}
 
+	seedDB := database.NewSeedDB(conn)
+
 	err = database.CreateUser(ctx, conn)
 	if err != nil {
 		return Error.Wrap(err)
@@ -179,6 +188,40 @@ func seedRun(cmd *cobra.Command, args []string) (err error) {
 		return Error.Wrap(err)
 	}
 	err = database.CreateDivisions(ctx, conn)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+	err = database.CreateClubs(ctx, conn)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+	err = database.CreateSquads(ctx, conn)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+	err = seedDB.CreateSquadCards(ctx, conn, runCfg.Cards.Config, runCfg.LootBoxes.Config)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+
+	return nil
+}
+
+// TODO: remove for production.
+func matchRun(cmd *cobra.Command, args []string) (err error) {
+	ctx := context.Background()
+	runCfg, err = readConfig()
+	if err != nil {
+		return Error.Wrap(err)
+	}
+	conn, err := sql.Open("postgres", runCfg.Database)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+
+	seedDB := database.NewSeedDB(conn)
+
+	err = seedDB.CreateMatches(ctx, conn, runCfg.Matches.Config, runCfg.Cards.Config)
 	if err != nil {
 		return Error.Wrap(err)
 	}

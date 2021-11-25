@@ -151,7 +151,7 @@ func (service *Service) UpdateClubsToNewDivision(ctx context.Context) error {
 		sort.Slice(sortStatistics, func(i, j int) bool {
 			return sortStatistics[i].Points < sortStatistics[j].Points
 		})
-		topStatisticsClubs := sortStatistics[int(totalPassingClubs):]
+		topStatisticsClubs := sortStatistics[len(sortStatistics)-int(totalPassingClubs):]
 		lowStatisticsClubs := sortStatistics[:int(totalPassingClubs)]
 
 		divisionHigher, err := service.divisions.GetByName(ctx, division.Name-1)
