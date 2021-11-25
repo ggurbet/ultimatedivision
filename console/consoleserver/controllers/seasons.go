@@ -6,9 +6,12 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/divisions"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/seasons"
 )
@@ -56,6 +59,24 @@ func (controller *Seasons) GetCurrentSeasons(w http.ResponseWriter, r *http.Requ
 func (controller *Seasons) GetAllClubsStatistics(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
+	params := mux.Vars(r)
+
+	divisionName, err := strconv.Atoi(params["divisionName"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrSeasons.Wrap(err))
+		return
+	}
+
+	division, err := controller.seasons.GetDivision(ctx, divisionName)
+	if err != nil {
+		switch {
+		case divisions.ErrNoDivision.Has(err):
+			controller.serveError(w, http.StatusNotFound, ErrSeasons.New("division does not exist"))
+		default:
+			controller.serveError(w, http.StatusInternalServerError, ErrSeasons.Wrap(err))
+		}
+		return
+	}
 
 	clubsStatistics, err := controller.seasons.GetAllClubsStatistics(ctx)
 	if err != nil {
@@ -63,12 +84,9 @@ func (controller *Seasons) GetAllClubsStatistics(w http.ResponseWriter, r *http.
 		return
 	}
 
-	var statistic seasons.SeasonStatistics
-	for division, statistics := range clubsStatistics {
-		statistic = seasons.SeasonStatistics{
-			Division:   division,
-			Statistics: statistics,
-		}
+	statistic := seasons.SeasonStatistics{
+		Division:   division,
+		Statistics: clubsStatistics[division],
 	}
 
 	if err := json.NewEncoder(w).Encode(statistic); err != nil {

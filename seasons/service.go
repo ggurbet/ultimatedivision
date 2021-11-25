@@ -96,6 +96,11 @@ func (service *Service) GetSeasonByDivisionID(ctx context.Context, divisionID uu
 	return season, ErrSeasons.Wrap(err)
 }
 
+// GetDivision returns division by name.
+func (service *Service) GetDivision(ctx context.Context, divisionName int) (divisions.Division, error) {
+	return service.divisions.GetByName(ctx, divisionName)
+}
+
 // GetAllClubsStatistics returns all clubs statistics by division.
 func (service *Service) GetAllClubsStatistics(ctx context.Context) (map[divisions.Division][]matches.Statistic, error) {
 	currentSeasons, err := service.GetCurrentSeasons(ctx)
@@ -108,8 +113,8 @@ func (service *Service) GetAllClubsStatistics(ctx context.Context) (map[division
 	}
 
 	statisticsMap := make(map[divisions.Division][]matches.Statistic)
-	var statistics []matches.Statistic
 	for _, currentSeason := range currentSeasons {
+		var statistics []matches.Statistic
 		for _, club := range clubs {
 			statistic, err := service.matches.GetStatistic(ctx, club.ID, currentSeason.ID)
 			if err != nil {
@@ -169,7 +174,8 @@ func (service *Service) UpdateClubsToNewDivision(ctx context.Context) error {
 		if err != nil {
 			return ErrSeasons.Wrap(err)
 		}
-		if division.Name > lastDivision.Name {
+
+		if division.Name < lastDivision.Name {
 			divisionLower, err := service.divisions.GetByName(ctx, division.Name+1)
 			if err != nil {
 				return ErrSeasons.Wrap(err)

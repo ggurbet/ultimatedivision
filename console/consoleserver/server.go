@@ -148,7 +148,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	seasonsRouter := apiRouter.PathPrefix("/seasons").Subrouter()
 	seasonsRouter.Use(server.withAuth)
 	seasonsRouter.HandleFunc("/current", seasonsController.GetCurrentSeasons).Methods(http.MethodGet)
-	seasonsRouter.HandleFunc("/statistics", seasonsController.GetAllClubsStatistics).Methods(http.MethodGet)
+	seasonsRouter.HandleFunc("/statistics/division/{divisionName}", seasonsController.GetAllClubsStatistics).Methods(http.MethodGet)
 	seasonsRouter.HandleFunc("/club", seasonsController.UpdatesClubsToNewDivision).Methods(http.MethodPut)
 
 	waitListRouter := apiRouter.PathPrefix("/nft-waitlist").Subrouter()
