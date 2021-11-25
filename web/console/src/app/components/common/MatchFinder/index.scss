@@ -60,6 +60,7 @@
         justify-content: space-between;
 
         &__accept,
+        &__accept-not-allowed,
         &__cancel {
             cursor: pointer;
             text-align: center;
@@ -69,6 +70,10 @@
             font-weight: 700;
             border: 1px solid transparent;
             background: linear-gradient($matchFinderMainLinearGradientColor 100%, $matchFinderSecondLinearGradientColor 100%);
+        }
+
+        &__accept-not-allow {
+            cursor:not-allowed
         }
 
         &__cancel {
@@ -87,7 +92,8 @@
         
         &__form {
             flex-direction: column;
-            &__accept {
+            &__accept,
+            &__accept-not-allowed {
                 width: 156px;
             }
 
@@ -108,7 +114,8 @@
         &__form {
             flex-direction: row;
 
-            &__accept {
+            &__accept,
+            &__accept-not-allowed {
             width: 144px;
             }
 
