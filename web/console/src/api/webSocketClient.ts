@@ -8,5 +8,5 @@ export class WebSocketAPICLient {
     /** The WebSocket provides the API for creating and managing
      * a websocket connection to a server and for sending and
      * receiving data on the connection. */
-    public readonly ws: WebSocket = new WebSocket('ws://localhost:8088/api/v0/queue');
+    public readonly ws: WebSocket = new WebSocket(`ws://${window.location.host}/api/v0/queue`);
 };

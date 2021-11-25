@@ -22,6 +22,7 @@ const MatchFinder: React.FC = () => {
     const { isSearchingMatch } = useSelector((state: RootState) => state.clubsReducer);
 
     const queueClient = useMemo(() => new QueueClient(), [isSearchingMatch]);
+
     const dispatch = useDispatch();
     const history = useHistory();
 
