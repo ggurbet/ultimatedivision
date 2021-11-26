@@ -25,15 +25,9 @@ import './index.scss';
 export const FieldPlayingArea: React.FC = () => {
     const dispatch = useDispatch();
 
-    const { cards } = useSelector(
-        (state: RootState) => state.cardsReducer.cardsPage
-    );
-    const formation = useSelector(
-        (state: RootState) => state.clubsReducer.activeClub.squad.formation
-    );
-    const dragStartIndex = useSelector(
-        (state: RootState) => state.clubsReducer.options.dragStart
-    );
+    const cards = useSelector((state: RootState) => state.cardsReducer.cardsPage.cards);
+    const formation = useSelector((state: RootState) => state.clubsReducer.activeClub.squad.formation);
+    const dragStartIndex = useSelector((state: RootState) => state.clubsReducer.options.dragStart);
     const club = useSelector((state: RootState) => state.clubsReducer.activeClub);
     const squad = useSelector((state: RootState) => state.clubsReducer.activeClub.squad);
 
@@ -41,27 +35,22 @@ export const FieldPlayingArea: React.FC = () => {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     /** This var created to not allow mouseUpEvent without Dragging before it */
     const [isDragging, handleDrag] = useState(false);
-    /** outer padding of playingArea */
-    const [outerOffset, handleOffset] = useState({ x: 0, y: 0 });
+    /** Playing area position */
+    const [playingAreaPosition, setplayingAreaPosition] = useState({ x: 0, y: 0 });
 
     const DEFAULT_VALUE = 0;
-    const OFFSET_TOP = 330;
-
-    const Y_SCROLL_POINT = 1200;
     const X_SCROLL_POINT = 0;
+    const Y_SCROLL_POINT = 1200;
     const DELAY = 100;
 
-    /** with getBoundingClientRect() we gettins outer padding of playingArea on any screen width and scale */
+    /** Gets playing area position */
     useEffect(() => {
         const playingArea = document.getElementById('playingArea');
-        if (playingArea) {
-            const position = playingArea.getBoundingClientRect();
-
-            handleOffset({
-                x: position.x,
-                y: position.y,
+        playingArea &&
+            setplayingAreaPosition({
+                x: playingArea.offsetLeft,
+                y: playingArea.offsetTop,
             });
-        }
     }, []);
     const useMousePosition = (ev: any) => {
         setMousePosition({ x: ev.pageX, y: ev.pageY });
@@ -120,17 +109,14 @@ export const FieldPlayingArea: React.FC = () => {
 
     /** deleting card when release beyond playing area */
     function removeFromArea() {
-        if (isDragging) {
-            dragStartIndex &&
-                dispatch(deleteCard(
-                    new CardEditIdentificators(squad.clubId, squad.id, club.squadCards[dragStartIndex].cardId, dragStartIndex))
-                );
-            dispatch(setDragStart());
-            handleDrag(false);
+        if (isDragging && dragStartIndex) {
+            dispatch(deleteCard(
+                new CardEditIdentificators(squad.clubId, squad.id, club.squadCards[dragStartIndex].cardId, dragStartIndex))
+            );
         }
+        dispatch(setDragStart());
+        handleDrag(false);
     }
-
-    const { x, y } = mousePosition;
 
     return (
         <div
@@ -148,15 +134,15 @@ export const FieldPlayingArea: React.FC = () => {
                     {club.squadCards.map(
                         (fieldCard: SquadCard, index: number) => {
                             const card = getCard(fieldCard.cardId);
-                            const equality = dragStartIndex === index;
+                            const isDragging = dragStartIndex === index;
 
                             return (
                                 <div
                                     style={
-                                        equality ? {
-                                            left: x - outerOffset.x,
-                                            top: y - OFFSET_TOP,
-                                            transform: 'translateX(-55%)',
+                                        isDragging ? {
+                                            left: mousePosition.x - playingAreaPosition.x,
+                                            top: mousePosition.y - playingAreaPosition.y,
+                                            transform: 'translate(-55%, -55%)',
                                             zIndex: 5,
                                             pointerEvents: 'none',
                                         }
@@ -193,8 +179,6 @@ export const FieldPlayingArea: React.FC = () => {
                                 >
                                     {card &&
                                         <img
-                                            // If data exist it has maininfo, but TS do not let me use it even with check
-                                            /** TODO: check for undefined will removed after correct Card type */
                                             src={card.style.shadow}
                                             alt="card shadow"
                                             className={`playing-area__${formation}-shadows__shadow`}
