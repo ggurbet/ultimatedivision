@@ -9,12 +9,12 @@ export const FilterFieldDropdown: React.FC<{
     props: { label: string; image: string };
 }> = ({ props }) => {
     const { label, image } = props;
-    const [shouldDropdownShow, handleShowing] = useState(false);
+    const [isDropdownShow, setIsDropdownShow] = useState(false);
 
     return (
         <div
             className="filter-item"
-            onClick={() => handleShowing((prev) => !prev)}
+            onClick={() => setIsDropdownShow((prev) => !prev)}
         >
             <span className="filter-item__title">{label}</span>
             <img
@@ -24,7 +24,7 @@ export const FilterFieldDropdown: React.FC<{
             />
             <div
                 className={`filter-item__dropdown${
-                    shouldDropdownShow ? '-active' : '-inactive'
+                    isDropdownShow ? '-active' : '-inactive'
                 }`}
             ></div>
         </div>

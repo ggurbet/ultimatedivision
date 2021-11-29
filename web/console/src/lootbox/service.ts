@@ -19,4 +19,3 @@ export class LootboxService {
         return await this.lootboxes.buy(lootbox);
     };
 };
-
