@@ -233,18 +233,16 @@ func (chore *Chore) Play(ctx context.Context, firstClient, secondClient Client) 
 		}
 	}
 
-	var (
-		firstClientResult  []matches.MatchResult
-		secondClientResult []matches.MatchResult
-	)
+	firstClientResult := make([]matches.MatchResult, len(matchResult))
+	_ = copy(firstClientResult, matchResult)
+	secondClientResult := make([]matches.MatchResult, len(matchResult))
+	_ = copy(secondClientResult, matchResult)
 
 	switch {
 	case firstClient.UserID == matchResult[0].UserID:
-		firstClientResult = matchResult
 		secondClientResult = matches.Swap(matchResult)
 	case secondClient.UserID == matchResult[0].UserID:
 		firstClientResult = matches.Swap(matchResult)
-		secondClientResult = matchResult
 	}
 
 	if err := firstClient.WriteJSON(http.StatusOK, firstClientResult); err != nil {
