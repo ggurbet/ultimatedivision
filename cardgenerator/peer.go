@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strconv"
 
@@ -98,7 +99,7 @@ func (peer *Peer) Generate(ctx context.Context) error {
 	for i := 0; i < peer.cardsTotal; i++ {
 		allNames := make(map[string]struct{}, peer.cardsTotal)
 		for len(allNames) <= peer.cardsTotal {
-			if err := peer.CardAvatars.Service.GenerateName(peer.Config.CardAvatars.PathToNamesDataset, allNames); err != nil {
+			if err := peer.CardAvatars.Service.GenerateName(peer.Config.CardAvatars.CardConfig.PathToNamesDataset, allNames); err != nil {
 				return err
 			}
 		}
@@ -117,6 +118,10 @@ func (peer *Peer) Generate(ctx context.Context) error {
 
 		file, err := json.MarshalIndent(nft, "", " ")
 		if err != nil {
+			return err
+		}
+
+		if err = os.MkdirAll(peer.Config.CardAvatars.PathToOutputJSONFile, os.ModePerm); err != nil {
 			return err
 		}
 

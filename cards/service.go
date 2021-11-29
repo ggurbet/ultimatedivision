@@ -40,7 +40,7 @@ func NewService(cards DB, config Config) *Service {
 }
 
 // Create adds card in DB.
-func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentageQualities []int, nameImage string) (Card, error) {
+func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentageQualities []int) (Card, error) {
 	var (
 		err  error
 		card Card

@@ -282,7 +282,7 @@ func (seedDB *SeedDB) CreateSquadCards(ctx context.Context, conn *sql.DB, cardsC
 		}
 		for i := 0; i < 11; i++ {
 			probabilities := []int{lootboxesConfig.RegularBoxConfig.Wood, lootboxesConfig.RegularBoxConfig.Silver, lootboxesConfig.RegularBoxConfig.Gold, lootboxesConfig.RegularBoxConfig.Diamond}
-			card, err := cardsService.Create(ctx, club.OwnerID, probabilities, "")
+			card, err := cardsService.Create(ctx, club.OwnerID, probabilities)
 			if err != nil {
 				return ErrClubs.Wrap(err)
 			}

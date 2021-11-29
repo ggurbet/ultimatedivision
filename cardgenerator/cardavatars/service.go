@@ -8,6 +8,7 @@ import (
 	"io"
 	"math/rand"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -57,8 +58,7 @@ func (service *Service) Generate(ctx context.Context, nameFile int, playerName s
 		return nft.NFT{}, ErrCardAvatars.Wrap(err)
 	}
 	card.PlayerName = playerName
-
-	avatar, err := service.avatars.Generate(ctx, card, nameFile+1)
+	avatar, err := service.avatars.Generate(ctx, card, strconv.Itoa(nameFile+1))
 	if err != nil {
 		return nft.NFT{}, ErrCardAvatars.Wrap(err)
 	}
@@ -101,7 +101,7 @@ func (service *Service) TestGenerate(ctx context.Context, count int) ([]avatars.
 			break
 		}
 
-		avatar, err := service.avatars.Generate(ctx, cardAvatar.Card, i+1)
+		avatar, err := service.avatars.Generate(ctx, cardAvatar.Card, strconv.Itoa(i+1))
 		if err != nil {
 			return nil, ErrCardAvatars.Wrap(err)
 		}

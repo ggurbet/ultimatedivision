@@ -36,8 +36,9 @@ var (
 
 // Config contains configuration for console web server.
 type Config struct {
-	Address   string `json:"address"`
-	StaticDir string `json:"staticDir"`
+	Address    string `json:"address"`
+	StaticDir  string `json:"staticDir"`
+	AvatarsDir string `json:"avatarsDir"`
 
 	Auth struct {
 		CookieName string `json:"cookieName"`
@@ -154,6 +155,9 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	waitListRouter := apiRouter.PathPrefix("/nft-waitlist").Subrouter()
 	waitListRouter.Use(server.withAuth)
 	waitListRouter.HandleFunc("", waitListController.Create).Methods(http.MethodPost)
+
+	av := http.FileServer(http.Dir(server.config.AvatarsDir))
+	router.PathPrefix("/avatars/").Handler(http.StripPrefix("/avatars/", av))
 
 	fs := http.FileServer(http.Dir(server.config.StaticDir))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static", fs))

@@ -54,7 +54,7 @@ func (controller *Cards) Get(w http.ResponseWriter, r *http.Request) {
 
 	card, err := controller.cards.Get(ctx, id)
 	if err != nil {
-		controller.log.Error("could not get cards list", ErrCards.Wrap(err))
+		controller.log.Error("could not get card", ErrCards.Wrap(err))
 		switch {
 		case cards.ErrNoCard.Has(err):
 			controller.serveError(w, http.StatusNotFound, ErrCards.Wrap(err))

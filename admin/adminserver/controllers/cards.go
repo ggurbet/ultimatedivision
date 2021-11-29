@@ -5,7 +5,6 @@ package controllers
 
 import (
 	"html/template"
-	"math/rand"
 	"net/http"
 	"strconv"
 
@@ -114,7 +113,7 @@ func (controller *Cards) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err := controller.cards.Create(ctx, userID, percentageQualities, strconv.Itoa((rand.Intn(99) + 1))); err != nil {
+	if _, err := controller.cards.Create(ctx, userID, percentageQualities); err != nil {
 		controller.log.Error("could not create card", ErrCards.Wrap(err))
 		http.Error(w, "could not create card", http.StatusInternalServerError)
 		return

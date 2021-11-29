@@ -44,7 +44,7 @@ func (service *Service) Create(ctx context.Context, avatar Avatar) error {
 }
 
 // Generate generates a common avatar from different layers of photos.
-func (service *Service) Generate(ctx context.Context, card cards.Card, name int) (Avatar, error) {
+func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile string) (Avatar, error) {
 	var (
 		layer                 image.Image
 		layers                []image.Image
@@ -378,8 +378,8 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, name int)
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
-	avatar.OriginalURL = fmt.Sprintf(service.config.PathToOutputAvatarsRemote, name)
-	if err = imageprocessing.SaveImage(service.config.PathToOutputAvatarsLocal, filepath.Join(service.config.PathToOutputAvatarsLocal, strconv.Itoa(name)+"."+string(TypeImagePNG)), originalImageWithLabelGk); err != nil {
+	avatar.OriginalURL = fmt.Sprintf(service.config.PathToOutputAvatarsRemote, nameFile)
+	if err = imageprocessing.SaveImage(service.config.PathToOutputAvatarsLocal, filepath.Join(service.config.PathToOutputAvatarsLocal, nameFile+"."+string(TypeImagePNG)), originalImageWithLabelGk); err != nil {
 		return avatar, ErrAvatar.Wrap(err)
 	}
 	return avatar, nil
