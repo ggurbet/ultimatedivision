@@ -139,6 +139,13 @@ type MatchResult struct {
 	Goalscorers   []Goalscorer `json:"goals"`
 }
 
+// Swap swaps match results.
+func Swap(matchResults []MatchResult) []MatchResult {
+	matchResults[0], matchResults[1] = matchResults[1], matchResults[0]
+
+	return matchResults
+}
+
 // Goalscorer defines which card scored goal in which minute.
 type Goalscorer struct {
 	Card   string `json:"card"`

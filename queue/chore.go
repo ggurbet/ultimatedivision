@@ -226,17 +226,31 @@ func (chore *Chore) Play(ctx context.Context, firstClient, secondClient Client) 
 		}
 	}
 
-	resultMatch, err := chore.matches.GetMatchResult(ctx, matchesID)
+	matchResult, err := chore.matches.GetMatchResult(ctx, matchesID)
 	if err != nil {
 		if err := secondClient.WriteJSON(http.StatusInternalServerError, "could not get result of match"); err != nil {
 			return ChoreError.Wrap(err)
 		}
 	}
 
-	if err := firstClient.WriteJSON(http.StatusOK, resultMatch); err != nil {
+	var (
+		firstClientResult  []matches.MatchResult
+		secondClientResult []matches.MatchResult
+	)
+
+	switch {
+	case firstClient.UserID == matchResult[0].UserID:
+		firstClientResult = matchResult
+		secondClientResult = matches.Swap(matchResult)
+	case secondClient.UserID == matchResult[0].UserID:
+		firstClientResult = matches.Swap(matchResult)
+		secondClientResult = matchResult
+	}
+
+	if err := firstClient.WriteJSON(http.StatusOK, firstClientResult); err != nil {
 		return ChoreError.Wrap(err)
 	}
-	if err := secondClient.WriteJSON(http.StatusOK, resultMatch); err != nil {
+	if err := secondClient.WriteJSON(http.StatusOK, secondClientResult); err != nil {
 		return ChoreError.Wrap(err)
 	}
 
