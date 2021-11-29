@@ -95,9 +95,6 @@ func (controller *Queue) Create(w http.ResponseWriter, r *http.Request) {
 				controller.log.Error("could not finish search", ErrQueue.Wrap(err))
 				controller.serveError(client.Connection, http.StatusInternalServerError, err.Error())
 			}
-			defer func() {
-				controller.log.Error("could not close websocket", ErrQueue.Wrap(client.Connection.Close()))
-			}()
 
 			controller.serveError(client.Connection, http.StatusOK, "you leaved!")
 			return

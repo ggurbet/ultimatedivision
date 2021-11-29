@@ -47,8 +47,11 @@ func NewChore(log logger.Logger, config Config, service *Service, matches *match
 
 // Run starts the chore for re-check the expiration time of the token.
 func (chore *Chore) Run(ctx context.Context) (err error) {
+	firstRequestChan := make(chan Request)
+	secondRequestChan := make(chan Request)
+
 	return chore.Loop.Run(ctx, func(ctx context.Context) error {
-		clients := chore.service.List()
+		clients := chore.service.ListNotPlayingUsers()
 
 		if len(clients) >= 2 {
 			for k := range clients {
@@ -57,132 +60,205 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 					continue
 				}
 
-				// TODO: add check if client/clients is empty.
+				go func(clients []Client, k int) {
+					firstClient := clients[k]
+					secondClient := clients[k+1]
 
-				firstClient := clients[k]
-				secondClient := clients[k+1]
-
-				if err := firstClient.WriteJSON(http.StatusOK, "you confirm play?"); err != nil {
-					return ChoreError.Wrap(err)
-				}
-				if err := secondClient.WriteJSON(http.StatusOK, "you confirm play?"); err != nil {
-					return ChoreError.Wrap(err)
-				}
-
-				firstRequest, err := firstClient.ReadJSON()
-				if err != nil {
-					return ChoreError.Wrap(err)
-				}
-				secondRequest, err := secondClient.ReadJSON()
-				if err != nil {
-					return ChoreError.Wrap(err)
-				}
-
-				if firstRequest.Action != ActionConfirm && firstRequest.Action != ActionReject {
-					if err := firstClient.WriteJSON(http.StatusBadRequest, "wrong action"); err != nil {
-						return ChoreError.Wrap(err)
+					if err = chore.service.UpdateIsPlaying(firstClient.UserID, true); err != nil {
+						chore.log.Error("could not update is play", ChoreError.Wrap(err))
 					}
-				}
-				if secondRequest.Action != ActionConfirm && secondRequest.Action != ActionReject {
-					if err := firstClient.WriteJSON(http.StatusBadRequest, "wrong action"); err != nil {
-						return ChoreError.Wrap(err)
+					if err = chore.service.UpdateIsPlaying(secondClient.UserID, true); err != nil {
+						chore.log.Error("could not update is play", ChoreError.Wrap(err))
 					}
-				}
 
-				if firstRequest.Action == ActionReject || secondRequest.Action == ActionReject {
-					if err := firstClient.WriteJSON(http.StatusOK, "you are still in search!"); err != nil {
-						return ChoreError.Wrap(err)
+					if err := firstClient.WriteJSON(http.StatusOK, "you confirm play?"); err != nil {
+						chore.log.Error("could not write json", ChoreError.Wrap(err))
 					}
-					if err := secondClient.WriteJSON(http.StatusOK, "you are still in search!"); err != nil {
-						return ChoreError.Wrap(err)
+					if err := secondClient.WriteJSON(http.StatusOK, "you confirm play?"); err != nil {
+						chore.log.Error("could not write json", ChoreError.Wrap(err))
 					}
-					continue
-				}
 
-				squadCardsFirstClient, err := chore.service.clubs.ListSquadCards(ctx, firstClient.SquadID)
-				if err != nil {
-					return ChoreError.Wrap(err)
-				}
-				if len(squadCardsFirstClient) != clubs.SquadSize {
-					if err := firstClient.WriteJSON(http.StatusInternalServerError, "squad is not full"); err != nil {
-						return ChoreError.Wrap(err)
-					}
-				}
+					go func() {
+						request, err := firstClient.ReadJSON()
+						if err != nil {
+							chore.log.Error("could not read json", ChoreError.Wrap(err))
+						}
+						firstRequestChan <- request
+					}()
 
-				squadCardsSecondClient, err := chore.service.clubs.ListSquadCards(ctx, secondClient.SquadID)
-				if err != nil {
-					return ChoreError.Wrap(err)
-				}
-				if len(squadCardsSecondClient) != clubs.SquadSize {
-					if err := secondClient.WriteJSON(http.StatusInternalServerError, "squad is not full"); err != nil {
-						return ChoreError.Wrap(err)
-					}
-				}
+					go func() {
+						request, err := secondClient.ReadJSON()
+						if err != nil {
+							chore.log.Error("could not read json", ChoreError.Wrap(err))
+						}
+						secondRequestChan <- request
+					}()
 
-				firstClientSquad, err := chore.clubs.GetSquad(ctx, firstClient.SquadID)
-				if err != nil {
-					return ChoreError.Wrap(err)
-				}
+					var firstRequest, secondRequest Request
+					for {
+						select {
+						case firstRequest = <-firstRequestChan:
+							if (firstRequest != Request{}) {
+								if firstRequest.Action != ActionConfirm && firstRequest.Action != ActionReject {
+									if err := firstClient.WriteJSON(http.StatusBadRequest, "wrong action"); err != nil {
+										chore.log.Error("could not write json", ChoreError.Wrap(err))
+									}
 
-				firstClientClub, err := chore.clubs.Get(ctx, firstClientSquad.ClubID)
-				if err != nil {
-					return ChoreError.Wrap(err)
-				}
+									if err = chore.service.UpdateIsPlaying(firstClient.UserID, false); err != nil {
+										chore.log.Error("could not update is play", ChoreError.Wrap(err))
+									}
+									if err = chore.service.UpdateIsPlaying(secondClient.UserID, false); err != nil {
+										chore.log.Error("could not update is play", ChoreError.Wrap(err))
+									}
+									return
+								}
+							}
+						case secondRequest = <-secondRequestChan:
+							if (secondRequest != Request{}) {
+								if secondRequest.Action != ActionConfirm && secondRequest.Action != ActionReject {
+									if err := secondClient.WriteJSON(http.StatusBadRequest, "wrong action"); err != nil {
+										chore.log.Error("could not write json", ChoreError.Wrap(err))
+									}
 
-				season, err := chore.seasons.GetSeasonByDivisionID(ctx, firstClientClub.DivisionID)
-				if err != nil {
-					if err := firstClient.WriteJSON(http.StatusInternalServerError, "could not season id"); err != nil {
-						return ChoreError.Wrap(err)
-					}
-					if err := secondClient.WriteJSON(http.StatusInternalServerError, "could not season id"); err != nil {
-						return ChoreError.Wrap(err)
-					}
-				}
+									if err = chore.service.UpdateIsPlaying(firstClient.UserID, false); err != nil {
+										chore.log.Error("could not update is play", ChoreError.Wrap(err))
+									}
+									if err = chore.service.UpdateIsPlaying(secondClient.UserID, false); err != nil {
+										chore.log.Error("could not update is play", ChoreError.Wrap(err))
+									}
+									return
+								}
+							}
+						}
 
-				matchesID, err := chore.matches.Create(ctx, firstClient.SquadID, secondClient.SquadID, firstClient.UserID, secondClient.UserID, season.ID)
-				if err != nil {
-					if err := firstClient.WriteJSON(http.StatusInternalServerError, "match error"); err != nil {
-						return ChoreError.Wrap(err)
-					}
-					if err := secondClient.WriteJSON(http.StatusInternalServerError, "match error"); err != nil {
-						return ChoreError.Wrap(err)
-					}
-				}
+						if (firstRequest == Request{} && secondRequest == Request{}) {
+							continue
+						}
 
-				resultMatch, err := chore.matches.GetMatchResult(ctx, matchesID)
-				if err != nil {
-					if err := secondClient.WriteJSON(http.StatusInternalServerError, "could not get result of match"); err != nil {
-						return ChoreError.Wrap(err)
-					}
-				}
-				if err := firstClient.WriteJSON(http.StatusOK, resultMatch); err != nil {
-					return ChoreError.Wrap(err)
-				}
-				if err := secondClient.WriteJSON(http.StatusOK, resultMatch); err != nil {
-					return ChoreError.Wrap(err)
-				}
+						if firstRequest.Action == ActionReject || secondRequest.Action == ActionReject {
+							if err := firstClient.WriteJSON(http.StatusOK, "you are still in search!"); err != nil {
+								chore.log.Error("could not write json", ChoreError.Wrap(err))
+							}
+							if err := secondClient.WriteJSON(http.StatusOK, "you are still in search!"); err != nil {
+								chore.log.Error("could not write json", ChoreError.Wrap(err))
+							}
 
-				if err = chore.service.Finish(firstClient.UserID); err != nil {
-					return ChoreError.Wrap(err)
-				}
-				if err = chore.service.Finish(secondClient.UserID); err != nil {
-					return ChoreError.Wrap(err)
-				}
+							if err = chore.service.Finish(firstClient.UserID); err != nil {
+								chore.log.Error("could not delete client from queue", ChoreError.Wrap(err))
+							}
+							if err = chore.service.Finish(secondClient.UserID); err != nil {
+								chore.log.Error("could not delete client from queue", ChoreError.Wrap(err))
+							}
+							return
+						}
 
-				defer func() {
-					if err = firstClient.Connection.Close(); err != nil {
-						chore.log.Error("could not close websocket", ErrQueue.Wrap(err))
+						if (firstRequest == Request{} || secondRequest == Request{}) {
+							continue
+						}
+
+						if err = chore.Play(ctx, firstClient, secondClient); err != nil {
+							if err = chore.service.UpdateIsPlaying(firstClient.UserID, false); err != nil {
+								chore.log.Error("could not update is play", ChoreError.Wrap(err))
+							}
+							if err = chore.service.UpdateIsPlaying(secondClient.UserID, false); err != nil {
+								chore.log.Error("could not update is play", ChoreError.Wrap(err))
+							}
+							chore.log.Error("could not play game", ChoreError.Wrap(err))
+						}
+						return
 					}
-				}()
-				defer func() {
-					if err = secondClient.Connection.Close(); err != nil {
-						chore.log.Error("could not close websocket", ErrQueue.Wrap(err))
-					}
-				}()
+				}(clients, k)
 			}
 		}
 		return ChoreError.Wrap(err)
 	})
+}
+
+// Play method contains all the logic for playing matches.
+func (chore *Chore) Play(ctx context.Context, firstClient, secondClient Client) error {
+	squadCardsFirstClient, err := chore.service.clubs.ListSquadCards(ctx, firstClient.SquadID)
+	if err != nil {
+		return ChoreError.Wrap(err)
+	}
+	if len(squadCardsFirstClient) != clubs.SquadSize {
+		if err := firstClient.WriteJSON(http.StatusInternalServerError, "squad is not full"); err != nil {
+			return ChoreError.Wrap(err)
+		}
+	}
+
+	squadCardsSecondClient, err := chore.service.clubs.ListSquadCards(ctx, secondClient.SquadID)
+	if err != nil {
+		return ChoreError.Wrap(err)
+	}
+	if len(squadCardsSecondClient) != clubs.SquadSize {
+		if err := secondClient.WriteJSON(http.StatusInternalServerError, "squad is not full"); err != nil {
+			return ChoreError.Wrap(err)
+		}
+	}
+
+	firstClientSquad, err := chore.clubs.GetSquad(ctx, firstClient.SquadID)
+	if err != nil {
+		return ChoreError.Wrap(err)
+	}
+
+	firstClientClub, err := chore.clubs.Get(ctx, firstClientSquad.ClubID)
+	if err != nil {
+		return ChoreError.Wrap(err)
+	}
+
+	season, err := chore.seasons.GetSeasonByDivisionID(ctx, firstClientClub.DivisionID)
+	if err != nil {
+		if err := firstClient.WriteJSON(http.StatusInternalServerError, "could not season id"); err != nil {
+			return ChoreError.Wrap(err)
+		}
+		if err := secondClient.WriteJSON(http.StatusInternalServerError, "could not season id"); err != nil {
+			return ChoreError.Wrap(err)
+		}
+	}
+
+	matchesID, err := chore.matches.Create(ctx, firstClient.SquadID, secondClient.SquadID, firstClient.UserID, secondClient.UserID, season.ID)
+	if err != nil {
+		if err := firstClient.WriteJSON(http.StatusInternalServerError, "match error"); err != nil {
+			return ChoreError.Wrap(err)
+		}
+		if err := secondClient.WriteJSON(http.StatusInternalServerError, "match error"); err != nil {
+			return ChoreError.Wrap(err)
+		}
+	}
+
+	resultMatch, err := chore.matches.GetMatchResult(ctx, matchesID)
+	if err != nil {
+		if err := secondClient.WriteJSON(http.StatusInternalServerError, "could not get result of match"); err != nil {
+			return ChoreError.Wrap(err)
+		}
+	}
+
+	if err := firstClient.WriteJSON(http.StatusOK, resultMatch); err != nil {
+		return ChoreError.Wrap(err)
+	}
+	if err := secondClient.WriteJSON(http.StatusOK, resultMatch); err != nil {
+		return ChoreError.Wrap(err)
+	}
+
+	if err = chore.service.Finish(firstClient.UserID); err != nil {
+		return ChoreError.Wrap(err)
+	}
+	if err = chore.service.Finish(secondClient.UserID); err != nil {
+		return ChoreError.Wrap(err)
+	}
+
+	defer func() {
+		if err = firstClient.Connection.Close(); err != nil {
+			chore.log.Error("could not close websocket", ErrQueue.Wrap(err))
+		}
+	}()
+	defer func() {
+		if err = secondClient.Connection.Close(); err != nil {
+			chore.log.Error("could not close websocket", ErrQueue.Wrap(err))
+		}
+	}()
+
+	return nil
 }
 
 // Close closes the chore chore for re-check the expiration time of the token.

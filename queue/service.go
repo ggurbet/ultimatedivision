@@ -74,6 +74,16 @@ func (service *Service) List() []Client {
 	return service.queues.List()
 }
 
+// ListNotPlayingUsers returns clients who don't play game from database.
+func (service *Service) ListNotPlayingUsers() []Client {
+	return service.queues.ListNotPlayingUsers()
+}
+
+// UpdateIsPlaying updates is playing status of client in database.
+func (service *Service) UpdateIsPlaying(userID uuid.UUID, isPlaying bool) error {
+	return service.queues.UpdateIsPlaying(userID, isPlaying)
+}
+
 // Finish finishes client's queue in database.
 func (service *Service) Finish(userID uuid.UUID) error {
 	return service.queues.Delete(userID)
