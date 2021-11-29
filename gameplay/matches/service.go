@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/cards"
 	"ultimatedivision/clubs"
 	"ultimatedivision/pkg/pagination"
 	rand2 "ultimatedivision/pkg/rand"
@@ -26,14 +27,16 @@ type Service struct {
 	matches DB
 	config  Config
 	clubs   *clubs.Service
+	cards   *cards.Service
 }
 
 // NewService is a constructor for matches service.
-func NewService(matches DB, config Config, clubs *clubs.Service) *Service {
+func NewService(matches DB, config Config, clubs *clubs.Service, cards *cards.Service) *Service {
 	return &Service{
 		matches: matches,
 		config:  config,
 		clubs:   clubs,
+		cards:   cards,
 	}
 }
 
@@ -282,7 +285,28 @@ func (service *Service) GetMatchResult(ctx context.Context, matchID uuid.UUID) (
 		return nil, ErrMatches.Wrap(err)
 	}
 
+	matchGoals, err := service.ListMatchGoals(ctx, matchID)
+	if err != nil {
+		return nil, ErrMatches.Wrap(err)
+	}
+
 	if len(resultMatch) == 2 {
+		for k, result := range resultMatch {
+			for _, goal := range matchGoals {
+				if goal.UserID == result.UserID {
+					card, err := service.cards.Get(ctx, goal.CardID)
+					if err != nil {
+						return resultMatch, ErrMatches.Wrap(err)
+					}
+
+					resultMatch[k].Goalscorers = append(resultMatch[k].Goalscorers, Goalscorer{
+						Card:   card.PlayerName,
+						Minute: goal.Minute,
+					})
+				}
+			}
+		}
+
 		return resultMatch, nil
 	}
 
@@ -299,6 +323,20 @@ func (service *Service) GetMatchResult(ctx context.Context, matchID uuid.UUID) (
 		for _, res := range resultMatch {
 			if result.UserID == res.UserID {
 				results[k].QuantityGoals = res.QuantityGoals
+			}
+		}
+
+		for _, goal := range matchGoals {
+			if goal.UserID == result.UserID {
+				card, err := service.cards.Get(ctx, goal.CardID)
+				if err != nil {
+					return results, ErrMatches.Wrap(err)
+				}
+
+				results[k].Goalscorers = append(results[k].Goalscorers, Goalscorer{
+					Card:   card.PlayerName,
+					Minute: goal.Minute,
+				})
 			}
 		}
 	}
