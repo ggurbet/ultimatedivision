@@ -298,6 +298,7 @@ type Config struct {
 			Offence   float64 `json:"offence"`
 		} `json:"st"`
 	} `json:"cardEfficiencyParameters"`
+	PathToNamesDataset string `json:"pathToNamesDataset"`
 }
 
 // PercentageQualities entity for probabilities generate cards.

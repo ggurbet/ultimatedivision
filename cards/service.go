@@ -5,8 +5,10 @@ package cards
 
 import (
 	"context"
+	"io"
 	"math"
 	"math/rand"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -14,6 +16,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/pkg/fileutils"
 	"ultimatedivision/pkg/pagination"
 )
 
@@ -129,10 +132,14 @@ func (service *Service) Generate(ctx context.Context, userID uuid.UUID, percenta
 		isTattoo = true
 	}
 
+	playerName, err := service.GeneratePlayerName()
+	if err != nil {
+		return Card{}, err
+	}
+
 	card := Card{
-		ID: uuid.New(),
-		// TODO: change it.
-		PlayerName:       "Dmytro",
+		ID:               uuid.New(),
+		PlayerName:       playerName,
 		Quality:          Quality(quality),
 		Height:           round(rand.Float64()*(maxHeight-minHeight)+minHeight, 0.01),
 		Weight:           round(rand.Float64()*(maxWeight-minWeight)+minWeight, 0.01),
@@ -232,6 +239,61 @@ func generateSkill(value int) int {
 // round rounds float64 the specified range.
 func round(x, unit float64) float64 {
 	return math.Round(x/unit) * unit
+}
+
+// GeneratePlayerName generates player name of card.
+func (service *Service) GeneratePlayerName() (string, error) {
+	var (
+		fullName   string
+		firstName  string
+		secondName string
+	)
+
+	file, err := os.Open(service.config.PathToNamesDataset)
+	if err != nil {
+		return "", ErrCards.Wrap(err)
+	}
+	defer func() {
+		err = errs.Combine(err, file.Close())
+	}()
+
+	rand.Seed(time.Now().UTC().UnixNano())
+
+	totalCount, err := fileutils.CountLines(file)
+	if err != nil {
+		return "", ErrCards.Wrap(err)
+	}
+
+	randomNum := rand.Intn(totalCount) + 1
+
+	_, err = file.Seek(0, io.SeekStart)
+	if err != nil {
+		return "", ErrCards.Wrap(err)
+	}
+
+	fullName, err = fileutils.ReadLine(file, randomNum)
+
+	splitFullName := strings.Split(fullName, " ")
+	if len(splitFullName) == 2 {
+		firstName = splitFullName[0]
+	}
+
+	randomNum = rand.Intn(totalCount) + 1
+
+	_, err = file.Seek(0, io.SeekStart)
+	if err != nil {
+		return "", ErrCards.Wrap(err)
+	}
+
+	fullName, err = fileutils.ReadLine(file, randomNum)
+
+	splitFullName = strings.Split(fullName, " ")
+	if len(splitFullName) == 2 {
+		secondName = splitFullName[1]
+	}
+
+	fullName = firstName + " " + secondName
+	return fullName, ErrCards.Wrap(err)
 }
 
 // Get returns card from DB.
