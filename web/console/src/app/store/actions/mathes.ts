@@ -7,10 +7,10 @@ import { Match } from '@/matches';
 export const GET_MATCH_SCORE = 'GET_MATCH_SCORE';
 
 /** getMatchScore dispatch updates match result. */
-export const getMatchScore = ({ firstTeamGoalsCrored, secondTeamGoalsScored }: Match) => ({
+export const getMatchScore = ({ firstTeam, secondTeam }: Match) => ({
     type: GET_MATCH_SCORE,
     payload: {
-        firstTeamGoalsCrored,
-        secondTeamGoalsScored,
+        firstTeam,
+        secondTeam,
     },
 });

@@ -132,16 +132,16 @@ const MatchFinder: React.FC = () => {
 
             return;
         default:
-            const firstTeamGoalsCrored =
-                    messageEvent.message[FIRST_TEAM_INDEX].quantityGoals;
-            const secondTeamGoalsScored =
-                    messageEvent.message[SECOND_TEAM_INDEX].quantityGoals;
+            const firstTeam =
+                    messageEvent.message[FIRST_TEAM_INDEX];
+            const secondTeam =
+                    messageEvent.message[SECOND_TEAM_INDEX];
 
             toast.success('Successfully! You will be redirected to match page', {
                 position: toast.POSITION.TOP_RIGHT,
             });
 
-            dispatch(getMatchScore({ firstTeamGoalsCrored, secondTeamGoalsScored }));
+            dispatch(getMatchScore({ firstTeam, secondTeam }));
             dispatch(startSearchingMatch(false));
 
             /** implements redirect to match page after DELAY time.  */

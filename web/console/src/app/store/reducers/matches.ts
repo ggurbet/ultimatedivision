@@ -4,22 +4,38 @@
 import { GET_MATCH_SCORE } from '../actions/mathes';
 
 
-import { Match } from '@/matches';
+import { Goal, Match, Team } from '@/matches';
 
-const DEFAULT_FIRST_TEAM_GOALS_SCORED: number = 0;
-const DEFAULT_SECOND_TEAM_GOALS_SCORED: number = 0;
+/** Describes default summary goals scored by first team. */
+const DEFAULT_FIRST_TEAM_GOALS: number = 0;
+/** Describes default summary goals scored by second team. */
+const DEFAULT_SECOND_TEAM_GOALS: number = 0;
+
+/** Describes default goal scorers by first team. */
+const DEFAULT_FIRST_TEAM_GOAL_SCORERS: Goal[] = [];
+/** Describes default goal scorers by second team. */
+const DEFAULT_SECOND_TEAM_GOAL_SCORERS: Goal[] = [];
+
+/** Describes default userId value of first player. */
+const DEFAULT_FIRST_USER_ID: string = '';
+
+/** Describes default userId valuew of second player. */
+const DEFAULT_SECOND_USER_ID: string = '';
+
+const firstTeam = new Team(DEFAULT_FIRST_TEAM_GOALS, DEFAULT_FIRST_TEAM_GOAL_SCORERS, DEFAULT_FIRST_USER_ID);
+const secondTeam = new Team(DEFAULT_SECOND_TEAM_GOALS, DEFAULT_SECOND_TEAM_GOAL_SCORERS, DEFAULT_SECOND_USER_ID);
 
 /** matchesReducer describes reducer for matches domain entity */
 export const matchesReducer = (
-    matchesState: Match = new Match(DEFAULT_FIRST_TEAM_GOALS_SCORED, DEFAULT_SECOND_TEAM_GOALS_SCORED),
+    matchesState: Match = new Match(firstTeam, secondTeam),
     action: any = {}
 ) => {
     switch (action.type) {
     case GET_MATCH_SCORE:
         return {
             ...matchesState,
-            firstTeamGoalsCrored: action.payload.firstTeamGoalsCrored,
-            secondTeamGoalsScored: action.payload.secondTeamGoalsScored,
+            firstTeam: action.payload.firstTeam,
+            secondTeam: action.payload.secondTeam,
         };
     default:
         return matchesState;
