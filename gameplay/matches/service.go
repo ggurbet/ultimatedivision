@@ -381,13 +381,8 @@ func (service *Service) RankMatch(ctx context.Context, match Match, matchGoals [
 }
 
 // GetStatistic returns statistic of club in season.
-func (service *Service) GetStatistic(ctx context.Context, clubID uuid.UUID, seasonID int) (Statistic, error) {
+func (service *Service) GetStatistic(ctx context.Context, club clubs.Club, seasonID int) (Statistic, error) {
 	var statistic Statistic
-
-	club, err := service.clubs.Get(ctx, clubID)
-	if err != nil {
-		return statistic, ErrMatches.Wrap(err)
-	}
 
 	allMatches, err := service.ListSquadMatches(ctx, seasonID)
 	if err != nil {
@@ -419,7 +414,7 @@ func (service *Service) GetStatistic(ctx context.Context, clubID uuid.UUID, seas
 			case match.User1Points == service.config.NumberOfPointsForLosing:
 				statistic.Losses++
 			}
-		} else {
+		} else if match.User2ID == club.OwnerID {
 			switch {
 			case match.User2Points == service.config.NumberOfPointsForWin:
 				statistic.Wins++
@@ -428,6 +423,8 @@ func (service *Service) GetStatistic(ctx context.Context, clubID uuid.UUID, seas
 			case match.User2Points == service.config.NumberOfPointsForLosing:
 				statistic.Losses++
 			}
+		} else {
+			return statistic, err
 		}
 		matchGoals, err := service.ListMatchGoals(ctx, match.ID)
 		if err != nil {

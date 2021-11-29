@@ -78,7 +78,7 @@ func (controller *Seasons) GetAllClubsStatistics(w http.ResponseWriter, r *http.
 		return
 	}
 
-	clubsStatistics, err := controller.seasons.GetAllClubsStatistics(ctx)
+	clubsStatistics, err := controller.seasons.GetAllClubsStatistics(ctx, division)
 	if err != nil {
 		controller.serveError(w, http.StatusInternalServerError, ErrSeasons.Wrap(err))
 		return
@@ -86,7 +86,7 @@ func (controller *Seasons) GetAllClubsStatistics(w http.ResponseWriter, r *http.
 
 	statistic := seasons.SeasonStatistics{
 		Division:   division,
-		Statistics: clubsStatistics[division],
+		Statistics: clubsStatistics,
 	}
 
 	if err := json.NewEncoder(w).Encode(statistic); err != nil {

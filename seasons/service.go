@@ -102,89 +102,94 @@ func (service *Service) GetDivision(ctx context.Context, divisionName int) (divi
 }
 
 // GetAllClubsStatistics returns all clubs statistics by division.
-func (service *Service) GetAllClubsStatistics(ctx context.Context) (map[divisions.Division][]matches.Statistic, error) {
+func (service *Service) GetAllClubsStatistics(ctx context.Context, division divisions.Division) ([]matches.Statistic, error) {
 	currentSeasons, err := service.GetCurrentSeasons(ctx)
 	if err != nil {
 		return nil, ErrSeasons.Wrap(err)
 	}
-	clubs, err := service.clubs.List(ctx)
+	var season Season
+	for _, currentSeason := range currentSeasons {
+		if currentSeason.DivisionID == division.ID {
+			season = currentSeason
+			break
+		}
+	}
+
+	clubs, err := service.clubs.ListByDivision(ctx, division)
 	if err != nil {
 		return nil, ErrSeasons.Wrap(err)
 	}
 
-	statisticsMap := make(map[divisions.Division][]matches.Statistic)
-	for _, currentSeason := range currentSeasons {
-		var statistics []matches.Statistic
-		for _, club := range clubs {
-			statistic, err := service.matches.GetStatistic(ctx, club.ID, currentSeason.ID)
-			if err != nil {
-				return nil, ErrSeasons.Wrap(err)
-			}
-			division, err := service.divisions.Get(ctx, currentSeason.DivisionID)
-			if err != nil {
-				return nil, ErrSeasons.Wrap(err)
-			}
-			if statistic.MatchPlayed > matches.MinNumberOfMatches {
-				if division.ID == statistic.Club.DivisionID {
-					statistics = append(statistics, statistic)
-					statisticsMap[division] = statistics
-				}
-			}
+	var statistics []matches.Statistic
+	for _, club := range clubs {
+		statistic, err := service.matches.GetStatistic(ctx, club, season.ID)
+		if err != nil {
+			return nil, ErrSeasons.Wrap(err)
+		}
+		if statistic.MatchPlayed >= matches.MinNumberOfMatches {
+			statistics = append(statistics, statistic)
 		}
 	}
 
-	return statisticsMap, nil
+	return statistics, nil
 }
 
 // UpdateClubsToNewDivision updates clubs to new division.
 func (service *Service) UpdateClubsToNewDivision(ctx context.Context) error {
-	clubsStatisticsByDivision, err := service.GetAllClubsStatistics(ctx)
+	divisions, err := service.divisions.List(ctx)
 	if err != nil {
 		return ErrSeasons.Wrap(err)
 	}
 
 	var totalPassingClubs float64
-	for division, statistics := range clubsStatisticsByDivision {
+	for _, division := range divisions {
+		clubsStatisticsByDivision, err := service.GetAllClubsStatistics(ctx, division)
+		if err != nil {
+			return ErrSeasons.Wrap(err)
+		}
 		var percent float64
-		percent = 100 / float64(len(statistics))
+		percent = 100 / float64(len(clubsStatisticsByDivision))
 		if percent < float64(division.PassingPercent) {
 			totalPassingClubs = float64(division.PassingPercent) / percent
 		} else {
 			totalPassingClubs = 1
 		}
-		sortStatistics := statistics
+		sortStatistics := clubsStatisticsByDivision
 		sort.Slice(sortStatistics, func(i, j int) bool {
 			return sortStatistics[i].Points < sortStatistics[j].Points
 		})
-		topStatisticsClubs := sortStatistics[len(sortStatistics)-int(totalPassingClubs):]
-		lowStatisticsClubs := sortStatistics[:int(totalPassingClubs)]
 
-		divisionHigher, err := service.divisions.GetByName(ctx, division.Name-1)
-		if err != nil {
-			return ErrSeasons.Wrap(err)
-		}
-		for _, statistic := range topStatisticsClubs {
-			err := service.clubs.UpdateClubToNewDivision(ctx, statistic.Club.ID, divisionHigher.ID)
+		if len(sortStatistics) > 0 {
+			topStatisticsClubs := sortStatistics[len(sortStatistics)-int(totalPassingClubs):]
+			lowStatisticsClubs := sortStatistics[:int(totalPassingClubs)]
+
+			divisionHigher, err := service.divisions.GetByName(ctx, division.Name-1)
 			if err != nil {
 				return ErrSeasons.Wrap(err)
 			}
-		}
-
-		lastDivision, err := service.divisions.GetLastDivision(ctx)
-		if err != nil {
-			return ErrSeasons.Wrap(err)
-		}
-
-		if division.Name < lastDivision.Name {
-			divisionLower, err := service.divisions.GetByName(ctx, division.Name+1)
-			if err != nil {
-				return ErrSeasons.Wrap(err)
-
-			}
-			for _, statistic := range lowStatisticsClubs {
-				err := service.clubs.UpdateClubToNewDivision(ctx, statistic.Club.ID, divisionLower.ID)
+			for _, statistic := range topStatisticsClubs {
+				err := service.clubs.UpdateClubToNewDivision(ctx, statistic.Club.ID, divisionHigher.ID)
 				if err != nil {
 					return ErrSeasons.Wrap(err)
+				}
+			}
+
+			lastDivision, err := service.divisions.GetLastDivision(ctx)
+			if err != nil {
+				return ErrSeasons.Wrap(err)
+			}
+
+			if division.Name < lastDivision.Name {
+				divisionLower, err := service.divisions.GetByName(ctx, division.Name+1)
+				if err != nil {
+					return ErrSeasons.Wrap(err)
+
+				}
+				for _, statistic := range lowStatisticsClubs {
+					err := service.clubs.UpdateClubToNewDivision(ctx, statistic.Club.ID, divisionLower.ID)
+					if err != nil {
+						return ErrSeasons.Wrap(err)
+					}
 				}
 			}
 		}

@@ -81,6 +81,12 @@ func (service *Service) List(ctx context.Context) ([]Club, error) {
 	return clubs, ErrClubs.Wrap(err)
 }
 
+// ListByDivision returns all clubs in division.
+func (service *Service) ListByDivision(ctx context.Context, division divisions.Division) ([]Club, error) {
+	clubs, err := service.clubs.ListByDivision(ctx, division.ID)
+	return clubs, ErrClubs.Wrap(err)
+}
+
 // CreateSquad creates new squad for club.
 func (service *Service) CreateSquad(ctx context.Context, clubID uuid.UUID) (uuid.UUID, error) {
 	newSquad := Squad{

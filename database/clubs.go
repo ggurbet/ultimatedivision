@@ -92,6 +92,38 @@ func (clubsDB *clubsDB) List(ctx context.Context) ([]clubs.Club, error) {
 	return allClubs, nil
 }
 
+// ListByDivision returns all clubs in division.
+func (clubsDB *clubsDB) ListByDivision(ctx context.Context, division uuid.UUID) ([]clubs.Club, error) {
+	query := `SELECT id, owner_id, club_name, status, division_id, created_at
+			  FROM clubs
+			  WHERE division_id=$1`
+
+	rows, err := clubsDB.conn.QueryContext(ctx, query, division)
+	if err != nil {
+		return nil, ErrClubs.Wrap(err)
+	}
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	var allClubs []clubs.Club
+
+	for rows.Next() {
+		var club clubs.Club
+		err = rows.Scan(&club.ID, &club.OwnerID, &club.Name, &club.Status, &club.DivisionID, &club.CreatedAt)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				return allClubs, clubs.ErrNoClub.Wrap(err)
+			}
+			return allClubs, clubs.ErrClubs.Wrap(err)
+		}
+
+		allClubs = append(allClubs, club)
+	}
+
+	return allClubs, nil
+}
+
 // CreateSquad creates squad for clubs in the database.
 func (clubsDB *clubsDB) CreateSquad(ctx context.Context, squad clubs.Squad) (uuid.UUID, error) {
 	query := `INSERT INTO squads(id, squad_name, club_id, tactic, formation, captain_id)

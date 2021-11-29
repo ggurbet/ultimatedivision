@@ -29,6 +29,8 @@ type DB interface {
 	Create(ctx context.Context, club Club) (uuid.UUID, error)
 	// List returns all clubs.
 	List(ctx context.Context) ([]Club, error)
+	// ListByDivision returns all clubs in division.
+	ListByDivision(ctx context.Context, division uuid.UUID) ([]Club, error)
 	// CreateSquad creates squad for clubs in the database.
 	CreateSquad(ctx context.Context, squad Squad) (uuid.UUID, error)
 	// ListByUserID returns clubs owned by the user.
