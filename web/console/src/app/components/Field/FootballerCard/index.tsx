@@ -6,14 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { PlayerCard } from '@components/common/PlayerCard';
 
-import { CardWithStats } from '@/card';
+import { Card } from '@/card';
 import { CardEditIdentificators } from '@/api/club';
 import { deleteCard } from '@/app/store/actions/clubs';
 import { RootState } from '@/app/store';
 
 import './index.scss';
 
-export const FootballerCard: React.FC<{ card: CardWithStats; index?: number; place?: string }> = ({ card }) => {
+export const FootballerCard: React.FC<{ card: Card; index?: number; place?: string }> = ({ card }) => {
     const dispatch = useDispatch();
     const squad = useSelector((state: RootState) => state.clubsReducer.activeClub.squad);
     const [isVisibile, setIsVisibile] = useState(false);

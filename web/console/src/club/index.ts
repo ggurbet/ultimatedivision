@@ -22,12 +22,15 @@ export class SquadCard {
 
 /** Club defines club entity. */
 export class Club {
-    public id: string = '';
-    public name: string = '';
-    public createdAt: string = '';
-    public squad: Squad = new Squad();
-    public squadCards: SquadCard[] = [];
-    public status: number = ACTIVE_STATUS_VALUE;
+    /** Includes id, name cleatedAt, squad, squadCards and status fields  */
+    constructor(
+        public id: string = '',
+        public name: string = '',
+        public createdAt: string = '',
+        public squad: Squad = new Squad(),
+        public squadCards: SquadCard[] = [],
+        public status: number = ACTIVE_STATUS_VALUE,
+    ) { }
 }
 
 /** Class defines fields for drag and drop */

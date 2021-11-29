@@ -3,11 +3,11 @@
 
 import { Radar } from 'react-chartjs-2';
 
-import { CardWithStats } from '@/card';
+import { Card } from '@/card';
 
 import './index.scss';
 
-export const FootballerCardIllustrationsRadar: React.FC<{ card: CardWithStats }> = ({
+export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({
     card,
 }) => {
     const stats = card.statsArea;

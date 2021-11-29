@@ -1,14 +1,23 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+const DEFAULT_VALUE = 0;
+/** Part of transaction props */
+export class Contract {
+    /** Includes address and addressMethod fields */
+    constructor(
+        public address: string = '',
+        public addressMethod: string = ''
+    ) { }
+}
 /** Transaction props from api */
-export interface Transaction {
-    password: string;
-    tokenId: number;
-    contract: {
-        address: string;
-        addressMethod: string;
-    };
+export class Transaction {
+    /** Includes password, tokenId and contract fields */
+    constructor(
+        public password: string = '',
+        public tokenId: number = DEFAULT_VALUE,
+        public contract: Contract = new Contract()
+    ) { }
 }
 
 /** Abi method interface */

@@ -3,7 +3,7 @@
 
 import { LootboxTypes } from '@/app/types/lootbox';
 
-/** domain entity Lootbox implementation */
+/** Class defines loot box entity */
 export class Lootbox {
     /** receives base params: id and type */
     constructor(

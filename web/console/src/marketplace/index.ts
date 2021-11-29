@@ -1,40 +1,35 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { CardWithStats } from '@/card';
+import { Card } from '@/card';
 
-/** base marketplace Lot type implementation */
-export interface Lot {
-    id: string;
-    itemId: string;
-    type: string;
-    userId: string;
-    shopperId: string;
-    status: string;
-    startPrice: number;
-    maxPrice: number;
-    currentPrice: number;
-    startTime: string;
-    endTime: string;
-    period: number;
-    card: CardWithStats;
+const DEFAULT_VALUE = 0;
+
+/** Class defines Marketplace lot entity */
+export class Lot {
+    public id: string = '';
+    public itemId: string = '';
+    public type: string = '';
+    public userId: string = '';
+    public shopperId: string = '';
+    public status: string = '';
+    public startPrice: number = DEFAULT_VALUE;
+    public maxPrice: number = DEFAULT_VALUE;
+    public currentPrice: number = DEFAULT_VALUE;
+    public startTime: string = '';
+    public endTime: string = '';
+    public period: number = DEFAULT_VALUE;
+    public card: Card = new Card();
+    /** Tooks each field of parameter and assign it with exist fields */
+    constructor(lot: Lot) {
+        Object.assign(this, lot);
+        this.card = new Card(lot.card);
+    }
 };
 
-/** base MarketPlace domain entity type implementation */
-export interface MarketPlacePage {
-    lots: Lot[];
-    page: {
-        offset: number;
-        limit: number;
-        currentPage: number;
-        pageCount: number;
-        totalCount: number;
-    };
-};
-
-/** marketplace reducer state */
-export class MarketPlaceState {
-    /** default MarketPlace initial values */
+/** Class defines Marketplace response */
+export class MarketPlacePage {
+    /** Includes lots and page field */
     constructor(
         public lots: Lot[],
         public page: {
@@ -43,6 +38,6 @@ export class MarketPlaceState {
             currentPage: number;
             pageCount: number;
             totalCount: number;
-        },
-    ) { };
+        }
+    ) { }
 };

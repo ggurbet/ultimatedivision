@@ -16,7 +16,8 @@ export class WhitelistClient extends APIClient {
         if (!response.ok) {
             await this.handleError(response);
         }
+        const transaction = await response.json();
 
-        return await response.json();
+        return new Transaction(transaction.password, transaction.tokenId, transaction.contract);
     }
 }

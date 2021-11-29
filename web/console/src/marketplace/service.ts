@@ -4,7 +4,7 @@
 import { MarketplaceClient } from '@/api/marketplace';
 import { CreatedLot } from '@/app/types/marketplace';
 import { Pagination } from '@/app/types/pagination';
-import { CardWithStats } from '@/card';
+import { Card } from '@/card';
 import { Lot, MarketPlacePage } from '.';
 
 /**
@@ -20,9 +20,7 @@ export class Marketplaces {
 
     /** returns marketplace domain entity with list of lots */
     public async list({ selectedPage, limit }: Pagination): Promise<MarketPlacePage> {
-        const response = await this.marketplace.list({ selectedPage, limit });
-
-        return { ...response, lots: response.lots.map((lot: Lot) => ({ ...lot, card: new CardWithStats(lot.card) })) };
+        return await this.marketplace.list({ selectedPage, limit });
     };
 
     /** creates lot */
@@ -32,9 +30,7 @@ export class Marketplaces {
 
     /** returns list of lots by filter parameters */
     public async filteredList(lowRange: string, topRange: string): Promise<MarketPlacePage> {
-        const response = await this.marketplace.filteredList(lowRange, topRange);
-
-        return { ...response, lots: response.lots.map((lot: Lot) => ({ ...lot, card: new CardWithStats(lot.card) })) };
+        return await this.marketplace.filteredList(lowRange, topRange);
     };
 
     /** returns lot by id */

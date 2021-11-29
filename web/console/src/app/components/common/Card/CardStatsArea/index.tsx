@@ -3,11 +3,11 @@
 
 import { FootballerCardStats } from '@/app/components/common/Card/CardStats';
 
-import { CardWithStats } from '@/card';
+import { Card } from '@/card';
 
 import './index.scss';
 
-export const FootballerCardStatsArea: React.FC<{ card: CardWithStats }> = ({ card }) => {
+export const FootballerCardStatsArea: React.FC<{ card: Card }> = ({ card }) => {
     const stats = card.statsArea;
 
     return (

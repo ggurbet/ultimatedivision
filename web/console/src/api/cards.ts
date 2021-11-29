@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { Card, CardWithStats, CardsPage } from '@/card';
+import { Card, CardsPage } from '@/card';
 
 import { APIClient } from '@/api/index';
 
@@ -20,7 +20,9 @@ export class CardClient extends APIClient {
             await this.handleError(response);
         };
 
-        return await response.json();
+        const cardsPage = await response.json();
+
+        return new CardsPage(cardsPage.cards.map((card: any) => new Card(card)), cardsPage.page);
     };
 
     /** method calls get method from APIClient */
@@ -32,7 +34,9 @@ export class CardClient extends APIClient {
             await this.handleError(response);
         };
 
-        return await response.json();
+        const card = await response.json();
+
+        return new Card(card);
     };
 
     /** method returns filtered card list */
@@ -44,6 +48,8 @@ export class CardClient extends APIClient {
             await this.handleError(response);
         };
 
-        return await response.json();
+        const cardsPage = await response.json();
+
+        return new CardsPage(cardsPage.cards.map((card: any) => new Card(card)), cardsPage.page);
     };
 };

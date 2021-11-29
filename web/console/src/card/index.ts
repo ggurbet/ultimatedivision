@@ -69,75 +69,9 @@ export class CardStats {
   }
 }
 
-export interface Card {
-  id: string;
-  playerName: string;
-  quality: string;
-  pictureType: number;
-  height: number;
-  weight: number;
-  skinColor: number;
-  hairStyle: number;
-  hairColor: number;
-  accessories: number[];
-  dominantFoot: string;
-  isTattoos: boolean;
-  status: number;
-  type: string;
-  userId: string;
-  tactics: number;
-  positioning: number;
-  composure: number;
-  aggression: number;
-  vision: number;
-  awareness: number;
-  crosses: number;
-  physique: number;
-  acceleration: number;
-  runningSpeed: number;
-  reactionSpeed: number;
-  agility: number;
-  stamina: number;
-  strength: number;
-  jumping: number;
-  balance: number;
-  technique: number;
-  dribbling: number;
-  ballControl: number;
-  weakFoot: number;
-  skillMoves: number;
-  finesse: number;
-  curve: number;
-  volleys: number;
-  shortPassing: number;
-  longPassing: number;
-  forwardPass: number;
-  offense: number;
-  finishingAbility: number;
-  shotPower: number;
-  accuracy: number;
-  distance: number;
-  penalty: number;
-  freeKicks: number;
-  corners: number;
-  headingAccuracy: number;
-  defence: number;
-  offsideTrap: number;
-  sliding: number;
-  tackles: number;
-  ballFocus: number;
-  interceptions: number;
-  vigilance: number;
-  goalkeeping: number;
-  reflexes: number;
-  diving: number;
-  handling: number;
-  sweeping: number;
-  throwing: number;
-}
 
-/** Card base implementation */
-export class CardWithStats {
+/** Class defines with needed getters */
+export class Card {
   id: string = "";
   playerName: string = "Taras";
   quality: string = "";
@@ -381,7 +315,7 @@ export class CardWithStats {
 export class CardsPage {
   /** default Cards initial values */
   constructor(
-    public cards: Card[] | CardWithStats[],
+    public cards: Card[],
     public page: {
       offset: number;
       limit: number;

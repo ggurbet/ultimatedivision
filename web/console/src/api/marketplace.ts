@@ -8,6 +8,7 @@ import { CreatedLot } from '@/app/types/marketplace';
 import { Pagination } from '@/app/types/pagination';
 import { APIClient } from '.';
 
+
 /** client for marketplace of api */
 export class MarketplaceClient extends APIClient {
     private readonly ROOT_PATH: string = '/api/v0/marketplace';
@@ -21,7 +22,9 @@ export class MarketplaceClient extends APIClient {
             await this.handleError(response);
         };
 
-        return await response.json();
+        const lotsPage = await response.json();
+
+        return new MarketPlacePage(lotsPage.lots.map((lot: any) => new Lot(lot)), lotsPage.page);
     };
 
     /** implements opening lot */
@@ -33,7 +36,9 @@ export class MarketplaceClient extends APIClient {
             await this.handleError(response);
         };
 
-        return await response.json();
+        const lot = await response.json();
+
+        return new Lot(lot);
     };
 
     /** implements creating lot (selling card) */
@@ -55,6 +60,8 @@ export class MarketplaceClient extends APIClient {
             await this.handleError(response);
         };
 
-        return await response.json();
+        const lotsPage = await response.json();
+
+        return new MarketPlacePage(lotsPage.lots.map((lot: any) => new Lot(lot)), lotsPage.page);
     };
 };

@@ -9,7 +9,7 @@ import { FilterField } from '@/app/components/Field/FieldCardSelection/FilterFie
 
 import { RootState } from '@/app/store';
 import { listOfCards } from '@/app/store/actions/cards';
-import { CardWithStats } from '@/card';
+import { Card } from '@/card';
 import { addCard, cardSelectionVisibility } from '@/app/store/actions/clubs';
 import { CardEditIdentificators } from '@/api/club';
 import { Squad, SquadCard } from '@/club';
@@ -30,7 +30,8 @@ export const FieldCardSelection = () => {
     /** Function filters card list each time when we add card on field */
     function getAvailableCards() {
         const squadCardsIds = squadCards.map(card => card.cardId);
-        return cards.filter((card: CardWithStats) => !squadCardsIds.includes(card.id));
+
+        return cards.filter((card: Card) => !squadCardsIds.includes(card.id));
     };
 
     /** Add card to field, and hide card selection component */
@@ -52,7 +53,7 @@ export const FieldCardSelection = () => {
             <FilterField />
             <div className="card-selection__list">
                 {cards &&
-                    availableCards.map((card: CardWithStats, index: number) =>
+                    availableCards.map((card: Card, index: number) =>
                         <div
                             key={index}
                             className="card-selection__card"

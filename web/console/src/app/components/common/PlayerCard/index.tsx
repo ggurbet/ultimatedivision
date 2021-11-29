@@ -1,9 +1,9 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { CardWithStats } from '@/card';
+import { Card } from '@/card';
 
-export const PlayerCard: React.FC<{ card: CardWithStats; parentClassName: string }> = ({
+export const PlayerCard: React.FC<{ card: Card; parentClassName: string }> = ({
     card,
     parentClassName,
 }) =>

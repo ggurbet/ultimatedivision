@@ -34,6 +34,6 @@ export class LootboxClient extends APIClient {
             this.handleError(cards);
         }
 
-        return cards;
+        return cards.map((card: Card) => new Card(card));
     };
 };

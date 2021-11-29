@@ -1,8 +1,8 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { CardWithStats } from '@/card';
-import { MarketPlacePage, MarketPlaceState } from '@/marketplace';
+import { Card } from '@/card';
+import { MarketPlacePage } from '@/marketplace';
 import { GET_SELLING_CARDS, MARKETPLACE_CARD } from '../actions/marketplace';
 
 /** Markeplace state base implementation */
@@ -10,7 +10,7 @@ class MarketplaceState {
     /** default state implementation */
     constructor(
         public marketplacePage: MarketPlacePage,
-        public card: CardWithStats,
+        public card: Card,
     ) { };
 };
 
@@ -28,8 +28,8 @@ const page = {
     totalCount: LOTS_TOTAL_COUNT,
 };
 
-const marketplacePage = new MarketPlaceState([], page);
-const card = new CardWithStats();
+const marketplacePage = new MarketPlacePage([], page);
+const card = new Card();
 
 export const marketplaceReducer = (marketplaceState: MarketplaceState = new MarketplaceState(marketplacePage, card), action: any = {}) => {
     switch (action.type) {

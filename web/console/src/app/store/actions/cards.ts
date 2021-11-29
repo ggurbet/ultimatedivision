@@ -3,7 +3,7 @@
 
 import { Dispatch } from 'redux';
 import { CardClient } from '@/api/cards';
-import { Card, CardWithStats, CardsPage } from '@/card';
+import { Card, CardsPage } from '@/card';
 import { CardService } from '@/card/service';
 import { Pagination } from '@/app/types/pagination';
 
@@ -34,7 +34,7 @@ export const listOfCards = ({ selectedPage, limit }: Pagination) => async functi
 export const openUserCard = (id: string) => async function(dispatch: Dispatch) {
     const card = await service.getCardById(id);
 
-    dispatch(userCard(new CardWithStats(card)));
+    dispatch(userCard(card));
 };
 
 /** thunk returns filtered cards */

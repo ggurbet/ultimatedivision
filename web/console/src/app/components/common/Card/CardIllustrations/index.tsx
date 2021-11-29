@@ -4,11 +4,11 @@
 import { FootballerCardIllustrationsDiagramsArea } from '@/app/components/common/Card/CardIllustrationsDiagramsArea';
 import { FootballerCardIllustrationsRadar } from '@/app/components/common/Card/CardIllustrationsRadar';
 
-import { CardWithStats } from '@/card';
+import { Card } from '@/card';
 
 import './index.scss';
 
-export const FootballerCardIllustrations: React.FC<{ card: CardWithStats }> = ({
+export const FootballerCardIllustrations: React.FC<{ card: Card }> = ({
     card,
 }) =>
     <div className="footballer-card-illustrations">
