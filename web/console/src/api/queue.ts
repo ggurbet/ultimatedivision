@@ -19,4 +19,12 @@ export class QueueClient extends WebSocketAPICLient {
             this.sendAction(action, squadId);
         };
     };
+
+    /** TODO: this will be deleted after ./queue/chore.go solution. */
+    /** finishes searching match. */
+    public finishSearch(action: string, squadId: string) {
+        this.ws.onopen = () => {
+            this.sendAction(action, squadId);
+        };
+    };
 };
