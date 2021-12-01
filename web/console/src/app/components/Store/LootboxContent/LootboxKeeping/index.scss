@@ -40,10 +40,10 @@
         justify-content: center;
         justify-items: center;
         align-items: flex-start;
-        padding: 0 0 80px;
     }
 
     &__card {
+        width: 170px;
         transition: transform 0.3s;
 
         &:hover {

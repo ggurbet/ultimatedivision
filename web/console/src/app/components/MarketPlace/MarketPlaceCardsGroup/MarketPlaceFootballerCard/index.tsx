@@ -20,8 +20,8 @@ export const MarketPlaceFootballerCard: React.FC<{ lot: Lot; place?: string }> =
                 to={`/lot/${lot.id}`}
             >
                 <PlayerCard
-                    card={lot.card}
-                    parentClassName={'marketplace-playerCard'}
+                    id={lot.card.id}
+                    className={'marketplace-playerCard__image'}
                 />
                 {/** TODO: fetch datas from back-end. Now it is just statis images */}
                 <div className="marketplace-playerCard__price">

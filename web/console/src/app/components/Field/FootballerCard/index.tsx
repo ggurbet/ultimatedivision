@@ -36,7 +36,7 @@ export const FootballerCard: React.FC<{ card: Card; index?: number; place?: stri
             <div
                 className={`football-field-card__wrapper${visibilityBlock}`}
             ></div>
-            <PlayerCard card={card} parentClassName="footballer-card" />
+            <PlayerCard id={card.id} className="footballer-card" />
             <div
                 onClick={handleDeletion}
                 className={`footballer-card__control${visibilityBlock}`}

@@ -55,8 +55,8 @@ export const MyCard: React.FC<{ card: Card }> = ({ card }) => {
                     alt="Price icon"
                 />
                 <PlayerCard
-                    card={card}
-                    parentClassName={'club-card'}
+                    id={card.id}
+                    className={'club-card__image'}
                 />
             </Link>
             {controlVisibility &&

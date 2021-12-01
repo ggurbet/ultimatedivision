@@ -13,6 +13,10 @@
     cursor: pointer;
     border: 1px solid transparent;
 
+    &__image {
+        width: 100%;
+    }
+
     &__control {
         position: absolute;
         top: 200px;
@@ -48,82 +52,19 @@
         text-decoration: none;
     }
 
-    &__background-type {
-        z-index: 1;
-        position: absolute;
-        margin-left: 0;
-        width: 192px;
-        left: -8px;
-        top: -30px;
-    }
-
-    &__face-picture {
-        z-index: 2;
-        position: absolute;
-        margin-left: 35px;
-        margin-top: 20px;
-        height: 110px;
-    }
-
     &__price-gold {
         z-index: 3;
         position: absolute;
-        bottom: 110px;
+        bottom: 100px;
         right: 20px;
     }
 
     &__confirm-icon {
         z-index: 3;
         position: absolute;
-        top: 0;
-        right: 25px;
-    }
-
-    &__list {
-        margin-top: 140px;
-        margin-left: 50px;
-        display: grid;
-        grid-column-gap: 20px;
-        grid-template-columns: 30px 30px;
-
-        &__item {
-            color: rgb(87, 86, 86);
-            list-style: none;
-            z-index: 2;
-            font-size: 13px;
-        }
-    }
-
-    &__price {
-        margin-top: 100px;
-        text-align: center;
-        position: relative;
-
-        &__picture {
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        &__current {
-            color: white;
-            font-size: 24px;
-        }
-
-        &__status {
-            position: absolute;
-            top: 50px;
-            left: 26px;
-        }
-    }
-
-    &__name {
-        color: rgb(87, 86, 86);
-        text-align: center;
-        width: 100%;
-        font-size: 16px;
-        z-index: 2;
-        margin-top: 5px;
-        position: absolute;
+        top: 6px;
+        right: 13px;
+        border-radius: 0px 18px 0 0;
     }
 }
 
@@ -148,19 +89,6 @@
         border-radius: 10px;
         padding-bottom: 20px;
 
-        &__background-type {
-            position: absolute;
-            width: 108%;
-            left: -8px;
-            top: -30px;
-        }
-
-        &__face-picture {
-            margin-top: 2px;
-            margin-left: 22px;
-            height: 100px;
-        }
-
         &__price-gold {
             bottom: 120px;
         }
@@ -171,35 +99,6 @@
             top: 0;
             right: 25px;
             width: 17px;
-        }
-
-        &__price {
-            margin-top: 80px;
-
-            &__current {
-                color: white;
-                font-size: 16px;
-            }
-
-            &__status {
-                top: 30px;
-                left: 11px;
-            }
-        }
-
-        &__list {
-            margin: 40px;
-            margin-top: 110px;
-            grid-column-gap: 15px;
-
-            &__item {
-                font-size: 12px;
-            }
-        }
-
-        &__name {
-            font-size: 14px;
-            margin-top: -10px;
         }
     }
 }

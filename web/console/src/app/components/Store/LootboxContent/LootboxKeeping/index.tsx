@@ -5,13 +5,14 @@ import { Dispatch, SetStateAction } from 'react';
 import { useSelector } from 'react-redux';
 import Slider from 'react-slick';
 
-import { MyCard } from '@/app/components/Club/ClubCardsArea/MyCard';
+import { PlayerCard } from '@/app/components/common/PlayerCard';
 
 import boxLight from '@static/img/StorePage/BoxContent/boxLight.svg';
 import ribbons from '@static/img/StorePage/BoxContent/ribbons.svg';
 
 import { RootState } from '@/app/store';
 import { boxStyle } from '@/app/internal/lootboxStyle';
+import { Card } from '@/card';
 
 import './index.scss';
 
@@ -47,10 +48,8 @@ export const LootboxKeeping: React.FC<{
                         <div className="box-keeping__card-wrapper">
                             {cards
                                 .slice(FIRST_PAGE_START, FIRST_PAGE_END)
-                                .map((card, index) =>
-                                    <div className="box-keeping__card" key={index}>
-                                        <MyCard card={card} />
-                                    </div>
+                                .map((card: Card, index: number) =>
+                                    <PlayerCard className="box-keeping__card" id={card.id} />
                                 )}
                         </div>
                     </div>
@@ -58,10 +57,8 @@ export const LootboxKeeping: React.FC<{
                         <div className="box-keeping__card-wrapper">
                             {cards
                                 .slice(FIRST_PAGE_END, SECOND_PAGE_END)
-                                .map((card, index) =>
-                                    <div className="box-keeping__card" key={index}>
-                                        <MyCard card={card} />
-                                    </div>
+                                .map((card: Card, index: number) =>
+                                    <PlayerCard className="box-keeping__card" id={card.id} />
                                 )}
                         </div>
                     </div>
@@ -70,10 +67,8 @@ export const LootboxKeeping: React.FC<{
                             <div className="box-keeping__card-wrapper">
                                 {cards
                                     .slice(SECOND_PAGE_END)
-                                    .map((card, index) =>
-                                        <div className="box-keeping__card" key={index}>
-                                            <MyCard card={card} />
-                                        </div>
+                                    .map((card: Card, index: number) =>
+                                        <PlayerCard className="box-keeping__card" id={card.id} />
                                     )}
                             </div>
                         </div>

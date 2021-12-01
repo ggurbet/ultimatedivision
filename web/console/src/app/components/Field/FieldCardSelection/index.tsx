@@ -60,8 +60,8 @@ export const FieldCardSelection = () => {
                             onClick={() => addCardOnField(card.id)}
                         >
                             <PlayerCard
-                                card={card}
-                                parentClassName={'card-selection__card'}
+                                id={card.id}
+                                className={'card-selection__card'}
                             />
                         </div>
                     )}
