@@ -57,8 +57,19 @@
     }
 }
 
-@media screen and (max-width: $phoneBreakPoint) {
+@media screen and (max-width: $tabletBreakPoint) {
+    .ultimatedivision-navbar {
+        &__list {
+            width: 70%;
 
+            &__item {
+                margin-right: 20px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
     .ultimatedivision-navbar {
         position: relative;
 
