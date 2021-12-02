@@ -57,8 +57,8 @@ type UpdateRequest struct {
 // ClubResponse is a struct for response clubs, squad and squadCards.
 type ClubResponse struct {
 	clubs.Club
-	Squad      clubs.Squad       `json:"squad"`
-	SquadCards []clubs.SquadCard `json:"squadCards"`
+	Squad      clubs.Squad          `json:"squad"`
+	SquadCards []clubs.GetSquadCard `json:"squadCards"`
 }
 
 // Create is an endpoint that creates new club.

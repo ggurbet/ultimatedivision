@@ -209,8 +209,8 @@ func (service *Service) GetSquad(ctx context.Context, squadID uuid.UUID) (Squad,
 	return squad, ErrClubs.Wrap(err)
 }
 
-// ListSquadCards returns all cards from the squad.
-func (service *Service) ListSquadCards(ctx context.Context, squadID uuid.UUID) ([]SquadCard, error) {
+// ListSquadCardIDs returns card ids with positions from the squad.
+func (service *Service) ListSquadCardIDs(ctx context.Context, squadID uuid.UUID) ([]SquadCard, error) {
 	squadCards, err := service.clubs.ListSquadCards(ctx, squadID)
 	if err != nil {
 		return squadCards, ErrClubs.Wrap(err)
@@ -247,6 +247,44 @@ func (service *Service) ListSquadCards(ctx context.Context, squadID uuid.UUID) (
 	}
 
 	sortSquadCards(squadCards)
+
+	return squadCards, ErrClubs.Wrap(err)
+}
+
+// ListSquadCards returns cards with positions from the squad.
+func (service *Service) ListSquadCards(ctx context.Context, squadID uuid.UUID) ([]GetSquadCard, error) {
+	squadCardIDs, err := service.ListSquadCardIDs(ctx, squadID)
+	if err != nil {
+		return nil, ErrClubs.Wrap(err)
+	}
+
+	var squadCards []GetSquadCard
+	for _, squadCardID := range squadCardIDs {
+		card, err := service.cards.Get(ctx, squadCardID.CardID)
+		if err != nil {
+			if cards.ErrNoCard.Has(err) {
+				squadCard := GetSquadCard{
+					SquadID:  squadCardID.SquadID,
+					Card:     cards.Card{},
+					Position: squadCardID.Position,
+				}
+
+				squadCards = append(squadCards, squadCard)
+
+				continue
+			}
+
+			return squadCards, ErrClubs.Wrap(err)
+		}
+
+		squadCard := GetSquadCard{
+			SquadID:  squadCardID.SquadID,
+			Card:     card,
+			Position: squadCardID.Position,
+		}
+
+		squadCards = append(squadCards, squadCard)
+	}
 
 	return squadCards, ErrClubs.Wrap(err)
 }
