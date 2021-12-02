@@ -54,6 +54,11 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentage
 
 // Generate generates card.
 func (service *Service) Generate(ctx context.Context, userID uuid.UUID, percentageQualities []int) (Card, error) {
+	var (
+		playerName string
+		err        error
+	)
+
 	qualities := map[string]int{
 		"wood":    percentageQualities[0],
 		"silver":  percentageQualities[1],
@@ -132,9 +137,19 @@ func (service *Service) Generate(ctx context.Context, userID uuid.UUID, percenta
 		isTattoo = true
 	}
 
-	playerName, err := service.GeneratePlayerName()
-	if err != nil {
-		return Card{}, err
+	for {
+		playerName, err = service.GeneratePlayerName()
+		if err != nil {
+			return Card{}, ErrCards.Wrap(err)
+		}
+
+		_, err = service.GetByPlayerName(ctx, playerName)
+		if err != nil {
+			if ErrNoCard.Has(err) {
+				break
+			}
+			return Card{}, ErrCards.Wrap(err)
+		}
 	}
 
 	card := Card{
@@ -299,6 +314,12 @@ func (service *Service) GeneratePlayerName() (string, error) {
 // Get returns card from DB.
 func (service *Service) Get(ctx context.Context, cardID uuid.UUID) (Card, error) {
 	card, err := service.cards.Get(ctx, cardID)
+	return card, ErrCards.Wrap(err)
+}
+
+// GetByPlayerName returns card by player name from DB.
+func (service *Service) GetByPlayerName(ctx context.Context, playerName string) (Card, error) {
+	card, err := service.cards.GetByPlayerName(ctx, playerName)
 	return card, ErrCards.Wrap(err)
 }
 

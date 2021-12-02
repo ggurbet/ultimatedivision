@@ -253,6 +253,12 @@ func TestCards(t *testing.T) {
 			compareCards(t, card1, cardFromDB)
 		})
 
+		t.Run("get by player name", func(t *testing.T) {
+			cardFromDB, err := repositoryCards.GetByPlayerName(ctx, card1.PlayerName)
+			require.NoError(t, err)
+			compareCards(t, card1, cardFromDB)
+		})
+
 		t.Run("list", func(t *testing.T) {
 			err := repositoryUsers.Create(ctx, user2)
 			require.NoError(t, err)

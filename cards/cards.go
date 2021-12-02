@@ -23,6 +23,8 @@ type DB interface {
 	Create(ctx context.Context, card Card) error
 	// Get returns card by id from the data base.
 	Get(ctx context.Context, id uuid.UUID) (Card, error)
+	// GetByPlayerName returns card by player name from DB.
+	GetByPlayerName(ctx context.Context, playerName string) (Card, error)
 	// ListByUserID returns cards by user id from the database.
 	ListByUserID(ctx context.Context, id uuid.UUID) ([]Card, error)
 	// List returns all cards from the data base.
