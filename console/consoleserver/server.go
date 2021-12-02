@@ -136,11 +136,12 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	lootBoxesRouter.HandleFunc("/{id}", lootBoxesController.Open).Methods(http.MethodPost)
 
 	marketplaceRouter := apiRouter.PathPrefix("/marketplace").Subrouter()
-	marketplaceRouter.Use(server.withAuth)
 	marketplaceRouter.HandleFunc("", marketplaceController.ListActiveLots).Methods(http.MethodGet)
-	marketplaceRouter.HandleFunc("/{id}", marketplaceController.GetLotByID).Methods(http.MethodGet)
-	marketplaceRouter.HandleFunc("", marketplaceController.CreateLot).Methods(http.MethodPost)
-	marketplaceRouter.HandleFunc("/bet", marketplaceController.PlaceBetLot).Methods(http.MethodPost)
+	marketplaceRouterWithAuth := marketplaceRouter
+	marketplaceRouterWithAuth.Use(server.withAuth)
+	marketplaceRouterWithAuth.HandleFunc("/{id}", marketplaceController.GetLotByID).Methods(http.MethodGet)
+	marketplaceRouterWithAuth.HandleFunc("", marketplaceController.CreateLot).Methods(http.MethodPost)
+	marketplaceRouterWithAuth.HandleFunc("/bet", marketplaceController.PlaceBetLot).Methods(http.MethodPost)
 
 	queueRouter := apiRouter.PathPrefix("/queue").Subrouter()
 	queueRouter.Use(server.withAuth)
