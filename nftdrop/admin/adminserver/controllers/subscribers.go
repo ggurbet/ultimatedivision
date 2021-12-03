@@ -14,7 +14,6 @@ import (
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/nftdrop/subscribers"
 	"ultimatedivision/pkg/pagination"
-	"ultimatedivision/users"
 )
 
 var (
@@ -109,7 +108,7 @@ func (controller *Subscribers) Delete(w http.ResponseWriter, r *http.Request) {
 	err := controller.subscribers.Delete(ctx, email)
 	if err != nil {
 		controller.log.Error("could not delete subscriber by email", ErrSubscribers.Wrap(err))
-		if users.ErrNoUser.Has(err) {
+		if subscribers.ErrNoSubscriber.Has(err) {
 			http.Error(w, "no subscriber with such email", http.StatusNotFound)
 			return
 		}

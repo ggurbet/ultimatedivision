@@ -1,9 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-// Copyright (C) 2021 Creditor Corp. Group.
-// See LICENSE for copying information.
-
 /** Implementation of user auth validation. */
 export class Validator {
     /** Static method for email field validation. */

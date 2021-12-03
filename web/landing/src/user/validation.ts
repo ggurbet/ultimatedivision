@@ -2,7 +2,6 @@
 // See LICENSE for copying information.
 
 /** implementation of user auth validation */
-
 export class Validator {
     /** static method for email field validation */
     static email(email: string): boolean {
