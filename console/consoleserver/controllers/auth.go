@@ -60,6 +60,11 @@ func (auth *Auth) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !request.IsValid() {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("did not fill in all the fields"))
+		return
+	}
+
 	err = auth.userAuth.Register(ctx, request.Email, request.Password, request.NickName, request.FirstName, request.LastName)
 	if err != nil {
 		switch {
@@ -111,7 +116,7 @@ func (auth *Auth) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if request.Email == "" || request.Password == "" {
-		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("Missing email address or password"))
 		return
 	}
 
