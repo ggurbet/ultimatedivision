@@ -56,9 +56,11 @@ export const FieldPlayingArea: React.FC = () => {
         setMousePosition({ x: ev.pageX, y: ev.pageY });
     };
 
-    /** returns card data for card */
-    function getCard(id: string) {
-        return cards.find((card: Card) => card.id === id);
+    /** Compares card id with default id */
+    function isCardDefined(id: string) {
+        const defaultId = '00000000-0000-0000-0000-000000000000';
+
+        return id !== defaultId;
     }
 
     /** Add card position, and shows card selection */
@@ -86,14 +88,14 @@ export const FieldPlayingArea: React.FC = () => {
         e.stopPropagation();
         if (isDragging && dragStartIndex !== null) {
             const cards = club.squadCards;
-            getCard(cards[index].cardId) ?
+            isCardDefined(cards[index].card.id) ?
                 dispatch(swapCards(
-                    new CardEditIdentificators(squad.clubId, squad.id, cards[dragStartIndex].cardId, index),
-                    new CardEditIdentificators(squad.clubId, squad.id, cards[index].cardId, dragStartIndex)
+                    new CardEditIdentificators(squad.clubId, squad.id, cards[dragStartIndex].card.id, index),
+                    new CardEditIdentificators(squad.clubId, squad.id, cards[index].card.id, dragStartIndex)
                 ))
                 :
                 dispatch(changeCardPosition(
-                    new CardEditIdentificators(squad.clubId, squad.id, cards[dragStartIndex].cardId, index),
+                    new CardEditIdentificators(squad.clubId, squad.id, cards[dragStartIndex].card.id, index),
                 ));
         }
 
@@ -111,7 +113,7 @@ export const FieldPlayingArea: React.FC = () => {
     function removeFromArea() {
         if (isDragging && dragStartIndex) {
             dispatch(deleteCard(
-                new CardEditIdentificators(squad.clubId, squad.id, club.squadCards[dragStartIndex].cardId, dragStartIndex))
+                new CardEditIdentificators(squad.clubId, squad.id, club.squadCards[dragStartIndex].card.id, dragStartIndex))
             );
         }
         dispatch(setDragStart());
@@ -133,7 +135,7 @@ export const FieldPlayingArea: React.FC = () => {
                 >
                     {club.squadCards.map(
                         (fieldCard: SquadCard, index: number) => {
-                            const card = getCard(fieldCard.cardId);
+                            const isDefined = isCardDefined(fieldCard.card.id);
                             const isDragging = dragStartIndex === index;
 
                             return (
@@ -149,16 +151,16 @@ export const FieldPlayingArea: React.FC = () => {
                                             : undefined
                                     }
                                     key={index}
-                                    className={`playing-area__${formation}__${card ? 'card' : 'empty-card'
+                                    className={`playing-area__${formation}__${isDefined ? 'card' : 'empty-card'
                                     }`}
                                     onClick={() => handleClick(index)}
                                     onDragStart={(e) => dragStart(e, index)}
                                     onMouseUp={(e) => onMouseUp(e, index)}
                                     draggable={true}
                                 >
-                                    {card &&
+                                    {isDefined &&
                                         <FootballerCard
-                                            card={card}
+                                            card={fieldCard.card}
                                             index={index}
                                             place={'PlayingArea'}
                                         />
@@ -170,16 +172,16 @@ export const FieldPlayingArea: React.FC = () => {
                 <div className={`playing-area__${formation}-shadows`}>
                     {club.squadCards.map(
                         (fieldCard: SquadCard, index: number) => {
-                            const card = getCard(fieldCard.cardId);
+                            const isDefined = isCardDefined(fieldCard.card.id);
 
                             return (
                                 <div
                                     className={`playing-area__${formation}-shadows__card`}
                                     key={index}
                                 >
-                                    {card &&
+                                    {isDefined && fieldCard.card.style &&
                                         <img
-                                            src={card.style.shadow}
+                                            src={fieldCard.card.style.shadow}
                                             alt="card shadow"
                                             className={`playing-area__${formation}-shadows__shadow`}
                                         />

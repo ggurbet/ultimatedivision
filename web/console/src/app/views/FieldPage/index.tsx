@@ -60,7 +60,7 @@ const FootballField: React.FC = () => {
     function drop(e: any) {
         if (e.target.className === 'football-field__wrapper') {
             dragStartIndex &&
-                dispatch(deleteCard(new CardEditIdentificators(squad.clubId, squad.id, club.squadCards[dragStartIndex].cardId)));
+                dispatch(deleteCard(new CardEditIdentificators(squad.clubId, squad.id, club.squadCards[dragStartIndex].card.id)));
         }
     };
 

@@ -1,6 +1,8 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import { Card } from '@/card';
+
 const DEFAULT_VALUE = 0;
 const ACTIVE_STATUS_VALUE = 1;
 
@@ -16,7 +18,7 @@ export class Squad {
 /** SquadCard defines squad card entity.  */
 export class SquadCard {
     public squadId: string = '';
-    public cardId: string = '';
+    public card: Card = new Card();
     public position: number = DEFAULT_VALUE;
 }
 

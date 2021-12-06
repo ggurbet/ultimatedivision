@@ -29,7 +29,7 @@ export const FieldCardSelection = () => {
 
     /** Function filters card list each time when we add card on field */
     function getAvailableCards() {
-        const squadCardsIds = squadCards.map(card => card.cardId);
+        const squadCardsIds = squadCards.map(card => card.card.id);
 
         return cards.filter((card: Card) => !squadCardsIds.includes(card.id));
     };

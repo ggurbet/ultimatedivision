@@ -2,7 +2,8 @@
 // See LICENSE for copying information.
 
 import { APIClient } from '@/api/index';
-import { Club, Squad } from '@/club';
+import { Card } from '@/card';
+import { Club, Squad, SquadCard } from '@/club';
 
 const DEFAULT_VALUE = 0;
 
@@ -45,7 +46,7 @@ export class ClubsClient extends APIClient {
                 club.name,
                 club.createdAt,
                 club.squad,
-                club.squadCards,
+                club.squadCards.map(squadCard => ({ ...squadCard, card: new Card(squadCard.card) })),
                 club.status
             )
         );

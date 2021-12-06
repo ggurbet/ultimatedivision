@@ -22,7 +22,7 @@ export const FieldControlsArea: React.FC = () => {
     useEffect(() => {
         /** Function checks field cards and compare it with player cards array */
         function isPossibleToStart() {
-            const emptyCard = squadCards.find((card: SquadCard) => card.cardId === EMPTY_CARD_ID);
+            const emptyCard = squadCards.find((squadCard: SquadCard) => squadCard.card.id === EMPTY_CARD_ID);
             emptyCard ?
                 setIsPossibleToStartMatch(false)
                 :
