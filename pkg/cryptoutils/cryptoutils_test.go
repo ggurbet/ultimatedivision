@@ -4,6 +4,7 @@
 package cryptoutils_test
 
 import (
+	"math/big"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/crypto"
@@ -29,6 +30,17 @@ func TestCryptoUtils(t *testing.T) {
 	}
 	var tokenID int64 = 2
 
+	value3 := map[string]string{
+		"addressWallet":   "0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b8",
+		"addressContract": "0xde07015be3E663954D514418B4014c3b829D212b",
+		"privateKey":      "5aefce0a2d473f59578fa7dee6a122d6509af1e0f79fcbee700dfcfeddabe4cc",
+		"signature":       "53f7f1e623364fa4f1bd6e7df67a66edcc06cba01462193d397bbe72fcdba31f04e50d9f65e387be1ea2351110166ad2cb882ccc28be05725e6877645941a3471b",
+	}
+
+	var value = new(big.Int)
+	value.SetString("5000000000000000000", 10)
+	var nonce int64 = 0
+
 	t.Run("GenerateSignature", func(t *testing.T) {
 		privateKeyECDSA, err := crypto.HexToECDSA(value1["privateKey"])
 		require.NoError(t, err)
@@ -42,11 +54,11 @@ func TestCryptoUtils(t *testing.T) {
 		assert.Equal(t, signature, cryptoutils.Signature(value1["signature"]))
 	})
 
-	t.Run("GenerateSignatureWithToken", func(t *testing.T) {
+	t.Run("GenerateSignatureWithValue", func(t *testing.T) {
 		privateKeyECDSA, err := crypto.HexToECDSA(value2["privateKey"])
 		require.NoError(t, err)
 
-		signature, err := cryptoutils.GenerateSignatureWithToken(
+		signature, err := cryptoutils.GenerateSignatureWithValue(
 			cryptoutils.Address(value2["addressWallet"]),
 			cryptoutils.Address(value2["addressContract"]),
 			tokenID,
@@ -54,5 +66,20 @@ func TestCryptoUtils(t *testing.T) {
 		)
 		require.NoError(t, err)
 		assert.Equal(t, signature, cryptoutils.Signature(value2["signature"]))
+	})
+
+	t.Run("GenerateSignatureWithValueAndNonce", func(t *testing.T) {
+		privateKeyECDSA, err := crypto.HexToECDSA(value3["privateKey"])
+		require.NoError(t, err)
+
+		signature, err := cryptoutils.GenerateSignatureWithValueAndNonce(
+			cryptoutils.Address(value3["addressWallet"]),
+			cryptoutils.Address(value3["addressContract"]),
+			value,
+			nonce,
+			privateKeyECDSA,
+		)
+		require.NoError(t, err)
+		assert.Equal(t, signature, cryptoutils.Signature(value3["signature"]))
 	})
 }

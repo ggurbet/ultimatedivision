@@ -55,14 +55,14 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 
 		if len(clients) >= 2 {
 			for k := range clients {
-				isEvenNumber := (k%2 != 0)
+				isEvenNumber := (k%2 != 1)
 				if isEvenNumber {
 					continue
 				}
 
 				go func(clients []Client, k int) {
-					firstClient := clients[k]
-					secondClient := clients[k+1]
+					firstClient := clients[k-1]
+					secondClient := clients[k]
 
 					if err = chore.service.UpdateIsPlaying(firstClient.UserID, true); err != nil {
 						chore.log.Error("could not update is play", ChoreError.Wrap(err))

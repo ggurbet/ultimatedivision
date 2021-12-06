@@ -224,7 +224,7 @@ func TestWaitList(t *testing.T) {
 		})
 
 		t.Run("Update sql no rows", func(t *testing.T) {
-			err := repositoryWaitList.Update(ctx, -1, "password")
+			err := repositoryWaitList.Update(ctx, int64(0), "password")
 			require.Error(t, err)
 			assert.Equal(t, true, waitlist.ErrNoItem.Has(err))
 		})
@@ -235,7 +235,7 @@ func TestWaitList(t *testing.T) {
 		})
 
 		t.Run("Delete sql no rows", func(t *testing.T) {
-			err := repositoryWaitList.Delete(ctx, []int64{-1})
+			err := repositoryWaitList.Delete(ctx, []int64{0})
 			require.Error(t, err)
 			assert.Equal(t, true, waitlist.ErrNoItem.Has(err))
 		})

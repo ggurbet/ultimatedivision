@@ -7,6 +7,7 @@ import (
 	"crypto/ecdsa"
 	"encoding/hex"
 	"fmt"
+	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -18,8 +19,7 @@ const EthereumSignedMessageHash string = "19457468657265756d205369676e6564204d65
 // CreateSignature entity describes values for create signature.
 type CreateSignature struct {
 	EthereumSignedMessage []byte
-	AddressWallet         []byte
-	AddressContract       []byte
+	Values                [][]byte
 	PrivateKey            *ecdsa.PrivateKey
 }
 
@@ -101,18 +101,6 @@ type BlockTag string
 // BlockTagLatest indicates that the last block will be used.
 const BlockTagLatest BlockTag = "latest"
 
-// Data entity describes values for data field in transacton.
-type Data struct {
-	AddressContractMethod Hex
-	TokenID               int64
-}
-
-// NewDataHex is a constructor for data entity, but returns hex string.
-func NewDataHex(data Data) Hex {
-	tokenID := createHexStringFixedLength(data.TokenID)
-	return data.AddressContractMethod + tokenID
-}
-
 // IsValidAddress checks if the address is valid.
 func (address Address) IsValidAddress() bool {
 	return common.IsHexAddress(string(address))
@@ -136,59 +124,21 @@ func isHexCharacter(c byte) bool {
 	return ('0' <= c && c <= '9') || ('a' <= c && c <= 'f') || ('A' <= c && c <= 'F')
 }
 
-// GenerateSignature generates signature for user's wallet.
-func GenerateSignature(addressWallet Address, addressContract Address, privateKey *ecdsa.PrivateKey) (Signature, error) {
-	if !addressWallet.IsValidAddress() {
-		return "", fmt.Errorf("invalid address of user's wallet")
-	}
-	if !addressContract.IsValidAddress() {
-		return "", fmt.Errorf("invalid address of contract")
-	}
-
-	addressWalletByte, err := hex.DecodeString(string(addressWallet)[2:])
-	if err != nil {
-		return "", err
-	}
-
-	addressContractByte, err := hex.DecodeString(string(addressContract)[2:])
-	if err != nil {
-		return "", err
-	}
-
-	ethereumSignedMessage, err := hex.DecodeString(EthereumSignedMessageHash)
-	if err != nil {
-		return "", err
-	}
-
-	createSignature := CreateSignature{
-		EthereumSignedMessage: ethereumSignedMessage,
-		AddressWallet:         addressWalletByte,
-		AddressContract:       addressContractByte,
-		PrivateKey:            privateKey,
-	}
-
-	signature, err := makeSignature(createSignature)
-	if err != nil {
-		return "", err
-	}
-
-	signatureWithoutEnd := string(signature)[:len(signature)-1]
-	signatureString := hex.EncodeToString(signature)
-	signatureLastSymbol := signatureString[len(signatureString)-1:]
-
-	if signatureLastSymbol == fmt.Sprintf("%d", PrivateKeyVZero) {
-		return Signature(hex.EncodeToString(append([]byte(signatureWithoutEnd), []byte{byte(PrivateKeyVTwentySeven)}...))), nil
-	}
-
-	if signatureLastSymbol == fmt.Sprintf("%d", PrivateKeyVOne) {
-		return Signature(hex.EncodeToString(append([]byte(signatureWithoutEnd), []byte{byte(PrivateKeyVTwentyEight)}...))), nil
-	}
-
-	return "", fmt.Errorf("error private key format")
+// Data entity describes values for data field in transacton.
+type Data struct {
+	AddressContractMethod Hex
+	TokenID               int64
 }
 
-// GenerateSignatureWithToken generates signature for user's wallet with token.
-func GenerateSignatureWithToken(addressWallet Address, addressContract Address, tokenID int64, privateKey *ecdsa.PrivateKey) (Signature, error) {
+// NewDataHex is a constructor for data entity, but returns hex string.
+func NewDataHex(data Data) Hex {
+	tokenID := createHexStringFixedLength(new(big.Int).SetInt64(data.TokenID))
+	return data.AddressContractMethod + tokenID
+}
+
+// GenerateSignature generates signature for user's wallet.
+func GenerateSignature(addressWallet Address, addressContract Address, privateKey *ecdsa.PrivateKey) (Signature, error) {
+	var values [][]byte
 	if !addressWallet.IsValidAddress() {
 		return "", fmt.Errorf("invalid address of user's wallet")
 	}
@@ -196,12 +146,12 @@ func GenerateSignatureWithToken(addressWallet Address, addressContract Address, 
 		return "", fmt.Errorf("invalid address of contract")
 	}
 
-	addressWalletByte, err := hex.DecodeString(string(addressWallet)[2:])
+	addressWalletByte, err := hex.DecodeString(string(addressWallet)[LengthHexPrefix:])
 	if err != nil {
 		return "", err
 	}
 
-	addressContractByte, err := hex.DecodeString(string(addressContract)[2:])
+	addressContractByte, err := hex.DecodeString(string(addressContract)[LengthHexPrefix:])
 	if err != nil {
 		return "", err
 	}
@@ -211,26 +161,123 @@ func GenerateSignatureWithToken(addressWallet Address, addressContract Address, 
 		return "", err
 	}
 
-	tokenIDStringWithZeros := createHexStringFixedLength(tokenID)
-	tokenIDByte, err := hex.DecodeString(string(tokenIDStringWithZeros))
-	if err != nil {
-		return "", err
-	}
-
+	values = append(values, addressWalletByte, addressContractByte)
 	createSignature := CreateSignature{
 		EthereumSignedMessage: ethereumSignedMessage,
-		AddressWallet:         addressWalletByte,
-		AddressContract:       addressContractByte,
+		Values:                values,
 		PrivateKey:            privateKey,
 	}
 
-	signature, err := makeSignatureWithToken(createSignature, tokenIDByte)
+	signatureByte, err := makeSignature(createSignature)
 	if err != nil {
 		return "", err
 	}
 
-	signatureWithoutEnd := string(signature)[:len(signature)-1]
-	signatureString := hex.EncodeToString(signature)
+	return reformSignature(signatureByte)
+}
+
+// GenerateSignatureWithValue generates signature for user's wallet with value.
+func GenerateSignatureWithValue(addressWallet Address, addressContract Address, value int64, privateKey *ecdsa.PrivateKey) (Signature, error) {
+	var values [][]byte
+	if !addressWallet.IsValidAddress() {
+		return "", fmt.Errorf("invalid address of user's wallet")
+	}
+	if !addressContract.IsValidAddress() {
+		return "", fmt.Errorf("invalid address of contract")
+	}
+
+	addressWalletByte, err := hex.DecodeString(string(addressWallet)[LengthHexPrefix:])
+	if err != nil {
+		return "", err
+	}
+
+	addressContractByte, err := hex.DecodeString(string(addressContract)[LengthHexPrefix:])
+	if err != nil {
+		return "", err
+	}
+
+	ethereumSignedMessage, err := hex.DecodeString(EthereumSignedMessageHash)
+	if err != nil {
+		return "", err
+	}
+
+	valueStringWithZeros := createHexStringFixedLength(new(big.Int).SetInt64(value))
+	valueByte, err := hex.DecodeString(string(valueStringWithZeros))
+	if err != nil {
+		return "", err
+	}
+
+	values = append(values, addressWalletByte, addressContractByte, valueByte)
+	createSignature := CreateSignature{
+		EthereumSignedMessage: ethereumSignedMessage,
+		Values:                values,
+		PrivateKey:            privateKey,
+	}
+
+	signatureByte, err := makeSignature(createSignature)
+	if err != nil {
+		return "", err
+	}
+
+	return reformSignature(signatureByte)
+}
+
+// GenerateSignatureWithValueAndNonce generates signature for user's wallet with value and nonce.
+func GenerateSignatureWithValueAndNonce(addressWallet Address, addressContract Address, value *big.Int, nonce int64, privateKey *ecdsa.PrivateKey) (Signature, error) {
+	var values [][]byte
+	if !addressWallet.IsValidAddress() {
+		return "", fmt.Errorf("invalid address of user's wallet")
+	}
+	if !addressContract.IsValidAddress() {
+		return "", fmt.Errorf("invalid address of contract")
+	}
+
+	addressWalletByte, err := hex.DecodeString(string(addressWallet)[LengthHexPrefix:])
+	if err != nil {
+		return "", err
+	}
+
+	addressContractByte, err := hex.DecodeString(string(addressContract)[LengthHexPrefix:])
+	if err != nil {
+		return "", err
+	}
+
+	ethereumSignedMessage, err := hex.DecodeString(EthereumSignedMessageHash)
+	if err != nil {
+		return "", err
+	}
+
+	valueStringWithZeros := createHexStringFixedLength(value)
+	valueByte, err := hex.DecodeString(string(valueStringWithZeros))
+	if err != nil {
+		return "", err
+	}
+
+	nonceStringWithZeros := createHexStringFixedLength(new(big.Int).SetInt64(nonce))
+	nonceByte, err := hex.DecodeString(string(nonceStringWithZeros))
+	if err != nil {
+		return "", err
+	}
+
+	values = append(values, addressWalletByte, addressContractByte, valueByte, nonceByte)
+	createSignature := CreateSignature{
+		EthereumSignedMessage: ethereumSignedMessage,
+		Values:                values,
+		PrivateKey:            privateKey,
+	}
+
+	signatureByte, err := makeSignature(createSignature)
+	if err != nil {
+		return "", err
+	}
+
+	return reformSignature(signatureByte)
+}
+
+// reformSignature reforms last two byte of signature from 00, 01 to 1b, 1c.
+func reformSignature(signatureByte []byte) (Signature, error) {
+	signatureWithoutEnd := string(signatureByte)[:len(signatureByte)-1]
+	signatureString := hex.EncodeToString(signatureByte)
 	signatureLastSymbol := signatureString[len(signatureString)-1:]
 
 	if signatureLastSymbol == fmt.Sprintf("%d", PrivateKeyVZero) {
@@ -245,26 +292,23 @@ func GenerateSignatureWithToken(addressWallet Address, addressContract Address, 
 }
 
 // createHexStringFixedLength creates srings with fixed length and number in hex formate in the end.
-func createHexStringFixedLength(tokenID int64) Hex {
-	tokenIDString := fmt.Sprintf("%x", tokenID)
+func createHexStringFixedLength(value *big.Int) Hex {
+	valueString := fmt.Sprintf("%x", value)
 	var zeroString string
-	for i := 0; i < (int(LengthOneBlockInputValue) - len(tokenIDString)); i++ {
+	for i := 0; i < (int(LengthOneBlockInputValue) - len(valueString)); i++ {
 		zeroString += "0"
 	}
 
-	return Hex(zeroString + tokenIDString)
-}
-
-// makeSignature makes signature from addresses and private key.
-func makeSignature(createSignature CreateSignature) ([]byte, error) {
-	dataSignature := crypto.Keccak256Hash(append(createSignature.EthereumSignedMessage, crypto.Keccak256Hash(append(createSignature.AddressWallet, createSignature.AddressContract...)).Bytes()...))
-	signature, err := crypto.Sign(dataSignature.Bytes(), createSignature.PrivateKey)
-	return signature, err
+	return Hex(zeroString + valueString)
 }
 
 // makeSignatureWithToken makes signature from addresses, private key and token id.
-func makeSignatureWithToken(createSignature CreateSignature, tokenID []byte) ([]byte, error) {
-	dataSignature := crypto.Keccak256Hash(append(createSignature.EthereumSignedMessage, crypto.Keccak256Hash(append(createSignature.AddressWallet, append(createSignature.AddressContract, tokenID...)...)).Bytes()...))
+func makeSignature(createSignature CreateSignature) ([]byte, error) {
+	var allValues []byte
+	for _, value := range createSignature.Values {
+		allValues = append(allValues, value...)
+	}
+	dataSignature := crypto.Keccak256Hash(append(createSignature.EthereumSignedMessage, crypto.Keccak256Hash(allValues).Bytes()...))
 	signature, err := crypto.Sign(dataSignature.Bytes(), createSignature.PrivateKey)
 	return signature, err
 }

@@ -60,7 +60,7 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 		}
 
 		for _, token := range unsignedNFTs {
-			signature, err := cryptoutils.GenerateSignatureWithToken(token.Wallet, chore.config.SmartContractAddress, token.TokenID, privateKeyECDSA)
+			signature, err := cryptoutils.GenerateSignatureWithValue(token.Wallet, chore.config.SmartContractAddress, token.TokenID, privateKeyECDSA)
 			if err != nil {
 				return ChoreError.Wrap(err)
 			}
