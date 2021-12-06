@@ -355,6 +355,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 
 	{ // lootboxes setup
 		peer.LootBoxes.Service = lootboxes.NewService(
+			peer.Log,
 			config.LootBoxes.Config,
 			peer.Database.LootBoxes(),
 			peer.Cards.Service,

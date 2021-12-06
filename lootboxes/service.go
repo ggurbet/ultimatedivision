@@ -5,12 +5,14 @@ package lootboxes
 
 import (
 	"context"
+	"sync"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/avatars"
+	"ultimatedivision/internal/logger"
 )
 
 // ErrLootBoxes indicates that there was an error in the service.
@@ -20,6 +22,7 @@ var ErrLootBoxes = errs.Class("lootboxes service error")
 //
 // architecture: Service
 type Service struct {
+	log       logger.Logger
 	config    Config
 	lootboxes DB
 	cards     *cards.Service
@@ -27,8 +30,9 @@ type Service struct {
 }
 
 // NewService is a constructor for lootboxes service.
-func NewService(config Config, lootboxes DB, cards *cards.Service, avatars *avatars.Service) *Service {
+func NewService(log logger.Logger, config Config, lootboxes DB, cards *cards.Service, avatars *avatars.Service) *Service {
 	return &Service{
+		log:       log,
 		config:    config,
 		lootboxes: lootboxes,
 		cards:     cards,
@@ -72,23 +76,37 @@ func (service *Service) Open(ctx context.Context, userID, lootboxID uuid.UUID) (
 			return lootBoxCards, ErrLootBoxes.Wrap(err)
 		}
 
-		avatar, err := service.avatars.Generate(ctx, card, card.ID.String())
-		if err != nil {
-			return lootBoxCards, ErrLootBoxes.Wrap(err)
-		}
-
-		if err := service.avatars.Create(ctx, avatar); err != nil {
-			return lootBoxCards, ErrLootBoxes.Wrap(err)
-		}
-
 		lootBoxCards = append(lootBoxCards, card)
 	}
 
 	sortLootBoxCards(lootBoxCards)
 
+	var wg sync.WaitGroup
+	wg.Add(len(lootBoxCards))
+	for _, card := range lootBoxCards {
+		go service.GenerateAvatarForLootboxCards(ctx, card, &wg)
+	}
+	wg.Wait()
+
 	err = service.lootboxes.Delete(ctx, lootboxID)
 
 	return lootBoxCards, ErrLootBoxes.Wrap(err)
+}
+
+// GenerateAvatarForLootboxCards generates and saves avatar for card.
+func (service *Service) GenerateAvatarForLootboxCards(ctx context.Context, card cards.Card, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	avatar, err := service.avatars.Generate(ctx, card, card.ID.String())
+	if err != nil {
+		service.log.Error("could not create card", err)
+		return
+	}
+
+	if err := service.avatars.Create(ctx, avatar); err != nil {
+		service.log.Error("could not create card", err)
+		return
+	}
 }
 
 // List returns all loot boxes.
