@@ -60,6 +60,7 @@
     }
 
     .player {
+        position: relative;
         display: flex;
         align-items: center;
         width: 465px;
@@ -72,11 +73,30 @@
             rgba(100, 91, 169, 0.15)
         );
         border-radius: 10px;
+        cursor: pointer;
 
-        &__logo {
+        &__wrapper {
             width: 56px;
             height: 56px;
             margin: auto 0 auto 16px;
+            border-radius: 50%;
+            overflow: hidden;
+
+            img {
+                position: relative;
+                width: 100px;
+                height: 161px;
+                top: -20px;
+                left: -22px;
+            }
+        }
+
+        &__card {
+            z-index: 3;
+            position: absolute;
+            top: 70px;
+            left: 295px;
+            width: 182px;
         }
 
         &__name {

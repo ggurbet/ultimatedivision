@@ -300,7 +300,7 @@ func (service *Service) GetMatchResult(ctx context.Context, matchID uuid.UUID) (
 					}
 
 					resultMatch[k].Goalscorers = append(resultMatch[k].Goalscorers, Goalscorer{
-						Card:   card.PlayerName,
+						Card:   card,
 						Minute: goal.Minute,
 					})
 				}
@@ -334,7 +334,7 @@ func (service *Service) GetMatchResult(ctx context.Context, matchID uuid.UUID) (
 				}
 
 				results[k].Goalscorers = append(results[k].Goalscorers, Goalscorer{
-					Card:   card.PlayerName,
+					Card:   card,
 					Minute: goal.Minute,
 				})
 			}
