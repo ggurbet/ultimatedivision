@@ -179,9 +179,9 @@ export const FieldPlayingArea: React.FC = () => {
                                     className={`playing-area__${formation}-shadows__card`}
                                     key={index}
                                 >
-                                    {isDefined && fieldCard.card.style &&
+                                    {isDefined &&
                                         <img
-                                            src={fieldCard.card.style.shadow}
+                                            src={fieldCard.card.shadow}
                                             alt="card shadow"
                                             className={`playing-area__${formation}-shadows__shadow`}
                                         />
