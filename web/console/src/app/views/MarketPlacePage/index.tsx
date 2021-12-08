@@ -15,10 +15,7 @@ const MarketPlace: React.FC = () => {
 
     return (
         <section className="marketplace">
-            <FilterField
-                title="MARKETPLACE"
-                thunk={filteredLots}
-            />
+            <FilterField />
             <MarketPlaceCardsGroup lots={lots} />
             <Paginator
                 getCardsOnPage={listOfLots}

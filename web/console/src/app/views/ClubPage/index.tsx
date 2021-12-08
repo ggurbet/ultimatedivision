@@ -15,10 +15,7 @@ const Club: React.FC = () => {
 
     return (
         <section className="club">
-            <FilterField
-                title="My cards"
-                thunk={filteredCards}
-            />
+            <FilterField />
             <ClubCardsArea />
             <Paginator
                 getCardsOnPage={listOfCards}

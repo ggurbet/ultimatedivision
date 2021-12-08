@@ -1,0 +1,196 @@
+@import "@/index.scss";
+
+.filter-item {
+    color: $fieldMainTextColor;
+    list-style: none;
+    cursor: pointer;
+    position: relative;
+
+    &__title-inactive,
+    &__title-active {
+        font-family: "Montserrat", sans-serif;
+        font-size: 14px;
+        color: $fieldMainTextColor;
+    }
+
+    &__title-active {
+        color: $highlightColor;
+    }
+
+    &__picture {
+        margin-left: 5px;
+        vertical-align: middle;
+    }
+
+    &__dropdown-active {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        top: 30px;
+        min-width: 152px;
+        z-index: 4;
+        border-radius: 5px;
+        background-color: $highlightBackground;
+
+        &__wrapper {
+            display: flex;
+            flex-direction: row;
+            margin-top: 20px;
+            width: 212px;
+            justify-content: space-around;
+        }
+
+        &__price {
+            width: 60px;
+            background: transparent;
+            color: $fieldMainTextColor;
+            border: none;
+            border-bottom: 1px solid $fieldMainBorderColo;
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            &:focus {
+                outline: none;
+            }
+        }
+
+        &:before {
+            content: "";
+            height: 20px;
+            width: 20px;
+            position: absolute;
+            top: -7px;
+            left: 20px;
+            border-radius: 3px;
+            background-color: $highlightBackground;
+            transform: rotate(45deg);
+        }
+
+        &__checkbox {
+            position: absolute;
+            opacity: 0;
+
+            & + label {
+                position: relative;
+                cursor: pointer;
+                padding: 11px 0px 11px 17px;
+                border-bottom: 1px solid $fieldMainBorderColo;
+            }
+
+            & + label:nth-child(8) {
+                border-bottom: unset;
+            }
+
+            & + label:before {
+                content: "";
+                margin-right: 10px;
+                display: inline-block;
+                vertical-align: text-top;
+                width: 16px;
+                height: 16px;
+                background: $highlightBackground;
+                border: 1px solid $divisionMainBackgroundColor;
+            }
+
+            &:checked + label:after {
+                content: "";
+                position: absolute;
+                left: 20px;
+                top: 18px;
+                background: $highlightColor;
+                width: 3px;
+                height: 3px;
+                box-shadow: 2px 0 0 $highlightColor, 4px 0 0 $highlightColor,
+                    4px -2px 0 $highlightColor, 4px -4px 0 $highlightColor,
+                    4px -6px 0 $highlightColor, 4px -8px 0 $highlightColor;
+                transform: rotate(45deg);
+            }
+        }
+
+        & #checkbox-unlocked {
+            & + label:nth-child(4) {
+                border-bottom: unset;
+            }
+        }
+
+        &__apply {
+            font-family: "BebasNeue", sans-serif;
+            margin: 15px auto;
+            height: 33px;
+            width: 77%;
+            background: linear-gradient($fieldMainLinearGradientColor 100%, $feildSecondLinearGradientColor 100%);
+            border: none;
+            cursor: pointer;
+        }
+
+        &__stats {
+
+            &__apply {
+                font-family: "BebasNeue", sans-serif;
+                margin: 10px 5px;
+                height: 33px;
+                width: 93%;
+                background: linear-gradient($fieldMainLinearGradientColor 100%, $feildSecondLinearGradientColor 100%);
+                border: none;
+                cursor: pointer;
+            }
+
+            &__clear {
+                background: transparent;
+                background-image: url('@static/img/FilterField/clear.svg');
+                background-repeat: no-repeat;
+                background-size: contain;
+                margin: 15px 5px;
+                height: 24px;
+                padding-left: 30px;
+                border: none;
+                cursor: pointer;
+                color: $fieldMainTextColor;
+            }
+
+            &__wrapper {
+                margin-top: 20px;
+                padding: 0 10px;
+                display: grid;
+                grid-template-columns: 170px 170px;
+                grid-template-rows: 50px 50px;
+            }
+
+            &__area {
+                width: 45%;
+                margin-left: 5px;
+                background: transparent;
+                border: none;
+                border-bottom: 1px solid $fieldMainBorderColo;
+                color: $fieldMainTextColor;
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            &__label {
+                font-size: 16px;
+                font-family: "BebasNeue", sans-serif;
+                margin-left: 5px;
+                display: inherit;
+            }
+        }
+    }
+
+    &__dropdown-inactive {
+        display: none;
+    }
+}
+
+@media (max-width: 1440px) {
+
+    .filter-item {
+
+        &__title {
+            font-size: 13px;
+        }
+
+        &__picture {
+            margin-left: 2px;
+        }
+    }
+}
