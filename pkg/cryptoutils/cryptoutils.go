@@ -312,3 +312,9 @@ func makeSignature(createSignature CreateSignature) ([]byte, error) {
 	signature, err := crypto.Sign(dataSignature.Bytes(), createSignature.PrivateKey)
 	return signature, err
 }
+
+// SignHash is a function that calculates a hash for the given message.
+func SignHash(data []byte) []byte {
+	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(data), data)
+	return crypto.Keccak256([]byte(msg))
+}

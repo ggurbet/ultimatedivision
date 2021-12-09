@@ -8,6 +8,9 @@ import (
 	"crypto/subtle"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 	"golang.org/x/crypto/bcrypt"
@@ -15,6 +18,7 @@ import (
 	"ultimatedivision/console/emails"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/auth"
+	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/users"
 )
 
@@ -74,7 +78,7 @@ func (service *Service) Token(ctx context.Context, email string, password string
 	claims := auth.Claims{
 		UserID:    user.ID,
 		Email:     user.Email,
-		ExpiresAt: time.Now().Add(TokenExpirationTime),
+		ExpiresAt: time.Now().UTC().Add(TokenExpirationTime),
 	}
 
 	token, err = service.signer.CreateToken(ctx, &claims)
@@ -109,7 +113,7 @@ func (service *Service) LoginToken(ctx context.Context, email string, password s
 	claims := auth.Claims{
 		UserID:    user.ID,
 		Email:     user.Email,
-		ExpiresAt: time.Now().Add(TokenExpirationTime),
+		ExpiresAt: time.Now().UTC().Add(TokenExpirationTime),
 	}
 
 	token, err = service.signer.CreateToken(ctx, &claims)
@@ -130,7 +134,7 @@ func (service *Service) PreAuthToken(ctx context.Context, email string) (token s
 	claims := auth.Claims{
 		UserID:    user.ID,
 		Email:     user.Email,
-		ExpiresAt: time.Now().Add(PreAuthTokenExpirationTime),
+		ExpiresAt: time.Now().UTC().Add(PreAuthTokenExpirationTime),
 	}
 
 	token, err = service.signer.CreateToken(ctx, &claims)
@@ -185,7 +189,7 @@ func (service *Service) authenticate(token auth.Token) (_ *auth.Claims, err erro
 // authorize checks claims and returns authorized User.
 func (service *Service) authorize(ctx context.Context, claims *auth.Claims) (err error) {
 	if !claims.ExpiresAt.IsZero() && claims.ExpiresAt.Before(time.Now()) {
-		return ErrUnauthenticated.Wrap(err)
+		return ErrUnauthenticated.New("token expiration time has expired")
 	}
 
 	user, err := service.users.GetByEmail(ctx, claims.Email)
@@ -205,8 +209,8 @@ func (service *Service) authorize(ctx context.Context, claims *auth.Claims) (err
 	return nil
 }
 
-// Register - register a new user.
-func (service *Service) Register(ctx context.Context, email, password, nickName, firstName, lastName string) error {
+// Register - registers a new user.
+func (service *Service) Register(ctx context.Context, email, password, nickName, firstName, lastName string, wallet cryptoutils.Address) error {
 	// check if the user email address already exists.
 	_, err := service.users.GetByEmail(ctx, email)
 	if err == nil {
@@ -228,6 +232,8 @@ func (service *Service) Register(ctx context.Context, email, password, nickName,
 		LastLogin:    time.Time{},
 		Status:       users.StatusCreated,
 		CreatedAt:    time.Now().UTC(),
+		// @TODO at the time of testing login through metamask.
+		Wallet: wallet,
 	}
 
 	err = user.EncodePass()
@@ -269,7 +275,7 @@ func (service *Service) ConfirmUserEmail(ctx context.Context, activationToken st
 	}
 
 	if !claims.ExpiresAt.IsZero() && claims.ExpiresAt.Before(time.Now()) {
-		return ErrUnauthenticated.Wrap(err)
+		return ErrUnauthenticated.New("token expiration time has expired")
 	}
 
 	user, err := service.users.GetByEmail(ctx, claims.Email)
@@ -353,7 +359,7 @@ func (service *Service) CheckAuthToken(ctx context.Context, tokenStr string) err
 	}
 
 	if !claims.ExpiresAt.IsZero() && claims.ExpiresAt.Before(time.Now()) {
-		return ErrUnauthenticated.Wrap(err)
+		return ErrUnauthenticated.New("token expiration time has expired")
 	}
 
 	_, err = service.users.GetByEmail(ctx, claims.Email)
@@ -383,4 +389,79 @@ func (service *Service) ResetPassword(ctx context.Context, newPassword string) e
 	}
 
 	return Error.Wrap(service.users.UpdatePassword(ctx, user.PasswordHash, user.ID))
+}
+
+// TokenMessage creates message token and send to metamask for login.
+func (service *Service) TokenMessage(ctx context.Context) (token string, err error) {
+	claims := auth.Claims{
+		ExpiresAt: time.Now().UTC().Add(PreAuthTokenExpirationTime),
+	}
+
+	token, err = service.signer.CreateToken(ctx, &claims)
+	return token, Error.Wrap(err)
+}
+
+// CheckMetamaskTokenMessage - parses token-message and checks for expiration time.
+func (service *Service) CheckMetamaskTokenMessage(ctx context.Context, tokenMessage string) error {
+	token, err := auth.FromBase64URLString(tokenMessage)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+
+	claims, err := service.authenticate(token)
+	if err != nil {
+		return ErrUnauthenticated.Wrap(err)
+	}
+
+	if !claims.ExpiresAt.IsZero() && claims.ExpiresAt.Before(time.Now()) {
+		return ErrUnauthenticated.New("token expiration time has expired")
+	}
+
+	return Error.Wrap(err)
+}
+
+// LoginWithMetamask authenticates user by credentials and returns login token.
+func (service *Service) LoginWithMetamask(ctx context.Context, loginMetamaskFields users.LoginMetamaskFields) (token string, err error) {
+	verifyLoginMetamaskFields, err := verifyLoginMetamaskFields(loginMetamaskFields)
+	if err != nil {
+		return "", Error.Wrap(err)
+	}
+
+	if !verifyLoginMetamaskFields {
+		return "", Error.New("login metamask fields are wrong")
+	}
+
+	user, err := service.users.GetByWalletAddress(ctx, loginMetamaskFields.Address)
+	if err != nil {
+		return "", Error.Wrap(err)
+	}
+
+	claims := auth.Claims{
+		UserID:    user.ID,
+		Email:     user.Email,
+		ExpiresAt: time.Now().UTC().Add(TokenExpirationTime),
+	}
+
+	token, err = service.signer.CreateToken(ctx, &claims)
+	return token, Error.Wrap(err)
+}
+
+// verifyLoginMetamaskFields function that verifies the authenticity of the address.
+func verifyLoginMetamaskFields(loginMetamaskFields users.LoginMetamaskFields) (bool, error) {
+	fromAddr := common.HexToAddress(string(loginMetamaskFields.Address))
+	hash := hexutil.MustDecode(loginMetamaskFields.Hash)
+
+	if hash[64] != 27 && hash[64] != 28 {
+		return false, Error.New("hash is wrong")
+	}
+	hash[64] -= 27
+
+	pubKey, err := crypto.SigToPub(cryptoutils.SignHash([]byte(loginMetamaskFields.Message)), hash)
+	if err != nil {
+		return false, Error.Wrap(err)
+	}
+
+	recoveredAddr := crypto.PubkeyToAddress(*pubKey)
+
+	return fromAddr == recoveredAddr, nil
 }

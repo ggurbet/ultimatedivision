@@ -59,7 +59,7 @@ func (service *Service) Token(ctx context.Context, email string, password string
 	claims := auth.Claims{
 		UserID:    admin.ID,
 		Email:     admin.Email,
-		ExpiresAt: time.Now().Add(TokenExpirationTime),
+		ExpiresAt: time.Now().UTC().Add(TokenExpirationTime),
 	}
 
 	token, err = service.signer.CreateToken(ctx, &claims)
@@ -114,7 +114,7 @@ func (service *Service) authenticate(token auth.Token) (_ *auth.Claims, err erro
 // authorize checks claims and returns authorized User.
 func (service *Service) authorize(ctx context.Context, claims *auth.Claims) (err error) {
 	if !claims.ExpiresAt.IsZero() && claims.ExpiresAt.Before(time.Now()) {
-		return ErrUnauthenticated.Wrap(err)
+		return ErrUnauthenticated.New("token expiration time has expired")
 	}
 
 	_, err = service.admins.GetByEmail(ctx, claims.Email)
