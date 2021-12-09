@@ -21,6 +21,9 @@ const MatchFinder: React.FC = () => {
     const { squad } = useSelector((state: RootState) => state.clubsReducer.activeClub);
     const { isSearchingMatch } = useSelector((state: RootState) => state.clubsReducer);
 
+    /** Indicates that user have rejected game. */
+    const [isRejectedUser, setIsRejectedUser] = useState<boolean>(false);
+
     const [queueClient, setQueueClient] = useState<QueueClient>(new QueueClient());
 
     const dispatch = useDispatch();
@@ -32,36 +35,54 @@ const MatchFinder: React.FC = () => {
     /** Delay is time delay for redirect user to match page. */
     const DELAY: number = 2000;
 
-    /** variables describes first and second teams indexes for eventAction response. */
+    /** DELAY_AFTER_REJECT is time delay in milliseconds for searching match after reject. */
+    const DELAY_AFTER_REJECT: number = 500;
+
+    /** Variables describes first and second teams indexes for eventAction response. */
     const FIRST_TEAM_INDEX: number = 0;
     const SECOND_TEAM_INDEX: number = 1;
 
-    /** variable describes that webscoket connection responsed with error. */
+    /** Variable describes that webscoket connection responsed with error. */
     const ERROR_MESSAGE: string = 'could not write to websocket';
-    /** variable describes that user still searching game. */
+    /** Variable describes that user still searching game. */
     const STILL_SEARCHING_MESSAGE: string = 'you are still in search!';
-    /** variable describes that was send wrong action from user. */
+    /** Variable describes that was send wrong action from user. */
     const WRONG_ACTION_MESSAGE: string = 'wrong action';
-    /** variable describes that user added to gueue. */
+    /** Variable describes that user added to gueue. */
     const YOU_ADDED_MESSAGE: string = 'you added!';
-    /** variable describes that it needs confirm game from user. */
+    /** Variable describes that it needs confirm game from user. */
     const YOU_CONFIRM_PLAY_MESSAGE: string = 'you confirm play?';
     /** Variable describes that user have leaved from searching game. */
     const YOU_LEAVED_MESSAGE: string = 'you leaved!';
 
-    /** exposes confirm match logic. */
+    /** Exposes confirm match logic. */
     const confirmMatch = () => {
         queueClient.sendAction('confirm', squad.id);
     };
 
-    /** canceles confirmation game. */
+    /** Canceles confirmation game. */
     const cancelConfirmationGame = () => {
         queueClient.sendAction('reject', squad.id);
+        setIsRejectedUser(true);
     };
 
-    /** canceles searching game and closes MatchFinder component. */
+    // TODO: rework after ./queue/chore.go solution.
+    /** Starts searching match after rejected by user. */
+    const startSearchAfterReject = () => {
+        const newQueueClient = new QueueClient();
+        newQueueClient.startSearch('startSearch', squad.id);
+
+        setQueueClient(newQueueClient);
+
+        toast.error('Your game was canceled. You are still in search.', {
+            position: toast.POSITION.TOP_RIGHT,
+            theme: 'colored',
+        });
+    };
+
+    /** Canceles searching game and closes MatchFinder component. */
     const canselSearchingGame = () => {
-        /** TODO: rework after ./queue/chore.go solution. */
+        // TODO: rework after ./queue/chore.go solution
         queueClient.ws.close();
 
         const newQueueClient = new QueueClient();
@@ -71,9 +92,9 @@ const MatchFinder: React.FC = () => {
         dispatch(startSearchingMatch(false));
     };
 
-    /** exposes start searching match logic. */
+    /** Exposes start searching match logic. */
     const startSearchMatch = () => {
-        /** TODO: rework after ./queue/chore.go solution. */
+        // TODO: rework after ./queue/chore.go solution.
         const newQueueClient = new QueueClient();
         newQueueClient.startSearch('startSearch', squad.id);
         setQueueClient(newQueueClient);
@@ -83,7 +104,7 @@ const MatchFinder: React.FC = () => {
         isSearchingMatch && startSearchMatch();
     }, [isSearchingMatch]);
 
-    /** processes queue client event messages. */
+    /** Processes queue client event messages. */
     queueClient.ws.onmessage = ({ data }: MessageEvent) => {
         const messageEvent = JSON.parse(data);
 
@@ -98,18 +119,19 @@ const MatchFinder: React.FC = () => {
         case STILL_SEARCHING_MESSAGE:
             /** TODO: will be deleted after ./queue/chore.go reworks. */
             queueClient.ws.close();
-
-            const newQueueClient = new QueueClient();
-            newQueueClient.startSearch('startSearch', squad.id);
-
-            setQueueClient(newQueueClient);
-
             setIsMatchFound(false);
 
-            toast.error('Your game was canceled. You are still in search.', {
-                position: toast.POSITION.TOP_RIGHT,
-                theme: 'colored',
-            });
+            if (isRejectedUser) {
+                setTimeout(() => {
+                    startSearchAfterReject();
+                }, DELAY_AFTER_REJECT);
+
+                setIsRejectedUser(false);
+
+                return;
+            };
+
+            startSearchAfterReject();
 
             return;
         case WRONG_ACTION_MESSAGE:
