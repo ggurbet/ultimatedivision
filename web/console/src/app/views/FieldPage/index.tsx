@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { DragEvent, useEffect } from 'react';
+import { DragEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -9,21 +9,36 @@ import { FieldCardSelection } from
     '@/app/components/Field/FieldCardSelection';
 import { FieldPlayingArea } from
     '@/app/components/Field/FieldPlayingArea';
+import { RegistrationPopup } from '@/app/components/common/Registration/Registration';
 
+import { NotFoundError, UnauthorizedError } from '@/api';
 import { RootState } from '@/app/store';
 import { createClubs, deleteCard, getClubs } from '@/app/store/actions/clubs';
 import { CardEditIdentificators } from '@/api/club';
-import { NotFoundError } from '@/api';
 
 import './index.scss';
 
 const FootballField: React.FC = () => {
     const dispatch = useDispatch();
+    /** Indicates if registration required. */
+    const [isRegistrationRequired, setIsRegistrationRequired] = useState(false);
+
+    /** Closes RegistrationPopup componnet. */
+    const closeRegistrationPopup = () => {
+        setIsRegistrationRequired(false);
+    };
+
     useEffect(() => {
         (async function setClub() {
             try {
                 await dispatch(getClubs());
             } catch (error: any) {
+                if (error instanceof UnauthorizedError) {
+                    setIsRegistrationRequired(true);
+
+                    return;
+                };
+
                 if (!(error instanceof NotFoundError)) {
                     toast.error('Something went wrong', {
                         position: toast.POSITION.TOP_RIGHT,
@@ -65,19 +80,22 @@ const FootballField: React.FC = () => {
     };
 
     return (
-        <div className="football-field"
-            onDrop={e => drop(e)}
-            onDragOver={e => dragOverHandler(e)}
-        >
-            <h1 className="football-field__title">Football Field</h1>
-            <FieldPlayingArea />
-            <div
-                style={{ height: cardSelectionVisibility ? 'unset' : '0' }}
-                className="football-field__wrapper"
+        <>
+            {isRegistrationRequired && <RegistrationPopup closeRegistrationPopup={closeRegistrationPopup} />}
+            <div className="football-field"
+                onDrop={e => drop(e)}
+                onDragOver={e => dragOverHandler(e)}
             >
-                <FieldCardSelection />
+                <h1 className="football-field__title">Football Field</h1>
+                <FieldPlayingArea />
+                <div
+                    style={{ height: cardSelectionVisibility ? 'unset' : '0' }}
+                    className="football-field__wrapper"
+                >
+                    <FieldCardSelection />
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

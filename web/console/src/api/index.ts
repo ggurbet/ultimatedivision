@@ -9,7 +9,7 @@ import { HttpClient } from '@/private/http/client';
  */
 export class UnauthorizedError extends Error {
     /** Error message while unautorized */
-    public constructor(message = 'authorization required') {
+    public constructor(message = 'Unauthorized') {
         super(message);
     }
 }

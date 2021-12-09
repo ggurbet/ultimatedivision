@@ -1,11 +1,13 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
 import { LootboxCardQuality } from './LootboxCardQuality';
+
+import { RegistrationPopup } from '@/app/components/common/Registration/Registration';
 
 import coin from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';
 import diamond from '@static/img/StorePage/BoxCard/diamond.svg';
@@ -13,6 +15,7 @@ import gold from '@static/img/StorePage/BoxCard/gold.svg';
 import silver from '@static/img/StorePage/BoxCard/silver.svg';
 import wood from '@static/img/StorePage/BoxCard/wood.svg';
 
+import { UnauthorizedError } from '@/api';
 import { openLootbox } from '@/app/store/actions/lootboxes';
 import { LootboxStats } from '@/app/types/lootbox';
 
@@ -22,6 +25,14 @@ export const LootboxCard: React.FC<{
     data: LootboxStats;
     handleOpening: Dispatch<SetStateAction<boolean>>;
 }> = ({ data, handleOpening }) => {
+    /** Indicates if registration required. */
+    const [isRegistrationRequired, setIsRegistrationRequired] = useState(false);
+
+    /** Closes Registration popup componnet. */
+    const closeRegistrationPopup = () => {
+        setIsRegistrationRequired(false);
+    };
+
     const dispatch = useDispatch();
 
     const qualities = [
@@ -50,11 +61,21 @@ export const LootboxCard: React.FC<{
 
             handleOpening(true);
         } catch (error: any) {
+            if (error instanceof UnauthorizedError) {
+                setIsRegistrationRequired(true);
+
+                return;
+            };
+
             toast.error('Failed to open lootbox', {
                 position: toast.POSITION.TOP_RIGHT,
                 theme: 'colored',
             });
         }
+    };
+
+    if (isRegistrationRequired) {
+        return <RegistrationPopup closeRegistrationPopup={closeRegistrationPopup} />;
     };
 
     return (
