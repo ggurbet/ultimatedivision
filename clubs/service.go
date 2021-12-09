@@ -19,6 +19,9 @@ import (
 // ErrClubs indicates that there was an error in the service.
 var ErrClubs = errs.Class("clubs service error")
 
+// ErrInvalidOperation indicates that operation is invalid.
+var ErrInvalidOperation = errs.Class("clubs invalid operation")
+
 // Service is handling clubs related logic.
 //
 // architecture: Service
@@ -102,7 +105,16 @@ func (service *Service) CreateSquad(ctx context.Context, clubID uuid.UUID) (uuid
 }
 
 // AddSquadCard adds card to the squad.
-func (service *Service) AddSquadCard(ctx context.Context, squadID uuid.UUID, newSquadCard SquadCard) error {
+func (service *Service) AddSquadCard(ctx context.Context, userID, squadID uuid.UUID, newSquadCard SquadCard) error {
+	card, err := service.cards.Get(ctx, newSquadCard.CardID)
+	if err != nil {
+		return ErrClubs.Wrap(err)
+	}
+
+	if userID != card.UserID {
+		return ErrInvalidOperation.New("card does not belong to user")
+	}
+
 	squadCards, err := service.clubs.ListSquadCards(ctx, squadID)
 	if err != nil {
 		return ErrClubs.Wrap(err)

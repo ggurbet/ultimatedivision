@@ -307,6 +307,13 @@ func (controller *Clubs) Add(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 	params := mux.Vars(r)
+
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusUnauthorized, ErrClubs.Wrap(err))
+		return
+	}
+
 	var squadCard clubs.SquadCard
 
 	squadID, err := uuid.Parse(params["squadId"])
@@ -334,7 +341,11 @@ func (controller *Clubs) Add(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = controller.clubs.AddSquadCard(ctx, squadID, squadCard); err != nil {
+	if err = controller.clubs.AddSquadCard(ctx, claims.UserID, squadID, squadCard); err != nil {
+		if clubs.ErrInvalidOperation.Has(err) {
+			controller.serveError(w, http.StatusBadRequest, ErrClubs.Wrap(err))
+			return
+		}
 		controller.log.Error("could not add card to the squad", ErrClubs.Wrap(err))
 		controller.serveError(w, http.StatusInternalServerError, ErrClubs.Wrap(err))
 		return
