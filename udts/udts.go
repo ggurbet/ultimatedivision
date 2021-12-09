@@ -4,10 +4,31 @@
 package udts
 
 import (
+	"context"
 	"math/big"
 
 	"github.com/google/uuid"
+	"github.com/zeebo/errs"
 )
+
+// ErrNoUDT indicates that udt of currency wait list does not exist.
+var ErrNoUDT = errs.Class("udt does not exist")
+
+// DB is exposing access to udts db.
+//
+// architecture: DB
+type DB interface {
+	// Create creates udt in the database.
+	Create(ctx context.Context, udt UDT) error
+	// Get returns udt by user's id from database.
+	Get(ctx context.Context, userID uuid.UUID) (UDT, error)
+	// List returns udts from database.
+	List(ctx context.Context) ([]UDT, error)
+	// Update updates udt by user's id in the database.
+	Update(ctx context.Context, udt UDT) error
+	// Delete deletes udt by user's id in the database.
+	Delete(ctx context.Context, userID uuid.UUID) error
+}
 
 // UDT entity describes how many tokens of udt and what nonce the user has.
 type UDT struct {
@@ -15,3 +36,6 @@ type UDT struct {
 	Value  big.Int   `json:"value"`
 	Nonce  int64     `json:"nonce"`
 }
+
+// Config defines values needed by create udt.
+type Config struct{}

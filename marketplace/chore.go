@@ -52,7 +52,7 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 
 		// TODO: the transaction may be required for all operations.
 		for _, lot := range lots {
-			if lot.CurrentPrice != 0 {
+			if lot.CurrentPrice.BitLen() != 0 {
 				// TODO: unhold old user's money.
 
 				winLot := WinLot{

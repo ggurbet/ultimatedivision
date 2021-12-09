@@ -5,6 +5,7 @@ package marketplace
 
 import (
 	"context"
+	"math/big"
 	"strconv"
 	"strings"
 	"time"
@@ -69,7 +70,7 @@ func (service *Service) CreateLot(ctx context.Context, createLot CreateLot) erro
 		return ErrMarketplace.Wrap(err)
 	}
 
-	if createLot.MaxPrice != 0 && createLot.MaxPrice < createLot.StartPrice {
+	if createLot.MaxPrice.BitLen() != 0 && createLot.MaxPrice.Cmp(&createLot.StartPrice) == -1 {
 		return ErrMarketplace.New("max price less start price")
 	}
 
@@ -186,7 +187,7 @@ func (service *Service) PlaceBetLot(ctx context.Context, betLot BetLot) error {
 		return ErrMarketplace.New("the lot is already on expired")
 	}
 
-	if betLot.BetAmount < lot.StartPrice || betLot.BetAmount <= lot.CurrentPrice {
+	if betLot.BetAmount.Cmp(&lot.StartPrice) == -1 || betLot.BetAmount.Cmp(&lot.CurrentPrice) == -1 || betLot.BetAmount.Cmp(&lot.CurrentPrice) == 0 {
 		return ErrMarketplace.New("not enough money")
 	}
 
@@ -200,7 +201,7 @@ func (service *Service) PlaceBetLot(ctx context.Context, betLot BetLot) error {
 		return ErrMarketplace.Wrap(err)
 	}
 
-	if betLot.BetAmount >= lot.MaxPrice && lot.MaxPrice != 0 {
+	if (betLot.BetAmount.Cmp(&lot.MaxPrice) == 1 || betLot.BetAmount.Cmp(&lot.MaxPrice) == 0) && lot.MaxPrice.BitLen() != 0 {
 		if err = service.UpdateCurrentPriceLot(ctx, betLot.ID, lot.MaxPrice); err != nil {
 			return ErrMarketplace.Wrap(err)
 		}
@@ -268,7 +269,7 @@ func (service *Service) UpdateStatusLot(ctx context.Context, id uuid.UUID, statu
 }
 
 // UpdateCurrentPriceLot updates current price of lot.
-func (service *Service) UpdateCurrentPriceLot(ctx context.Context, id uuid.UUID, currentPrice float64) error {
+func (service *Service) UpdateCurrentPriceLot(ctx context.Context, id uuid.UUID, currentPrice big.Int) error {
 	return ErrMarketplace.Wrap(service.marketplace.UpdateCurrentPriceLot(ctx, id, currentPrice))
 }
 

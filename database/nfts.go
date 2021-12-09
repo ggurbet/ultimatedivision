@@ -52,7 +52,7 @@ func (nftsDB *nftsDB) Get(ctx context.Context, tokenID int64, chain cryptoutils.
 
 	err := row.Scan(&nft.CardID, &nft.TokenID, &nft.Chain, &nft.WalletAddress)
 	if errors.Is(err, sql.ErrNoRows) {
-		return nft, nfts.ErrNoNFTs.Wrap(err)
+		return nft, nfts.ErrNoNFT.Wrap(err)
 	}
 
 	return nft, ErrNFTs.Wrap(err)
@@ -99,7 +99,7 @@ func (nftsDB *nftsDB) Update(ctx context.Context, nft nfts.NFT) error {
 		return ErrNFTs.Wrap(err)
 	}
 	if rowNum == 0 {
-		return nfts.ErrNoNFTs.New("nft does not exist")
+		return nfts.ErrNoNFT.New("nft does not exist")
 	}
 
 	return ErrNFTs.Wrap(err)
@@ -114,7 +114,7 @@ func (nftsDB *nftsDB) Delete(ctx context.Context, cardID uuid.UUID) error {
 
 	rowNum, err := result.RowsAffected()
 	if err == nil && rowNum == 0 {
-		return nfts.ErrNoNFTs.New("nft does not exist")
+		return nfts.ErrNoNFT.New("nft does not exist")
 	}
 
 	return ErrNFTs.Wrap(err)

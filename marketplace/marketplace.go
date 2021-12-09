@@ -5,6 +5,7 @@ package marketplace
 
 import (
 	"context"
+	"math/big"
 	"time"
 
 	"github.com/google/uuid"
@@ -37,7 +38,7 @@ type DB interface {
 	// UpdateStatusLot updates status of lot in the database.
 	UpdateStatusLot(ctx context.Context, id uuid.UUID, status Status) error
 	// UpdateCurrentPriceLot updates current price of lot in the database.
-	UpdateCurrentPriceLot(ctx context.Context, id uuid.UUID, currentPrice float64) error
+	UpdateCurrentPriceLot(ctx context.Context, id uuid.UUID, currentPrice big.Int) error
 	// UpdateEndTimeLot updates end time of lot in the database.
 	UpdateEndTimeLot(ctx context.Context, id uuid.UUID, endTime time.Time) error
 }
@@ -50,9 +51,9 @@ type Lot struct {
 	UserID       uuid.UUID  `json:"userId"`
 	ShopperID    uuid.UUID  `json:"shopperId"`
 	Status       Status     `json:"status"`
-	StartPrice   float64    `json:"startPrice"`
-	MaxPrice     float64    `json:"maxPrice"`
-	CurrentPrice float64    `json:"currentPrice"`
+	StartPrice   big.Int    `json:"startPrice"`
+	MaxPrice     big.Int    `json:"maxPrice"`
+	CurrentPrice big.Int    `json:"currentPrice"`
 	StartTime    time.Time  `json:"startTime"`
 	EndTime      time.Time  `json:"endTime"`
 	Period       Period     `json:"period"`
@@ -102,8 +103,8 @@ type CreateLot struct {
 	ItemID     uuid.UUID `json:"itemId"`
 	Type       Type      `json:"type"`
 	UserID     uuid.UUID `json:"userId"`
-	StartPrice float64   `json:"startPrice"`
-	MaxPrice   float64   `json:"maxPrice"`
+	StartPrice big.Int   `json:"startPrice"`
+	MaxPrice   big.Int   `json:"maxPrice"`
 	Period     Period    `json:"period"`
 }
 
@@ -111,7 +112,7 @@ type CreateLot struct {
 type BetLot struct {
 	ID        uuid.UUID `json:"id"`
 	UserID    uuid.UUID `json:"userId"`
-	BetAmount float64   `json:"betAmount"`
+	BetAmount big.Int   `json:"betAmount"`
 }
 
 // WinLot entity that contains the values required to win the lot.
@@ -122,7 +123,7 @@ type WinLot struct {
 	UserID    uuid.UUID `json:"userId"`
 	ShopperID uuid.UUID `json:"shopperID"`
 	Status    Status    `json:"status"`
-	Amount    float64   `json:"amount"`
+	Amount    big.Int   `json:"amount"`
 }
 
 // ValidateCreateLot check is empty fields of create lot entity.
@@ -131,7 +132,7 @@ func (createLot CreateLot) ValidateCreateLot() error {
 		return ErrMarketplace.New("item id is empty")
 	}
 
-	if createLot.StartPrice == 0 {
+	if createLot.StartPrice.BitLen() == 0 {
 		return ErrMarketplace.New("start price is empty")
 	}
 
@@ -148,7 +149,7 @@ func (betLot BetLot) ValidateBetLot() error {
 		return ErrMarketplace.New("lot id is empty")
 	}
 
-	if betLot.BetAmount == 0 {
+	if betLot.BetAmount.BitLen() == 0 {
 		return ErrMarketplace.New("bet amount is empty")
 	}
 

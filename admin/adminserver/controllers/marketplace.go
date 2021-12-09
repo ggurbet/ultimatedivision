@@ -5,9 +5,9 @@ package controllers
 
 import (
 	"html/template"
+	"math/big"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -203,6 +203,11 @@ func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request)
 			return
 		}
 	case http.MethodPost:
+		var (
+			startPrice big.Int
+			maxPrice   big.Int
+		)
+
 		err := r.ParseForm()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -210,7 +215,6 @@ func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request)
 		}
 
 		itemIDForm := r.FormValue("itemId")
-		strings.ToValidUTF8(itemIDForm, "")
 		itemID, err := uuid.Parse(itemIDForm)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -218,7 +222,6 @@ func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request)
 		}
 
 		userIDForm := r.FormValue("userId")
-		strings.ToValidUTF8(userIDForm, "")
 		userID, err := uuid.Parse(userIDForm)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -226,21 +229,16 @@ func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request)
 		}
 
 		startPriceForm := r.FormValue("startPrice")
-		strings.ToValidUTF8(startPriceForm, "")
-		startPrice, err := strconv.ParseFloat(startPriceForm, 64)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+		if _, ok := startPrice.SetString(startPriceForm, 10); !ok {
+			http.Error(w, "could not scan start price into big int", http.StatusBadRequest)
 		}
 
 		maxPriceForm := r.FormValue("maxPrice")
-		strings.ToValidUTF8(maxPriceForm, "")
-		maxPrice, err := strconv.ParseFloat(maxPriceForm, 64)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+		if _, ok := maxPrice.SetString(maxPriceForm, 10); !ok {
+			http.Error(w, "could not scan max price into big int", http.StatusBadRequest)
 		}
 
 		periodForm := r.FormValue("period")
-		strings.ToValidUTF8(periodForm, "")
 		period, err := strconv.Atoi(periodForm)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -320,14 +318,14 @@ func (controller *Marketplace) PlaceBetLot(w http.ResponseWriter, r *http.Reques
 			return
 		}
 	case http.MethodPost:
-		err := r.ParseForm()
-		if err != nil {
+		var betAmount big.Int
+
+		if err := r.ParseForm(); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		userIDForm := r.FormValue("userId")
-		strings.ToValidUTF8(userIDForm, "")
 		userID, err := uuid.Parse(userIDForm)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -335,10 +333,8 @@ func (controller *Marketplace) PlaceBetLot(w http.ResponseWriter, r *http.Reques
 		}
 
 		betAmountForm := r.FormValue("betAmount")
-		strings.ToValidUTF8(betAmountForm, "")
-		betAmount, err := strconv.ParseFloat(betAmountForm, 64)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+		if _, ok := betAmount.SetString(betAmountForm, 10); !ok {
+			http.Error(w, "could not scan start price into big int", http.StatusBadRequest)
 		}
 
 		betLot := marketplace.BetLot{

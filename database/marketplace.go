@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"math/big"
 	"time"
 
 	"github.com/google/uuid"
@@ -45,14 +46,20 @@ func (marketplaceDB *marketplaceDB) CreateLot(ctx context.Context, lot marketpla
 
 	_, err := marketplaceDB.conn.ExecContext(ctx, query,
 		lot.ID, lot.ItemID, lot.Type, lot.UserID, lot.ShopperID, lot.Status,
-		lot.StartPrice, lot.MaxPrice, lot.CurrentPrice, lot.StartTime, lot.EndTime, lot.Period)
+		lot.StartPrice.Bytes(), lot.MaxPrice.Bytes(), lot.CurrentPrice.Bytes(), lot.StartTime, lot.EndTime, lot.Period)
 
 	return ErrMarketplace.Wrap(err)
 }
 
 // GetLotByID returns lot by id from the data base.
 func (marketplaceDB *marketplaceDB) GetLotByID(ctx context.Context, id uuid.UUID) (marketplace.Lot, error) {
-	lot := marketplace.Lot{}
+	var (
+		startPrice   []byte
+		maxPrice     []byte
+		currentPrice []byte
+		lot          marketplace.Lot
+	)
+
 	query :=
 		`SELECT 
 			lots.id, item_id, lots.type, lots.user_id, shopper_id, lots.status, start_price, max_price, current_price, start_time, end_time, period,
@@ -69,7 +76,7 @@ func (marketplaceDB *marketplaceDB) GetLotByID(ctx context.Context, id uuid.UUID
 			lots.id = $1`
 
 	err := marketplaceDB.conn.QueryRowContext(ctx, query, id).Scan(
-		&lot.ID, &lot.ItemID, &lot.Type, &lot.UserID, &lot.ShopperID, &lot.Status, &lot.StartPrice, &lot.MaxPrice, &lot.CurrentPrice, &lot.StartTime, &lot.EndTime, &lot.Period,
+		&lot.ID, &lot.ItemID, &lot.Type, &lot.UserID, &lot.ShopperID, &lot.Status, &startPrice, &maxPrice, &currentPrice, &lot.StartTime, &lot.EndTime, &lot.Period,
 		&lot.Card.ID, &lot.Card.PlayerName, &lot.Card.Quality, &lot.Card.Height, &lot.Card.Weight, &lot.Card.DominantFoot, &lot.Card.IsTattoo, &lot.Card.Status, &lot.Card.Type, &lot.Card.UserID, &lot.Card.Tactics, &lot.Card.Positioning,
 		&lot.Card.Composure, &lot.Card.Aggression, &lot.Card.Vision, &lot.Card.Awareness, &lot.Card.Crosses, &lot.Card.Physique, &lot.Card.Acceleration, &lot.Card.RunningSpeed,
 		&lot.Card.ReactionSpeed, &lot.Card.Agility, &lot.Card.Stamina, &lot.Card.Strength, &lot.Card.Jumping, &lot.Card.Balance, &lot.Card.Technique, &lot.Card.Dribbling,
@@ -78,6 +85,9 @@ func (marketplaceDB *marketplaceDB) GetLotByID(ctx context.Context, id uuid.UUID
 		&lot.Card.FreeKicks, &lot.Card.Corners, &lot.Card.HeadingAccuracy, &lot.Card.Defence, &lot.Card.OffsideTrap, &lot.Card.Sliding, &lot.Card.Tackles, &lot.Card.BallFocus,
 		&lot.Card.Interceptions, &lot.Card.Vigilance, &lot.Card.Goalkeeping, &lot.Card.Reflexes, &lot.Card.Diving, &lot.Card.Handling, &lot.Card.Sweeping, &lot.Card.Throwing,
 	)
+	lot.StartPrice.SetBytes(startPrice)
+	lot.MaxPrice.SetBytes(maxPrice)
+	lot.CurrentPrice.SetBytes(currentPrice)
 
 	switch {
 	case errors.Is(err, sql.ErrNoRows):
@@ -91,7 +101,13 @@ func (marketplaceDB *marketplaceDB) GetLotByID(ctx context.Context, id uuid.UUID
 
 // ListActiveLots returns active lots from the data base.
 func (marketplaceDB *marketplaceDB) ListActiveLots(ctx context.Context, cursor pagination.Cursor) (marketplace.Page, error) {
-	var lotsListPage marketplace.Page
+	var (
+		startPrice   []byte
+		maxPrice     []byte
+		currentPrice []byte
+		lotsListPage marketplace.Page
+	)
+
 	offset := (cursor.Page - 1) * cursor.Limit
 	query :=
 		`SELECT 
@@ -124,7 +140,7 @@ func (marketplaceDB *marketplaceDB) ListActiveLots(ctx context.Context, cursor p
 	for rows.Next() {
 		lot := marketplace.Lot{}
 		if err = rows.Scan(
-			&lot.ID, &lot.ItemID, &lot.Type, &lot.UserID, &lot.ShopperID, &lot.Status, &lot.StartPrice, &lot.MaxPrice, &lot.CurrentPrice, &lot.StartTime, &lot.EndTime, &lot.Period,
+			&lot.ID, &lot.ItemID, &lot.Type, &lot.UserID, &lot.ShopperID, &lot.Status, &startPrice, &maxPrice, &currentPrice, &lot.StartTime, &lot.EndTime, &lot.Period,
 			&lot.Card.ID, &lot.Card.PlayerName, &lot.Card.Quality, &lot.Card.Height, &lot.Card.Weight,
 			&lot.Card.DominantFoot, &lot.Card.IsTattoo, &lot.Card.Status, &lot.Card.Type, &lot.Card.UserID, &lot.Card.Tactics, &lot.Card.Positioning,
 			&lot.Card.Composure, &lot.Card.Aggression, &lot.Card.Vision, &lot.Card.Awareness, &lot.Card.Crosses, &lot.Card.Physique, &lot.Card.Acceleration, &lot.Card.RunningSpeed,
@@ -136,6 +152,9 @@ func (marketplaceDB *marketplaceDB) ListActiveLots(ctx context.Context, cursor p
 		); err != nil {
 			return lotsListPage, ErrMarketplace.Wrap(err)
 		}
+		lot.StartPrice.SetBytes(startPrice)
+		lot.MaxPrice.SetBytes(maxPrice)
+		lot.CurrentPrice.SetBytes(currentPrice)
 
 		lots = append(lots, lot)
 	}
@@ -145,7 +164,13 @@ func (marketplaceDB *marketplaceDB) ListActiveLots(ctx context.Context, cursor p
 
 // ListActiveLotsByItemID returns active lots from the data base by item id.
 func (marketplaceDB *marketplaceDB) ListActiveLotsByItemID(ctx context.Context, itemIds []uuid.UUID, cursor pagination.Cursor) (marketplace.Page, error) {
-	var lotsListPage marketplace.Page
+	var (
+		startPrice   []byte
+		maxPrice     []byte
+		currentPrice []byte
+		lotsListPage marketplace.Page
+	)
+
 	offset := (cursor.Page - 1) * cursor.Limit
 	query :=
 		`SELECT 
@@ -178,7 +203,7 @@ func (marketplaceDB *marketplaceDB) ListActiveLotsByItemID(ctx context.Context, 
 	for rows.Next() {
 		lot := marketplace.Lot{}
 		if err = rows.Scan(
-			&lot.ID, &lot.ItemID, &lot.Type, &lot.UserID, &lot.ShopperID, &lot.Status, &lot.StartPrice, &lot.MaxPrice, &lot.CurrentPrice, &lot.StartTime, &lot.EndTime, &lot.Period,
+			&lot.ID, &lot.ItemID, &lot.Type, &lot.UserID, &lot.ShopperID, &lot.Status, &startPrice, &maxPrice, &currentPrice, &lot.StartTime, &lot.EndTime, &lot.Period,
 			&lot.Card.ID, &lot.Card.PlayerName, &lot.Card.Quality, &lot.Card.Height, &lot.Card.Weight, &lot.Card.DominantFoot, &lot.Card.IsTattoo, &lot.Card.Status, &lot.Card.Type, &lot.Card.UserID, &lot.Card.Tactics, &lot.Card.Positioning,
 			&lot.Card.Composure, &lot.Card.Aggression, &lot.Card.Vision, &lot.Card.Awareness, &lot.Card.Crosses, &lot.Card.Physique, &lot.Card.Acceleration, &lot.Card.RunningSpeed,
 			&lot.Card.ReactionSpeed, &lot.Card.Agility, &lot.Card.Stamina, &lot.Card.Strength, &lot.Card.Jumping, &lot.Card.Balance, &lot.Card.Technique, &lot.Card.Dribbling,
@@ -189,6 +214,10 @@ func (marketplaceDB *marketplaceDB) ListActiveLotsByItemID(ctx context.Context, 
 		); err != nil {
 			return lotsListPage, ErrMarketplace.Wrap(err)
 		}
+		lot.StartPrice.SetBytes(startPrice)
+		lot.MaxPrice.SetBytes(maxPrice)
+		lot.CurrentPrice.SetBytes(currentPrice)
+
 		lots = append(lots, lot)
 	}
 	lotsListPage, err = marketplaceDB.listPaginated(ctx, cursor, lots)
@@ -237,6 +266,13 @@ func (marketplaceDB *marketplaceDB) totalActiveCount(ctx context.Context) (int, 
 
 // ListExpiredLot returns lots where end time lower than or equal to time now UTC from the data base.
 func (marketplaceDB *marketplaceDB) ListExpiredLot(ctx context.Context) ([]marketplace.Lot, error) {
+	var (
+		startPrice   []byte
+		maxPrice     []byte
+		currentPrice []byte
+		lots         []marketplace.Lot
+	)
+
 	query :=
 		`SELECT 
 			` + allFieldsOfLot + ` 
@@ -256,15 +292,17 @@ func (marketplaceDB *marketplaceDB) ListExpiredLot(ctx context.Context) ([]marke
 		err = errs.Combine(err, rows.Close())
 	}()
 
-	lots := []marketplace.Lot{}
 	for rows.Next() {
 		lot := marketplace.Lot{}
 		if err = rows.Scan(
 			&lot.ID, &lot.ItemID, &lot.Type, &lot.UserID, &lot.ShopperID, &lot.Status,
-			&lot.StartPrice, &lot.MaxPrice, &lot.CurrentPrice, &lot.StartTime, &lot.EndTime, &lot.Period,
+			&startPrice, &maxPrice, &currentPrice, &lot.StartTime, &lot.EndTime, &lot.Period,
 		); err != nil {
 			return nil, ErrMarketplace.Wrap(err)
 		}
+		lot.StartPrice.SetBytes(startPrice)
+		lot.MaxPrice.SetBytes(maxPrice)
+		lot.CurrentPrice.SetBytes(currentPrice)
 
 		lots = append(lots, lot)
 	}
@@ -306,8 +344,8 @@ func (marketplaceDB *marketplaceDB) UpdateStatusLot(ctx context.Context, id uuid
 }
 
 // UpdateCurrentPriceLot updates current price of lot in the database.
-func (marketplaceDB *marketplaceDB) UpdateCurrentPriceLot(ctx context.Context, id uuid.UUID, currentPrice float64) error {
-	result, err := marketplaceDB.conn.ExecContext(ctx, "UPDATE lots SET current_price = $1 WHERE id = $2", currentPrice, id)
+func (marketplaceDB *marketplaceDB) UpdateCurrentPriceLot(ctx context.Context, id uuid.UUID, currentPrice big.Int) error {
+	result, err := marketplaceDB.conn.ExecContext(ctx, "UPDATE lots SET current_price = $1 WHERE id = $2", currentPrice.Bytes(), id)
 	if err != nil {
 		return ErrMarketplace.Wrap(err)
 	}

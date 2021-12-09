@@ -31,6 +31,7 @@ import (
 	"ultimatedivision/pkg/auth"
 	mail2 "ultimatedivision/pkg/mail"
 	"ultimatedivision/seasons"
+	"ultimatedivision/udts"
 	"ultimatedivision/users"
 	"ultimatedivision/users/userauth"
 )
@@ -77,6 +78,9 @@ type DB interface {
 
 	// Seasons provides access to seasons db.
 	Seasons() seasons.DB
+
+	// UDTs provides access to udts db.
+	UDTs() udts.DB
 
 	// Close closes underlying db connection.
 	Close() error
@@ -146,6 +150,10 @@ type Config struct {
 	Matches struct {
 		matches.Config
 	} `json:"matches"`
+
+	UDTs struct {
+		udts.Config
+	} `json:"udts"`
 }
 
 // Peer is the representation of a ultimatedivision.
@@ -225,6 +233,11 @@ type Peer struct {
 	Seasons struct {
 		Service           *seasons.Service
 		ExpirationSeasons *seasons.Chore
+	}
+
+	// exposes udts related logic.
+	UDTs struct {
+		Service *udts.Service
 	}
 
 	// Admin web server server with web UI.
@@ -425,6 +438,13 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Matches.Service,
 			peer.Seasons.Service,
 			peer.Clubs.Service,
+		)
+	}
+
+	{ // udts setup
+		peer.UDTs.Service = udts.NewService(
+			config.UDTs.Config,
+			peer.Database.UDTs(),
 		)
 	}
 

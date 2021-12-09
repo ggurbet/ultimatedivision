@@ -5,6 +5,7 @@ package marketplace_test
 
 import (
 	"context"
+	"math/big"
 	"testing"
 	"time"
 
@@ -28,9 +29,9 @@ func TestMarketplace(t *testing.T) {
 		UserID:       uuid.New(),
 		ShopperID:    uuid.New(),
 		Status:       marketplace.StatusSoldBuynow,
-		StartPrice:   5.0,
-		MaxPrice:     30.0,
-		CurrentPrice: 30.0,
+		StartPrice:   *big.NewInt(500000000000000),
+		MaxPrice:     *big.NewInt(3000000000000000),
+		CurrentPrice: *big.NewInt(3000000000000000),
 		StartTime:    time.Now().UTC(),
 		EndTime:      time.Now().AddDate(0, 0, 2).UTC(),
 		Period:       2,
@@ -42,8 +43,8 @@ func TestMarketplace(t *testing.T) {
 		Type:         marketplace.TypeCard,
 		UserID:       uuid.New(),
 		Status:       marketplace.StatusActive,
-		StartPrice:   5.0,
-		CurrentPrice: 25.0,
+		StartPrice:   *big.NewInt(500000000000000),
+		CurrentPrice: *big.NewInt(2500000000000000),
 		StartTime:    time.Now().UTC(),
 		EndTime:      time.Now().AddDate(0, 0, 1).UTC(),
 		Period:       marketplace.MinPeriod,
@@ -308,14 +309,14 @@ func TestMarketplace(t *testing.T) {
 		})
 
 		t.Run("update current price of lot sql no rows", func(t *testing.T) {
-			err := repositoryMarketplace.UpdateCurrentPriceLot(ctx, id, 25.0)
+			err := repositoryMarketplace.UpdateCurrentPriceLot(ctx, id, *big.NewInt(2500000000000000))
 			require.Error(t, err)
 			require.Equal(t, marketplace.ErrNoLot.Has(err), true)
 		})
 
 		t.Run("update current price of lot", func(t *testing.T) {
-			lot1.CurrentPrice = 25.0
-			err := repositoryMarketplace.UpdateCurrentPriceLot(ctx, lot1.ID, 25.0)
+			lot1.CurrentPrice = *big.NewInt(2500000000000000)
+			err := repositoryMarketplace.UpdateCurrentPriceLot(ctx, lot1.ID, *big.NewInt(2500000000000000))
 			require.NoError(t, err)
 
 			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.ID)

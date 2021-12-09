@@ -5,6 +5,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"math/big"
 	"net/http"
 	"strconv"
 	"time"
@@ -138,9 +139,9 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 		ItemID       uuid.UUID          `json:"itemId"`
 		Type         marketplace.Type   `json:"type"`
 		Status       marketplace.Status `json:"status"`
-		StartPrice   float64            `json:"startPrice"`
-		MaxPrice     float64            `json:"maxPrice"`
-		CurrentPrice float64            `json:"currentPrice"`
+		StartPrice   big.Int            `json:"startPrice"`
+		MaxPrice     big.Int            `json:"maxPrice"`
+		CurrentPrice big.Int            `json:"currentPrice"`
 		StartTime    time.Time          `json:"startTime"`
 		EndTime      time.Time          `json:"endTime"`
 		Period       marketplace.Period `json:"period"`

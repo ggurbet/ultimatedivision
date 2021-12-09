@@ -23,6 +23,7 @@ import (
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/seasons"
+	"ultimatedivision/udts"
 	"ultimatedivision/users"
 )
 
@@ -206,9 +207,9 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             user_id       BYTEA                    REFERENCES users(id) ON DELETE CASCADE NOT NULL,
             shopper_id    BYTEA,
             status        VARCHAR                                                         NOT NULL,
-            start_price   NUMERIC(16,2)                                                   NOT NULL,
-            max_price     NUMERIC(16,2),
-            current_price NUMERIC(16,2),
+            start_price   BYTEA                                                           NOT NULL,
+            max_price     BYTEA,
+            current_price BYTEA,
             start_time    TIMESTAMP WITH TIME ZONE                                        NOT NULL,
             end_time      TIMESTAMP WITH TIME ZONE                                        NOT NULL,
             period        INTEGER                                                         NOT NULL
@@ -248,6 +249,11 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             token_id       INTEGER                                  NOT NULL,
             chain          VARCHAR                                  NOT NULL,
             wallet_address VARCHAR                                  NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS udts(
+            user_id        BYTEA   PRIMARY KEY REFERENCES users(id) NOT NULL,
+            value          BYTEA                                    NOT NULL,
+            nonce          INTEGER                                  NOT NULL
         );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)
@@ -326,4 +332,9 @@ func (db *database) NFTs() nfts.DB {
 // WaitList provides access to accounts db.
 func (db *database) WaitList() waitlist.DB {
 	return &waitlistDB{conn: db.conn}
+}
+
+// UDTs provides access to accounts db.
+func (db *database) UDTs() udts.DB {
+	return &udtsDB{conn: db.conn}
 }
