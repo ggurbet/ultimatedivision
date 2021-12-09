@@ -3,10 +3,10 @@
 
 import { ethers } from 'ethers';
 
-import { WhitelistClient } from '@/api/whitelist';
+import { EthersClient } from '@/api/ethers';
 import { buildHash } from '../internal/ethers';
-import { Transaction } from '.';
-import { TransactionIdentificators } from '@/app/types/ethers';
+import { SignedMessage, Transaction } from '.';
+import { TransactionIdentificators } from '@/app/ethers';
 import { web3Provider } from '@/app/plugins/service';
 
 const CHAIN_ID = 4;
@@ -14,7 +14,7 @@ const CHAIN_ID = 4;
 /** Service for ethers methods */
 export class Service {
     private readonly provider;
-    private readonly client = new WhitelistClient();
+    private readonly client = new EthersClient();
 
     /** Applies ethereum provider for internal methons */
     public constructor(ethereumProvider: typeof web3Provider) {
@@ -26,11 +26,18 @@ export class Service {
         return await this.client.getTransaction(signature);
     }
 
-    /** Gets current wallet address. */
-    public async getWallet() {
-        const signer = await this.provider.getSigner();
+    /** Gets message from API for sign */
+    public async getMessage() {
+        return await this.client.getMessage();
+    }
 
-        return await signer.getAddress();
+    /** Signs message and creates message raw signature */
+    public async signMessage() {
+        const message = await this.getMessage();
+        const signer = await this.provider.getSigner();
+        const adress = await signer.getAddress();
+        const signedMessage = await signer.signMessage(message);
+        await this.client.signMessage(new SignedMessage(message, signedMessage, adress));
     }
 
     /** Sends smart contract transaction. */

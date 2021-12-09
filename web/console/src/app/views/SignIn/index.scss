@@ -36,6 +36,7 @@
         }
     }
 
+
     &__sign-up,
     &__sign-in,
     &__reset,
@@ -158,8 +159,8 @@
                 width: 65%;
                 color: black;
                 border-radius: 5px;
-                margin-top: 20px;
                 margin-right: 20px;
+                margin-top: 0;
                 font-family: "BebasNeue", sans-serif;
                 font-weight: bold;
                 cursor: pointer;
@@ -167,7 +168,7 @@
             }
 
             &__checkbox-wrapper {
-                margin-top: 10px;
+                margin-top: 40px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -217,19 +218,35 @@
             }
 
             &__auth-internal {
+                margin-top: 40px;
+                display: flex;
+                align-items: center;
                 color: $signInMainTextColor;
             }
 
             &__logos {
                 float: right;
-                margin-top: 20px;
+                display: flex;
+                align-items: center;
 
                 &__google,
-                &__facebook {
-                    vertical-align: middle;
+                &__facebook,
+                &__metamask {
                     margin-left: 15px;
-                    margin-top: 30px;
+                    cursor: pointer;
                 }
+                &__metamask {
+                    width: 24px;
+                    height: 24px;
+                }
+            }
+        }
+    }
+
+    &__sign-up {
+        &__sign-form {
+            &__confirm {
+                margin-top: 40px;
             }
         }
     }
@@ -245,9 +262,6 @@
         &__sign-form {
             margin-top: 10%;
 
-            &__confirm {
-                margin-top: 40px;
-            }
         }
     }
 }
@@ -330,20 +344,6 @@
 
                 &__auth-internal {
                     text-align: center;
-                }
-
-                &__logos {
-                    float: unset;
-                    margin-top: unset;
-
-                    &__google,
-                    &__facebook {
-                        margin-top: 5px;
-                    }
-
-                    &__google {
-                        margin-left: 0;
-                    }
                 }
             }
         }

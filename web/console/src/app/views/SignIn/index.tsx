@@ -1,24 +1,29 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
+import MetaMaskOnboarding from '@metamask/onboarding';
 import { toast } from 'react-toastify';
 
 import { UserDataArea } from '@components/common/UserDataArea';
 
 import facebook from '@static/img/registerPage/facebook_logo.svg';
 import google from '@static/img/registerPage/google_logo.svg';
+import metamask from '@static/img/registerPage/metamask.svg';
 import ultimate from '@static/img/registerPage/ultimate.svg';
 
 import { AuthRouteConfig, RouteConfig } from '@/app/routes';
 import { loginUser } from '@/app/store/actions/users';
 import { Validator } from '@/users/validation';
+import { ServicePlugin } from '@/app/plugins/service';
 
 import './index.scss';
 
 const SignIn: React.FC = () => {
+    const onboarding = useRef<MetaMaskOnboarding>();
+    const service = ServicePlugin.create();
     const dispatch = useDispatch();
     const history = useHistory();
     /** controlled values for form inputs */
@@ -46,7 +51,7 @@ const SignIn: React.FC = () => {
         return isFormValid;
     };
     /** user data that will send to server */
-    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!validateForm()) {
@@ -86,6 +91,40 @@ const SignIn: React.FC = () => {
             validate: Validator.isPassword,
         },
     ];
+
+    useEffect(() => {
+        if (!onboarding.current) {
+            onboarding.current = new MetaMaskOnboarding();
+        }
+    }, []);
+
+    const metamaskLogin = async () => {
+        /** Code which indicates that 'eth_requestAccounts' already processing */
+        const METAMASK_RPC_ERROR_CODE = -32002;
+        if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+            try {
+                // @ts-ignore
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                await service.signMessage();
+                history.push(RouteConfig.MarketPlace.path);
+            } catch (error: any) {
+                error.code === METAMASK_RPC_ERROR_CODE
+                    ?
+                    toast.error('Please open metamask manually!', {
+                        position: toast.POSITION.TOP_RIGHT,
+                        theme: 'colored',
+                    })
+                    :
+                    toast.error('Something went wrong', {
+                        position: toast.POSITION.TOP_RIGHT,
+                        theme: 'colored',
+                    });
+            }
+        } else {
+            onboarding.current = new MetaMaskOnboarding();
+            onboarding.current?.startOnboarding();
+        }
+    };
 
     return (
         <div className="register">
@@ -150,6 +189,12 @@ const SignIn: React.FC = () => {
                                 src={facebook}
                                 alt="Facebook logo"
                                 className="register__sign-in__sign-form__logos__facebook"
+                            />
+                            <img
+                                src={metamask}
+                                alt="Metamask logo"
+                                className="register__sign-in__sign-form__logos__metamask"
+                                onClick={() => metamaskLogin()}
                             />
                         </div>
                     </div>

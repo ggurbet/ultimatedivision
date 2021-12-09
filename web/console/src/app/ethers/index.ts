@@ -36,6 +36,25 @@ interface Abi {
     type: string;
 }
 
+/** Desctibes parameters for transaction */
+export class TransactionIdentificators {
+    /** Includes wallet address, and card id */
+    constructor(
+        public walletAddress: string,
+        public cardId: string
+    ) { }
+}
+
+/** Describes parameters for sign message */
+export class SignedMessage {
+    /** Includes message from API, signed message, and wallet address */
+    constructor(
+        public message: string,
+        public hash: string,
+        public address: string
+    ) { }
+}
+
 /** Smart conract interface */
 export const GAME_ABI: Array<Partial<Abi>> = [
     {
