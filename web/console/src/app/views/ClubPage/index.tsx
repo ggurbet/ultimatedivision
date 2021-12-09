@@ -2,11 +2,13 @@
 // See LICENSE for copying information.
 
 import { useSelector } from 'react-redux';
-import { filteredCards, listOfCards } from '@/app/store/actions/cards';
-import { RootState } from '@/app/store';
+
 import { ClubCardsArea } from '@components/Club/ClubCardsArea';
 import { FilterField } from '@components/common/FilterField';
 import { Paginator } from '@components/common/Paginator';
+
+import { RootState } from '@/app/store';
+import { listOfCards } from '@/app/store/actions/cards';
 
 import './index.scss';
 
@@ -15,11 +17,14 @@ const Club: React.FC = () => {
 
     return (
         <section className="club">
+            <h1 className="club__title">
+                MY CARDS
+            </h1>
             <FilterField />
             <ClubCardsArea />
             <Paginator
                 getCardsOnPage={listOfCards}
-                pagesCount={page.pageCount}
+                itemsCount={page.totalCount}
                 selectedPage={page.currentPage}
             />
         </section>

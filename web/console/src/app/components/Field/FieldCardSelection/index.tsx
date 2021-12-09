@@ -9,9 +9,9 @@ import { FilterField } from '@/app/components/Field/FieldCardSelection/FilterFie
 
 import { RootState } from '@/app/store';
 import { listOfCards } from '@/app/store/actions/cards';
-import { Card } from '@/card';
 import { addCard, cardSelectionVisibility } from '@/app/store/actions/clubs';
 import { CardEditIdentificators } from '@/api/club';
+import { Card, CardsPage } from '@/card';
 import { Squad, SquadCard } from '@/club';
 
 import './index.scss';
@@ -20,7 +20,7 @@ export const FieldCardSelection = () => {
     const dispatch = useDispatch();
     const squad: Squad = useSelector((state: RootState) => state.clubsReducer.activeClub.squad);
     const squadCards: SquadCard[] = useSelector((state: RootState) => state.clubsReducer.activeClub.squadCards);
-    const { cards, page } = useSelector((state: RootState) => state.cardsReducer.cardsPage);
+    const { cards, page }: CardsPage = useSelector((state: RootState) => state.cardsReducer.cardsPage);
     const club = useSelector((state: RootState) => state.clubsReducer);
 
     const Y_SCROLL_POINT = 200;
@@ -68,7 +68,7 @@ export const FieldCardSelection = () => {
             </div>
             <Paginator
                 getCardsOnPage={listOfCards}
-                pagesCount={page.pageCount}
+                itemsCount={page.totalCount}
                 selectedPage={page.currentPage}
             />
         </div>

@@ -4,7 +4,6 @@
 import { Lot, MarketPlacePage } from '@/marketplace';
 
 import { CreatedLot } from '@/app/types/marketplace';
-import { Pagination } from '@/app/types/pagination';
 import { APIClient } from '.';
 
 
@@ -13,7 +12,9 @@ export class MarketplaceClient extends APIClient {
     private readonly ROOT_PATH: string = '/api/v0/marketplace';
 
     /** returns marketplace domain entity with list of lots*/
-    public async list({ selectedPage, limit }: Pagination): Promise<MarketPlacePage> {
+    public async list(selectedPage: number): Promise<MarketPlacePage> {
+        /** Variable limit is default limit value of lots on page. */
+        const limit: number = 24;
         const path = `${this.ROOT_PATH}?page=${selectedPage}&limit=${limit}`;
         const response = await this.http.get(path);
 
@@ -48,19 +49,5 @@ export class MarketplaceClient extends APIClient {
         if (!response.ok) {
             await this.handleError(response);
         };
-    };
-
-    /** method returns filtered lot list */
-    public async filteredList(lowRange: string, topRange: string): Promise<MarketPlacePage> {
-        const path = `${this.ROOT_PATH}/lots/?${lowRange}&${topRange}`;
-        const response = await this.http.get(path);
-
-        if (!response.ok) {
-            await this.handleError(response);
-        };
-
-        const lotsPage = await response.json();
-
-        return new MarketPlacePage(lotsPage.lots.map((lot: any) => new Lot(lot)), lotsPage.page);
     };
 };

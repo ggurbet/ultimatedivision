@@ -2,11 +2,13 @@
 // See LICENSE for copying information.
 
 import { useSelector } from 'react-redux';
-import { RootState } from '@/app/store';
-import { filteredLots, listOfLots } from '@/app/store/actions/marketplace';
-import { MarketPlaceCardsGroup } from '@components/MarketPlace/MarketPlaceCardsGroup';
+
 import { FilterField } from '@components/common/FilterField';
 import { Paginator } from '@components/common/Paginator';
+import { MarketPlaceCardsGroup } from '@components/MarketPlace/MarketPlaceCardsGroup';
+
+import { RootState } from '@/app/store';
+import { listOfLots } from '@/app/store/actions/marketplace';
 
 import './index.scss';
 
@@ -15,11 +17,14 @@ const MarketPlace: React.FC = () => {
 
     return (
         <section className="marketplace">
+            <h1 className="marketplace__title">
+                MARKETPLACE
+            </h1>
             <FilterField />
             <MarketPlaceCardsGroup lots={lots} />
             <Paginator
                 getCardsOnPage={listOfLots}
-                pagesCount={page.pageCount}
+                itemsCount={page.totalCount}
                 selectedPage={page.currentPage}
             />
         </section>

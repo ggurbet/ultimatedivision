@@ -7,4 +7,12 @@
     background-color: $mainBackground;
     padding: 15px 0;
     position: relative;
+
+    &__title {
+        color: white;
+        margin: 70px 0 50px 40px;
+        font-size: 48px;
+        font-weight: 100;
+        position: relative;
+    }
 }

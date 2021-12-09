@@ -11,15 +11,13 @@ import notActiveNext from '@static/img/UltimateDivisionPaginator/not_active_next
 import notActivePrevious from '@static/img/UltimateDivisionPaginator/not_active_previous.svg';
 import previous from '@static/img/UltimateDivisionPaginator/previous.svg';
 
-import { Pagination } from '@/app/types/pagination';
-
 import './index.scss';
 
 export const Paginator: React.FC<{
-    getCardsOnPage: ({ selectedPage, limit }: Pagination) => void;
-    pagesCount: number;
+    getCardsOnPage: (selectedPage: number) => void;
+    itemsCount: number;
     selectedPage: number;
-}> = ({ getCardsOnPage, pagesCount, selectedPage }) => {
+}> = ({ getCardsOnPage, itemsCount, selectedPage }) => {
     const dispatch = useDispatch();
     const [currentPage, setCurrentPage] = useState<number>(selectedPage);
 
@@ -46,7 +44,7 @@ export const Paginator: React.FC<{
         try {
             /** dispatch getCardsOnPage thunk with parameters: page and default limit value */
             await dispatch(
-                getCardsOnPage({ selectedPage, limit: CARDS_ON_PAGE })
+                getCardsOnPage(selectedPage)
             );
         } catch (error: any) {
             /** TODO: it will be reworked with notification system */
@@ -54,6 +52,8 @@ export const Paginator: React.FC<{
     }
 
     const pages: number[] = [];
+    /** Couns pages number. */
+    const pagesCount = itemsCount / CARDS_ON_PAGE;
 
     for (let i = 1; i <= Math.ceil(pagesCount); i++) {
         pages.push(i);
