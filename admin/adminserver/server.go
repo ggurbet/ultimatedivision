@@ -24,12 +24,12 @@ import (
 	"ultimatedivision/clubs"
 	"ultimatedivision/divisions"
 	"ultimatedivision/gameplay/matches"
+	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/templatefuncs"
 	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/pkg/auth"
-	"ultimatedivision/queue"
 	"ultimatedivision/users"
 )
 

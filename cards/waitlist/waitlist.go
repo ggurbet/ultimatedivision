@@ -16,7 +16,7 @@ import (
 // ErrNoItem indicates that item for wait list does not exist.
 var ErrNoItem = errs.Class("item for wait list does not exist")
 
-// DB is exposing access to cards db.
+// DB is exposing access to waitlist db.
 //
 // architecture: DB
 type DB interface {

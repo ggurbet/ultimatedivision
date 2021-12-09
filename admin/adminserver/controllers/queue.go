@@ -11,8 +11,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/queue"
 )
 
 var (

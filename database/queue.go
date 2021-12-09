@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/queue"
+	"ultimatedivision/gameplay/queue"
 )
 
 // ensures that queueHub implements queue.DB.

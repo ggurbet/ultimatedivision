@@ -14,7 +14,7 @@ import (
 
 	"ultimatedivision"
 	"ultimatedivision/database/dbtesting"
-	"ultimatedivision/queue"
+	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/users"
 )
 
