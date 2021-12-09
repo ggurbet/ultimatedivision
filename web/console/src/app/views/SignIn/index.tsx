@@ -51,7 +51,7 @@ const SignIn: React.FC = () => {
         return isFormValid;
     };
     /** user data that will send to server */
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!validateForm()) {
@@ -98,7 +98,7 @@ const SignIn: React.FC = () => {
         }
     }, []);
 
-    const metamaskLogin = async () => {
+    const metamaskLogin = async() => {
         /** Code which indicates that 'eth_requestAccounts' already processing */
         const METAMASK_RPC_ERROR_CODE = -32002;
         if (MetaMaskOnboarding.isMetaMaskInstalled()) {

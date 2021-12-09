@@ -4,6 +4,8 @@
 import { useSelector } from 'react-redux';
 
 import { FilterField } from '@components/common/FilterField';
+import { FilterByPrice } from '@/app/components/common/FilterField/FilterByPrice';
+import { FilterByStatus } from '@/app/components/common/FilterField/FilterByStatus';
 import { Paginator } from '@components/common/Paginator';
 import { MarketPlaceCardsGroup } from '@components/MarketPlace/MarketPlaceCardsGroup';
 
@@ -20,7 +22,10 @@ const MarketPlace: React.FC = () => {
             <h1 className="marketplace__title">
                 MARKETPLACE
             </h1>
-            <FilterField />
+            <FilterField>
+                <FilterByPrice />
+                <FilterByStatus />
+            </FilterField>
             <MarketPlaceCardsGroup lots={lots} />
             <Paginator
                 getCardsOnPage={listOfLots}

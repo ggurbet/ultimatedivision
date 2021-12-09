@@ -45,7 +45,7 @@
             background: transparent;
             color: $fieldMainTextColor;
             border: none;
-            border-bottom: 1px solid $fieldMainBorderColo;
+            border-bottom: 1px solid $fieldMainBorderColor;
             font-family: "Montserrat", sans-serif;
             font-size: 14px;
             &:focus {
@@ -73,7 +73,7 @@
                 position: relative;
                 cursor: pointer;
                 padding: 11px 0px 11px 17px;
-                border-bottom: 1px solid $fieldMainBorderColo;
+                border-bottom: 1px solid $fieldMainBorderColor;
             }
 
             & + label:nth-child(8) {
@@ -160,7 +160,7 @@
                 margin-left: 5px;
                 background: transparent;
                 border: none;
-                border-bottom: 1px solid $fieldMainBorderColo;
+                border-bottom: 1px solid $fieldMainBorderColor;
                 color: $fieldMainTextColor;
                 &:focus {
                     outline: none;
