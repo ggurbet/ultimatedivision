@@ -26,9 +26,9 @@ export const FilterByStats: React.FC<{submitSearch: (queryParameters: CardsQuery
     const [goalkeepingMin, setGoalkeepingMin] = useState('');
     const [goalkeepingMax, setGoalkeepingMax] = useState('');
 
-    /** Describes offside skills of each card. */
-    const [offsideMin, setOffsideMin] = useState('');
-    const [offsideMax, setOffsideMax] = useState('');
+    /** Describes offense skills of each card. */
+    const [offenseMin, setOffenseMin] = useState('');
+    const [offenseMax, setOffenseMax] = useState('');
 
     /** Describes physique skills of each card. */
     const [physiqueMin, setPhysiqueMin] = useState('');
@@ -62,14 +62,14 @@ export const FilterByStats: React.FC<{submitSearch: (queryParameters: CardsQuery
         setGoalkeepingMax(e.target.value);
     };
 
-    /** Changes min offside value. */
-    const changeOffsideMin = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setOffsideMin(e.target.value);
+    /** Changes min offense value. */
+    const changeOffenseMin = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setOffenseMin(e.target.value);
     };
 
-    /** Changes max offside value. */
-    const changeOffsideMax = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setOffsideMax(e.target.value);
+    /** Changes max offense value. */
+    const changeOffenseMax = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setOffenseMax(e.target.value);
     };
 
     /** Changes min physique value. */
@@ -113,10 +113,10 @@ export const FilterByStats: React.FC<{submitSearch: (queryParameters: CardsQuery
         },
         {
             label: 'OFF',
-            minValue: offsideMin,
-            maxValue: offsideMax,
-            changeMinValue: changeOffsideMin,
-            changeMaxValue: changeOffsideMax,
+            minValue: offenseMin,
+            maxValue: offenseMax,
+            changeMinValue: changeOffenseMin,
+            changeMaxValue: changeOffenseMax,
         },
         {
             label: 'TEC',
@@ -155,8 +155,8 @@ export const FilterByStats: React.FC<{submitSearch: (queryParameters: CardsQuery
             { 'defence_lt': defenceMax },
             { 'goalkeeping_gte': goalkeepingMin },
             { 'goalkeeping_lt': goalkeepingMax },
-            { 'offside_trap_gte': offsideMin },
-            { 'offside_trap_lt': offsideMax },
+            { 'offense_gte': offenseMin },
+            { 'offense_lt': offenseMax },
             { 'physique_gte': physiqueMin },
             { 'physique_lt': physiqueMax },
             { 'tactics_gte': tacticsMin },
@@ -173,8 +173,8 @@ export const FilterByStats: React.FC<{submitSearch: (queryParameters: CardsQuery
         setDefenceMax('');
         setGoalkeepingMin('');
         setGoalkeepingMax('');
-        setOffsideMin('');
-        setOffsideMax('');
+        setOffenseMin('');
+        setOffenseMax('');
         setPhysiqueMin('');
         setPhysiqueMax('');
         setTacticsMin('');

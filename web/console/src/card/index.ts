@@ -42,8 +42,8 @@ export class CardsQueryParameters {
     public 'defence_lt': number | null = null;
     public 'goalkeeping_gte': number | null = null;
     public 'goalkeeping_lt': number | null = null;
-    public 'offside_trap_gte': number | null = null;
-    public 'offside_trap_lt': number | null = null;
+    public 'offense_gte': number | null = null;
+    public 'offense_lt': number | null = null;
     public 'physique_gte': number | null = null;
     public 'physique_lt': number | null = null;
     public 'tactics_gte': string | null = null;
