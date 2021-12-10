@@ -24,6 +24,7 @@ import (
 	"ultimatedivision/marketplace"
 	"ultimatedivision/seasons"
 	"ultimatedivision/udts"
+	"ultimatedivision/udts/currencywaitlist"
 	"ultimatedivision/users"
 )
 
@@ -69,7 +70,7 @@ func NewHub() *Hub {
 func (db *database) CreateSchema(ctx context.Context) (err error) {
 	createTableQuery :=
 		`CREATE TABLE IF NOT EXISTS users (
-            id               BYTEA PRIMARY KEY        NOT NULL,
+            id               BYTEA     PRIMARY KEY    NOT NULL,
             email            VARCHAR                  NOT NULL,
             email_normalized VARCHAR                  NOT NULL,
             password_hash    BYTEA                    NOT NULL,
@@ -250,6 +251,13 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             chain          VARCHAR                                  NOT NULL,
             wallet_address VARCHAR                                  NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS currencywaitlist(
+            wallet_address VARCHAR NOT NULL,
+            value          BYTEA   NOT NULL,
+            nonce          INTEGER NOT NULL,
+            signature      VARCHAR NOT NULL,
+            PRIMARY KEY(wallet_address, nonce)
+        );
         CREATE TABLE IF NOT EXISTS udts(
             user_id        BYTEA   PRIMARY KEY REFERENCES users(id) NOT NULL,
             value          BYTEA                                    NOT NULL,
@@ -324,14 +332,19 @@ func (db *database) Seasons() seasons.DB {
 	return &seasonsDB{conn: db.conn}
 }
 
+// WaitList provides access to accounts db.
+func (db *database) WaitList() waitlist.DB {
+	return &waitlistDB{conn: db.conn}
+}
+
 // NFTs provides access to accounts db.
 func (db *database) NFTs() nfts.DB {
 	return &nftsDB{conn: db.conn}
 }
 
-// WaitList provides access to accounts db.
-func (db *database) WaitList() waitlist.DB {
-	return &waitlistDB{conn: db.conn}
+// CurrencyWaitList provides access to accounts db.
+func (db *database) CurrencyWaitList() currencywaitlist.DB {
+	return &currencywaitlistDB{conn: db.conn}
 }
 
 // UDTs provides access to accounts db.

@@ -32,6 +32,7 @@ import (
 	mail2 "ultimatedivision/pkg/mail"
 	"ultimatedivision/seasons"
 	"ultimatedivision/udts"
+	"ultimatedivision/udts/currencywaitlist"
 	"ultimatedivision/users"
 	"ultimatedivision/users/userauth"
 )
@@ -78,6 +79,9 @@ type DB interface {
 
 	// Seasons provides access to seasons db.
 	Seasons() seasons.DB
+
+	// CurrencyWaitList provides access to currencywaitlist db.
+	CurrencyWaitList() currencywaitlist.DB
 
 	// UDTs provides access to udts db.
 	UDTs() udts.DB

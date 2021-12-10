@@ -21,10 +21,10 @@ type DB interface{}
 
 // Item entity describes item of currency wait list.
 type Item struct {
-	Wallet    cryptoutils.Address   `json:"wallet"`
-	Value     big.Int               `json:"value"`
-	Nonce     int64                 `json:"nonce"`
-	Signature cryptoutils.Signature `json:"signature"`
+	WalletAddress cryptoutils.Address   `json:"walletAddress"`
+	Value         big.Int               `json:"value"`
+	Nonce         int64                 `json:"nonce"`
+	Signature     cryptoutils.Signature `json:"signature"`
 }
 
 // Transaction entity describes values for creating transaction to contract.
