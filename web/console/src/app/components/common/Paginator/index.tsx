@@ -52,10 +52,11 @@ export const Paginator: React.FC<{
     }
 
     const pages: number[] = [];
-    /** Couns pages number. */
-    const pagesCount = itemsCount / CARDS_ON_PAGE;
 
-    for (let i = 1; i <= Math.ceil(pagesCount); i++) {
+    /** Couns pages number. */
+    const pagesCount = Math.ceil(itemsCount / CARDS_ON_PAGE);
+
+    for (let i = 1; i <= pagesCount; i++) {
         pages.push(i);
     }
 
@@ -244,7 +245,6 @@ export const Paginator: React.FC<{
                 {isLastPageSelected ?
                     <a
                         className="ultimatedivision-paginator__next-not-active"
-                        onClick={() => onPageChange('next page')}
                     >
                         <p className="ultimatedivision-paginator__next__title">
                             Next page
