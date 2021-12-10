@@ -106,7 +106,7 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 
 	if playerName == "" {
 		if err := filters.DecodingURLParameters(urlQuery); err != nil {
-			controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+			controller.serveError(w, http.StatusBadRequest, ErrCards.Wrap(err))
 		}
 		if len(filters) > 0 {
 			cardsListPage, err = controller.cards.ListWithFilters(ctx, filters, cursor)

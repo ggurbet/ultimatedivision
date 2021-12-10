@@ -158,7 +158,13 @@ func (marketplaceDB *marketplaceDB) ListActiveLots(ctx context.Context, cursor p
 
 		lots = append(lots, lot)
 	}
-	lotsListPage, err = marketplaceDB.listPaginated(ctx, cursor, lots)
+
+	totalActiveCount, err := marketplaceDB.totalActiveCount(ctx)
+	if err != nil {
+		return lotsListPage, ErrMarketplace.Wrap(err)
+	}
+
+	lotsListPage, err = marketplaceDB.listPaginated(ctx, cursor, lots, totalActiveCount)
 	return lotsListPage, ErrMarketplace.Wrap(err)
 }
 
@@ -220,20 +226,20 @@ func (marketplaceDB *marketplaceDB) ListActiveLotsByItemID(ctx context.Context, 
 
 		lots = append(lots, lot)
 	}
-	lotsListPage, err = marketplaceDB.listPaginated(ctx, cursor, lots)
+
+	totalActiveCount, err := marketplaceDB.totalActiveCountWithFilters(ctx, itemIds)
+	if err != nil {
+		return lotsListPage, ErrCard.Wrap(err)
+	}
+
+	lotsListPage, err = marketplaceDB.listPaginated(ctx, cursor, lots, totalActiveCount)
 	return lotsListPage, ErrMarketplace.Wrap(err)
 }
 
 // listPaginated returns paginated list of lots.
-func (marketplaceDB *marketplaceDB) listPaginated(ctx context.Context, cursor pagination.Cursor, lotsList []marketplace.Lot) (marketplace.Page, error) {
+func (marketplaceDB *marketplaceDB) listPaginated(ctx context.Context, cursor pagination.Cursor, lotsList []marketplace.Lot, totalActiveCount int) (marketplace.Page, error) {
 	var lotsListPage marketplace.Page
 	offset := (cursor.Page - 1) * cursor.Limit
-
-	totalActiveCount, err := marketplaceDB.totalActiveCount(ctx)
-	if err != nil {
-		return lotsListPage, ErrMarketplace.Wrap(err)
-	}
-
 	pageCount := totalActiveCount / cursor.Limit
 	if totalActiveCount%cursor.Limit != 0 {
 		pageCount++
@@ -258,6 +264,17 @@ func (marketplaceDB *marketplaceDB) totalActiveCount(ctx context.Context) (int, 
 	var count int
 	query := fmt.Sprintf(`SELECT COUNT(*) FROM lots WHERE lots.status = $1`)
 	err := marketplaceDB.conn.QueryRowContext(ctx, query, marketplace.StatusActive).Scan(&count)
+	if errors.Is(err, sql.ErrNoRows) {
+		return 0, marketplace.ErrNoLot.Wrap(err)
+	}
+	return count, ErrMarketplace.Wrap(err)
+}
+
+// totalActiveCountWithFilters counts active lots with filtes in the table.
+func (marketplaceDB *marketplaceDB) totalActiveCountWithFilters(ctx context.Context, itemIds []uuid.UUID) (int, error) {
+	var count int
+	query := fmt.Sprintf("SELECT COUNT(*) FROM lots WHERE lots.status = $1 AND item_id = ANY($2)")
+	err := marketplaceDB.conn.QueryRowContext(ctx, query, marketplace.StatusActive, pq.Array(itemIds)).Scan(&count)
 	if errors.Is(err, sql.ErrNoRows) {
 		return 0, marketplace.ErrNoLot.Wrap(err)
 	}

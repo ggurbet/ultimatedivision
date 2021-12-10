@@ -157,7 +157,12 @@ func (cardsDB *cardsDB) List(ctx context.Context, cursor pagination.Cursor) (car
 		return cardsListPage, ErrCard.Wrap(err)
 	}
 
-	cardsListPage, err = cardsDB.listPaginated(ctx, cursor, data)
+	totalCount, err := cardsDB.totalCount(ctx)
+	if err != nil {
+		return cardsListPage, ErrCard.Wrap(err)
+	}
+
+	cardsListPage, err = cardsDB.listPaginated(ctx, cursor, data, totalCount)
 	return cardsListPage, ErrCard.Wrap(err)
 }
 
@@ -254,7 +259,12 @@ func (cardsDB *cardsDB) ListWithFilters(ctx context.Context, filters []cards.Fil
 		return cardsListPage, ErrCard.Wrap(err)
 	}
 
-	cardsListPage, err = cardsDB.listPaginated(ctx, cursor, data)
+	totalCount, err := cardsDB.totalCountWithFilters(ctx, whereClause, valuesInterface)
+	if err != nil {
+		return cardsListPage, ErrCard.Wrap(err)
+	}
+
+	cardsListPage, err = cardsDB.listPaginated(ctx, cursor, data, totalCount)
 	return cardsListPage, ErrCard.Wrap(err)
 }
 
@@ -333,7 +343,12 @@ func (cardsDB *cardsDB) ListByPlayerName(ctx context.Context, filter cards.Filte
 		return cardsListPage, ErrCard.Wrap(err)
 	}
 
-	cardsListPage, err = cardsDB.listPaginated(ctx, cursor, data)
+	totalCount, err := cardsDB.totalCountWithFilters(ctx, whereClause, valuesInterface)
+	if err != nil {
+		return cardsListPage, ErrCard.Wrap(err)
+	}
+
+	cardsListPage, err = cardsDB.listPaginated(ctx, cursor, data, totalCount)
 	return cardsListPage, ErrCard.Wrap(err)
 }
 
@@ -373,15 +388,9 @@ func (cardsDB *cardsDB) ListCardIDsByPlayerNameWhereActiveLot(ctx context.Contex
 }
 
 // listPaginated returns paginated list of cards.
-func (cardsDB *cardsDB) listPaginated(ctx context.Context, cursor pagination.Cursor, cardsList []cards.Card) (cards.Page, error) {
+func (cardsDB *cardsDB) listPaginated(ctx context.Context, cursor pagination.Cursor, cardsList []cards.Card, totalCount int) (cards.Page, error) {
 	var cardsListPage cards.Page
 	offset := (cursor.Page - 1) * cursor.Limit
-
-	totalCount, err := cardsDB.totalCount(ctx)
-	if err != nil {
-		return cardsListPage, ErrCard.Wrap(err)
-	}
-
 	pageCount := totalCount / cursor.Limit
 	if totalCount%cursor.Limit != 0 {
 		pageCount++
@@ -406,6 +415,17 @@ func (cardsDB *cardsDB) totalCount(ctx context.Context) (int, error) {
 	var count int
 	query := fmt.Sprintf("SELECT COUNT(*) FROM cards")
 	err := cardsDB.conn.QueryRowContext(ctx, query).Scan(&count)
+	if errors.Is(err, sql.ErrNoRows) {
+		return 0, cards.ErrNoCard.Wrap(err)
+	}
+	return count, ErrCard.Wrap(err)
+}
+
+// totalCountWithFilters counts cards with filtes in the table.
+func (cardsDB *cardsDB) totalCountWithFilters(ctx context.Context, whereClause string, valuesInterface []interface{}) (int, error) {
+	var count int
+	query := fmt.Sprintf("SELECT COUNT(*) FROM cards %s", whereClause)
+	err := cardsDB.conn.QueryRowContext(ctx, query, valuesInterface...).Scan(&count)
 	if errors.Is(err, sql.ErrNoRows) {
 		return 0, cards.ErrNoCard.Wrap(err)
 	}
