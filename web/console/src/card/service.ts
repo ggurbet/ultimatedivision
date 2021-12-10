@@ -15,6 +15,11 @@ export class CardService {
         this.cards = cards;
     };
 
+    /** Clears cards query parameters. */
+    public clearCardsQueryParameters() {
+        this.cards.clearCardsQueryParameters();
+    };
+
     /** Changes cards query parameters. */
     public changeCardsQueryParameters(queryParameters: CardsQueryParametersField[]) {
         this.cards.changeCardsQueryParameters(queryParameters);

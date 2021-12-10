@@ -88,11 +88,8 @@ const FootballField: React.FC = () => {
             >
                 <h1 className="football-field__title">Football Field</h1>
                 <FieldPlayingArea />
-                <div
-                    style={{ height: cardSelectionVisibility ? 'unset' : '0' }}
-                    className="football-field__wrapper"
-                >
-                    <FieldCardSelection />
+                <div className="football-field__wrapper" >
+                    {cardSelectionVisibility && <FieldCardSelection />}
                 </div>
             </div>
         </>

@@ -22,6 +22,11 @@ const userCard = (card: Card) => ({
 const cardsClient = new CardsClient();
 const cardsService = new CardService(cardsClient);
 
+/** Clears cards query parameters. */
+export const clearCardsQueryParameters = () => {
+    cardsService.clearCardsQueryParameters();
+};
+
 /** Creates cards query parameters and sets them to CardsService. */
 export const createCardsQueryParameters = (queryParameters: CardsQueryParametersField[]) => {
     cardsService.changeCardsQueryParameters(queryParameters);

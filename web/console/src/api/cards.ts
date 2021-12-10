@@ -10,6 +10,11 @@ export class CardsClient extends APIClient {
 
     private queryParameters: CardsQueryParameters = new CardsQueryParameters();
 
+    /** Clears queryParameters object. */
+    public clearCardsQueryParameters() {
+        this.queryParameters = new CardsQueryParameters();
+    };
+
     /** Changes queryParameters object. */
     public changeCardsQueryParameters(queryParameters: CardsQueryParametersField[]) {
         queryParameters.forEach(queryParameter => {
