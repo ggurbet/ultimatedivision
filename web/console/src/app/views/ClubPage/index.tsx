@@ -31,8 +31,8 @@ const Club: React.FC = () => {
     const DEFAULT_PAGE_INDEX: number = 1;
 
     /** Submits search by cards query parameters. */
-    const submitSearch = async(cardsQueryParameters: CardsQueryParametersField[]) => {
-        createCardsQueryParameters(cardsQueryParameters);
+    const submitSearch = async(queryParameters: CardsQueryParametersField[]) => {
+        createCardsQueryParameters(queryParameters);
         await dispatch(listOfCards(DEFAULT_PAGE_INDEX));
     };
 

@@ -2,18 +2,15 @@
 // See LICENSE for copying information.
 
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { FilterByParameterWrapper } from '@/app/components/common/FilterField/FilterByParameterWrapper';
 
 import { CardsQueryParametersField } from '@/card';
 
 // TODO: rework functionality.
-export const FilterByVersion: React.FC<{ submitSearch: (cardsQueryParameters: CardsQueryParametersField[]) => void }> = ({ submitSearch }) => {
+export const FilterByVersion: React.FC<{ submitSearch: (queryParameters: CardsQueryParametersField[]) => void }> = ({ submitSearch }) => {
     /** Indicates if FilterByVersion component shown. */
     const [isFilterByVersionShown, setIsFilterByVersionShown] = useState(false);
-
-    const dispatch = useDispatch();
 
     /** Shows and closes FilterByVersion component. */
     const showFilterByVersion = () => {

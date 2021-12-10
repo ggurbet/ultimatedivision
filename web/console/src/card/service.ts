@@ -19,6 +19,7 @@ export class CardService {
     public changeCardsQueryParameters(queryParameters: CardsQueryParametersField[]) {
         this.cards.changeCardsQueryParameters(queryParameters);
     };
+
     /** gets list of cards by user */
     public async list(selectedPage: number): Promise<CardsPage> {
         return await this.cards.list(selectedPage);

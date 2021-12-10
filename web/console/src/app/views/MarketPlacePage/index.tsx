@@ -1,21 +1,34 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { FilterField } from '@components/common/FilterField';
-import { FilterByPrice } from '@/app/components/common/FilterField/FilterByPrice';
-import { FilterByStatus } from '@/app/components/common/FilterField/FilterByStatus';
+import { FilterByPrice } from '@components/common/FilterField/FilterByPrice';
+import { FilterByStats } from '@components/common/FilterField/FilterByStats';
+import { FilterByStatus } from '@components/common/FilterField/FilterByStatus';
+import { FilterByVersion } from '@components/common/FilterField/FilterByVersion';
 import { Paginator } from '@components/common/Paginator';
 import { MarketPlaceCardsGroup } from '@components/MarketPlace/MarketPlaceCardsGroup';
 
 import { RootState } from '@/app/store';
-import { listOfLots } from '@/app/store/actions/marketplace';
+import { listOfLots, createLotsQueryParameters } from '@/app/store/actions/marketplace';
+import { CardsQueryParametersField } from '@/card';
 
 import './index.scss';
 
 const MarketPlace: React.FC = () => {
+    const dispatch = useDispatch();
     const { lots, page } = useSelector((state: RootState) => state.marketplaceReducer.marketplacePage);
+
+    /** Exposes default page number. */
+    const DEFAULT_PAGE_INDEX: number = 1;
+
+    /** Submits search by lots query parameters. */
+    const submitSearch = async(queryParameters: CardsQueryParametersField[]) => {
+        createLotsQueryParameters(queryParameters);
+        await dispatch(listOfLots(DEFAULT_PAGE_INDEX));
+    };
 
     return (
         <section className="marketplace">
@@ -23,6 +36,8 @@ const MarketPlace: React.FC = () => {
                 MARKETPLACE
             </h1>
             <FilterField>
+                <FilterByVersion submitSearch={submitSearch} />
+                <FilterByStats submitSearch={submitSearch} />
                 <FilterByPrice />
                 <FilterByStatus />
             </FilterField>

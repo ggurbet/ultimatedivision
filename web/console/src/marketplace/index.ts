@@ -5,7 +5,7 @@ import { Card } from '@/card';
 
 const DEFAULT_VALUE = 0;
 
-/** Class defines Marketplace lot entity */
+/** Defines Marketplace lot entity. */
 export class Lot {
     public id: string = '';
     public itemId: string = '';
