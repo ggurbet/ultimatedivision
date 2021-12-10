@@ -243,7 +243,8 @@
         }
     }
 
-    &__sign-up {
+    &__sign-up,
+    &__reset{
         &__sign-form {
             &__confirm {
                 margin-top: 40px;
