@@ -20,6 +20,7 @@ const Store = lazy(() => import('@/app/views/StorePage'));
 const Navbar = lazy(() => import('@/app/components/common/Navbar'));
 const Division = lazy(() => import('@/app/views/Division'));
 const Match = lazy(() => import('@/app/views/Match'));
+const MatchFinder = (lazy(() => import('@components/common/MatchFinder')));
 
 import Summary from '@components/WhitePaper/Summary';
 import GameMechanics from '@components/WhitePaper/GameMechanics';
@@ -29,7 +30,6 @@ import Fund from '@components/Tokenomics/Fund';
 import PlayToEarn from '@components/Tokenomics/PlayToEarn';
 import Spending from '@components/Tokenomics/Spending';
 import Staking from '@components/Tokenomics/Staking';
-import MatchFinder from '@components/common/MatchFinder';
 
 /** Route base config implementation */
 export class ComponentRoutes {

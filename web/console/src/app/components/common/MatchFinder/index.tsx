@@ -24,7 +24,7 @@ const MatchFinder: React.FC = () => {
     /** Indicates that user have rejected game. */
     const [isRejectedUser, setIsRejectedUser] = useState<boolean>(false);
 
-    const [queueClient, setQueueClient] = useState<QueueClient>(new QueueClient());
+    const [queueClient, setQueueClient] = useState<QueueClient | null>(null);
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -57,12 +57,12 @@ const MatchFinder: React.FC = () => {
 
     /** Exposes confirm match logic. */
     const confirmMatch = () => {
-        queueClient.sendAction('confirm', squad.id);
+        queueClient && queueClient.sendAction('confirm', squad.id);
     };
 
     /** Canceles confirmation game. */
     const cancelConfirmationGame = () => {
-        queueClient.sendAction('reject', squad.id);
+        queueClient && queueClient.sendAction('reject', squad.id);
         setIsRejectedUser(true);
     };
 
@@ -83,7 +83,7 @@ const MatchFinder: React.FC = () => {
     /** Canceles searching game and closes MatchFinder component. */
     const canselSearchingGame = () => {
         // TODO: rework after ./queue/chore.go solution
-        queueClient.ws.close();
+        queueClient && queueClient.ws.close();
 
         const newQueueClient = new QueueClient();
         newQueueClient.finishSearch('finishSearch', squad.id);
@@ -105,80 +105,85 @@ const MatchFinder: React.FC = () => {
     }, [isSearchingMatch]);
 
     /** Processes queue client event messages. */
-    queueClient.ws.onmessage = ({ data }: MessageEvent) => {
-        const messageEvent = JSON.parse(data);
+    if (queueClient) {
+        queueClient.ws.onmessage = ({ data }: MessageEvent) => {
+            const messageEvent = JSON.parse(data);
 
-        switch (messageEvent.message) {
-        case ERROR_MESSAGE:
-            toast.error('error message', {
-                position: toast.POSITION.TOP_RIGHT,
-                theme: 'colored',
-            });
-
-            return;
-        case STILL_SEARCHING_MESSAGE:
-            /** TODO: will be deleted after ./queue/chore.go reworks. */
-            queueClient.ws.close();
-            setIsMatchFound(false);
-
-            if (isRejectedUser) {
-                setTimeout(() => {
-                    startSearchAfterReject();
-                }, DELAY_AFTER_REJECT);
-
-                setIsRejectedUser(false);
+            switch (messageEvent.message) {
+            case ERROR_MESSAGE:
+                toast.error('error message', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    theme: 'colored',
+                });
 
                 return;
-            };
+            case STILL_SEARCHING_MESSAGE:
+                /** TODO: will be deleted after ./queue/chore.go reworks. */
+                queueClient && queueClient.ws.close();
+                setIsMatchFound(false);
 
-            startSearchAfterReject();
+                if (isRejectedUser) {
+                    setTimeout(() => {
+                        startSearchAfterReject();
+                    }, DELAY_AFTER_REJECT);
 
-            return;
-        case WRONG_ACTION_MESSAGE:
+                    setIsRejectedUser(false);
+
+                    return;
+                };
+
+                startSearchAfterReject();
+
+                return;
+            case WRONG_ACTION_MESSAGE:
+                toast.error('Something wrong, please, try later.', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    theme: 'colored',
+                });
+
+                return;
+            case YOU_ADDED_MESSAGE:
+                setIsMatchFound(false);
+
+                return;
+            case YOU_CONFIRM_PLAY_MESSAGE:
+                setIsMatchFound(true);
+
+                return;
+            case YOU_LEAVED_MESSAGE:
+                dispatch(startSearchingMatch(false));
+
+                return;
+            default:
+                const firstTeam = messageEvent.message[FIRST_TEAM_INDEX];
+                const secondTeam = messageEvent.message[SECOND_TEAM_INDEX];
+
+                toast.success(
+                    'Successfully! You will be redirected to match page',
+                    {
+                        position: toast.POSITION.TOP_RIGHT,
+                    }
+                );
+
+                dispatch(getMatchScore({ firstTeam, secondTeam }));
+                dispatch(startSearchingMatch(false));
+
+                /** implements redirect to match page after DELAY time.  */
+                setTimeout(() => {
+                    history.push(RouteConfig.Match.path);
+                }, DELAY);
+            }
+        };
+    }
+
+    if (queueClient) {
+        queueClient.ws.onerror = (event: Event) => {
             toast.error('Something wrong, please, try later.', {
                 position: toast.POSITION.TOP_RIGHT,
                 theme: 'colored',
             });
-
-            return;
-        case YOU_ADDED_MESSAGE:
-            setIsMatchFound(false);
-
-            return;
-        case YOU_CONFIRM_PLAY_MESSAGE:
-            setIsMatchFound(true);
-
-            return;
-        case YOU_LEAVED_MESSAGE:
-            dispatch(startSearchingMatch(false));
-
-            return;
-        default:
-            const firstTeam =
-                    messageEvent.message[FIRST_TEAM_INDEX];
-            const secondTeam =
-                    messageEvent.message[SECOND_TEAM_INDEX];
-
-            toast.success('Successfully! You will be redirected to match page', {
-                position: toast.POSITION.TOP_RIGHT,
-            });
-
-            dispatch(getMatchScore({ firstTeam, secondTeam }));
-            dispatch(startSearchingMatch(false));
-
-            /** implements redirect to match page after DELAY time.  */
-            setTimeout(() => {
-                history.push(RouteConfig.Match.path);
-            }, DELAY);
-        }
-    };
-
-    queueClient.ws.onerror = (event: Event) => {
-        toast.error('Something wrong, please, try later.', {
-            position: toast.POSITION.TOP_RIGHT,
-            theme: 'colored',
-        });
-    };
+        };
+    }
 
     return isSearchingMatch && <section className={isMatchFound ? 'match-finder__wrapper' : ''}>
         <div className="match-finder">
