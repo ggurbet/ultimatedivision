@@ -14,6 +14,7 @@ import './index.scss';
 const Navbar: React.FC = () => {
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false);
 
+    /** Сlass visibility for navbar items. */
     const visibleClassName = isDropdownActive ? '-active' : '';
 
     /** TODO: DIVISIONS will be replaced with id parameter */
@@ -26,9 +27,12 @@ const Navbar: React.FC = () => {
         { name: 'DIVISIONS', path: RouteConfig.Division.path },
     ];
 
+    /** Marketplace component index from navbar items. */
+    const navbarMarketplaceIndex: number = 2;
+
     return (
         <div className="ultimatedivision-navbar">
-            <a href="/">
+            <a href={navbarItems[navbarMarketplaceIndex].path}>
                 <img
                     className="ultimatedivision-navbar__logo"
                     src={ultimate}
