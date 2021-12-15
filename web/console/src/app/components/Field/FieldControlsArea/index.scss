@@ -5,7 +5,7 @@
     background: $highlightBackground;
     border-radius: 5px;
     font-family: "Montserrat", sans-serif;
-    
+
     &__wrapper {
         display: flex;
         flex-direction: column;
@@ -14,9 +14,50 @@
         margin: 0 0 0 auto;
     }
 
+    .field-control-area__clubs {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid red;
+
+    &-name {
+        font-family: "BebasNeue", sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 48px;
+        line-height: 58px;
+        display: flex;
+        align-items: center;
+        color: #fff;
+    }
+
+    .clubs {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        overflow-x: scroll;
+
+        .club {
+            display: flex;
+
+            &__name {
+                font-family: "BebasNeue", sans-serif;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 24px;
+                line-height: 29px;
+                color: #fff;
+            }
+        }
+    }
+}
+
+
     &__play {
         width: 100%;
-        background: linear-gradient($fieldMainLinearGradientColor 100%, $feildSecondLinearGradientColor 100%);
+        background: linear-gradient(
+            $fieldMainLinearGradientColor 100%,
+            $feildSecondLinearGradientColor 100%
+        );
         height: 33px;
         font-size: 16px;
         font-family: "BebasNeue", sans-serif;
@@ -39,7 +80,6 @@
 }
 
 .field-control {
-
     &__heading {
         font-weight: 500;
         font-size: 16px;
@@ -58,9 +98,7 @@
 }
 
 @media screen and (max-width: $desktopBreakPoint) {
-
     .field-controls-area {
-
         &__title {
             font-size: 28px;
         }
@@ -68,7 +106,6 @@
 }
 
 @media screen and (max-width: $tabletBreakPoint) {
-
     .field-controls-area {
         width: 100%;
         margin: 1% 0;
@@ -86,9 +123,7 @@
 }
 
 @media screen and (max-width: $phoneBreakPoint) {
-
     .field-controls-area {
-
         &__title {
             font-size: 24px;
         }

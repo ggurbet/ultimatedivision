@@ -22,7 +22,7 @@
     background-color: $matchFinderBackground;
     font-family: "BebasNeue", sans-serif;
     color: $matchFinderTextColor;
-    
+
     &__wrapper {
         position: fixed;
         z-index: 11;
@@ -73,7 +73,7 @@
         }
 
         &__accept-not-allow {
-            cursor:not-allowed
+            cursor: not-allowed;
         }
 
         &__cancel {
@@ -85,13 +85,15 @@
 }
 
 @media (max-width: $phoneBreakPoint) {
+
     .match-finder {
         top: 200px;
         height: 284px;
         width: 205px;
-        
+
         &__form {
             flex-direction: column;
+
             &__accept,
             &__accept-not-allowed {
                 width: 156px;
@@ -106,17 +108,18 @@
 }
 
 @media (max-height: 420px) {
+
     .match-finder {
         top: 150px;
         width: 344px;
         height: 220px;
-        
+
         &__form {
             flex-direction: row;
 
             &__accept,
             &__accept-not-allowed {
-            width: 144px;
+                width: 144px;
             }
 
             &__cancel {
@@ -128,6 +131,7 @@
 }
 
 @media (max-height: 420px) {
+
     .match-finder {
         top: 90px;
     }

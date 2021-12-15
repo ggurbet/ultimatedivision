@@ -36,7 +36,6 @@
         }
     }
 
-
     &__sign-up,
     &__sign-in,
     &__reset,
@@ -235,6 +234,7 @@
                     margin-left: 15px;
                     cursor: pointer;
                 }
+
                 &__metamask {
                     width: 24px;
                     height: 24px;
@@ -246,6 +246,7 @@
     &__sign-up,
     &__reset{
         &__sign-form {
+
             &__confirm {
                 margin-top: 40px;
             }
@@ -262,7 +263,6 @@
 
         &__sign-form {
             margin-top: 10%;
-
         }
     }
 }

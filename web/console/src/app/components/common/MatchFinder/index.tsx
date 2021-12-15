@@ -18,8 +18,12 @@ import { startSearchingMatch } from '@/app/store/actions/clubs';
 import './index.scss';
 
 const MatchFinder: React.FC = () => {
-    const { squad } = useSelector((state: RootState) => state.clubsReducer.activeClub);
-    const { isSearchingMatch } = useSelector((state: RootState) => state.clubsReducer);
+    const { squad } = useSelector(
+        (state: RootState) => state.clubsReducer.activeClub
+    );
+    const { isSearchingMatch } = useSelector(
+        (state: RootState) => state.clubsReducer
+    );
 
     /** Indicates that user have rejected game. */
     const [isRejectedUser, setIsRejectedUser] = useState<boolean>(false);
