@@ -9,6 +9,7 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards/waitlist"
@@ -21,14 +22,14 @@ var _ waitlist.DB = (*waitlistDB)(nil)
 // ErrWaitlist indicates that there was an error in the database.
 var ErrWaitlist = errs.Class("ErrWaitlist repository error")
 
-// waitlistDB provide access to nfts DB.
+// waitlistDB provides access to waitlist DB.
 //
 // architecture: Database
 type waitlistDB struct {
 	conn *sql.DB
 }
 
-// Create creates nft for wait list in the database.
+// Create creates item of wait list in the database.
 func (waitlistDB *waitlistDB) Create(ctx context.Context, cardID uuid.UUID, wallet cryptoutils.Address) error {
 	query := `INSERT INTO waitlist(card_id, wallet_address, password)
 	          VALUES($1,$2,$3)`
@@ -37,65 +38,7 @@ func (waitlistDB *waitlistDB) Create(ctx context.Context, cardID uuid.UUID, wall
 	return ErrWaitlist.Wrap(err)
 }
 
-// List returns all nft for wait list from wait list from database.
-func (waitlistDB *waitlistDB) List(ctx context.Context) ([]waitlist.Item, error) {
-	query := `SELECT *
-	          FROM waitlist`
-
-	var WaitList []waitlist.Item
-
-	rows, err := waitlistDB.conn.QueryContext(ctx, query)
-	if err != nil {
-		return WaitList, ErrWaitlist.Wrap(err)
-	}
-	defer func() {
-		err = errs.Combine(err, rows.Close())
-	}()
-
-	for rows.Next() {
-		var nft waitlist.Item
-		err = rows.Scan(&nft.TokenID, &nft.CardID, &nft.Wallet, &nft.Password)
-		if err != nil {
-			return WaitList, ErrWaitlist.Wrap(err)
-		}
-
-		WaitList = append(WaitList, nft)
-	}
-	if err = rows.Err(); err != nil {
-		return WaitList, ErrWaitlist.Wrap(err)
-	}
-
-	return WaitList, ErrWaitlist.Wrap(err)
-}
-
-// ListWithoutPassword returns all nft for wait list without password from database.
-func (waitlistDB *waitlistDB) ListWithoutPassword(ctx context.Context) ([]waitlist.Item, error) {
-	query :=
-		`SELECT *
-	     FROM waitlist
-	     WHERE password = ''`
-
-	rows, err := waitlistDB.conn.QueryContext(ctx, query)
-	if err != nil {
-		return nil, ErrWaitlist.Wrap(err)
-	}
-	defer func() {
-		err = errs.Combine(err, rows.Close())
-	}()
-
-	var WaitListWithoutPassword []waitlist.Item
-	for rows.Next() {
-		var nft waitlist.Item
-		if err = rows.Scan(&nft.TokenID, &nft.CardID, &nft.Wallet, &nft.Password); err != nil {
-			return nil, ErrWaitlist.Wrap(err)
-		}
-		WaitListWithoutPassword = append(WaitListWithoutPassword, nft)
-	}
-
-	return WaitListWithoutPassword, ErrWaitlist.Wrap(rows.Err())
-}
-
-// Get returns nft for wait list by token id.
+// GetByTokenID returns item of wait list by token id.
 func (waitlistDB *waitlistDB) GetByTokenID(ctx context.Context, tokenID int64) (waitlist.Item, error) {
 	query := `SELECT *
 	          FROM waitlist
@@ -111,7 +54,7 @@ func (waitlistDB *waitlistDB) GetByTokenID(ctx context.Context, tokenID int64) (
 	return item, ErrWaitlist.Wrap(err)
 }
 
-// GetByCardID returns nft for wait list by card id.
+// GetByCardID returns item of wait list by card id.
 func (waitlistDB *waitlistDB) GetByCardID(ctx context.Context, cardID uuid.UUID) (waitlist.Item, error) {
 	query := `SELECT *
 	          FROM waitlist
@@ -127,7 +70,7 @@ func (waitlistDB *waitlistDB) GetByCardID(ctx context.Context, cardID uuid.UUID)
 	return item, ErrWaitlist.Wrap(err)
 }
 
-// GetLast returns id of last inserted nft for wait list.
+// GetLast returns id of last inserted item of wait list.
 func (waitlistDB *waitlistDB) GetLast(ctx context.Context) (int64, error) {
 	query := `SELECT token_id
 	          FROM waitlist
@@ -144,38 +87,65 @@ func (waitlistDB *waitlistDB) GetLast(ctx context.Context) (int64, error) {
 	return lastToken, ErrWaitlist.Wrap(err)
 }
 
-// Delete deletes nft from wait list by id of token.
-func (waitlistDB *waitlistDB) Delete(ctx context.Context, tokenIDs []int64) error {
-	query := `DELETE FROM waitlist
-	          WHERE token_id = $1`
+// List returns items of wait list from database.
+func (waitlistDB *waitlistDB) List(ctx context.Context) ([]waitlist.Item, error) {
+	query := `SELECT *
+	          FROM waitlist`
 
-	preparedQuery, err := waitlistDB.conn.PrepareContext(ctx, query)
+	var waitList []waitlist.Item
+
+	rows, err := waitlistDB.conn.QueryContext(ctx, query)
 	if err != nil {
-		return ErrWaitlist.Wrap(err)
+		return waitList, ErrWaitlist.Wrap(err)
 	}
 	defer func() {
-		err = preparedQuery.Close()
+		err = errs.Combine(err, rows.Close())
 	}()
 
-	for _, tokenID := range tokenIDs {
-		result, err := waitlistDB.conn.ExecContext(ctx, query, tokenID)
+	for rows.Next() {
+		var item waitlist.Item
+		err = rows.Scan(&item.TokenID, &item.CardID, &item.Wallet, &item.Password)
 		if err != nil {
-			return ErrWaitlist.Wrap(err)
+			return waitList, ErrWaitlist.Wrap(err)
 		}
 
-		rowNum, err := result.RowsAffected()
-		if err != nil {
-			return ErrWaitlist.Wrap(err)
-		}
-		if rowNum == 0 {
-			return waitlist.ErrNoItem.New("nft token does not exist")
-		}
+		waitList = append(waitList, item)
+	}
+	if err = rows.Err(); err != nil {
+		return waitList, ErrWaitlist.Wrap(err)
 	}
 
-	return nil
+	return waitList, ErrWaitlist.Wrap(err)
 }
 
-// Update updates signature to nft token.
+// ListWithoutPassword returns items of wait list without password from database.
+func (waitlistDB *waitlistDB) ListWithoutPassword(ctx context.Context) ([]waitlist.Item, error) {
+	query :=
+		`SELECT *
+	     FROM waitlist
+	     WHERE password = ''`
+
+	rows, err := waitlistDB.conn.QueryContext(ctx, query)
+	if err != nil {
+		return nil, ErrWaitlist.Wrap(err)
+	}
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	var waitListWithoutPassword []waitlist.Item
+	for rows.Next() {
+		var item waitlist.Item
+		if err = rows.Scan(&item.TokenID, &item.CardID, &item.Wallet, &item.Password); err != nil {
+			return nil, ErrWaitlist.Wrap(err)
+		}
+		waitListWithoutPassword = append(waitListWithoutPassword, item)
+	}
+
+	return waitListWithoutPassword, ErrWaitlist.Wrap(rows.Err())
+}
+
+// Update updates signature of item by token id.
 func (waitlistDB *waitlistDB) Update(ctx context.Context, tokenID int64, password cryptoutils.Signature) error {
 	query := `UPDATE waitlist
 	          SET password = $1
@@ -186,12 +156,27 @@ func (waitlistDB *waitlistDB) Update(ctx context.Context, tokenID int64, passwor
 		return ErrWaitlist.Wrap(err)
 	}
 	rowNum, err := result.RowsAffected()
-	if err != nil {
-		return ErrWaitlist.Wrap(err)
-	}
-	if rowNum == 0 {
-		return waitlist.ErrNoItem.New("nft for wait list does not exist")
+	if err == nil && rowNum == 0 {
+		return waitlist.ErrNoItem.New("item of wait list does not exist")
 	}
 
 	return nil
+}
+
+// Delete deletes item of wait list by token id.
+func (waitlistDB *waitlistDB) Delete(ctx context.Context, tokenIDs []int64) error {
+	query := `DELETE FROM waitlist
+	          WHERE token_id = ANY($1)`
+
+	result, err := waitlistDB.conn.ExecContext(ctx, query, pq.Array(tokenIDs))
+	if err != nil {
+		return ErrWaitlist.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if err == nil && rowNum == 0 {
+		return waitlist.ErrNoItem.New("item of wait list does not exist")
+	}
+
+	return ErrWaitlist.Wrap(err)
 }

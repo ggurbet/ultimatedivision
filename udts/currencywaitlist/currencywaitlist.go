@@ -4,6 +4,7 @@
 package currencywaitlist
 
 import (
+	"context"
 	"math/big"
 
 	"github.com/zeebo/errs"
@@ -17,7 +18,16 @@ var ErrNoItem = errs.Class("item of currency wait list does not exist")
 // DB is exposing access to currencywaitlist db.
 //
 // architecture: DB
-type DB interface{}
+type DB interface {
+	// Create creates item of currency waitlist in the database.
+	Create(ctx context.Context, item Item) error
+	// List returns items of currency waitlist from database.
+	List(ctx context.Context) ([]Item, error)
+	// Update updates signature of item by wallet address and nonce in the database.
+	UpdateSignature(ctx context.Context, signature cryptoutils.Signature, walletAddress cryptoutils.Address, nonce int64) error
+	// Delete deletes item of currency waitlist by wallet address and nonce in the database.
+	Delete(ctx context.Context, walletAddress cryptoutils.Address, nonce int64) error
+}
 
 // Item entity describes item of currency wait list.
 type Item struct {

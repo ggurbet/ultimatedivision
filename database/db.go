@@ -251,7 +251,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             chain          VARCHAR                                  NOT NULL,
             wallet_address VARCHAR                                  NOT NULL
         );
-        CREATE TABLE IF NOT EXISTS currencywaitlist(
+        CREATE TABLE IF NOT EXISTS currency_waitlist(
             wallet_address VARCHAR NOT NULL,
             value          BYTEA   NOT NULL,
             nonce          INTEGER NOT NULL,
