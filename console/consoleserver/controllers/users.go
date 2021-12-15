@@ -59,6 +59,47 @@ func (controller *Users) GetProfile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// CreateWalletFromMetamask creates wallet from metamask.
+func (controller *Users) CreateWalletFromMetamask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	var err error
+	var request users.User
+	if err = json.NewDecoder(r.Body).Decode(&request); err != nil {
+		controller.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
+		return
+	}
+
+	if !request.Wallet.IsValidAddress() {
+		controller.serveError(w, http.StatusBadRequest, AuthError.New("wallet address is wrong"))
+		return
+	}
+
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusUnauthorized, ErrUsers.Wrap(err))
+		return
+	}
+
+	err = controller.users.UpdateWalletAddress(ctx, request.Wallet, claims.UserID)
+	if err != nil {
+		controller.log.Error("could not update wallet address", ErrUsers.Wrap(err))
+		switch {
+		case users.ErrWalletAddressAlreadyInUse.Has(err):
+			controller.serveError(w, http.StatusInternalServerError, users.ErrUsers.Wrap(err))
+		default:
+			controller.serveError(w, http.StatusInternalServerError, ErrUsers.Wrap(err))
+		}
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode("OK"); err != nil {
+		controller.log.Error("failed to write json response", ErrUsers.Wrap(err))
+		return
+	}
+}
+
 // serveError replies to request with specific code and error.
 func (controller *Users) serveError(w http.ResponseWriter, status int, err error) {
 	w.WriteHeader(status)

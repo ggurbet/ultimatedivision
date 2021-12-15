@@ -20,6 +20,9 @@ var ErrUsers = errs.Class("users service error")
 // ErrUnauthenticated should be returned when user performs unauthenticated action.
 var ErrUnauthenticated = errs.Class("user unauthenticated error")
 
+// ErrWalletAddressAlreadyInUse should be returned when users wallet address is already in use.
+var ErrWalletAddressAlreadyInUse = errs.Class("wallet address is already in use")
+
 // Service is handling users related logic.
 //
 // architecture: Service
@@ -114,5 +117,11 @@ func (service *Service) GetNickNameByID(ctx context.Context, id uuid.UUID) (stri
 // UpdateWalletAddress updates wallet address.
 func (service *Service) UpdateWalletAddress(ctx context.Context, wallet cryptoutils.Address, id uuid.UUID) error {
 	wallet = cryptoutils.Address(strings.ToLower(string(wallet)))
+
+	_, err := service.GetByWalletAddress(ctx, wallet)
+	if err == nil {
+		return ErrWalletAddressAlreadyInUse.New("wallet address already in use")
+	}
+
 	return ErrUsers.Wrap(service.users.UpdateWalletAddress(ctx, wallet, id))
 }
