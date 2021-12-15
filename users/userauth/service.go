@@ -6,6 +6,7 @@ package userauth
 import (
 	"context"
 	"crypto/subtle"
+	"strings"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -121,7 +122,8 @@ func (service *Service) LoginToken(ctx context.Context, email string, password s
 		return "", Error.Wrap(err)
 	}
 
-	return token, nil
+	err = service.users.UpdateLastLogin(ctx, user.ID)
+	return token, Error.Wrap(err)
 }
 
 // PreAuthToken authenticates User by credentials and returns pre auth token.
@@ -431,18 +433,38 @@ func (service *Service) LoginWithMetamask(ctx context.Context, loginMetamaskFiel
 		return "", Error.New("login metamask fields are wrong")
 	}
 
+	wallet := cryptoutils.Address(strings.ToLower(string(loginMetamaskFields.Address)))
+
 	user, err := service.users.GetByWalletAddress(ctx, loginMetamaskFields.Address)
-	if err != nil {
+	switch {
+	case users.ErrNoUser.Has(err):
+		user = users.User{
+			ID:        uuid.New(),
+			LastLogin: time.Time{},
+			Status:    users.StatusActive,
+			CreatedAt: time.Now().UTC(),
+			Wallet:    wallet,
+		}
+		err = service.users.Create(ctx, user)
+		if err != nil {
+			return "", Error.Wrap(err)
+		}
+	case err != nil:
 		return "", Error.Wrap(err)
 	}
 
 	claims := auth.Claims{
 		UserID:    user.ID,
-		Email:     user.Email,
 		ExpiresAt: time.Now().UTC().Add(TokenExpirationTime),
 	}
 
 	token, err = service.signer.CreateToken(ctx, &claims)
+	if err != nil {
+		return "", Error.Wrap(err)
+	}
+
+	err = service.users.UpdateLastLogin(ctx, user.ID)
+
 	return token, Error.Wrap(err)
 }
 

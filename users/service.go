@@ -100,6 +100,7 @@ func (service *Service) GetProfile(ctx context.Context, userID uuid.UUID) (*Prof
 		Email:     user.Email,
 		NickName:  user.NickName,
 		CreatedAt: user.CreatedAt,
+		LastLogin: user.LastLogin,
 	}, nil
 }
 

@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
@@ -198,6 +199,22 @@ func (usersDB *usersDB) UpdatePassword(ctx context.Context, passwordHash []byte,
 // UpdateWalletAddress updates wallet address in the database.
 func (usersDB *usersDB) UpdateWalletAddress(ctx context.Context, wallet cryptoutils.Address, id uuid.UUID) error {
 	result, err := usersDB.conn.ExecContext(ctx, "UPDATE users SET wallet_address=$1 WHERE id=$2", wallet, id)
+	if err != nil {
+		return ErrUsers.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return users.ErrNoUser.New("user does not exist")
+	}
+
+	return ErrUsers.Wrap(err)
+}
+
+// UpdateLastLogin updates last login time.
+func (usersDB *usersDB) UpdateLastLogin(ctx context.Context, id uuid.UUID) error {
+	lastLogin := time.Now().UTC()
+	result, err := usersDB.conn.ExecContext(ctx, "UPDATE users SET last_login=$1 WHERE id=$2", lastLogin, id)
 	if err != nil {
 		return ErrUsers.Wrap(err)
 	}

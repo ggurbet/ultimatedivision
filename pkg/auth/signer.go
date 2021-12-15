@@ -40,7 +40,6 @@ func (a *TokenSigner) SignToken(token *Token) error {
 func (a *TokenSigner) CreateToken(ctx context.Context, claims *Claims) (string, error) {
 	json, err := claims.JSON()
 	if err != nil {
-		// TODO: wrap
 		return "", TokenSignerError.Wrap(err)
 	}
 

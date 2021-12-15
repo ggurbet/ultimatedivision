@@ -42,6 +42,8 @@ type DB interface {
 	Delete(ctx context.Context, id uuid.UUID) error
 	// GetNickNameByID returns nickname by user id from the database.
 	GetNickNameByID(ctx context.Context, id uuid.UUID) (string, error)
+	// UpdateLastLogin updates last login time.
+	UpdateLastLogin(ctx context.Context, id uuid.UUID) error
 }
 
 // Status defines the list of possible user statuses.
@@ -95,6 +97,7 @@ type Profile struct {
 	Email     string    `json:"email"`
 	NickName  string    `json:"nickName"`
 	CreatedAt time.Time `json:"registerDate"`
+	LastLogin time.Time `json:"lastLogin"`
 }
 
 // Password for old/new passwords.
