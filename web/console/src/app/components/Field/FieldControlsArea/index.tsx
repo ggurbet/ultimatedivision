@@ -52,7 +52,7 @@ export const FieldControlsArea: React.FC = () => {
             '4-3-2-1',
             '4-1-3-2',
             '5-3-2',
-            '4-5-2',
+            '4-5-1',
         ]),
         new Control('1', 'tactics', setTactic, [
             'attack',

@@ -67,7 +67,8 @@ export type FormationsType =
     | '4-3-2-1'
     | '4-1-3-2'
     | '5-3-2'
-    | '4-5-2';
+    | '4-5-1';
+    
 export type TacticsType = 'attack' | 'defence' | 'balanced';
 
 /* eslint-disable no-magic-numbers */
@@ -81,7 +82,7 @@ export enum Formations {
     '4-3-2-1' = 7,
     '4-1-3-2' = 8,
     '5-3-2' = 9,
-    '4-5-2' = 10,
+    '4-5-1' = 10,
 }
 
 export enum Tactic {
