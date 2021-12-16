@@ -3,6 +3,7 @@
 
 import { GET_USER_CARDS, USER_CARD } from '@/app/store/actions/cards';
 import { Card, CardsPage } from '@/card';
+import { GET_FIELD_CARDS } from '../actions/cards';
 
 const DEFAULT_OFFSET_VALUE: number = 0;
 const DEFAULT_LIMIT_VALUE: number = 24;
@@ -16,6 +17,8 @@ class CardsState {
     constructor(
         public cardsPage: CardsPage,
         public card: Card,
+        public currentCardsPage: number,
+        public currentFieldCardsPage: number,
     ) { };
 };
 
@@ -30,12 +33,19 @@ const page = {
 const cardsPage = new CardsPage([], page);
 const openedCard = new Card();
 
-export const cardsReducer = (cardsState: CardsState = new CardsState(cardsPage, openedCard), action: any = {}) => {
+export const cardsReducer = (cardsState: CardsState = new CardsState(cardsPage, openedCard, FIRST_PAGE, FIRST_PAGE), action: any = {}) => {
     switch (action.type) {
     case GET_USER_CARDS:
         return {
             ...cardsState,
-            cardsPage: action.cardsPage,
+            cardsPage: action.payload.cardsPage,
+            currentCardsPage: action.payload.currentPage,
+        };
+    case GET_FIELD_CARDS:
+        return {
+            ...cardsState,
+            cardsPage: action.payload.cardsPage,
+            currentFieldCardsPage: action.payload.currentPage,
         };
     case USER_CARD:
         return {
