@@ -257,9 +257,13 @@ func (chore *Chore) Play(ctx context.Context, firstClient, secondClient Client) 
 	var value = new(big.Int)
 	value.SetString(chore.config.WinValue, 10)
 	if firstClientResult.MatchResults[0].QuantityGoals > secondClientResult.MatchResults[0].QuantityGoals {
-		firstClientResult.Transaction, err = chore.currencywaitlist.Create(ctx, firstClientResult.MatchResults[0].UserID, *value)
+		if firstClientResult.Transaction, err = chore.currencywaitlist.Create(ctx, firstClientResult.MatchResults[0].UserID, *value); err != nil {
+			return ChoreError.Wrap(err)
+		}
 	} else if firstClientResult.MatchResults[0].QuantityGoals < secondClientResult.MatchResults[0].QuantityGoals {
-		secondClientResult.Transaction, err = chore.currencywaitlist.Create(ctx, secondClientResult.MatchResults[0].UserID, *value)
+		if secondClientResult.Transaction, err = chore.currencywaitlist.Create(ctx, secondClientResult.MatchResults[0].UserID, *value); err != nil {
+			return ChoreError.Wrap(err)
+		}
 	}
 
 	if err := firstClient.WriteJSON(http.StatusOK, firstClientResult); err != nil {

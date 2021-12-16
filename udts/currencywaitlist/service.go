@@ -63,22 +63,23 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, value big.
 		}
 	}
 
+	udt.Nonce++
 	item := Item{
 		WalletAddress: user.Wallet,
 		Value:         value,
-		Nonce:         udt.Nonce + 1,
+		Nonce:         udt.Nonce,
 	}
 
 	if err = service.currencyWaitList.Create(ctx, item); err != nil {
 		return transaction, ErrCurrencyWaitlist.Wrap(err)
 	}
 
+	if err = service.udts.Update(ctx, udt); err != nil {
+		return transaction, ErrCurrencyWaitlist.Wrap(err)
+	}
+
 	for range time.NewTicker(time.Millisecond * service.config.IntervalSignatureCheck).C {
 		if item, err := service.GetByWalletAddressAndNonce(ctx, user.Wallet, udt.Nonce); item.Signature != "" && err == nil {
-			udt.Nonce++
-			if err = service.udts.Update(ctx, udt); err != nil {
-				return transaction, ErrCurrencyWaitlist.Wrap(err)
-			}
 			transaction = Transaction{
 				Signature:   item.Signature,
 				UDTContract: service.config.UDTContract,
