@@ -15,7 +15,6 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
-	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/imageprocessing"
 	"ultimatedivision/pkg/rand"
 )
@@ -28,16 +27,14 @@ var ErrAvatar = errs.Class("avatar service error")
 // architecture: Service
 type Service struct {
 	avatars DB
-	log     logger.Logger
 	config  Config
 }
 
 // NewService is a constructor for avatars service.
-func NewService(avatars DB, log logger.Logger, config Config) *Service {
+func NewService(avatars DB, config Config) *Service {
 	return &Service{
 		config:  config,
 		avatars: avatars,
-		log:     log,
 	}
 }
 
@@ -381,13 +378,10 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
-	go func() {
-		avatar.OriginalURL = fmt.Sprintf(service.config.PathToOutputAvatarsRemote, nameFile)
-		if err = imageprocessing.SaveImage(service.config.PathToOutputAvatarsLocal, filepath.Join(service.config.PathToOutputAvatarsLocal, nameFile+"."+string(TypeImagePNG)), originalImageWithLabelGk); err != nil {
-			service.log.Error("could not generate avatar", err)
-			return
-		}
-	}()
+	avatar.OriginalURL = fmt.Sprintf(service.config.PathToOutputAvatarsRemote, nameFile)
+	if err = imageprocessing.SaveImage(service.config.PathToOutputAvatarsLocal, filepath.Join(service.config.PathToOutputAvatarsLocal, nameFile+"."+string(TypeImagePNG)), originalImageWithLabelGk); err != nil {
+		return avatar, ErrAvatar.Wrap(err)
+	}
 
 	return avatar, nil
 }
