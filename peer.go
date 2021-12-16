@@ -323,6 +323,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 	{ // avatars setup
 		peer.Avatars.Service = avatars.NewService(
 			peer.Database.Avatars(),
+			peer.Log,
 			config.Avatars.Config,
 		)
 	}

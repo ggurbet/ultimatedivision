@@ -99,12 +99,12 @@ func (service *Service) GenerateAvatarForLootboxCards(ctx context.Context, card 
 
 	avatar, err := service.avatars.Generate(ctx, card, card.ID.String())
 	if err != nil {
-		service.log.Error("could not create card", err)
+		service.log.Error("could not generate avatar", err)
 		return
 	}
 
 	if err := service.avatars.Create(ctx, avatar); err != nil {
-		service.log.Error("could not create card", err)
+		service.log.Error("could not create avatar", err)
 		return
 	}
 }
