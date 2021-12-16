@@ -443,10 +443,33 @@ func ValidDBParameters(stringSlice []string) []interface{} {
 
 // BuildWhereClauseDependsOnCardsFilters build string for WHERE.
 func BuildWhereClauseDependsOnCardsFilters(filters []cards.Filters) (string, []string) {
-	var query string
-	var values []string
-	var where []string
-	var leftJoin string
+	var (
+		query        string
+		values       []string
+		where        []string
+		whereOR      []string
+		leftJoin     string
+		countQuality int
+	)
+
+	for _, filter := range filters {
+		if filter.Name == cards.FilterQuality {
+			countQuality++
+		}
+	}
+
+	if countQuality > 1 {
+		var newFilters []cards.Filters
+		for _, filter := range filters {
+			if filter.Name == cards.FilterQuality {
+				values = append(values, filter.Value)
+				whereOR = append(whereOR, fmt.Sprintf(`cards.%s %s %s`, filter.Name, filter.SearchOperator, "$"+strconv.Itoa(len(values))))
+				continue
+			}
+			newFilters = append(newFilters, filter)
+		}
+		filters = newFilters
+	}
 
 	for _, filter := range filters {
 		if filter.Name != cards.FilterPrice {
@@ -477,6 +500,15 @@ func BuildWhereClauseDependsOnCardsFilters(filters []cards.Filters) (string, []s
 	if leftJoin != "" {
 		query += leftJoin
 	}
+
+	if len(whereOR) > 0 {
+		query += " WHERE (" + strings.Join(whereOR, " OR ") + ") "
+		if len(where) > 0 {
+			query += strings.Join(where, " AND ")
+		}
+		return query, values
+	}
+
 	if len(where) > 0 {
 		query += " WHERE " + strings.Join(where, " AND ")
 	}

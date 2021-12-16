@@ -215,6 +215,18 @@ func TestCards(t *testing.T) {
 		SearchOperator: sqlsearchoperators.EQ,
 	}
 
+	filter2a := cards.Filters{
+		Name:           cards.FilterQuality,
+		Value:          string(cards.QualityGold),
+		SearchOperator: sqlsearchoperators.EQ,
+	}
+
+	filter2b := cards.Filters{
+		Name:           cards.FilterQuality,
+		Value:          string(cards.QualityWood),
+		SearchOperator: sqlsearchoperators.EQ,
+	}
+
 	filter3 := cards.Filters{
 		Name:           cards.FilterPlayerName,
 		Value:          "yak",
@@ -312,7 +324,7 @@ func TestCards(t *testing.T) {
 
 		t.Run("build where string", func(t *testing.T) {
 			filters := []cards.Filters{}
-			filters = append(filters, filter1, filter2)
+			filters = append(filters, filter1, filter2, filter2a, filter2b)
 
 			for _, v := range filters {
 				err := v.Validate()
@@ -321,8 +333,8 @@ func TestCards(t *testing.T) {
 
 			queryString, values := database.BuildWhereClauseDependsOnCardsFilters(filters)
 
-			assert.Equal(t, queryString, ` WHERE cards.tactics >= $1 AND cards.type = $2`)
-			assert.Equal(t, values, []string{"1", "won"})
+			assert.Equal(t, queryString, ` WHERE (cards.quality = $1 OR cards.quality = $2) cards.tactics >= $3 AND cards.type = $4`)
+			assert.Equal(t, values, []string{"gold", "wood", "1", "won"})
 		})
 
 		t.Run("build where string for player name", func(t *testing.T) {
