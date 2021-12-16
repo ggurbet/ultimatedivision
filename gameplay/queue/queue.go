@@ -76,6 +76,7 @@ type Response struct {
 // Config defines configuration for queue.
 type Config struct {
 	PlaceRenewalInterval time.Duration `json:"placeRenewalInterval"`
+	WinValue             string        `json:"winValue"`
 }
 
 // ReadJSON reads request sent by client.

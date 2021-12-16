@@ -45,11 +45,25 @@ func TestCurrencycurrencywaitlist(t *testing.T) {
 			require.NoError(t, err)
 		})
 
-		t.Run("List", func(t *testing.T) {
-			nftList, err := repositoryCurrencyWaitList.List(ctx)
+		t.Run("GetByWalletAddressAndNonce", func(t *testing.T) {
+			item, err := repositoryCurrencyWaitList.GetByWalletAddressAndNonce(ctx, item1.WalletAddress, item1.Nonce)
 			require.NoError(t, err)
 
-			compareNFTsSlice(t, nftList, []currencywaitlist.Item{item1, item2})
+			compareItem(t, item, item1)
+		})
+
+		t.Run("List", func(t *testing.T) {
+			itemList, err := repositoryCurrencyWaitList.List(ctx)
+			require.NoError(t, err)
+
+			compareItemsSlice(t, itemList, []currencywaitlist.Item{item1, item2})
+		})
+
+		t.Run("ListWithoutSignature", func(t *testing.T) {
+			itemList, err := repositoryCurrencyWaitList.ListWithoutSignature(ctx)
+			require.NoError(t, err)
+
+			compareItemsSlice(t, itemList, []currencywaitlist.Item{item1, item2})
 		})
 
 		t.Run("UpdateSignature", func(t *testing.T) {
@@ -57,25 +71,25 @@ func TestCurrencycurrencywaitlist(t *testing.T) {
 			err := repositoryCurrencyWaitList.UpdateSignature(ctx, item1.Signature, item1.WalletAddress, item1.Nonce)
 			require.NoError(t, err)
 
-			nftList, err := repositoryCurrencyWaitList.List(ctx)
+			itemList, err := repositoryCurrencyWaitList.List(ctx)
 			require.NoError(t, err)
 
-			compareNFTsSlice(t, nftList, []currencywaitlist.Item{item2, item1})
+			compareItemsSlice(t, itemList, []currencywaitlist.Item{item2, item1})
 		})
 
 		t.Run("Delete", func(t *testing.T) {
 			err := repositoryCurrencyWaitList.Delete(ctx, item1.WalletAddress, item1.Nonce)
 			require.NoError(t, err)
 
-			nftList, err := repositoryCurrencyWaitList.List(ctx)
+			itemList, err := repositoryCurrencyWaitList.List(ctx)
 			require.NoError(t, err)
 
-			compareNFTsSlice(t, nftList, []currencywaitlist.Item{item2})
+			compareItemsSlice(t, itemList, []currencywaitlist.Item{item2})
 		})
 	})
 }
 
-func compareNFTsSlice(t *testing.T, item1, item2 []currencywaitlist.Item) {
+func compareItemsSlice(t *testing.T, item1, item2 []currencywaitlist.Item) {
 	assert.Equal(t, len(item1), len(item2))
 
 	for i := 0; i < len(item1); i++ {
@@ -84,4 +98,11 @@ func compareNFTsSlice(t *testing.T, item1, item2 []currencywaitlist.Item) {
 		assert.Equal(t, item1[i].Nonce, item2[i].Nonce)
 		assert.Equal(t, item1[i].Signature, item2[i].Signature)
 	}
+}
+
+func compareItem(t *testing.T, item1, item2 currencywaitlist.Item) {
+	assert.Equal(t, item1.WalletAddress, item2.WalletAddress)
+	assert.Equal(t, item1.Value, item2.Value)
+	assert.Equal(t, item1.Nonce, item2.Nonce)
+	assert.Equal(t, item1.Signature, item2.Signature)
 }

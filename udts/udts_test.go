@@ -5,7 +5,6 @@ package udts_test
 
 import (
 	"context"
-	"math/big"
 	"testing"
 	"time"
 
@@ -46,13 +45,11 @@ func TestUDTs(t *testing.T) {
 
 	udt1 := udts.UDT{
 		UserID: user1.ID,
-		Value:  *big.NewInt(100000000000000),
 		Nonce:  0,
 	}
 
 	udt2 := udts.UDT{
 		UserID: user2.ID,
-		Value:  *big.NewInt(100000000000000),
 		Nonce:  0,
 	}
 
@@ -74,8 +71,8 @@ func TestUDTs(t *testing.T) {
 			require.NoError(t, err)
 		})
 
-		t.Run("Get", func(t *testing.T) {
-			udtGet, err := repositoryUDTs.Get(ctx, udt1.UserID)
+		t.Run("GetByUserID", func(t *testing.T) {
+			udtGet, err := repositoryUDTs.GetByUserID(ctx, udt1.UserID)
 			require.NoError(t, err)
 
 			compareUDTsSlice(t, []udts.UDT{udtGet}, []udts.UDT{udt1})
@@ -89,12 +86,11 @@ func TestUDTs(t *testing.T) {
 		})
 
 		t.Run("Update", func(t *testing.T) {
-			udt1.Value = *big.NewInt(200000000000000)
 			udt1.Nonce = 1
 			err := repositoryUDTs.Update(ctx, udt1)
 			require.NoError(t, err)
 
-			udtGet, err := repositoryUDTs.Get(ctx, udt1.UserID)
+			udtGet, err := repositoryUDTs.GetByUserID(ctx, udt1.UserID)
 			require.NoError(t, err)
 
 			compareUDTsSlice(t, []udts.UDT{udtGet}, []udts.UDT{udt1})
@@ -117,7 +113,6 @@ func compareUDTsSlice(t *testing.T, udt1, udt2 []udts.UDT) {
 
 	for i := 0; i < len(udt1); i++ {
 		assert.Equal(t, udt1[i].UserID, udt2[i].UserID)
-		assert.Equal(t, udt1[i].Value, udt2[i].Value)
 		assert.Equal(t, udt1[i].Nonce, udt2[i].Nonce)
 	}
 }

@@ -17,15 +17,13 @@ var ErrUDTs = errs.Class("UDTs service error")
 //
 // architecture: Service
 type Service struct {
-	config Config
-	udts   DB
+	udts DB
 }
 
 // NewService is a constructor for UDTs service.
-func NewService(config Config, udts DB) *Service {
+func NewService(udts DB) *Service {
 	return &Service{
-		config: config,
-		udts:   udts,
+		udts: udts,
 	}
 }
 
@@ -34,9 +32,9 @@ func (service *Service) Create(ctx context.Context, udt UDT) error {
 	return ErrUDTs.Wrap(service.udts.Create(ctx, udt))
 }
 
-// Get returns udt by user id from database.
-func (service *Service) Get(ctx context.Context, userID uuid.UUID) (UDT, error) {
-	udt, err := service.udts.Get(ctx, userID)
+// GetByUserID returns udt by user id from database.
+func (service *Service) GetByUserID(ctx context.Context, userID uuid.UUID) (UDT, error) {
+	udt, err := service.udts.GetByUserID(ctx, userID)
 	return udt, ErrUDTs.Wrap(err)
 }
 

@@ -260,7 +260,6 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
         );
         CREATE TABLE IF NOT EXISTS udts(
             user_id        BYTEA   PRIMARY KEY REFERENCES users(id) NOT NULL,
-            value          BYTEA                                    NOT NULL,
             nonce          INTEGER                                  NOT NULL
         );`
 

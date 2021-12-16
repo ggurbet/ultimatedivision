@@ -5,6 +5,7 @@ package queue
 
 import (
 	"context"
+	"math/big"
 	"net/http"
 
 	"github.com/zeebo/errs"
@@ -14,6 +15,7 @@ import (
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/sync"
 	"ultimatedivision/seasons"
+	"ultimatedivision/udts/currencywaitlist"
 )
 
 var (
@@ -25,23 +27,27 @@ var (
 //
 // architecture: Chore
 type Chore struct {
-	log     logger.Logger
-	service *Service
-	Loop    *sync.Cycle
-	matches *matches.Service
-	seasons *seasons.Service
-	clubs   *clubs.Service
+	config           Config
+	log              logger.Logger
+	service          *Service
+	Loop             *sync.Cycle
+	matches          *matches.Service
+	seasons          *seasons.Service
+	clubs            *clubs.Service
+	currencywaitlist *currencywaitlist.Service
 }
 
 // NewChore instantiates Chore.
-func NewChore(log logger.Logger, config Config, service *Service, matches *matches.Service, seasons *seasons.Service, clubs *clubs.Service) *Chore {
+func NewChore(config Config, log logger.Logger, service *Service, matches *matches.Service, seasons *seasons.Service, clubs *clubs.Service, currencywaitlist *currencywaitlist.Service) *Chore {
 	return &Chore{
-		log:     log,
-		service: service,
-		Loop:    sync.NewCycle(config.PlaceRenewalInterval),
-		matches: matches,
-		seasons: seasons,
-		clubs:   clubs,
+		config:           config,
+		log:              log,
+		service:          service,
+		Loop:             sync.NewCycle(config.PlaceRenewalInterval),
+		matches:          matches,
+		seasons:          seasons,
+		clubs:            clubs,
+		currencywaitlist: currencywaitlist,
 	}
 }
 
@@ -226,23 +232,34 @@ func (chore *Chore) Play(ctx context.Context, firstClient, secondClient Client) 
 		}
 	}
 
-	matchResult, err := chore.matches.GetMatchResult(ctx, matchesID)
+	gameResult, err := chore.matches.GetGameResult(ctx, matchesID)
 	if err != nil {
 		if err := secondClient.WriteJSON(http.StatusInternalServerError, "could not get result of match"); err != nil {
 			return ChoreError.Wrap(err)
 		}
 	}
 
-	firstClientResult := make([]matches.MatchResult, len(matchResult))
-	_ = copy(firstClientResult, matchResult)
-	secondClientResult := make([]matches.MatchResult, len(matchResult))
-	_ = copy(secondClientResult, matchResult)
+	var firstClientResult matches.GameResult
+	var secondClientResult matches.GameResult
+
+	firstClientResult.MatchResults = make([]matches.MatchResult, len(gameResult.MatchResults))
+	_ = copy(firstClientResult.MatchResults, gameResult.MatchResults)
+	secondClientResult.MatchResults = make([]matches.MatchResult, len(gameResult.MatchResults))
+	_ = copy(secondClientResult.MatchResults, gameResult.MatchResults)
 
 	switch {
-	case firstClient.UserID == matchResult[0].UserID:
-		secondClientResult = matches.Swap(matchResult)
-	case secondClient.UserID == matchResult[0].UserID:
-		firstClientResult = matches.Swap(matchResult)
+	case firstClient.UserID == gameResult.MatchResults[0].UserID:
+		secondClientResult.MatchResults = matches.Swap(gameResult.MatchResults)
+	case secondClient.UserID == gameResult.MatchResults[0].UserID:
+		firstClientResult.MatchResults = matches.Swap(gameResult.MatchResults)
+	}
+
+	var value = new(big.Int)
+	value.SetString(chore.config.WinValue, 10)
+	if firstClientResult.MatchResults[0].QuantityGoals > secondClientResult.MatchResults[0].QuantityGoals {
+		firstClientResult.Transaction, err = chore.currencywaitlist.Create(ctx, firstClientResult.MatchResults[0].UserID, *value)
+	} else if firstClientResult.MatchResults[0].QuantityGoals < secondClientResult.MatchResults[0].QuantityGoals {
+		secondClientResult.Transaction, err = chore.currencywaitlist.Create(ctx, secondClientResult.MatchResults[0].UserID, *value)
 	}
 
 	if err := firstClient.WriteJSON(http.StatusOK, firstClientResult); err != nil {

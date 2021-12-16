@@ -12,6 +12,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/clubs"
 	"ultimatedivision/pkg/pagination"
+	"ultimatedivision/udts/currencywaitlist"
 )
 
 // ErrNoMatch indicated that match does not exist.
@@ -138,6 +139,12 @@ type MatchResult struct {
 	UserID        uuid.UUID    `json:"userId"`
 	QuantityGoals int          `json:"quantityGoals"`
 	Goalscorers   []Goalscorer `json:"goals"`
+}
+
+// GameResult entity describes values which send to user after game.
+type GameResult struct {
+	MatchResults []MatchResult                `json:"matchResults"`
+	Transaction  currencywaitlist.Transaction `json:"transaction"`
 }
 
 // Swap swaps match results.

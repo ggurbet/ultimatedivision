@@ -278,28 +278,32 @@ func (service *Service) ListMatchGoals(ctx context.Context, matchID uuid.UUID) (
 	return matchGoals, ErrMatches.Wrap(err)
 }
 
-// GetMatchResult returns goals of each user in the match.
-func (service *Service) GetMatchResult(ctx context.Context, matchID uuid.UUID) ([]MatchResult, error) {
-	resultMatch, err := service.matches.GetMatchResult(ctx, matchID)
+// GetGameResult returns goals of each user in the match.
+func (service *Service) GetGameResult(ctx context.Context, matchID uuid.UUID) (GameResult, error) {
+	matchResults, err := service.matches.GetMatchResult(ctx, matchID)
 	if err != nil {
-		return nil, ErrMatches.Wrap(err)
+		return GameResult{}, ErrMatches.Wrap(err)
 	}
 
 	matchGoals, err := service.ListMatchGoals(ctx, matchID)
 	if err != nil {
-		return nil, ErrMatches.Wrap(err)
+		return GameResult{}, ErrMatches.Wrap(err)
 	}
 
-	if len(resultMatch) == 2 {
-		for k, result := range resultMatch {
+	gameResult := GameResult{
+		MatchResults: matchResults,
+	}
+
+	if len(gameResult.MatchResults) == 2 {
+		for k, result := range gameResult.MatchResults {
 			for _, goal := range matchGoals {
 				if goal.UserID == result.UserID {
 					card, err := service.cards.Get(ctx, goal.CardID)
 					if err != nil {
-						return resultMatch, ErrMatches.Wrap(err)
+						return gameResult, ErrMatches.Wrap(err)
 					}
 
-					resultMatch[k].Goalscorers = append(resultMatch[k].Goalscorers, Goalscorer{
+					gameResult.MatchResults[k].Goalscorers = append(gameResult.MatchResults[k].Goalscorers, Goalscorer{
 						Card:   card,
 						Minute: goal.Minute,
 					})
@@ -307,22 +311,22 @@ func (service *Service) GetMatchResult(ctx context.Context, matchID uuid.UUID) (
 			}
 		}
 
-		return resultMatch, nil
+		return gameResult, nil
 	}
 
 	match, err := service.matches.Get(ctx, matchID)
 	if err != nil {
-		return nil, ErrMatches.Wrap(err)
+		return gameResult, ErrMatches.Wrap(err)
 	}
 
-	var results []MatchResult
-	results = append(results, MatchResult{UserID: match.User1ID})
-	results = append(results, MatchResult{UserID: match.User2ID})
+	var newGameResult GameResult
+	newGameResult.MatchResults = append(newGameResult.MatchResults, MatchResult{UserID: match.User1ID})
+	newGameResult.MatchResults = append(newGameResult.MatchResults, MatchResult{UserID: match.User2ID})
 
-	for k, result := range results {
-		for _, res := range resultMatch {
+	for k, result := range newGameResult.MatchResults {
+		for _, res := range matchResults {
 			if result.UserID == res.UserID {
-				results[k].QuantityGoals = res.QuantityGoals
+				newGameResult.MatchResults[k].QuantityGoals = res.QuantityGoals
 			}
 		}
 
@@ -330,10 +334,10 @@ func (service *Service) GetMatchResult(ctx context.Context, matchID uuid.UUID) (
 			if goal.UserID == result.UserID {
 				card, err := service.cards.Get(ctx, goal.CardID)
 				if err != nil {
-					return results, ErrMatches.Wrap(err)
+					return newGameResult, ErrMatches.Wrap(err)
 				}
 
-				results[k].Goalscorers = append(results[k].Goalscorers, Goalscorer{
+				newGameResult.MatchResults[k].Goalscorers = append(newGameResult.MatchResults[k].Goalscorers, Goalscorer{
 					Card:   card,
 					Minute: goal.Minute,
 				})
@@ -341,7 +345,7 @@ func (service *Service) GetMatchResult(ctx context.Context, matchID uuid.UUID) (
 		}
 	}
 
-	return results, nil
+	return newGameResult, nil
 }
 
 // ListSquadMatches returns all club matches in season.

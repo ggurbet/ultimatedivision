@@ -29,23 +29,18 @@ type udtsDB struct {
 
 // Create creates udt in the database.
 func (udtsDB *udtsDB) Create(ctx context.Context, udt udts.UDT) error {
-	query := `INSERT INTO udts(user_id, value, nonce) VALUES($1,$2,$3)`
-	_, err := udtsDB.conn.ExecContext(ctx, query, udt.UserID, udt.Value.Bytes(), udt.Nonce)
+	query := `INSERT INTO udts(user_id, nonce) VALUES($1,$2)`
+	_, err := udtsDB.conn.ExecContext(ctx, query, udt.UserID, udt.Nonce)
 	return ErrUDTs.Wrap(err)
 }
 
-// Get returns udt by user's id from database.
-func (udtsDB *udtsDB) Get(ctx context.Context, userID uuid.UUID) (udts.UDT, error) {
-	var (
-		udt   udts.UDT
-		value []byte
-	)
-
+// GetByUserID returns udt by user's id from database.
+func (udtsDB *udtsDB) GetByUserID(ctx context.Context, userID uuid.UUID) (udts.UDT, error) {
+	var udt udts.UDT
 	query := `SELECT * FROM udts WHERE user_id = $1`
 	row := udtsDB.conn.QueryRowContext(ctx, query, userID)
 
-	err := row.Scan(&udt.UserID, &value, &udt.Nonce)
-	udt.Value.SetBytes(value)
+	err := row.Scan(&udt.UserID, &udt.Nonce)
 	if errors.Is(err, sql.ErrNoRows) {
 		return udt, udts.ErrNoUDT.Wrap(err)
 	}
@@ -55,13 +50,8 @@ func (udtsDB *udtsDB) Get(ctx context.Context, userID uuid.UUID) (udts.UDT, erro
 
 // List returns udts from database.
 func (udtsDB *udtsDB) List(ctx context.Context) ([]udts.UDT, error) {
-	var (
-		udtList []udts.UDT
-		value   []byte
-	)
-
+	var udtList []udts.UDT
 	query := `SELECT * FROM udts`
-
 	rows, err := udtsDB.conn.QueryContext(ctx, query)
 	if err != nil {
 		return udtList, ErrUDTs.Wrap(err)
@@ -73,10 +63,9 @@ func (udtsDB *udtsDB) List(ctx context.Context) ([]udts.UDT, error) {
 	for rows.Next() {
 		var udt udts.UDT
 
-		if err = rows.Scan(&udt.UserID, &value, &udt.Nonce); err != nil {
+		if err = rows.Scan(&udt.UserID, &udt.Nonce); err != nil {
 			return udtList, ErrUDTs.Wrap(err)
 		}
-		udt.Value.SetBytes(value)
 		udtList = append(udtList, udt)
 	}
 
@@ -86,19 +75,16 @@ func (udtsDB *udtsDB) List(ctx context.Context) ([]udts.UDT, error) {
 // Update updates nft by user's id in the database.
 func (udtsDB *udtsDB) Update(ctx context.Context, udt udts.UDT) error {
 	query := `UPDATE udts
-	          SET value = $1, nonce = $2
-	          WHERE user_id = $3`
+	          SET nonce = $1
+	          WHERE user_id = $2`
 
-	result, err := udtsDB.conn.ExecContext(ctx, query, udt.Value.Bytes(), udt.Nonce, udt.UserID)
+	result, err := udtsDB.conn.ExecContext(ctx, query, udt.Nonce, udt.UserID)
 	if err != nil {
 		return ErrUDTs.Wrap(err)
 	}
 
 	rowNum, err := result.RowsAffected()
-	if err != nil {
-		return ErrUDTs.Wrap(err)
-	}
-	if rowNum == 0 {
+	if err == nil && rowNum == 0 {
 		return udts.ErrNoUDT.New("udt does not exist")
 	}
 
