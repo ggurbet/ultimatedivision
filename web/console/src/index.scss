@@ -26,6 +26,38 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: "Russo One";
+    src: url("@static/fonts/RussoOne-Regular.ttf") format("truetype");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Hanson";
+    src: url("@static/fonts/Hanson-Bold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "BaiJamjuree";
+    src: url("@static/fonts/BaiJamjuree-Regular.ttf") format("truetype");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Syncopate";
+    src: url("@static/fonts/Syncopate-Bold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
 html {
     font-family: "BebasNeue", sans-serif;
     scroll-behavior: smooth;

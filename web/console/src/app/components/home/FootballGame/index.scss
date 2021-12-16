@@ -1,0 +1,83 @@
+@import "@/index.scss";
+
+.football-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #2c3c8f;
+
+    &__cards {
+        margin-top: 85px;
+    }
+
+    &__title {
+        font-family: "Hanson", sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 48px;
+        line-height: 50px;
+        color: #40ff5e;
+    }
+
+    &__subtitle {
+        margin: 11px auto 40px auto;
+        font-family: "Syncopate", sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 32px;
+        line-height: 33px;
+        color: #f3feff;
+    }
+
+    .ultimatedivision-join-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 3px;
+        width: 249px;
+        height: 54px;
+        background-image: url("data:image/svg+xml, %3Csvg width='200' height='54' viewBox='0 0 200 54' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='54' fill='%230DF55C'/%3E%3Crect width='200' height='54' fill='url(%23paint0_linear)' fill-opacity='0.2'/%3E%3Cpath d='M199 0H173.809L136.119 53.4627H162.096L199 0Z' fill='%2367FFB6'/%3E%3Cpath d='M53.2639 0H46.567L8.87732 53.4627H16.3594L53.2639 0Z' fill='%2367FFB6'/%3E%3Cdefs%3E%3ClinearGradient id='paint0_linear' x1='8.85245' y1='6.21328e-06' x2='171.959' y2='55.9918' gradientUnits='userSpaceOnUse'%3E%3Cstop/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
+        background-size: cover;
+        filter: drop-shadow(0px 4px 35px #2C3C8F);
+    }
+
+    &__field {
+        margin: -27px auto 153px auto;
+    }
+}
+
+@media (max-width: $desktopBreakPoint) {
+    .football-game {
+        &__field {
+            display: flex;
+            width: 90%;
+            margin: -27px auto 153px auto;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+    .football-game {
+        &__cards {
+            display: flex;
+            width: 90%;
+            margin: 85px auto 0 auto;
+        }
+
+        &__title {
+            text-align: center;
+            font-size: 35px;
+            line-height: 50px;
+        }
+
+        &__subtitle {
+            text-align: center;
+            font-size: 21px;
+            line-height: 33px;
+        }
+
+        &__field {
+            margin: 30px auto 153px auto;
+        }
+    }
+}

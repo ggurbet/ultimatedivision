@@ -17,10 +17,11 @@ const Field = lazy(() => import('@/app/views/FieldPage'));
 const WhitePaper = lazy(() => import('@/app/views/WhitePaperPage'));
 const Tokenomics = lazy(() => import('@/app/views/TokenomicsPage'));
 const Store = lazy(() => import('@/app/views/StorePage'));
-const Navbar = lazy(() => import('@/app/components/common/Navbar'));
 const Division = lazy(() => import('@/app/views/Division'));
 const Match = lazy(() => import('@/app/views/Match'));
-const MatchFinder = (lazy(() => import('@components/common/MatchFinder')));
+const MatchFinder = lazy(() => import('@components/common/MatchFinder'));
+const Home = lazy(() => import('@/app/views/Home'));
+const Navbar = lazy(() => import('@/app/components/common/Navbar'));
 
 import Summary from '@components/WhitePaper/Summary';
 import GameMechanics from '@components/WhitePaper/GameMechanics';
@@ -39,7 +40,7 @@ export class ComponentRoutes {
         public component: React.FC<any>,
         public exact: boolean,
         public children?: ComponentRoutes[]
-    ) { }
+    ) {}
     /** Method for creating child subroutes path */
     public with(
         child: ComponentRoutes,
@@ -141,6 +142,11 @@ export class RouteConfig {
         Match,
         true
     );
+    public static Home: ComponentRoutes = new ComponentRoutes(
+        '/home',
+        Home,
+        true
+    );
     public static Whitepaper: ComponentRoutes = new ComponentRoutes(
         '/whitepaper',
         WhitePaper,
@@ -193,6 +199,7 @@ export class RouteConfig {
     );
 
     public static routes: ComponentRoutes[] = [
+        RouteConfig.Home,
         RouteConfig.Field,
         RouteConfig.MarketPlace,
         RouteConfig.Club,
@@ -239,3 +246,4 @@ export const Routes = () =>
             )}
         </Route>
     </Switch>;
+
