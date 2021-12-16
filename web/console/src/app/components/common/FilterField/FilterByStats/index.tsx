@@ -190,7 +190,8 @@ export const FilterByStats: React.FC<{submitSearch: (queryParameters: CardsQuery
             title="Stats"
         >
             <div className="filter-item__dropdown-active__stats__wrapper">
-                {stats.map((stat: FilterFieldStatsAreaProps) => <FilterFieldStatsArea
+                {stats.map((stat: FilterFieldStatsAreaProps, index: number) => <FilterFieldStatsArea
+                    key={index}
                     label={stat.label}
                     minValue={stat.minValue}
                     maxValue={stat.maxValue}
