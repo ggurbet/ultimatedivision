@@ -3,14 +3,14 @@
 
 import { Match } from '@/matches';
 
-/** GET_MATCH_SCORE  is action type for update match score. */
+/** GET_MATCH_SCORE  is action type for update match score and transaction. */
 export const GET_MATCH_SCORE = 'GET_MATCH_SCORE';
 
-/** getMatchScore dispatch updates match result. */
-export const getMatchScore = ({ firstTeam, secondTeam }: Match) => ({
+/** GetMatchScore dispatch updates match result and transaction values. */
+export const getMatchScore = ({ teams, transaction }: Match) => ({
     type: GET_MATCH_SCORE,
     payload: {
-        firstTeam,
-        secondTeam,
+        teams,
+        transaction,
     },
 });

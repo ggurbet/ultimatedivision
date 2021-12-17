@@ -4,7 +4,7 @@
 import { GET_MATCH_SCORE } from '../actions/mathes';
 
 
-import { Goal, Match, Team } from '@/matches';
+import { Goal, Match, Team, Transaction } from '@/matches';
 
 /** Describes default summary goals scored by first team. */
 const DEFAULT_FIRST_TEAM_GOALS: number = 0;
@@ -22,20 +22,44 @@ const DEFAULT_FIRST_USER_ID: string = '';
 /** Describes default userId valuew of second player. */
 const DEFAULT_SECOND_USER_ID: string = '';
 
+/** Describes default contract address. */
+const DEFAULT_ADDRESS_CONTRACT: string = '';
+/** Desribes default contract address method. */
+const DEFALT_CONTRACT_ADDRESS_METHOD: string = '';
+/** Describes default nonce contract value. */
+const DEFAULT_NONCE_VALUE: number = 0;
+/** Describes default hash of signature. */
+const SIGNATURE_HASH: string = '';
+/** Describes default coins value. */
+const COINS_VALUE: string = '';
+
 const firstTeam = new Team(DEFAULT_FIRST_TEAM_GOALS, DEFAULT_FIRST_TEAM_GOAL_SCORERS, DEFAULT_FIRST_USER_ID);
 const secondTeam = new Team(DEFAULT_SECOND_TEAM_GOALS, DEFAULT_SECOND_TEAM_GOAL_SCORERS, DEFAULT_SECOND_USER_ID);
 
-/** matchesReducer describes reducer for matches domain entity */
+const transaction = new Transaction(
+    DEFAULT_NONCE_VALUE,
+    SIGNATURE_HASH,
+    {
+        address: DEFAULT_ADDRESS_CONTRACT,
+        addressMethod: DEFALT_CONTRACT_ADDRESS_METHOD,
+    },
+    COINS_VALUE
+);
+
+/** Exposes matches result that return array of teams. */
+const teams = [firstTeam, secondTeam];
+
+/** MatchesReducer describes reducer for matches domain entity */
 export const matchesReducer = (
-    matchesState: Match = new Match(firstTeam, secondTeam),
+    matchesState: Match = new Match(teams, transaction),
     action: any = {}
 ) => {
     switch (action.type) {
     case GET_MATCH_SCORE:
         return {
             ...matchesState,
-            firstTeam: action.payload.firstTeam,
-            secondTeam: action.payload.secondTeam,
+            teams: action.payload.teams,
+            transaction: action.payload.transaction,
         };
     default:
         return matchesState;

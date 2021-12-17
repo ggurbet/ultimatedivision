@@ -14,7 +14,12 @@ import './index.scss';
 const MAX_SCORED_PLAYERS_COUNT: number = 3;
 
 export const GoalScorers: React.FC = () => {
-    const { firstTeam, secondTeam } = useSelector((state: RootState) => state.matchesReducer);
+    const { teams } = useSelector((state: RootState) => state.matchesReducer);
+
+    /** FIRST_TEAM_INDEX is variable that describes first team index in teams array. */
+    const FIRST_TEAM_INDEX: number = 0;
+    /** SECOND_TEAM_INDEX is variable that describes second team index in teams array. */
+    const SECOND_TEAM_INDEX: number = 1;
 
     const [visabilityTeamsAreaScroll, setVisabilityTeamsAreaScroll] = useState<{
         firstTeam: boolean;
@@ -24,8 +29,8 @@ export const GoalScorers: React.FC = () => {
     useEffect(() => {
         /** If the length of the array of players who scored a goal is more than 3 - add a scroll for the block. */
         setVisabilityTeamsAreaScroll({
-            firstTeam: firstTeam.goals && firstTeam.goals.length > MAX_SCORED_PLAYERS_COUNT,
-            secondTeam: secondTeam.goals && secondTeam.goals.length > MAX_SCORED_PLAYERS_COUNT,
+            firstTeam: teams[FIRST_TEAM_INDEX].goals && teams[FIRST_TEAM_INDEX].goals.length > MAX_SCORED_PLAYERS_COUNT,
+            secondTeam: teams[SECOND_TEAM_INDEX].goals && teams[SECOND_TEAM_INDEX].goals.length > MAX_SCORED_PLAYERS_COUNT,
         });
     }, []);
 
@@ -37,7 +42,7 @@ export const GoalScorers: React.FC = () => {
                     className={`scores${visabilityTeamsAreaScroll.firstTeam ? '-scroll' : ''
                     }`}
                 >
-                    {firstTeam.goals && <GoalScorersTeam goals={firstTeam.goals} />}
+                    {teams[FIRST_TEAM_INDEX].goals && <GoalScorersTeam goals={teams[FIRST_TEAM_INDEX].goals} />}
                 </div>
             </div>
             <div className="match__goal-scorers__team-2">
@@ -46,7 +51,7 @@ export const GoalScorers: React.FC = () => {
                     className={`scores${visabilityTeamsAreaScroll.secondTeam ? '-scroll' : ''
                     }`}
                 >
-                    {secondTeam.goals && <GoalScorersTeam goals={secondTeam.goals} />}
+                    {teams[SECOND_TEAM_INDEX].goals && <GoalScorersTeam goals={teams[SECOND_TEAM_INDEX].goals} />}
                 </div>
             </div>
         </div>

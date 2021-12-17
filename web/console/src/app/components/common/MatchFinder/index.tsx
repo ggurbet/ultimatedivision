@@ -159,9 +159,9 @@ const MatchFinder: React.FC = () => {
 
                 return;
             default:
-                const firstTeam = messageEvent.message[FIRST_TEAM_INDEX];
-                const secondTeam = messageEvent.message[SECOND_TEAM_INDEX];
+                const teams = messageEvent.message.matchResults;
 
+                const transaction = messageEvent.message.transaction;
                 toast.success(
                     'Successfully! You will be redirected to match page',
                     {
@@ -169,7 +169,7 @@ const MatchFinder: React.FC = () => {
                     }
                 );
 
-                dispatch(getMatchScore({ firstTeam, secondTeam }));
+                dispatch(getMatchScore({ teams, transaction }));
                 dispatch(startSearchingMatch(false));
 
                 /** implements redirect to match page after DELAY time.  */

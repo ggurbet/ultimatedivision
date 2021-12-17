@@ -2,13 +2,10 @@
 // See LICENSE for copying information.
 
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import { PlayerCard } from '@components/common/PlayerCard';
 
 import { Goal } from '@/matches';
-import { SquadCard } from '@/club';
-import { RootState } from '@/app/store';
 
 export const GoalScorersTeam: React.FC<{ goals: Goal[] }> = ({ goals }) => {
     const [cardId, setCardId] = useState<number | null>(null);
