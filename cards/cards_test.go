@@ -287,10 +287,10 @@ func TestCards(t *testing.T) {
 		})
 
 		t.Run("list by user id", func(t *testing.T) {
-			userCard, err := repositoryCards.ListByUserID(ctx, user1.ID)
+			userCard, err := repositoryCards.ListByUserID(ctx, user1.ID, cursor1)
 			require.NoError(t, err)
 
-			compareCards(t, userCard[0], card1)
+			compareCards(t, userCard.Cards[0], card1)
 		})
 
 		t.Run("list with filters", func(t *testing.T) {
@@ -316,7 +316,7 @@ func TestCards(t *testing.T) {
 				assert.NoError(t, err)
 			}
 
-			allCards, err := repositoryCards.ListByPlayerName(ctx, filter3, cursor1)
+			allCards, err := repositoryCards.ListByUserIDAndPlayerName(ctx, card1.UserID, filter3, cursor1)
 			assert.NoError(t, err)
 			assert.Equal(t, len(allCards.Cards), 1)
 			compareCards(t, card1, allCards.Cards[0])
@@ -333,7 +333,7 @@ func TestCards(t *testing.T) {
 
 			queryString, values := database.BuildWhereClauseDependsOnCardsFilters(filters)
 
-			assert.Equal(t, queryString, ` WHERE (cards.quality = $1 OR cards.quality = $2) cards.tactics >= $3 AND cards.type = $4`)
+			assert.Equal(t, queryString, ` WHERE (cards.quality = $1 OR cards.quality = $2) AND cards.tactics >= $3 AND cards.type = $4`)
 			assert.Equal(t, values, []string{"gold", "wood", "1", "won"})
 		})
 

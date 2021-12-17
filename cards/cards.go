@@ -26,15 +26,15 @@ type DB interface {
 	// GetByPlayerName returns card by player name from DB.
 	GetByPlayerName(ctx context.Context, playerName string) (Card, error)
 	// ListByUserID returns cards by user id from the database.
-	ListByUserID(ctx context.Context, id uuid.UUID) ([]Card, error)
+	ListByUserID(ctx context.Context, id uuid.UUID, cursor pagination.Cursor) (Page, error)
 	// List returns all cards from the data base.
 	List(ctx context.Context, cursor pagination.Cursor) (Page, error)
 	// ListWithFilters returns all cards from the data base with filters.
 	ListWithFilters(ctx context.Context, filters []Filters, cursor pagination.Cursor) (Page, error)
 	// ListCardIDsWithFiltersWhereActiveLot returns card ids where active lots from DB, taking the necessary filters.
 	ListCardIDsWithFiltersWhereActiveLot(ctx context.Context, filters []Filters) ([]uuid.UUID, error)
-	// ListByPlayerName returns cards from DB by player name.
-	ListByPlayerName(ctx context.Context, filters Filters, cursor pagination.Cursor) (Page, error)
+	// ListByUserIDAndPlayerName returns cards from DB by user id and player name.
+	ListByUserIDAndPlayerName(ctx context.Context, userID uuid.UUID, filters Filters, cursor pagination.Cursor) (Page, error)
 	// ListCardIDsByPlayerNameWhereActiveLot returns card ids where active lot from DB by player name.
 	ListCardIDsByPlayerNameWhereActiveLot(ctx context.Context, filter Filters) ([]uuid.UUID, error)
 	// GetSquadCards returns all card with characteristics from the squad from the database.

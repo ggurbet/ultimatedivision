@@ -14,6 +14,7 @@ import (
 
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/pkg/auth"
 	"ultimatedivision/pkg/pagination"
 	"ultimatedivision/pkg/sqlsearchoperators"
 )
@@ -80,6 +81,13 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 		filters       cards.SliceFilters
 		limit, page   int
 	)
+
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusUnauthorized, ErrClubs.Wrap(err))
+		return
+	}
+
 	urlQuery := r.URL.Query()
 	limitQuery := urlQuery.Get("limit")
 	pageQuery := urlQuery.Get("page")
@@ -109,9 +117,9 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 			controller.serveError(w, http.StatusBadRequest, ErrCards.Wrap(err))
 		}
 		if len(filters) > 0 {
-			cardsListPage, err = controller.cards.ListWithFilters(ctx, filters, cursor)
+			cardsListPage, err = controller.cards.ListWithFilters(ctx, claims.UserID, filters, cursor)
 		} else {
-			cardsListPage, err = controller.cards.List(ctx, cursor)
+			cardsListPage, err = controller.cards.ListByUserID(ctx, claims.UserID, cursor)
 		}
 	} else {
 		filter := cards.Filters{
@@ -119,7 +127,7 @@ func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 			Value:          playerName,
 			SearchOperator: sqlsearchoperators.LIKE,
 		}
-		cardsListPage, err = controller.cards.ListByPlayerName(ctx, filter, cursor)
+		cardsListPage, err = controller.cards.ListByUserIDAndPlayerName(ctx, claims.UserID, filter, cursor)
 	}
 	if err != nil {
 		controller.log.Error("could not get cards list", ErrCards.Wrap(err))

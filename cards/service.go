@@ -18,6 +18,7 @@ import (
 
 	"ultimatedivision/pkg/fileutils"
 	"ultimatedivision/pkg/pagination"
+	"ultimatedivision/pkg/sqlsearchoperators"
 )
 
 // ErrCards indicated that there was an error in service.
@@ -337,7 +338,7 @@ func (service *Service) List(ctx context.Context, cursor pagination.Cursor) (Pag
 }
 
 // ListWithFilters returns all cards from DB, taking the necessary filters.
-func (service *Service) ListWithFilters(ctx context.Context, filters []Filters, cursor pagination.Cursor) (Page, error) {
+func (service *Service) ListWithFilters(ctx context.Context, userID uuid.UUID, filters []Filters, cursor pagination.Cursor) (Page, error) {
 	var cardsListPage Page
 
 	for _, v := range filters {
@@ -346,6 +347,13 @@ func (service *Service) ListWithFilters(ctx context.Context, filters []Filters, 
 			return cardsListPage, err
 		}
 	}
+
+	filter := Filters{
+		Name:           "user_id",
+		Value:          userID.String(),
+		SearchOperator: sqlsearchoperators.EQ,
+	}
+	filters = append(filters, filter)
 
 	if cursor.Limit <= 0 {
 		cursor.Limit = service.config.Cursor.Limit
@@ -370,8 +378,8 @@ func (service *Service) ListCardIDsWithFiltersWhereActiveLot(ctx context.Context
 	return cardsList, ErrCards.Wrap(err)
 }
 
-// ListByPlayerName returns cards from DB by player name.
-func (service *Service) ListByPlayerName(ctx context.Context, filter Filters, cursor pagination.Cursor) (Page, error) {
+// ListByUserIDAndPlayerName returns cards from DB by user id and player name.
+func (service *Service) ListByUserIDAndPlayerName(ctx context.Context, userID uuid.UUID, filter Filters, cursor pagination.Cursor) (Page, error) {
 	var cardsListPage Page
 	strings.ToValidUTF8(filter.Value, "")
 
@@ -388,7 +396,7 @@ func (service *Service) ListByPlayerName(ctx context.Context, filter Filters, cu
 		cursor.Page = service.config.Cursor.Page
 	}
 
-	cardsListPage, err = service.cards.ListByPlayerName(ctx, filter, cursor)
+	cardsListPage, err = service.cards.ListByUserIDAndPlayerName(ctx, userID, filter, cursor)
 	return cardsListPage, ErrCards.Wrap(err)
 }
 
@@ -406,8 +414,14 @@ func (service *Service) ListCardIDsByPlayerNameWhereActiveLot(ctx context.Contex
 }
 
 // ListByUserID returns all user`s cards in database.
-func (service *Service) ListByUserID(ctx context.Context, userID uuid.UUID) ([]Card, error) {
-	userCards, err := service.cards.ListByUserID(ctx, userID)
+func (service *Service) ListByUserID(ctx context.Context, userID uuid.UUID, cursor pagination.Cursor) (Page, error) {
+	if cursor.Limit <= 0 {
+		cursor.Limit = service.config.Cursor.Limit
+	}
+	if cursor.Page <= 0 {
+		cursor.Page = service.config.Cursor.Page
+	}
+	userCards, err := service.cards.ListByUserID(ctx, userID, cursor)
 	return userCards, ErrCards.Wrap(err)
 }
 
