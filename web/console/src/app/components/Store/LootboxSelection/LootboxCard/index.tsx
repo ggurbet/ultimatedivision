@@ -16,6 +16,7 @@ import silver from '@static/img/StorePage/BoxCard/silver.svg';
 import wood from '@static/img/StorePage/BoxCard/wood.svg';
 
 import { UnauthorizedError } from '@/api';
+import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { openLootbox } from '@/app/store/actions/lootboxes';
 import { LootboxStats } from '@/app/types/lootbox';
 
@@ -27,6 +28,8 @@ export const LootboxCard: React.FC<{
 }> = ({ data, handleOpening }) => {
     /** Indicates if registration required. */
     const [isRegistrationRequired, setIsRegistrationRequired] = useState(false);
+
+    const [setLocalStorageItem, getLocalStorageItem] = useLocalStorage();
 
     /** Closes Registration popup componnet. */
     const closeRegistrationPopup = () => {
@@ -64,8 +67,10 @@ export const LootboxCard: React.FC<{
             if (error instanceof UnauthorizedError) {
                 setIsRegistrationRequired(true);
 
+                setLocalStorageItem('IS_LOGGINED', false);
+
                 return;
-            };
+            }
 
             toast.error('Failed to open lootbox', {
                 position: toast.POSITION.TOP_RIGHT,
@@ -75,8 +80,12 @@ export const LootboxCard: React.FC<{
     };
 
     if (isRegistrationRequired) {
-        return <RegistrationPopup closeRegistrationPopup={closeRegistrationPopup} />;
-    };
+        return (
+            <RegistrationPopup
+                closeRegistrationPopup={closeRegistrationPopup}
+            />
+        );
+    }
 
     return (
         <div className="box-card">

@@ -14,15 +14,26 @@ import { Paginator } from '@components/common/Paginator';
 import { RegistrationPopup } from '@/app/components/common/Registration/Registration';
 
 import { UnauthorizedError } from '@/api';
+import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { RootState } from '@/app/store';
-import { listOfCards, clearCardsQueryParameters, createCardsQueryParameters } from '@/app/store/actions/cards';
+import {
+    listOfCards,
+    clearCardsQueryParameters,
+    createCardsQueryParameters,
+} from '@/app/store/actions/cards';
 import { CardsQueryParametersField } from '@/card';
 
 import './index.scss';
 
 const UserCards: React.FC = () => {
-    const { page } = useSelector((state: RootState) => state.cardsReducer.cardsPage);
-    const { currentCardsPage } = useSelector((state: RootState) => state.cardsReducer);
+    const { page } = useSelector(
+        (state: RootState) => state.cardsReducer.cardsPage
+    );
+    const { currentCardsPage } = useSelector(
+        (state: RootState) => state.cardsReducer
+    );
+
+    const [setLocalStorageItem, getLocalStorageItem] = useLocalStorage();
 
     const dispatch = useDispatch();
 
@@ -33,7 +44,9 @@ const UserCards: React.FC = () => {
     const DEFAULT_PAGE_INDEX: number = 1;
 
     /** Submits search by cards query parameters. */
-    const submitSearch = async(queryParameters: CardsQueryParametersField[]) => {
+    const submitSearch = async(
+        queryParameters: CardsQueryParametersField[]
+    ) => {
         createCardsQueryParameters(queryParameters);
         await dispatch(listOfCards(DEFAULT_PAGE_INDEX));
     };
@@ -51,19 +64,21 @@ const UserCards: React.FC = () => {
                 if (error instanceof UnauthorizedError) {
                     setIsRegistrationRequired(true);
 
-                    return;
-                };
-            };
+                    setLocalStorageItem('IS_LOGGINED', false);
+                }
+            }
         })();
     }, []);
 
     return (
         <section className="user-cards">
-            {isRegistrationRequired && <RegistrationPopup closeRegistrationPopup={closeRegistrationPopup} />}
-            <h1 className="user-cards__title">
-                MY CARDS
-            </h1>
-            <FilterField >
+            {isRegistrationRequired &&
+                <RegistrationPopup
+                    closeRegistrationPopup={closeRegistrationPopup}
+                />
+            }
+            <h1 className="user-cards__title">MY CARDS</h1>
+            <FilterField>
                 <FilterByVersion submitSearch={submitSearch} />
                 <FilterByStats submitSearch={submitSearch} />
                 <FilterByPrice />
