@@ -10,7 +10,7 @@ const ChangePassword = lazy(() => import('@/app/views/ChangePassword'));
 const ConfirmEmail = lazy(() => import('@/app/views/ConfirmEmail'));
 const RecoverPassword = lazy(() => import('@/app/views/RecoverPassword'));
 const MarketPlace = lazy(() => import('@/app/views/MarketPlacePage'));
-const Club = lazy(() => import('@/app/views/ClubPage'));
+const UserCards = lazy(() => import('@/app/views/UserCards'));
 const Card = lazy(() => import('@/app/views/CardPage'));
 const Lot = lazy(() => import('@/app/views/LotPage'));
 const Field = lazy(() => import('@/app/views/FieldPage'));
@@ -132,9 +132,9 @@ export class RouteConfig {
         Store,
         true
     );
-    public static Club: ComponentRoutes = new ComponentRoutes(
-        '/club',
-        Club,
+    public static Cards: ComponentRoutes = new ComponentRoutes(
+        '/cards',
+        UserCards,
         true
     );
     public static Match: ComponentRoutes = new ComponentRoutes(
@@ -202,7 +202,7 @@ export class RouteConfig {
         RouteConfig.Home,
         RouteConfig.Field,
         RouteConfig.MarketPlace,
-        RouteConfig.Club,
+        RouteConfig.Cards,
         RouteConfig.Card,
         RouteConfig.Division,
         RouteConfig.Lot,

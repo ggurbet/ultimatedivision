@@ -3,20 +3,21 @@
 
 import { useSelector } from 'react-redux';
 
-import { MyCard } from '@/app/components/Club/ClubCardsArea/MyCard';
+import { PlayerCard } from '@components/common/PlayerCard';
 
 import boxLight from '@static/img/StorePage/BoxContent/boxLight.svg';
 import ribbons from '@static/img/StorePage/BoxContent/ribbons.svg';
 
 import { RootState } from '@/app/store';
 import { boxStyle } from '@/app/internal/lootboxStyle';
+import { Card } from '@/card';
 
 import './index.scss';
 
 export const LootboxOpening = () => {
     const FIRST_CARD = 0;
     const REGULAR_CARDS_AMOUNT: number = 5;
-    const cards = useSelector(
+    const cards: Card[] = useSelector(
         (state: RootState) => state.lootboxReducer.lootbox
     );
 
@@ -51,7 +52,7 @@ export const LootboxOpening = () => {
             </div>
             <div className="box-animation__card-container">
                 <div className="box-animation__card-container-backlight">
-                    <MyCard card={cards[FIRST_CARD]} />
+                    <PlayerCard className={'box-animation__card'} id={cards[FIRST_CARD].id}/>
                 </div>
             </div>
         </div>

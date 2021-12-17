@@ -2,7 +2,7 @@
 //See LICENSE for copying information.
 @import "@/index.scss";
 
-.club-card {
+.user-card {
     width: 178px;
     position: relative;
     background: none;
@@ -70,21 +70,21 @@
 
 @media (max-width: 1440px) {
 
-    .club-card {
+    .user-card {
         margin: 70px 10px 0;
     }
 }
 
 @media (max-width: $desktopBreakPoint) {
 
-    .club-card {
+    .user-card {
         margin: 70px 5px 0;
     }
 }
 
 @media (max-width: $phoneBreakPoint - 150px) {
 
-    .club-card {
+    .user-card {
         width: 150px;
         border-radius: 10px;
         padding-bottom: 20px;

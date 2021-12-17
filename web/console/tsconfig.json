@@ -8,8 +8,17 @@
       "@components/*": [
         "./src/app/components/*"
       ],
+      "@views/*": [
+        "./src/app/views/*"
+      ],
+      "@store/*": [
+        "./src/app/store/*"
+      ],
       "@static/*": [
         "./src/app/static/*"
+      ],
+      "@utils/*": [
+        "./src/app/utils/*"
       ],
     },
     "target": "es6",

@@ -21,7 +21,7 @@ const getCards = (cardsPage: CardsPage, currentPage: number) => ({
 });
 
 /** Exposes an action object for cards on field page.  */
-const getFieldCards = (cardsPage: CardsPage, currentPage: number) =>({
+const getFieldCards = (cardsPage: CardsPage, currentPage: number) => ({
     type: GET_FIELD_CARDS,
     payload: {
         cardsPage,
@@ -62,7 +62,7 @@ export const fieldCards = (selectedPage: number) => async function(dispatch: Dis
     const cards = response.cards;
     const currentPage = response.page.currentPage;
 
-    dispatch(getFieldCards({ cards, page}, currentPage ));
+    dispatch(getFieldCards({ cards, page }, currentPage));
 };
 
 /** thunk for creating user cards list */
@@ -72,7 +72,7 @@ export const listOfCards = (selectedPage: number) => async function(dispatch: Di
     const cards = response.cards;
     const currentPage = response.page.currentPage;
 
-    dispatch(getCards({ cards, page}, currentPage ));
+    dispatch(getCards({ cards, page }, currentPage));
 };
 /** thunk for opening fotballerCardPage with reload possibility */
 export const openUserCard = (id: string) => async function(dispatch: Dispatch) {

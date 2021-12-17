@@ -126,6 +126,10 @@
             }
         }
     }
+    &__card {
+        width: 70%;
+        margin: 0 auto;
+    }
 
     &__card-container-backlight {
         display: flex;

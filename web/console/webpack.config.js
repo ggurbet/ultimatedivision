@@ -94,6 +94,8 @@ module.exports = (env, argv) => {
         resolve: {
             alias: {
                 "@components": path.resolve(__dirname, "./src/app/components/"),
+                "@views": path.resolve(__dirname, "./src/app/views/"),
+                "@store": path.resolve(__dirname, "./src/app/store/"),
                 "@static": path.resolve(__dirname, "./src/app/static/"),
                 "@utils": path.resolve(__dirname, "./src/app/utils/"),
                 "@": path.resolve(__dirname, "./src/"),

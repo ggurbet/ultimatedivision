@@ -21,7 +21,7 @@ const HomeNavbar: React.FC = () => {
 
     /** TODO: DIVISIONS will be replaced with id parameter */
     const navbarItems: Array<{ name: string; path: string }> = [
-        { name: 'My Club', path: RouteConfig.Club.path },
+        { name: 'My Club', path: RouteConfig.Cards.path },
         { name: 'Store', path: RouteConfig.Store.path },
         { name: 'Marketplace', path: RouteConfig.MarketPlace.path },
         { name: 'FAQ', path: RouteConfig.Summary.path },

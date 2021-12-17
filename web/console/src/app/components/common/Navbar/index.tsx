@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
         { name: 'HOME', path: RouteConfig.Home.path },
         { name: 'STORE', path: RouteConfig.Store.path },
         { name: 'MARKETPLACE', path: RouteConfig.MarketPlace.path },
-        { name: 'CARDS', path: RouteConfig.Club.path },
+        { name: 'CARDS', path: RouteConfig.Cards.path },
         { name: 'FIELD', path: RouteConfig.Field.path },
         { name: 'DIVISIONS', path: RouteConfig.Division.path },
     ];
