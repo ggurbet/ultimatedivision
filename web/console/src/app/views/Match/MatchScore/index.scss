@@ -15,8 +15,8 @@
         align-items: center;
         justify-content: center;
         position: relative;
-        width: 468.92px;
-        height: 274.8px;
+        width: 410px;
+        height: 246px;
         margin: 100px auto 0 auto;
         background: rgba(100, 91, 169, 0.15);
         border: 3.02532px solid #3ccf5d;
@@ -35,35 +35,34 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 151.27px;
-            height: 87.73px;
+            width: 131px;
+            height: 68px;
             left: calc(50% - 151.27px / 2 + 1.5px);
-            top: -50px;
+            top: -36px;
             padding-top: 8px;
             background: radial-gradient(
-                67.26% 64.29% at 48.63% 117.86%,
-                rgba(24, 227, 255, 0.7) 0%,
-                rgba(44, 87, 198, 0) 100%
-            ),
+                    67.26% 64.29% at 48.63% 117.86%,
+                    rgba(24, 227, 255, 0.7) 0%,
+                    rgba(44, 87, 198, 0) 100%
+                ),
                 radial-gradient(
-                174.95% 157.22% at 43.8% 72.11%,
-                rgba(46, 46, 80, 0) 0%,
-                rgba(57, 89, 137, 0.9) 100%
-            ),
+                    174.95% 157.22% at 43.8% 72.11%,
+                    rgba(46, 46, 80, 0) 0%,
+                    rgba(57, 89, 137, 0.9) 100%
+                ),
                 radial-gradient(
-                132.39% 69.83% at 48.63% 50%,
-                #3a3a70 0%,
-                #303052 100%
-            );
+                    132.39% 69.83% at 48.63% 50%,
+                    #3a3a70 0%,
+                    #303052 100%
+                );
             box-shadow: inset 0 6.05063px 45.3797px rgba(0, 0, 0, 0.5);
             border-radius: 57px;
-            // TODO: Need add border gradient.
-            border: 1px solid;
+            border: 1px solid #5a5aac;
             font-family: "BebasNeue", sans-serif;
             font-style: normal;
             font-weight: normal;
-            font-size: 48.4051px;
-            line-height: 58px;
+            font-size: 40px;
+            line-height: 48px;
             color: #fff;
         }
 
@@ -75,9 +74,58 @@
             font-family: "Digital Numbers", sans-serif;
             font-style: normal;
             font-weight: normal;
-            font-size: 173.956px;
-            line-height: 225px;
+            font-size: 130px;
+            line-height: 168px;
             color: #fff;
+        }
+
+        &__coins {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            bottom: -37px;
+            width: 289px;
+            height: 74px;
+            padding: 0 15px;
+            background: linear-gradient(0deg, #36315b, #36315b);
+            border-radius: 10px;
+
+            &-image {
+                margin-left: -10px;
+            }
+
+            &-value {
+                font-family: "BebasNeue", sans-serif;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 40.6857px;
+                line-height: 49px;
+                color: #ffffff;
+            }
+
+            &__btn {
+                width: 65px;
+                height: 41px;
+                background: radial-gradient(
+                        254.55% 254.55% at 50% 50%,
+                        rgba(255, 255, 255, 0) 0%,
+                        rgba(255, 255, 255, 0.8) 100%
+                    ),
+                    linear-gradient(180deg, #5cff79 0%, #3ccf56 100%);
+                border-radius: 5px;
+                border: none;
+
+                &-text {
+                    font-family: "BebasNeue", sans-serif;
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 16px;
+                    line-height: 16px;
+                    text-align: center;
+                    color: #181829;
+                }
+            }
         }
 
         &__gradient {
