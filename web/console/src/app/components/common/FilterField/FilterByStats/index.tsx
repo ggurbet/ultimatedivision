@@ -152,17 +152,17 @@ export const FilterByStats: React.FC<{submitSearch: (queryParameters: CardsQuery
     const handleSubmit = async() => {
         await submitSearch([
             { 'defence_gte': defenceMin },
-            { 'defence_lt': defenceMax },
+            { 'defence_lte': defenceMax },
             { 'goalkeeping_gte': goalkeepingMin },
-            { 'goalkeeping_lt': goalkeepingMax },
+            { 'goalkeeping_lte': goalkeepingMax },
             { 'offense_gte': offenseMin },
-            { 'offense_lt': offenseMax },
+            { 'offense_lte': offenseMax },
             { 'physique_gte': physiqueMin },
-            { 'physique_lt': physiqueMax },
+            { 'physique_lte': physiqueMax },
             { 'tactics_gte': tacticsMin },
-            { 'tactics_lt': tacticsMax },
+            { 'tactics_lte': tacticsMax },
             { 'technique_gte': techniqueMin },
-            { 'technique_lt': techniqueMax },
+            { 'technique_lte': techniqueMax },
         ]);
         showFilterByStats();
     };

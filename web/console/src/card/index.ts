@@ -32,26 +32,26 @@ export class CardField {
 
 /** CardsQueryParametersField is an interface for cards and lots query parameters field, that consist of key and value. */
 export interface CardsQueryParametersField {
-    [key: string]: string | number;
+    [key: string]: string[] | string | number;
 };
 
 /** CardsQueryParameters is class that uses for filtering cards and lots by queries. */
 export class CardsQueryParameters {
-    [key: string]: number | string | null;
+    [key: string]: string[] | number | string | null;
     public 'defence_gte': number | null = null;
-    public 'defence_lt': number | null = null;
+    public 'defence_lte': number | null = null;
     public 'goalkeeping_gte': number | null = null;
-    public 'goalkeeping_lt': number | null = null;
+    public 'goalkeeping_lte': number | null = null;
     public 'offense_gte': number | null = null;
-    public 'offense_lt': number | null = null;
+    public 'offense_lte': number | null = null;
     public 'physique_gte': number | null = null;
-    public 'physique_lt': number | null = null;
+    public 'physique_lte': number | null = null;
     public 'tactics_gte': string | null = null;
-    public 'tactics_lt': string | null = null;
-    public 'quality': string | null = null;
+    public 'tactics_lte': string | null = null;
+    public 'quality': string[] = [];
     public 'status': number | null = null;
     public 'technique_gte': number | null = null;
-    public 'technique_lt': number| null = null;
+    public 'technique_lte': number| null = null;
 };
 
 /* eslint-disable */

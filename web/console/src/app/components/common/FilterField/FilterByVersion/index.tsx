@@ -47,30 +47,27 @@ export const FilterByVersion: React.FC<{ submitSearch: (queryParameters: CardsQu
     };
 
     /** Changes quality of cards. */
-    const changeQuality: () => string = () => {
-        let quality: string = '';
+    const changeQuality: () => string[] = () => {
+        const qualities: string[] = [];
 
         if (isDiamondQuality) {
-            quality = 'diamond';
+            qualities.push('diamond');
         };
 
         if (isGoldQuality) {
-            quality = 'gold';
+            qualities.push('gold');
         };
 
         if (isSilverQuality) {
-            quality = 'silver';
+            qualities.push('silver');
         };
 
         if (isWoodQuality) {
-            quality = 'wood';
+            qualities.push('wood');
         };
 
-        return quality;
+        return qualities;
     };
-
-    /** Exposes default page number. */
-    const DEFAULT_PAGE_INDEX: number = 1;
 
     /** Submits query parameters by quality. */
     const handleSubmit = async() => {

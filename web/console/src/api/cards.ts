@@ -33,9 +33,16 @@ export class CardsClient extends APIClient {
 
         let queryParametersPath = '';
 
+        /** Adds qualities query parameters to query path. */
+        const addQualitiesQueryParameters = (queryParameter: string, quality: string) => {
+            queryParametersPath += `&${queryParameter}=${quality}`;
+        };
+
         for (const queryParameter in this.queryParameters) {
             if (this.queryParameters[queryParameter]) {
-                queryParametersPath += `&${queryParameter}=${this.queryParameters[queryParameter]}`;
+                queryParameter === 'quality' ? this.queryParameters[queryParameter].
+                    forEach((quality: string) => addQualitiesQueryParameters(queryParameter, quality)) :
+                    queryParametersPath += `&${queryParameter}=${this.queryParameters[queryParameter]}`;
             }
         };
 
