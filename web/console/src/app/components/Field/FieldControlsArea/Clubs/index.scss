@@ -46,7 +46,9 @@
         }
 
         .club-active {
+
             svg {
+
                 path {
                     fill: #58e271;
                 }
@@ -73,7 +75,9 @@
             }
 
             &:hover {
+
                 svg {
+
                     path {
                         fill: #58e271;
                     }
@@ -111,7 +115,7 @@
                 font-weight: 500;
                 font-size: 10px;
                 line-height: 12px;
-                color: #ffffff;
+                color: #fff;
 
                 &:before {
                     content: "";
@@ -166,11 +170,11 @@
             font-weight: normal;
             font-size: 24px;
             line-height: 29px;
-            color: #ffffff;
+            color: #fff;
             text-transform: uppercase;
             cursor: pointer;
 
-            &::after {
+            &:after {
                 content: "";
                 border-style: solid;
                 border-width: 5px 5px 5px 0;
@@ -182,7 +186,8 @@
         }
 
         .active-dropdown {
-            &::after {
+
+            &:after {
                 content: "";
                 border-style: solid;
                 border-width: 5px 5px 5px 0;
@@ -215,13 +220,14 @@
                     font-weight: normal;
                     font-size: 24px;
                     line-height: 29px;
-                    color: #ffffff;
+                    color: #fff;
                     text-transform: uppercase;
                     cursor: pointer;
                 }
             }
 
             &-item:hover {
+
                 span {
                     color: #3ccf5d;
                 }

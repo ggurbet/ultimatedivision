@@ -35,6 +35,8 @@ const UserCards: React.FC = () => {
 
     const [setLocalStorageItem, getLocalStorageItem] = useLocalStorage();
 
+    const [setLocalStorageItem, getLocalStorageItem] = useLocalStorage();
+
     const dispatch = useDispatch();
 
     /** Indicates if registration is required. */
