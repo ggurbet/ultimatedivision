@@ -39,16 +39,13 @@ const Navbar: React.FC = () => {
             : setIsHomePath(false);
     }, [location]);
 
-    /** Marketplace component index from navbar items. */
-    const navbarMarketplaceIndex: number = 2;
-
     return (
         <>
             {isHomePath ?
                 <HomeNavbar />
                 :
                 <div className="ultimatedivision-navbar">
-                    <a href={navbarItems[navbarMarketplaceIndex].path}>
+                    <a href={RouteConfig.Home.path}>
                         <img
                             className="ultimatedivision-navbar__logo"
                             src={ultimate}

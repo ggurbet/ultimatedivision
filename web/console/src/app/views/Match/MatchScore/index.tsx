@@ -1,13 +1,13 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
 
-import coin from "@static/img/match/money.svg";
+import coin from '@static/img/match/money.svg';
 
-import { RootState } from "@/app/store";
+import { RootState } from '@/app/store';
 
-import "./index.scss";
+import './index.scss';
 
 export const MatchScore: React.FC = () => {
     const { teams } = useSelector((state: RootState) => state.matchesReducer);

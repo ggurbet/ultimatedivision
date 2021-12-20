@@ -21,19 +21,16 @@ const HomeNavbar: React.FC = () => {
 
     /** TODO: DIVISIONS will be replaced with id parameter */
     const navbarItems: Array<{ name: string; path: string }> = [
-        { name: 'My Club', path: RouteConfig.Cards.path },
+        { name: 'My Club', path: RouteConfig.Field.path },
         { name: 'Store', path: RouteConfig.Store.path },
         { name: 'Marketplace', path: RouteConfig.MarketPlace.path },
         { name: 'FAQ', path: RouteConfig.Summary.path },
     ];
 
-    /** Marketplace component index from navbar items. */
-    const navbarMarketplaceIndex: number = 2;
-
     return (
         <nav className="ultimatedivision-home-navbar">
             <div className="wrapper">
-                <a href={navbarItems[navbarMarketplaceIndex].path}>
+                <a href={RouteConfig.Home.path}>
                     <img
                         className="ultimatedivision-home-navbar__logo"
                         src={ultimate}

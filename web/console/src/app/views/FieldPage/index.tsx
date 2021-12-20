@@ -36,7 +36,7 @@ const FootballField: React.FC = () => {
             } catch (error: any) {
                 if (error instanceof UnauthorizedError) {
                     setIsRegistrationRequired(true);
-                    
+
                     setLocalStorageItem('IS_LOGGINED', false);
 
                     setLocalStorageItem('IS_LOGGINED', false);
