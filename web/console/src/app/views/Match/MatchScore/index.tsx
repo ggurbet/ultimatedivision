@@ -14,7 +14,7 @@ import { ServicePlugin } from '@/app/plugins/service';
 import './index.scss';
 
 export const MatchScore: React.FC = () => {
-    const onboarding = useMemo(() => new MetaMaskOnboarding(), [])
+    const onboarding = useMemo(() => new MetaMaskOnboarding(), []);
     const service = ServicePlugin.create();
     const { teams } = useSelector((state: RootState) => state.matchesReducer);
 
@@ -24,12 +24,12 @@ export const MatchScore: React.FC = () => {
     const SECOND_TEAM_INDEX: number = 1;
 
     /** Returns metamask wallet address for earning reward */
-    const addWallet = async () => {
+    const addWallet = async() => {
         /** Code which indicates that 'eth_requestAccounts' already processing */
         const METAMASK_RPC_ERROR_CODE = -32002;
         if (MetaMaskOnboarding.isMetaMaskInstalled()) {
             try {
-                //@ts-ignore
+                // @ts-ignore
                 await window.ethereum.request({
                     method: 'eth_requestAccounts',
                 });

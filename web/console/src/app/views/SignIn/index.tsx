@@ -23,7 +23,7 @@ import { ServicePlugin } from '@/app/plugins/service';
 import './index.scss';
 
 const SignIn: React.FC = () => {
-    const onboarding = useMemo(() => new MetaMaskOnboarding(), [])
+    const onboarding = useMemo(() => new MetaMaskOnboarding(), []);
     const service = ServicePlugin.create();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -56,8 +56,9 @@ const SignIn: React.FC = () => {
 
         return isFormValid;
     };
+
     /** user data that will send to server */
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!validateForm()) {
@@ -101,16 +102,21 @@ const SignIn: React.FC = () => {
         },
     ];
 
-    const metamaskLogin = async () => {
+    /** Login with matamask. */
+    const metamaskLogin = async() => {
         /** Code which indicates that 'eth_requestAccounts' already processing */
         const METAMASK_RPC_ERROR_CODE = -32002;
         if (MetaMaskOnboarding.isMetaMaskInstalled()) {
             try {
-                //@ts-ignore
+                // @ts-ignore
                 await window.ethereum.request({
                     method: 'eth_requestAccounts',
                 });
+
                 await service.login();
+
+                setLocalStorageItem('IS_LOGGINED', true);
+
                 history.push(RouteConfig.MarketPlace.path);
             } catch (error: any) {
                 error.code === METAMASK_RPC_ERROR_CODE
