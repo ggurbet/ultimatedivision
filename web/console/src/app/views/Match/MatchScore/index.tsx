@@ -1,21 +1,54 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import { useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import MetaMaskOnboarding from '@metamask/onboarding';
+import { toast } from 'react-toastify';
 
 import coin from '@static/img/match/money.svg';
 
 import { RootState } from '@/app/store';
+import { ServicePlugin } from '@/app/plugins/service';
 
 import './index.scss';
 
 export const MatchScore: React.FC = () => {
+    const onboarding = useMemo(() => new MetaMaskOnboarding(), [])
+    const service = ServicePlugin.create();
     const { teams } = useSelector((state: RootState) => state.matchesReducer);
 
     /** FIRST_TEAM_INDEX is variable that describes first team index in teams array. */
     const FIRST_TEAM_INDEX: number = 0;
     /** SECOND_TEAM_INDEX is variable that describes second team index in teams array. */
     const SECOND_TEAM_INDEX: number = 1;
+
+    /** Returns metamask wallet address for earning reward */
+    const addWallet = async () => {
+        /** Code which indicates that 'eth_requestAccounts' already processing */
+        const METAMASK_RPC_ERROR_CODE = -32002;
+        if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+            try {
+                //@ts-ignore
+                await window.ethereum.request({
+                    method: 'eth_requestAccounts',
+                });
+                const wallet = await service.getWallet();
+            } catch (error: any) {
+                error.code === METAMASK_RPC_ERROR_CODE
+                    ? toast.error('Please open metamask manually!', {
+                        position: toast.POSITION.TOP_RIGHT,
+                        theme: 'colored',
+                    })
+                    : toast.error('Something went wrong', {
+                        position: toast.POSITION.TOP_RIGHT,
+                        theme: 'colored',
+                    });
+            }
+        } else {
+            onboarding.startOnboarding();
+        }
+    };
 
     return (
         <div className="match__score">
@@ -40,7 +73,10 @@ export const MatchScore: React.FC = () => {
                     <span className="match__score__board__coins-value">
                         1,200,000
                     </span>
-                    <button className="match__score__board__coins__btn">
+                    <button
+                        className="match__score__board__coins__btn"
+                        onClick={addWallet}
+                    >
                         <span className="match__score__board__coins__btn-text">
                             GET
                         </span>

@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { SetStateAction, useEffect, useRef, useState } from 'react';
+import { SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import MetaMaskOnboarding from '@metamask/onboarding';
@@ -23,7 +23,7 @@ import { ServicePlugin } from '@/app/plugins/service';
 import './index.scss';
 
 const SignIn: React.FC = () => {
-    const onboarding = useRef<MetaMaskOnboarding>();
+    const onboarding = useMemo(() => new MetaMaskOnboarding(), [])
     const service = ServicePlugin.create();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -57,7 +57,7 @@ const SignIn: React.FC = () => {
         return isFormValid;
     };
     /** user data that will send to server */
-    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!validateForm()) {
@@ -101,22 +101,16 @@ const SignIn: React.FC = () => {
         },
     ];
 
-    useEffect(() => {
-        if (!onboarding.current) {
-            onboarding.current = new MetaMaskOnboarding();
-        }
-    }, []);
-
-    const metamaskLogin = async() => {
+    const metamaskLogin = async () => {
         /** Code which indicates that 'eth_requestAccounts' already processing */
         const METAMASK_RPC_ERROR_CODE = -32002;
         if (MetaMaskOnboarding.isMetaMaskInstalled()) {
             try {
-                // @ts-ignore
+                //@ts-ignore
                 await window.ethereum.request({
                     method: 'eth_requestAccounts',
                 });
-                await service.signMessage();
+                await service.login();
                 history.push(RouteConfig.MarketPlace.path);
             } catch (error: any) {
                 error.code === METAMASK_RPC_ERROR_CODE
@@ -130,8 +124,7 @@ const SignIn: React.FC = () => {
                     });
             }
         } else {
-            onboarding.current = new MetaMaskOnboarding();
-            onboarding.current?.startOnboarding();
+            onboarding.startOnboarding();
         }
     };
 

@@ -21,6 +21,20 @@ export class Service {
         this.provider = ethereumProvider;
     }
 
+    /** Returns metamask walllet address */
+    public async getWallet() {
+        const signer = await this.provider.getSigner();
+
+        return await signer.getAddress();
+    }
+
+    /** Signs message and creates message raw signature */
+    public async signMessage(message: string) {
+        const signer = await this.provider.getSigner();
+
+        return await signer.signMessage(message);
+    }
+
     /** Gets transaction from api */
     public async getTransaction(signature: TransactionIdentificators): Promise<Transaction> {
         return await this.client.getTransaction(signature);
@@ -31,12 +45,11 @@ export class Service {
         return await this.client.getMessage();
     }
 
-    /** Signs message and creates message raw signature */
-    public async signMessage() {
+    /** Returns required fields for metamask login */
+    public async login() {
         const message = await this.getMessage();
-        const signer = await this.provider.getSigner();
-        const adress = await signer.getAddress();
-        const signedMessage = await signer.signMessage(message);
+        const adress = await this.getWallet();
+        const signedMessage = await this.signMessage(message);
         await this.client.signMessage(new SignedMessage(message, signedMessage, adress));
     }
 
