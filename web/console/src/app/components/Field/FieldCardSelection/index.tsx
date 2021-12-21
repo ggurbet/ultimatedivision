@@ -1,6 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Paginator } from '@components/common/Paginator';
@@ -19,8 +20,6 @@ import { Card, CardsPage, CardsQueryParametersField } from '@/card';
 import { Squad, SquadCard } from '@/club';
 
 import './index.scss';
-import { useEffect } from 'react';
-import { clearCardsQueryParameters } from '../../../store/actions/cards';
 
 export const FieldCardSelection = () => {
     const dispatch = useDispatch();
@@ -68,8 +67,12 @@ export const FieldCardSelection = () => {
     return (
         <div id="cardList" className="card-selection">
             <FilterField >
-                <FilterByVersion submitSearch={submitSearch} />
-                <FilterByStats submitSearch={submitSearch} />
+                <FilterByVersion
+                    submitSearch={submitSearch}
+                />
+                <FilterByStats
+                    submitSearch={submitSearch}
+                />
                 <FilterByPrice />
                 <FilterByStatus />
             </FilterField>

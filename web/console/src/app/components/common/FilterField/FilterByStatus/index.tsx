@@ -1,22 +1,33 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { FilterByParameterWrapper } from '@/app/components/common/FilterField/FilterByParameterWrapper';
 
 import { listOfCards } from '@/app/store/actions/cards';
+import { FilterContext } from '../index';
 
 // TODO: rework functionality.
 export const FilterByStatus: React.FC = () => {
+    const { activeFilterIndex, setActiveFilterIndex }: {
+        activeFilterIndex: number;
+        setActiveFilterIndex: React.Dispatch<React.SetStateAction<number>>;
+    } = useContext(FilterContext);
+    /** Exposes default index which does not exist in array. */
+    const DEFAULT_FILTER_ITEM_INDEX = -1;
+    const FILTER_BY_STATUS_INDEX = 4;
     /** Indicates if FilterByStatus component shown. */
     const [isFilterByStatusShown, setIsFilterByStatusShown] = useState(false);
+
+    const isVisible = FILTER_BY_STATUS_INDEX === activeFilterIndex && isFilterByStatusShown;
 
     const dispatch = useDispatch();
 
     /** Shows and closes FilterByStatus component. */
     const showFilterByStatus = () => {
+        setActiveFilterIndex(FILTER_BY_STATUS_INDEX);
         setIsFilterByStatusShown(isFilterByStatusShown => !isFilterByStatusShown);
     };
 
@@ -42,13 +53,18 @@ export const FilterByStatus: React.FC = () => {
     /** Submits query parameters by status. */
     const handleSubmit = async() => {
         await dispatch(listOfCards(DEFAULT_PAGE_INDEX));
-        showFilterByStatus();
+        setIsFilterByStatusShown(false);
+        setActiveFilterIndex(DEFAULT_FILTER_ITEM_INDEX);
     };
+
+    useEffect(() => {
+        FILTER_BY_STATUS_INDEX !== activeFilterIndex && setIsFilterByStatusShown(false);
+    }, [activeFilterIndex]);
 
     return (
         <FilterByParameterWrapper
             showComponent={showFilterByStatus}
-            isComponentShown={isFilterByStatusShown}
+            isVisible={isVisible}
             title="Status"
         >
             <input
@@ -61,7 +77,7 @@ export const FilterByStatus: React.FC = () => {
                 className="filter-item__dropdown-active__text"
                 htmlFor="checkbox-locked"
             >
-                Locked
+                    Locked
             </label>
             <input
                 id="checkbox-unlocked"
@@ -73,7 +89,7 @@ export const FilterByStatus: React.FC = () => {
                 className="filter-item__dropdown-active__text"
                 htmlFor="checkbox-unlocked"
             >
-                Unlocked
+                    Unlocked
             </label>
             <input
                 value="APPLY"

@@ -19,6 +19,7 @@ import {
 import { CardsQueryParametersField } from '@/card';
 
 import './index.scss';
+import { useState } from 'react';
 
 const MarketPlace: React.FC = () => {
     const dispatch = useDispatch();
@@ -41,8 +42,12 @@ const MarketPlace: React.FC = () => {
         <section className="marketplace">
             <h1 className="marketplace__title">MARKETPLACE</h1>
             <FilterField>
-                <FilterByVersion submitSearch={submitSearch} />
-                <FilterByStats submitSearch={submitSearch} />
+                <FilterByVersion
+                    submitSearch={submitSearch}
+                />
+                <FilterByStats
+                    submitSearch={submitSearch}
+                />
                 <FilterByPrice />
                 <FilterByStatus />
             </FilterField>

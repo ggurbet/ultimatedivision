@@ -9,27 +9,28 @@ import './index.scss';
 /** FilterByParameterWrapper is common wrapper component for each filter component.*/
 export const FilterByParameterWrapper: React.FC<{
     showComponent: () => void;
-    isComponentShown: boolean;
+    isVisible: boolean;
     title: string;
-}> = ({ showComponent, children, isComponentShown, title }) =>
+}> = ({ showComponent, children, isVisible, title }) =>
     <li className="filter-field__list__item">
         <div
             className="filter-item"
         >
             <span
-                className={`filter-item__title${isComponentShown ? '-active' : '-inactive'}`}
+                className={`filter-item__title${isVisible ? '-active' : '-inactive'}`}
                 onClick={showComponent}
             >
                 {title}
             </span>
             <img
                 className="filter-item__picture"
-                src={isComponentShown ? reverseRectangle : rectangle}
+                src={isVisible ? reverseRectangle : rectangle}
                 alt="filter icon"
             />
-            <div className={`filter-item__dropdown${isComponentShown ? '-active' : '-inactive'}`} >
+            <div className={`filter-item__dropdown${isVisible ? '-active' : '-inactive'}`} >
                 {children}
             </div>
         </div>
     </li>;
+
 

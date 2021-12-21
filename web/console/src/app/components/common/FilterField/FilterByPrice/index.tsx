@@ -1,22 +1,34 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { FilterByParameterWrapper } from '@/app/components/common/FilterField/FilterByParameterWrapper';
 
 import { listOfCards } from '@/app/store/actions/cards';
+import { FilterContext } from '../index';
 
 // TODO: rework functionality.
 export const FilterByPrice: React.FC = () => {
+    const { activeFilterIndex, setActiveFilterIndex }: {
+        activeFilterIndex: number;
+        setActiveFilterIndex: React.Dispatch<React.SetStateAction<number>>;
+    } = useContext(FilterContext);
+
+    /** Exposes default index which does not exist in array. */
+    const DEFAULT_FILTER_ITEM_INDEX = -1;
+    const FILTER_BY_PRICE_INDEX = 3;
     /** Indicates if FilterByPrice component shown. */
     const [isFilterByPriceShown, setIsFilterByPriceShown] = useState(false);
+
+    const isVisible = FILTER_BY_PRICE_INDEX === activeFilterIndex && isFilterByPriceShown;
 
     const dispatch = useDispatch();
 
     /** Shows and closes FilterByPrice component. */
     const showFilterByPrice = () => {
+        setActiveFilterIndex(FILTER_BY_PRICE_INDEX);
         setIsFilterByPriceShown(isFilterByPriceShown => !isFilterByPriceShown);
     };
 
@@ -42,13 +54,18 @@ export const FilterByPrice: React.FC = () => {
     /** Submits query parameters by status. */
     const handleSubmit = async() => {
         await dispatch(listOfCards(DEFAULT_PAGE_INDEX));
-        showFilterByPrice();
+        setIsFilterByPriceShown(false);
+        setActiveFilterIndex(DEFAULT_FILTER_ITEM_INDEX);
     };
+
+    useEffect(() => {
+        FILTER_BY_PRICE_INDEX !== activeFilterIndex && setIsFilterByPriceShown(false);
+    }, [activeFilterIndex]);
 
     return (
         <FilterByParameterWrapper
             showComponent={showFilterByPrice}
-            isComponentShown={isFilterByPriceShown}
+            isVisible={isVisible}
             title="Price"
         >
             <div className="filter-item__dropdown-active__wrapper">

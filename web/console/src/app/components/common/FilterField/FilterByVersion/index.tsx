@@ -1,19 +1,32 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import { FilterByParameterWrapper } from '@/app/components/common/FilterField/FilterByParameterWrapper';
 
 import { CardsQueryParametersField } from '@/card';
+import { FilterContext } from '../index';
 
 // TODO: rework functionality.
-export const FilterByVersion: React.FC<{ submitSearch: (queryParameters: CardsQueryParametersField[]) => void }> = ({ submitSearch }) => {
+export const FilterByVersion: React.FC<{
+    submitSearch: (queryParameters: CardsQueryParametersField[]) => void;
+}> = ({ submitSearch }) => {
+    const { activeFilterIndex, setActiveFilterIndex }: {
+        activeFilterIndex: number;
+        setActiveFilterIndex: React.Dispatch<React.SetStateAction<number>>;
+    } = useContext(FilterContext);
+    /** Exposes default index which does not exist in array. */
+    const DEFAULT_FILTER_ITEM_INDEX = -1;
+    const FILTER_BY_VERSION_INDEX = 1;
     /** Indicates if FilterByVersion component shown. */
     const [isFilterByVersionShown, setIsFilterByVersionShown] = useState(false);
 
+    const isVisible = FILTER_BY_VERSION_INDEX === activeFilterIndex && isFilterByVersionShown;
+
     /** Shows and closes FilterByVersion component. */
     const showFilterByVersion = () => {
+        setActiveFilterIndex(FILTER_BY_VERSION_INDEX);
         setIsFilterByVersionShown(isFilterByVersionShown => !isFilterByVersionShown);
     };
 
@@ -72,13 +85,18 @@ export const FilterByVersion: React.FC<{ submitSearch: (queryParameters: CardsQu
     /** Submits query parameters by quality. */
     const handleSubmit = async() => {
         await submitSearch([{ quality: changeQuality() }]);
-        showFilterByVersion();
+        setIsFilterByVersionShown(false);
+        setActiveFilterIndex(DEFAULT_FILTER_ITEM_INDEX);
     };
+
+    useEffect(() => {
+        FILTER_BY_VERSION_INDEX !== activeFilterIndex && setIsFilterByVersionShown(false);
+    }, [activeFilterIndex]);
 
     return (
         <FilterByParameterWrapper
             showComponent={showFilterByVersion}
-            isComponentShown={isFilterByVersionShown}
+            isVisible={isVisible}
             title="Version"
         >
             <input

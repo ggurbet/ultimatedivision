@@ -79,8 +79,12 @@ const UserCards: React.FC = () => {
             }
             <h1 className="user-cards__title">MY CARDS</h1>
             <FilterField>
-                <FilterByVersion submitSearch={submitSearch} />
-                <FilterByStats submitSearch={submitSearch} />
+                <FilterByVersion
+                    submitSearch={submitSearch}
+                />
+                <FilterByStats
+                    submitSearch={submitSearch}
+                />
                 <FilterByPrice />
                 <FilterByStatus />
             </FilterField>

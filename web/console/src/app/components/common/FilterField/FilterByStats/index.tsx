@@ -1,20 +1,32 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import { FilterByParameterWrapper } from '@/app/components/common/FilterField/FilterByParameterWrapper';
 import { FilterFieldStatsArea, FilterFieldStatsAreaProps } from '@/app/components/common/FilterField/FilterFieldStatsArea';
 
 import { CardsQueryParametersField } from '@/card';
+import { FilterContext } from '../index';
 
-// TODO: rework functionality.
-export const FilterByStats: React.FC<{submitSearch: (queryParameters: CardsQueryParametersField[]) => void}> = ({ submitSearch }) => {
+export const FilterByStats: React.FC<{
+    submitSearch: (queryParameters: CardsQueryParametersField[]) => void;
+}> = ({ submitSearch }) => {
+    const { activeFilterIndex, setActiveFilterIndex }: {
+        activeFilterIndex: number;
+        setActiveFilterIndex: React.Dispatch<React.SetStateAction<number>>;
+    } = useContext(FilterContext);
+    /** Exposes default index which does not exist in array. */
+    const DEFAULT_FILTER_ITEM_INDEX = -1;
+    const FILTER_BY_STATS_INDEX = 2;
     /** Indicates if FilterByStats component shown. */
     const [isFilterByStatsShown, setIsFilterByStatsShown] = useState(false);
 
+    const isVisible = FILTER_BY_STATS_INDEX === activeFilterIndex && isFilterByStatsShown;
+
     /** Shows and closes FilterByStats component. */
     const showFilterByStats = () => {
+        setActiveFilterIndex(FILTER_BY_STATS_INDEX);
         setIsFilterByStatsShown(isFilterByStatsShown => !isFilterByStatsShown);
     };
 
@@ -164,7 +176,8 @@ export const FilterByStats: React.FC<{submitSearch: (queryParameters: CardsQuery
             { 'technique_gte': techniqueMin },
             { 'technique_lte': techniqueMax },
         ]);
-        showFilterByStats();
+        setIsFilterByStatsShown(false);
+        setActiveFilterIndex(DEFAULT_FILTER_ITEM_INDEX);
     };
 
     /** Clears all stats values. */
@@ -183,10 +196,14 @@ export const FilterByStats: React.FC<{submitSearch: (queryParameters: CardsQuery
         setTechniqueMax('');
     };
 
+    useEffect(() => {
+        FILTER_BY_STATS_INDEX !== activeFilterIndex && setIsFilterByStatsShown(false);
+    }, [activeFilterIndex]);
+
     return (
         <FilterByParameterWrapper
             showComponent={showFilterByStats}
-            isComponentShown={isFilterByStatsShown}
+            isVisible={isVisible}
             title="Stats"
         >
             <div className="filter-item__dropdown-active__stats__wrapper">
