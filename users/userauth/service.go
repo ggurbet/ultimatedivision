@@ -435,7 +435,7 @@ func (service *Service) LoginWithMetamask(ctx context.Context, loginMetamaskFiel
 
 	wallet := cryptoutils.Address(strings.ToLower(string(loginMetamaskFields.Address)))
 
-	user, err := service.users.GetByWalletAddress(ctx, loginMetamaskFields.Address)
+	user, err := service.users.GetByWalletAddress(ctx, wallet)
 	switch {
 	case users.ErrNoUser.Has(err):
 		user = users.User{

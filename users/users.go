@@ -94,10 +94,11 @@ type CreateUserFields struct {
 
 // Profile for user profile.
 type Profile struct {
-	Email     string    `json:"email"`
-	NickName  string    `json:"nickName"`
-	CreatedAt time.Time `json:"registerDate"`
-	LastLogin time.Time `json:"lastLogin"`
+	Email     string              `json:"email"`
+	NickName  string              `json:"nickName"`
+	CreatedAt time.Time           `json:"registerDate"`
+	LastLogin time.Time           `json:"lastLogin"`
+	Wallet    cryptoutils.Address `json:"wallet"`
 }
 
 // Password for old/new passwords.
