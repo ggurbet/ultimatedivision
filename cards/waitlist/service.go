@@ -82,7 +82,9 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 	// TODO: add transaction and mb lock db
 	lastTokenID, err := service.GetLastTokenID(ctx)
 	if err != nil {
-		return transaction, ErrWaitlist.Wrap(err)
+		if !ErrNoItem.Has(err) {
+			return transaction, ErrWaitlist.Wrap(err)
+		}
 	}
 
 	if err = client.Upload(ctx, service.config.Bucket, fmt.Sprintf("%d.%s", lastTokenID+1, imageprocessing.TypeFilePNG), image); err != nil {
