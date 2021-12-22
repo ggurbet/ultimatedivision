@@ -179,14 +179,6 @@ type Coordinate struct {
 	Y float64 `json:"y"`
 }
 
-// TypeImage defines the list of possible type of avatar image.
-type TypeImage string
-
-const (
-	// TypeImagePNG indicates that the type image avatar is png.
-	TypeImagePNG TypeImage = "png"
-)
-
 // FormatImage defines the list of possible format of avatar image.
 type FormatImage string
 

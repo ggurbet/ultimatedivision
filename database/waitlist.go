@@ -70,8 +70,8 @@ func (waitlistDB *waitlistDB) GetByCardID(ctx context.Context, cardID uuid.UUID)
 	return item, ErrWaitlist.Wrap(err)
 }
 
-// GetLast returns id of last inserted item of wait list.
-func (waitlistDB *waitlistDB) GetLast(ctx context.Context) (int64, error) {
+// GetLastTokenID returns id of last inserted item of wait list.
+func (waitlistDB *waitlistDB) GetLastTokenID(ctx context.Context) (int64, error) {
 	query := `SELECT token_id
 	          FROM waitlist
 	          ORDER BY token_id DESC

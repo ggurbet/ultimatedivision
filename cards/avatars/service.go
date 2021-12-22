@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"image"
+	"io/ioutil"
 	"path/filepath"
 	"strconv"
 
@@ -221,7 +222,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 
 	// Background
 	pathToBackground := filepath.Join(service.config.PathToAvararsComponents, service.config.BackgroundFolder)
-	if layer, err = imageprocessing.CreateLayer(pathToBackground, string(card.Quality)+"."+string(TypeImagePNG)); err != nil {
+	if layer, err = imageprocessing.CreateLayer(pathToBackground, string(card.Quality)+"."+string(imageprocessing.TypeFilePNG)); err != nil {
 		return avatar, ErrNoAvatarFile.Wrap(err)
 	}
 	originalAvatarsLayers = append(originalAvatarsLayers, layer)
@@ -379,7 +380,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 	}
 
 	avatar.OriginalURL = fmt.Sprintf(service.config.PathToOutputAvatarsRemote, nameFile)
-	if err = imageprocessing.SaveImage(service.config.PathToOutputAvatarsLocal, filepath.Join(service.config.PathToOutputAvatarsLocal, nameFile+"."+string(TypeImagePNG)), originalImageWithLabelGk); err != nil {
+	if err = imageprocessing.SaveImage(service.config.PathToOutputAvatarsLocal, filepath.Join(service.config.PathToOutputAvatarsLocal, nameFile+"."+string(imageprocessing.TypeFilePNG)), originalImageWithLabelGk); err != nil {
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
@@ -390,4 +391,10 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 func (service *Service) Get(ctx context.Context, cardID uuid.UUID) (Avatar, error) {
 	avatar, err := service.avatars.Get(ctx, cardID)
 	return avatar, ErrAvatar.Wrap(err)
+}
+
+// GetImage returns avatar image.
+func (service *Service) GetImage(ctx context.Context, cardID uuid.UUID) ([]byte, error) {
+	image, err := ioutil.ReadFile(filepath.Join(service.config.PathToOutputAvatarsLocal, cardID.String()+"."+string(imageprocessing.TypeFilePNG)))
+	return image, ErrAvatar.Wrap(err)
 }

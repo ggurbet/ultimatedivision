@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
+	"ultimatedivision/internal/remotefilestorage/storj"
 	"ultimatedivision/pkg/cryptoutils"
 )
 
@@ -26,8 +27,8 @@ type DB interface {
 	GetByTokenID(ctx context.Context, tokenID int64) (Item, error)
 	// GetByCardID returns nft for wait list by card id.
 	GetByCardID(ctx context.Context, cardID uuid.UUID) (Item, error)
-	// GetLast returns id of last inserted token.
-	GetLast(ctx context.Context) (int64, error)
+	// GetLastTokenID returns id of last inserted token.
+	GetLastTokenID(ctx context.Context) (int64, error)
 	// List returns all nft tokens from wait list from database.
 	List(ctx context.Context) ([]Item, error)
 	// ListWithoutPassword returns nfts for wait list without password from database.
@@ -69,5 +70,7 @@ type Config struct {
 		AddressEvent cryptoutils.Hex     `json:"addressEvent"`
 	} `json:"nftContract"`
 	cryptoutils.Contract `json:"contract"`
-	AddressNodeServer    string `json:"addressNodeServer"`
+	AddressNodeServer    string       `json:"addressNodeServer"`
+	Storj                storj.Config `json:"storj"`
+	Bucket               string       `json:"bucket"`
 }

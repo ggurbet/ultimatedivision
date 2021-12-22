@@ -29,10 +29,10 @@ var (
 
 // Config is the setup for a particular client.
 type Config struct {
-	S3Gateway string
-	AccessKey string
-	SecretKey string
-	Region    string `default:"us-east-1"`
+	S3Gateway string `json:"s3Gateway"`
+	AccessKey string `json:"accessKey"`
+	SecretKey string `json:"secretKey"`
+	Region    string `json:"region" default:"us-east-1"`
 }
 
 // Client implements basic S3 Client with minio.
@@ -64,7 +64,8 @@ func NewClient(cfg Config) (*Client, error) {
 }
 
 // Download downloads object from specific bucket and returns it as byte slice.
-func (client *Client) Download(ctx context.Context, bucket, objectName string, buffer []byte) ([]byte, error) {
+func (client *Client) Download(ctx context.Context, bucket, objectName string) ([]byte, error) {
+	var buffer []byte
 	reader, err := client.API.GetObject(ctx, bucket, objectName, minio.GetObjectOptions{})
 	if err != nil {
 		return nil, MinioError.Wrap(err)

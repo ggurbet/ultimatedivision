@@ -17,6 +17,16 @@ import (
 	"github.com/zeebo/errs"
 )
 
+// TypeFile defines the list of possible type of files.
+type TypeFile string
+
+const (
+	// TypeFilePNG indicates that the type file is png.
+	TypeFilePNG TypeFile = "png"
+	// TypeFileJSON indicates that the type file is json.
+	TypeFileJSON TypeFile = "json"
+)
+
 // LayerComponentsCount searches count files in the specified path and by name of file.
 func LayerComponentsCount(pathToLayerComponents, nameFile string) (int, error) {
 	files, err := ioutil.ReadDir(pathToLayerComponents)
@@ -44,14 +54,15 @@ func CreateLayer(path, name string) (image.Image, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer func() {
+		err = errs.Combine(err, image.Close())
+	}()
+
 	layer, err := png.Decode(image)
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		err = errs.Combine(err, image.Close())
-	}()
-	return layer, nil
+	return layer, err
 }
 
 // Layering overlays image layers on the base image.
