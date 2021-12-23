@@ -32,7 +32,7 @@
 
 @media (max-width: $desktopBreakPoint) {
 
-    .cards-area{
+    .cards-area {
 
         &__wrapper {
             grid-template-columns: repeat((4, 1fr));

@@ -55,10 +55,9 @@ export class Service {
 
     /** Sends smart contract transaction. */
     public async sendTransaction(
-        walletAddress: string,
-        abi: any[],
         cardId: string,
     ) {
+        const walletAddress = await this.getWallet();
         const signer = await this.provider.getSigner();
         const address = await this.getTransaction(new TransactionIdentificators(walletAddress, cardId));
         /* eslint-disable */

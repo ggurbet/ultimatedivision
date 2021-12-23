@@ -22,7 +22,7 @@ export class EthersClient extends APIClient {
 
     /** Gets message from API for sign */
     public async getMessage(): Promise<string> {
-        const response = await this.http.get(`${this.ROOT_PATH}/auth/metamask/token-message`);
+        const response = await this.http.get(`${this.ROOT_PATH}/auth/metamask/token`);
 
         if (!response.ok) {
             await this.handleError(response);
