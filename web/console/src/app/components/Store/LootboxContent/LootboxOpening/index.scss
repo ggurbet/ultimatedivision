@@ -135,6 +135,7 @@
     &__card-container-backlight {
         display: flex;
         justify-content: center;
+        align-items: center;
         background-image: url("@static/img/StorePage/BoxContent/backLight.svg");
         background-size: cover;
         background-position: center;
