@@ -17,6 +17,11 @@ export class Marketplaces {
         this.marketplace = marketplace;
     };
 
+    /** Returns current lots queryParameters object. */
+    public getCurrentQueryParameters() {
+        return this.marketplace.queryParameters;
+    };
+
     /** Changes lots query parameters. */
     public changeLotsQueryParameters(queryParameters: CardsQueryParametersField[]) {
         this.marketplace.changeLotsQueryParameters(queryParameters);

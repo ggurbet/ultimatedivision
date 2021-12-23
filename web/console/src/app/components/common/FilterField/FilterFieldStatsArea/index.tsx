@@ -4,8 +4,8 @@
 /** FilterFieldStatsAreaProps is an interface that uses for incoming props FilterFieldStatsArea component. */
 export interface FilterFieldStatsAreaProps {
     label: string;
-    minValue: string;
-    maxValue: string;
+    minValue: string | undefined;
+    maxValue: string | undefined;
     changeMinValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
     changeMaxValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };

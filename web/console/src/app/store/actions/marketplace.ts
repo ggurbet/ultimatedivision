@@ -24,6 +24,9 @@ const marketplaceCard = (card: Card) => ({
 const marketplaceClient = new MarketplaceClient();
 const marketplaces = new Marketplaces(marketplaceClient);
 
+/** Returns current cards queryParameters object. */
+export const getCurrentLotsQueryParameters = () => marketplaces.getCurrentQueryParameters();
+
 /** Creates lots query parameters and sets them to marketplace service. */
 export const createLotsQueryParameters = (queryParameters: CardsQueryParametersField[]) => {
     marketplaces.changeLotsQueryParameters(queryParameters);

@@ -40,10 +40,11 @@ const cardsService = new CardService(cardsClient);
 const fieldCardsClient = new CardsClient();
 const fieldCardsService = new CardService(fieldCardsClient);
 
-/** Clears cards query parameters. */
-export const clearCardsQueryParameters = () => {
-    cardsService.clearCardsQueryParameters();
-};
+/** Returns current cards queryParameters object. */
+export const getCurrentCardsQueryParameters = () => cardsService.getCurrentQueryParameters();
+
+/** Returns current field cards queryParameters object. */
+export const getCurrentFieldCardsQueryParameters = () => fieldCardsService.getCurrentQueryParameters();
 
 /** Creates field cards query parameters and sets them to fieldCardsService. */
 export const createFieldCardsQueryParameters = (queryParameters: CardsQueryParametersField[]) => {
@@ -74,6 +75,7 @@ export const listOfCards = (selectedPage: number) => async function(dispatch: Di
 
     dispatch(getCards({ cards, page }, currentPage));
 };
+
 /** thunk for opening fotballerCardPage with reload possibility */
 export const openUserCard = (id: string) => async function(dispatch: Dispatch) {
     const card = await cardsService.getCardById(id);

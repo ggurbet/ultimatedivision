@@ -5,13 +5,14 @@ import { useState, useEffect, useContext } from 'react';
 
 import { FilterByParameterWrapper } from '@/app/components/common/FilterField/FilterByParameterWrapper';
 
-import { CardsQueryParametersField } from '@/card';
+import { CardsQueryParametersField, CardsQueryParameters } from '@/card';
 import { FilterContext } from '../index';
 
 // TODO: rework functionality.
 export const FilterByVersion: React.FC<{
     submitSearch: (queryParameters: CardsQueryParametersField[]) => void;
-}> = ({ submitSearch }) => {
+    cardsQueryParameters: CardsQueryParameters;
+}> = ({ submitSearch, cardsQueryParameters }) => {
     const { activeFilterIndex, setActiveFilterIndex }: {
         activeFilterIndex: number;
         setActiveFilterIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -29,6 +30,9 @@ export const FilterByVersion: React.FC<{
         setActiveFilterIndex(FILTER_BY_VERSION_INDEX);
         setIsFilterByVersionShown(isFilterByVersionShown => !isFilterByVersionShown);
     };
+
+    /** Describes version parameters. */
+    const [version, setVersion] = useState<string[]>(cardsQueryParameters.quality && cardsQueryParameters.quality);
 
     /** Indicates if is choosed diamond quality of cards. */
     const [isDiamondQuality, setIsDiamondQuality] = useState<boolean>(false);
@@ -83,15 +87,26 @@ export const FilterByVersion: React.FC<{
     };
 
     /** Submits query parameters by quality. */
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
         await submitSearch([{ quality: changeQuality() }]);
         setIsFilterByVersionShown(false);
         setActiveFilterIndex(DEFAULT_FILTER_ITEM_INDEX);
     };
 
+    /** Checks current versions. */
+    const checkCurrentVersion = () => {
+        // TODO: rework functionality.
+        setIsDiamondQuality(Boolean(version && version.includes('diamond')));
+        setIsGoldQuality(Boolean(version && version.includes('gold')));
+        setIsSilverQuality(Boolean(version && version.includes('silver')));
+        setIsWoodQuality(Boolean(version && version.includes('wood')));
+    };
+
     useEffect(() => {
         FILTER_BY_VERSION_INDEX !== activeFilterIndex && setIsFilterByVersionShown(false);
-    }, [activeFilterIndex]);
+        setVersion(cardsQueryParameters.quality);
+        checkCurrentVersion();
+    }, [activeFilterIndex, cardsQueryParameters]);
 
     return (
         <FilterByParameterWrapper
@@ -103,6 +118,7 @@ export const FilterByVersion: React.FC<{
                 id="division-checkbox-wood"
                 className="filter-item__dropdown-active__checkbox"
                 type="checkbox"
+                checked={isWoodQuality}
                 onClick={chooseWoodQuality}
             />
             <label
@@ -115,7 +131,8 @@ export const FilterByVersion: React.FC<{
                 id="checkbox-silver"
                 className="filter-item__dropdown-active__checkbox"
                 type="checkbox"
-                onClick={chooseSilverQuality}
+                checked={isSilverQuality}
+                onChange={chooseSilverQuality}
             />
             <label
                 className="filter-item__dropdown-active__text"
@@ -127,7 +144,8 @@ export const FilterByVersion: React.FC<{
                 id="checkbox-gold"
                 className="filter-item__dropdown-active__checkbox"
                 type="checkbox"
-                onClick={chooseGoldQuality}
+                checked={isGoldQuality}
+                onChange={chooseGoldQuality}
             />
             <label
                 className="filter-item__dropdown-active__text"
@@ -139,7 +157,8 @@ export const FilterByVersion: React.FC<{
                 id="checkbox-diamond"
                 className="filter-item__dropdown-active__checkbox"
                 type="checkbox"
-                onClick={chooseDiamondQuality}
+                checked={isDiamondQuality}
+                onChange={chooseDiamondQuality}
             />
             <label
                 className="filter-item__dropdown-active__text"

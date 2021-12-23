@@ -3,15 +3,17 @@
 
 import { useState, useEffect, useContext } from 'react';
 
-import { FilterByParameterWrapper } from '@/app/components/common/FilterField/FilterByParameterWrapper';
 import { FilterFieldStatsArea, FilterFieldStatsAreaProps } from '@/app/components/common/FilterField/FilterFieldStatsArea';
+import { FilterByParameterWrapper } from '@/app/components/common/FilterField/FilterByParameterWrapper';
+import { CardsQueryParameters, CardsQueryParametersField } from '@/card';
 
-import { CardsQueryParametersField } from '@/card';
 import { FilterContext } from '../index';
 
+// TODO: rework functionality.
 export const FilterByStats: React.FC<{
-    submitSearch: (queryParameters: CardsQueryParametersField[]) => void;
-}> = ({ submitSearch }) => {
+    submitSearch: (queryParameters: CardsQueryParametersField[]) => Promise<void>;
+    cardsQueryParameters: CardsQueryParameters;
+}> = ({ submitSearch, cardsQueryParameters }) => {
     const { activeFilterIndex, setActiveFilterIndex }: {
         activeFilterIndex: number;
         setActiveFilterIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -31,28 +33,28 @@ export const FilterByStats: React.FC<{
     };
 
     /** Describes defence skills of each card. */
-    const [defenceMin, setDefenceMin] = useState('');
-    const [defenceMax, setDefenceMax] = useState('');
+    const [defenceMin, setDefenceMin] = useState(cardsQueryParameters.defence_gte);
+    const [defenceMax, setDefenceMax] = useState(cardsQueryParameters.defence_lte);
 
     /** Describes goalkeeping skills of each card. */
-    const [goalkeepingMin, setGoalkeepingMin] = useState('');
-    const [goalkeepingMax, setGoalkeepingMax] = useState('');
+    const [goalkeepingMin, setGoalkeepingMin] = useState(cardsQueryParameters.goalkeeping_gte);
+    const [goalkeepingMax, setGoalkeepingMax] = useState(cardsQueryParameters.goalkeeping_lte);
 
     /** Describes offense skills of each card. */
-    const [offenseMin, setOffenseMin] = useState('');
-    const [offenseMax, setOffenseMax] = useState('');
+    const [offenseMin, setOffenseMin] = useState(cardsQueryParameters.offense_gte);
+    const [offenseMax, setOffenseMax] = useState(cardsQueryParameters.offense_lte);
 
     /** Describes physique skills of each card. */
-    const [physiqueMin, setPhysiqueMin] = useState('');
-    const [physiqueMax, setPhysiqueMax] = useState('');
+    const [physiqueMin, setPhysiqueMin] = useState(cardsQueryParameters.physique_gte);
+    const [physiqueMax, setPhysiqueMax] = useState(cardsQueryParameters.goalkeeping_lte);
 
     /** Describes tactics skills of each card. */
-    const [tacticsMin, setTacticsMin] = useState('');
-    const [tacticsMax, setTacticsMax] = useState('');
+    const [tacticsMin, setTacticsMin] = useState(cardsQueryParameters.tactics_gte);
+    const [tacticsMax, setTacticsMax] = useState(cardsQueryParameters.tactics_lte);
 
     /** Describes technique skills of each card. */
-    const [techniqueMin, setTechniqueMin] = useState('');
-    const [techniqueMax, setTechniqueMax] = useState('');
+    const [techniqueMin, setTechniqueMin] = useState(cardsQueryParameters.technique_gte);
+    const [techniqueMax, setTechniqueMax] = useState(cardsQueryParameters.technique_lte);
 
     /** Changes min defence value. */
     const changeDefenceMin = (e: React.ChangeEvent<HTMLInputElement>) => {

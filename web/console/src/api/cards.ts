@@ -8,12 +8,7 @@ import { Card, CardsPage, CardsQueryParameters, CardsQueryParametersField } from
 export class CardsClient extends APIClient {
     private readonly ROOT_PATH: string = '/api/v0/cards';
 
-    private queryParameters: CardsQueryParameters = new CardsQueryParameters();
-
-    /** Clears queryParameters object. */
-    public clearCardsQueryParameters() {
-        this.queryParameters = new CardsQueryParameters();
-    };
+    public queryParameters: CardsQueryParameters = new CardsQueryParameters();
 
     /** Changes queryParameters object. */
     public changeCardsQueryParameters(queryParameters: CardsQueryParametersField[]) {

@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { CardsArea } from '@components/UserCards/CardsArea';
@@ -16,11 +16,7 @@ import { RegistrationPopup } from '@/app/components/common/Registration/Registra
 import { UnauthorizedError } from '@/api';
 import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { RootState } from '@/app/store';
-import {
-    listOfCards,
-    clearCardsQueryParameters,
-    createCardsQueryParameters,
-} from '@/app/store/actions/cards';
+import { listOfCards, createCardsQueryParameters, getCurrentCardsQueryParameters } from '@/app/store/actions/cards';
 import { CardsQueryParametersField } from '@/card';
 
 import './index.scss';
@@ -36,6 +32,8 @@ const UserCards: React.FC = () => {
     const [setLocalStorageItem, getLocalStorageItem] = useLocalStorage();
 
     const dispatch = useDispatch();
+
+    const cardsQueryParameters = getCurrentCardsQueryParameters();
 
     /** Indicates if registration is required. */
     const [isRegistrationRequired, setIsRegistrationRequired] = useState(false);
@@ -81,8 +79,10 @@ const UserCards: React.FC = () => {
             <FilterField>
                 <FilterByVersion
                     submitSearch={submitSearch}
+                    cardsQueryParameters={cardsQueryParameters}
                 />
                 <FilterByStats
+                    cardsQueryParameters={cardsQueryParameters}
                     submitSearch={submitSearch}
                 />
                 <FilterByPrice />
