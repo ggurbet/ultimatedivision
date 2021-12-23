@@ -147,7 +147,7 @@ module.exports = (env, argv) => {
                     },
                 },
                 {
-                    test: /\.(jpe|jpg|png|svg)(\?.*$|$)/,
+                    test: /\.(jpe|jpg|png|svg|webp)(\?.*$|$)/,
                     exclude: /(node_modules)/,
                     type: "asset/resource",
                     generator: {
