@@ -73,4 +73,5 @@ type Config struct {
 	AddressNodeServer    string       `json:"addressNodeServer"`
 	Storj                storj.Config `json:"storj"`
 	Bucket               string       `json:"bucket"`
+	URLToAvatar          string       `json:"urlToAvatar"`
 }

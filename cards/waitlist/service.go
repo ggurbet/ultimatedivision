@@ -87,22 +87,19 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 		}
 	}
 
-	if err = client.Upload(ctx, service.config.Bucket, fmt.Sprintf("%d.%s", lastTokenID+1, imageprocessing.TypeFilePNG), image); err != nil {
+	nextTokenID := lastTokenID + 1
+
+	if err = client.Upload(ctx, service.config.Bucket, fmt.Sprintf("%d.%s", nextTokenID, imageprocessing.TypeFilePNG), image); err != nil {
 		return transaction, ErrWaitlist.Wrap(err)
 	}
 
-	avatar, err := service.avatars.Get(ctx, createNFT.CardID)
-	if err != nil {
-		return transaction, ErrWaitlist.Wrap(err)
-	}
-
-	nft := service.nfts.Generate(ctx, card, avatar.OriginalURL)
+	nft := service.nfts.Generate(ctx, card, fmt.Sprintf(service.config.URLToAvatar, nextTokenID))
 	fileMetadata, err := json.MarshalIndent(nft, "", " ")
 	if err != nil {
 		return transaction, ErrWaitlist.Wrap(err)
 	}
 
-	if err = client.Upload(ctx, service.config.Bucket, fmt.Sprintf("%d.%s", lastTokenID+1, imageprocessing.TypeFileJSON), fileMetadata); err != nil {
+	if err = client.Upload(ctx, service.config.Bucket, fmt.Sprintf("%d.%s", nextTokenID, imageprocessing.TypeFileJSON), fileMetadata); err != nil {
 		return transaction, ErrWaitlist.Wrap(err)
 	}
 

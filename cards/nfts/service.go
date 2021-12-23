@@ -105,7 +105,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, avatarURL
 	nft := nft.NFT{
 		Attributes:  attributes,
 		Description: service.config.Description,
-		ExternalURL: service.config.ExternalURL + card.ID.String(),
+		ExternalURL: fmt.Sprintf(service.config.ExternalURL, card.ID.String()),
 		Image:       avatarURL,
 		Name:        card.PlayerName,
 	}
