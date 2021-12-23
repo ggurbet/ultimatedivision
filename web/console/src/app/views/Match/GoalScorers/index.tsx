@@ -14,7 +14,7 @@ import './index.scss';
 const MAX_SCORED_PLAYERS_COUNT: number = 3;
 
 export const GoalScorers: React.FC = () => {
-    const { teams } = useSelector((state: RootState) => state.matchesReducer);
+    const { matchResults } = useSelector((state: RootState) => state.matchesReducer);
 
     /** FIRST_TEAM_INDEX is variable that describes first team index in teams array. */
     const FIRST_TEAM_INDEX: number = 0;
@@ -29,8 +29,8 @@ export const GoalScorers: React.FC = () => {
     useEffect(() => {
         /** If the length of the array of players who scored a goal is more than 3 - add a scroll for the block. */
         setVisabilityTeamsAreaScroll({
-            firstTeam: teams[FIRST_TEAM_INDEX].goals && teams[FIRST_TEAM_INDEX].goals.length > MAX_SCORED_PLAYERS_COUNT,
-            secondTeam: teams[SECOND_TEAM_INDEX].goals && teams[SECOND_TEAM_INDEX].goals.length > MAX_SCORED_PLAYERS_COUNT,
+            firstTeam: Boolean(matchResults[FIRST_TEAM_INDEX].goals && matchResults[FIRST_TEAM_INDEX].goals.length > MAX_SCORED_PLAYERS_COUNT),
+            secondTeam: Boolean(matchResults[SECOND_TEAM_INDEX].goals && matchResults[SECOND_TEAM_INDEX].goals.length > MAX_SCORED_PLAYERS_COUNT),
         });
     }, []);
 
@@ -42,7 +42,7 @@ export const GoalScorers: React.FC = () => {
                     className={`scores${visabilityTeamsAreaScroll.firstTeam ? '-scroll' : ''
                     }`}
                 >
-                    {teams[FIRST_TEAM_INDEX].goals && <GoalScorersTeam goals={teams[FIRST_TEAM_INDEX].goals} />}
+                    {matchResults[FIRST_TEAM_INDEX].goals && <GoalScorersTeam goals={matchResults[FIRST_TEAM_INDEX].goals} />}
                 </div>
             </div>
             <div className="match__goal-scorers__team-2">
@@ -51,7 +51,7 @@ export const GoalScorers: React.FC = () => {
                     className={`scores${visabilityTeamsAreaScroll.secondTeam ? '-scroll' : ''
                     }`}
                 >
-                    {teams[SECOND_TEAM_INDEX].goals && <GoalScorersTeam goals={teams[SECOND_TEAM_INDEX].goals} />}
+                    {matchResults[SECOND_TEAM_INDEX].goals && <GoalScorersTeam goals={matchResults[SECOND_TEAM_INDEX].goals} />}
                 </div>
             </div>
         </div>

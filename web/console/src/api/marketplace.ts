@@ -9,7 +9,7 @@ import { Lot, MarketPlacePage } from '@/marketplace';
 /** client for marketplace of api */
 export class MarketplaceClient extends APIClient {
     private readonly ROOT_PATH: string = '/api/v0/marketplace';
-    
+
     public queryParameters: CardsQueryParameters = new CardsQueryParameters();
 
     /** Changes queryParameters object. */

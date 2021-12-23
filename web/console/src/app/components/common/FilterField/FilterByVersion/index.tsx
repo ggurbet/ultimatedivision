@@ -87,7 +87,7 @@ export const FilterByVersion: React.FC<{
     };
 
     /** Submits query parameters by quality. */
-    const handleSubmit = async () => {
+    const handleSubmit = async() => {
         await submitSearch([{ quality: changeQuality() }]);
         setIsFilterByVersionShown(false);
         setActiveFilterIndex(DEFAULT_FILTER_ITEM_INDEX);

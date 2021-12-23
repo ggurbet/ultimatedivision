@@ -14,6 +14,7 @@ import { RouteConfig } from '@/app/routes';
 import { RootState } from '@/app/store';
 import { getMatchScore } from '@/app/store/actions/mathes';
 import { startSearchingMatch } from '@/app/store/actions/clubs';
+import { onOpenConnectionSendAction, getCurrentQueueClient, queueSendAction } from '@/queue/service';
 
 import './index.scss';
 
@@ -42,10 +43,6 @@ const MatchFinder: React.FC = () => {
     /** DELAY_AFTER_REJECT is time delay in milliseconds for searching match after reject. */
     const DELAY_AFTER_REJECT: number = 500;
 
-    /** Variables describes first and second teams indexes for eventAction response. */
-    const FIRST_TEAM_INDEX: number = 0;
-    const SECOND_TEAM_INDEX: number = 1;
-
     /** Variable describes that webscoket connection responsed with error. */
     const ERROR_MESSAGE: string = 'could not write to websocket';
     /** Variable describes that user still searching game. */
@@ -59,24 +56,25 @@ const MatchFinder: React.FC = () => {
     /** Variable describes that user have leaved from searching game. */
     const YOU_LEAVED_MESSAGE: string = 'you leaved!';
 
-    /** Exposes confirm match logic. */
+    /** Sends confirm action. */
     const confirmMatch = () => {
-        queueClient && queueClient.sendAction('confirm', squad.id);
+        queueSendAction('confirm', squad.id);
     };
 
     /** Canceles confirmation game. */
     const cancelConfirmationGame = () => {
-        queueClient && queueClient.sendAction('reject', squad.id);
+        queueSendAction('reject', squad.id);
         setIsRejectedUser(true);
     };
 
     // TODO: rework after ./queue/chore.go solution.
     /** Starts searching match after rejected by user. */
     const startSearchAfterReject = () => {
-        const newQueueClient = new QueueClient();
-        newQueueClient.startSearch('startSearch', squad.id);
+        onOpenConnectionSendAction('startSearch', squad.id);
 
-        setQueueClient(newQueueClient);
+        /** Updates current queue client. */
+        const updatedClient = getCurrentQueueClient();
+        setQueueClient(updatedClient);
 
         toast.error('Your game was canceled. You are still in search.', {
             position: toast.POSITION.TOP_RIGHT,
@@ -89,19 +87,22 @@ const MatchFinder: React.FC = () => {
         // TODO: rework after ./queue/chore.go solution
         queueClient && queueClient.ws.close();
 
-        const newQueueClient = new QueueClient();
-        newQueueClient.finishSearch('finishSearch', squad.id);
+        onOpenConnectionSendAction('finishSearch', squad.id);
 
-        setQueueClient(newQueueClient);
+        /** Updates current queue client. */
+        const updatedClient = getCurrentQueueClient();
+        setQueueClient(updatedClient);
+
         dispatch(startSearchingMatch(false));
     };
 
     /** Exposes start searching match logic. */
     const startSearchMatch = () => {
         // TODO: rework after ./queue/chore.go solution.
-        const newQueueClient = new QueueClient();
-        newQueueClient.startSearch('startSearch', squad.id);
-        setQueueClient(newQueueClient);
+        onOpenConnectionSendAction('startSearch', squad.id);
+        /** Updates current queue client. */
+        const newclient = getCurrentQueueClient();
+        setQueueClient(newclient);
     };
 
     useEffect(() => {
@@ -159,9 +160,7 @@ const MatchFinder: React.FC = () => {
 
                 return;
             default:
-                const teams = messageEvent.message.matchResults;
 
-                const transaction = messageEvent.message.transaction;
                 toast.success(
                     'Successfully! You will be redirected to match page',
                     {
@@ -169,7 +168,7 @@ const MatchFinder: React.FC = () => {
                     }
                 );
 
-                dispatch(getMatchScore({ teams, transaction }));
+                dispatch(getMatchScore(messageEvent.message));
                 dispatch(startSearchingMatch(false));
 
                 /** implements redirect to match page after DELAY time.  */

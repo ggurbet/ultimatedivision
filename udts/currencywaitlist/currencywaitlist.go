@@ -47,7 +47,6 @@ type Transaction struct {
 	Signature   cryptoutils.Signature `json:"signature"`
 	UDTContract cryptoutils.Contract  `json:"udtContract"`
 	Value       string                `json:"value"`
-	Nonce       int64                 `json:"nonce"`
 }
 
 // Config defines values needed by mint udt tokens in blockchain.

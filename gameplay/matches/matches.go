@@ -145,6 +145,7 @@ type MatchResult struct {
 type GameResult struct {
 	MatchResults []MatchResult                `json:"matchResults"`
 	Transaction  currencywaitlist.Transaction `json:"transaction"`
+	Question     string                       `json:"question"`
 }
 
 // Swap swaps match results.

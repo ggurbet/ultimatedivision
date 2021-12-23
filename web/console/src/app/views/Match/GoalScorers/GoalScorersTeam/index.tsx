@@ -7,14 +7,14 @@ import { PlayerCard } from '@components/common/PlayerCard';
 
 import { Goal } from '@/matches';
 
-export const GoalScorersTeam: React.FC<{ goals: Goal[] }> = ({ goals }) => {
+export const GoalScorersTeam: React.FC<{ goals: Goal[] | null }> = ({ goals }) => {
     const [cardId, setCardId] = useState<number | null>(null);
     /** COUNTER is counter that describes index number of each scored goal. */
     const COUNTER: number = 1;
 
     return (
         <>
-            {goals.map((goal: Goal, index: number) =>
+            {goals && goals.map((goal: Goal, index: number) =>
                 <div
                     className="player"
                     key={index}

@@ -13,9 +13,11 @@ import (
 	"ultimatedivision/clubs"
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/pkg/sync"
 	"ultimatedivision/seasons"
 	"ultimatedivision/udts/currencywaitlist"
+	"ultimatedivision/users"
 )
 
 var (
@@ -35,10 +37,11 @@ type Chore struct {
 	seasons          *seasons.Service
 	clubs            *clubs.Service
 	currencywaitlist *currencywaitlist.Service
+	users            *users.Service
 }
 
 // NewChore instantiates Chore.
-func NewChore(config Config, log logger.Logger, service *Service, matches *matches.Service, seasons *seasons.Service, clubs *clubs.Service, currencywaitlist *currencywaitlist.Service) *Chore {
+func NewChore(config Config, log logger.Logger, service *Service, matches *matches.Service, seasons *seasons.Service, clubs *clubs.Service, currencywaitlist *currencywaitlist.Service, users *users.Service) *Chore {
 	return &Chore{
 		config:           config,
 		log:              log,
@@ -48,6 +51,7 @@ func NewChore(config Config, log logger.Logger, service *Service, matches *match
 		seasons:          seasons,
 		clubs:            clubs,
 		currencywaitlist: currencywaitlist,
+		users:            users,
 	}
 }
 
@@ -220,6 +224,7 @@ func (chore *Chore) Play(ctx context.Context, firstClient, secondClient Client) 
 		if err := secondClient.WriteJSON(http.StatusInternalServerError, "could not season id"); err != nil {
 			return ChoreError.Wrap(err)
 		}
+		return ChoreError.Wrap(err)
 	}
 
 	matchesID, err := chore.matches.Create(ctx, firstClient.SquadID, secondClient.SquadID, firstClient.UserID, secondClient.UserID, season.ID)
@@ -230,6 +235,7 @@ func (chore *Chore) Play(ctx context.Context, firstClient, secondClient Client) 
 		if err := secondClient.WriteJSON(http.StatusInternalServerError, "match error"); err != nil {
 			return ChoreError.Wrap(err)
 		}
+		return ChoreError.Wrap(err)
 	}
 
 	gameResult, err := chore.matches.GetGameResult(ctx, matchesID)
@@ -237,6 +243,7 @@ func (chore *Chore) Play(ctx context.Context, firstClient, secondClient Client) 
 		if err := secondClient.WriteJSON(http.StatusInternalServerError, "could not get result of match"); err != nil {
 			return ChoreError.Wrap(err)
 		}
+		return ChoreError.Wrap(err)
 	}
 
 	var firstClientResult matches.GameResult
@@ -256,42 +263,118 @@ func (chore *Chore) Play(ctx context.Context, firstClient, secondClient Client) 
 
 	var value = new(big.Int)
 	value.SetString(chore.config.WinValue, 10)
-	if firstClientResult.MatchResults[0].QuantityGoals > secondClientResult.MatchResults[0].QuantityGoals {
-		if firstClientResult.Transaction, err = chore.currencywaitlist.Create(ctx, firstClientResult.MatchResults[0].UserID, *value); err != nil {
-			return ChoreError.Wrap(err)
-		}
-	} else if firstClientResult.MatchResults[0].QuantityGoals < secondClientResult.MatchResults[0].QuantityGoals {
-		if secondClientResult.Transaction, err = chore.currencywaitlist.Create(ctx, secondClientResult.MatchResults[0].UserID, *value); err != nil {
-			return ChoreError.Wrap(err)
-		}
-	}
 
-	if err := firstClient.WriteJSON(http.StatusOK, firstClientResult); err != nil {
-		return ChoreError.Wrap(err)
-	}
-	if err := secondClient.WriteJSON(http.StatusOK, secondClientResult); err != nil {
-		return ChoreError.Wrap(err)
-	}
-
-	if err = chore.service.Finish(firstClient.UserID); err != nil {
-		return ChoreError.Wrap(err)
-	}
-	if err = chore.service.Finish(secondClient.UserID); err != nil {
-		return ChoreError.Wrap(err)
-	}
-
-	defer func() {
-		if err = firstClient.Connection.Close(); err != nil {
-			chore.log.Error("could not close websocket", ErrQueue.Wrap(err))
+	switch {
+	case firstClientResult.MatchResults[0].QuantityGoals > secondClientResult.MatchResults[0].QuantityGoals:
+		winResult := WinResult{
+			Client:     firstClient,
+			GameResult: firstClientResult,
+			Value:      value,
 		}
-	}()
-	defer func() {
-		if err = secondClient.Connection.Close(); err != nil {
-			chore.log.Error("could not close websocket", ErrQueue.Wrap(err))
+
+		go chore.FinishWithWinResult(ctx, winResult)
+		go chore.Finish(secondClient, secondClientResult)
+	case firstClientResult.MatchResults[0].QuantityGoals < secondClientResult.MatchResults[0].QuantityGoals:
+		winResult := WinResult{
+			Client:     secondClient,
+			GameResult: secondClientResult,
+			Value:      value,
 		}
-	}()
+
+		go chore.FinishWithWinResult(ctx, winResult)
+		go chore.Finish(firstClient, firstClientResult)
+	default:
+		var value = new(big.Int)
+		value.SetString(chore.config.DrawValue, 10)
+
+		winResult := WinResult{
+			Client:     firstClient,
+			GameResult: firstClientResult,
+			Value:      value,
+		}
+		go chore.FinishWithWinResult(ctx, winResult)
+
+		winResult = WinResult{
+			Client:     secondClient,
+			GameResult: secondClientResult,
+			Value:      value,
+		}
+		go chore.FinishWithWinResult(ctx, winResult)
+	}
 
 	return nil
+}
+
+// FinishWithWinResult sends win result and finishes the connection.
+func (chore *Chore) FinishWithWinResult(ctx context.Context, winResult WinResult) {
+	user, err := chore.users.Get(ctx, winResult.Client.UserID)
+	if err != nil {
+		chore.log.Error("could not get user", ChoreError.Wrap(err))
+		return
+	}
+
+	winResult.GameResult.Question = "do you allow us to take your address?"
+	winResult.GameResult.Transaction.Value = cryptoutils.WeiToEthereum(winResult.Value).String()
+	winResult.GameResult.Transaction.UDTContract.Address = chore.config.UDTContract.Address
+	if err := winResult.Client.WriteJSON(http.StatusOK, winResult.GameResult); err != nil {
+		chore.log.Error("could not write json", ChoreError.Wrap(err))
+		return
+	}
+
+	request, err := winResult.Client.ReadJSON()
+	if err != nil {
+		chore.log.Error("could not read json", ChoreError.Wrap(err))
+		return
+	}
+
+	if request.Action != ActionForbidAddress && request.Action != ActionAllowAddress {
+		if err := winResult.Client.WriteJSON(http.StatusBadRequest, "wrong action"); err != nil {
+			chore.log.Error("could not write json", ChoreError.Wrap(err))
+			return
+		}
+	}
+
+	if request.Action == ActionAllowAddress {
+		if !request.WalletAddress.IsValidAddress() {
+			if err := winResult.Client.WriteJSON(http.StatusBadRequest, "invalid address of user's wallet"); err != nil {
+				chore.log.Error("could not write json", ChoreError.Wrap(err))
+				return
+			}
+		}
+
+		if err = chore.users.UpdateWalletAddress(ctx, request.WalletAddress, winResult.Client.UserID); err != nil {
+			if !users.ErrWalletAddressAlreadyInUse.Has(err) {
+				chore.log.Error("could not update user's wallet address", ChoreError.Wrap(err))
+				return
+			}
+		}
+
+		if winResult.GameResult.Transaction, err = chore.currencywaitlist.Create(ctx, user.ID, *winResult.Value, request.Nonce); err != nil {
+			chore.log.Error("could not create item of currencywaitlist", ChoreError.Wrap(err))
+			return
+		}
+	}
+	chore.Finish(winResult.Client, winResult.GameResult)
+}
+
+// Finish sends result and finishes the connection.
+func (chore *Chore) Finish(client Client, gameResult matches.GameResult) {
+	var err error
+
+	if err = client.WriteJSON(http.StatusOK, gameResult); err != nil {
+		chore.log.Error("could not write json", ChoreError.Wrap(err))
+		return
+	}
+
+	if err = chore.service.Finish(client.UserID); err != nil {
+		chore.log.Error("could not finish match", ChoreError.Wrap(err))
+		return
+	}
+	defer func() {
+		if err = client.Connection.Close(); err != nil {
+			chore.log.Error("could not close websocket", ChoreError.Wrap(err))
+		}
+	}()
 }
 
 // Close closes the chore chore for re-check the expiration time of the token.

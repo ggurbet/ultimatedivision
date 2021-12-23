@@ -40,7 +40,7 @@ func NewService(config Config, currencyWaitList DB, users *users.Service, udts *
 }
 
 // Create creates item of currency wait list.
-func (service *Service) Create(ctx context.Context, userID uuid.UUID, value big.Int) (Transaction, error) {
+func (service *Service) Create(ctx context.Context, userID uuid.UUID, value big.Int, nonce int64) (Transaction, error) {
 	var transaction Transaction
 
 	user, err := service.users.Get(ctx, userID)
@@ -48,43 +48,22 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, value big.
 		return transaction, ErrCurrencyWaitlist.Wrap(err)
 	}
 
-	udt, err := service.udts.GetByUserID(ctx, user.ID)
-	if err != nil {
-		if !udts.ErrNoUDT.Has(err) {
-			return transaction, ErrCurrencyWaitlist.Wrap(err)
-		}
-
-		udt = udts.UDT{
-			UserID: user.ID,
-			Nonce:  0,
-		}
-		if err = service.udts.Create(ctx, udt); err != nil {
-			return transaction, ErrCurrencyWaitlist.Wrap(err)
-		}
-	}
-
-	udt.Nonce++
 	item := Item{
 		WalletAddress: user.Wallet,
 		Value:         value,
-		Nonce:         udt.Nonce,
+		Nonce:         nonce,
 	}
 
 	if err = service.currencyWaitList.Create(ctx, item); err != nil {
 		return transaction, ErrCurrencyWaitlist.Wrap(err)
 	}
 
-	if err = service.udts.Update(ctx, udt); err != nil {
-		return transaction, ErrCurrencyWaitlist.Wrap(err)
-	}
-
 	for range time.NewTicker(time.Millisecond * service.config.IntervalSignatureCheck).C {
-		if item, err := service.GetByWalletAddressAndNonce(ctx, user.Wallet, udt.Nonce); item.Signature != "" && err == nil {
+		if item, err := service.GetByWalletAddressAndNonce(ctx, item.WalletAddress, item.Nonce); item.Signature != "" && err == nil {
 			transaction = Transaction{
 				Signature:   item.Signature,
 				UDTContract: service.config.UDTContract,
 				Value:       item.Value.String(),
-				Nonce:       item.Nonce,
 			}
 			break
 		}

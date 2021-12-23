@@ -132,3 +132,11 @@ type Contract struct {
 	Address       Address `json:"address"`
 	AddressMethod Hex     `json:"addressMethod"`
 }
+
+// WeiInEthereum indicates that one ether = 1,000,000,000,000,000,000 wei (10^18).
+const WeiInEthereum int64 = 1000000000000000000
+
+// WeiToEthereum converts wei to ethereum coins.
+func WeiToEthereum(value *big.Int) *big.Int {
+	return new(big.Int).Div(value, new(big.Int).SetInt64(WeiInEthereum))
+}
