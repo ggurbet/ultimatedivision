@@ -6,7 +6,6 @@
     animation: darken 1s 0 1 normal forwards;
 
     @keyframes darken {
-
         from {
             opacity: 0;
         }
@@ -45,6 +44,7 @@
     &__card {
         width: 170px;
         transition: transform 0.3s;
+        margin: 20px 0;
 
         &:hover {
             transform: scale(1.1);
@@ -60,7 +60,11 @@
     &__button {
         padding: 10px 70px;
         z-index: 2;
-        background: radial-gradient(254.55% 254.55% at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%),
+        background: radial-gradient(
+                254.55% 254.55% at 50% 50%,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.8) 100%
+            ),
             linear-gradient(180deg, #5cff79 0%, #3ccf56 100%);
         border: none;
         cursor: pointer;
@@ -101,23 +105,28 @@
 }
 
 @media (max-width: $tabletBreakPoint) {
-
     .box-keeping {
-
         &__card-wrapper {
             row-gap: 20px;
             width: 100%;
             min-height: 700px;
             grid-template-columns: repeat(2, 1fr);
             justify-content: space-between;
+
+            &__card {
+                margin: 5% 0;
+                transform: scale(0.7);
+            }
+
+            .slick-list {
+                height: 620px;
+            }
         }
     }
 }
 
 @media (max-width: $phoneBreakPoint) {
-
     .box-keeping {
-
         &__title {
             font-size: 32px;
             font-weight: normal;
@@ -132,9 +141,17 @@
             row-gap: 0;
         }
 
+        &__card:nth-child(2n+1) {
+            margin-right: -12px;
+        }
+
         &__card {
-            margin: -40px -10px;
+            margin: 0;
             transform: scale(0.7);
+
+            &:hover {
+                transform: scale(0.9);
+            }
         }
 
         &__box-body {
@@ -147,9 +164,7 @@
 }
 
 @media (max-width: 330px) {
-
     .box-keeping {
-
         &__title {
             margin-left: 30px;
         }
