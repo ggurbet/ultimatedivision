@@ -21,7 +21,7 @@
         height: 100%;
         width: 1024px;
         overflow: hidden;
-        max-height: 760px;
+        max-height: 780px;
 
         &__close {
             line-height: 20px;
@@ -38,7 +38,7 @@
     .pop-up-registration {
 
         &__wrapper {
-            max-height: 580px;
+            max-height: 640px;
             width: 80%;
             top: 10px;
             height: 100%;
@@ -75,8 +75,8 @@
 
         &__wrapper {
             width: 90%;
-            top: 20px;
-            max-height: 530px;
+            top: 10px;
+            max-height: 550px;
         }
     }
 }

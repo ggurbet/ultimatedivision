@@ -686,6 +686,14 @@
                 margin: auto;
                 width: 50%;
 
+                &__remember-me {
+                    float: left;
+                }
+
+                &__forgot-password {
+                    bottom: 105px;
+                }
+
                 &__email,
                 &__name,
                 &__surname,
@@ -713,6 +721,44 @@
                 &__password-error {
                     margin-top: 5px;
                     font-size: 12px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-height: $phoneBreakPoint - 200px) {
+
+    .register {
+
+        &__sign-in,
+        &__sign-up,
+        &__reset,
+        &__recover {
+
+            &__sign-form {
+
+                &__forgot-password {
+                    bottom: 120px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-height: $phoneBreakPoint - 250px) {
+
+    .register {
+
+        &__sign-in,
+        &__sign-up,
+        &__reset,
+        &__recover {
+
+            &__sign-form {
+
+                &__forgot-password {
+                    bottom: 140px;
                 }
             }
         }
