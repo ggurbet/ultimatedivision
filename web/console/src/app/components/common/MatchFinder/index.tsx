@@ -37,6 +37,9 @@ const MatchFinder: React.FC = () => {
     /** Indicates if match is found. */
     const [isMatchFound, setIsMatchFound] = useState<boolean>(false);
 
+    /** CANCEL_GAME_DELAY is time delay for auto cancel game. */
+    const CANCEL_GAME_DELAY: number = 30000;
+
     /** Delay is time delay for redirect user to match page. */
     const DELAY: number = 2000;
 
@@ -187,6 +190,23 @@ const MatchFinder: React.FC = () => {
             });
         };
     }
+
+    useEffect(() => {
+        /** Canceles confirm game after CANCEL_GAME_DELAY delay. */
+        let autoCancelConfirmGame: ReturnType<typeof setTimeout>;
+
+        if (isMatchFound) {
+            autoCancelConfirmGame = setTimeout(() => {
+                onOpenConnectionSendAction('startSearch', squad.id);
+
+                /** Updates current queue client. */
+                const updatedClient = getCurrentQueueClient();
+                setQueueClient(updatedClient);
+            }, CANCEL_GAME_DELAY);
+        }
+
+        return () => clearTimeout(autoCancelConfirmGame);
+    }, [isMatchFound]);
 
     return isSearchingMatch && <section className={isMatchFound ? 'match-finder__wrapper' : ''}>
         <div className="match-finder">

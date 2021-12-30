@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 export const useTimeCounter = () => {
     const COUNTER: number = 1;
     /** Variables describes default values for seconds and minutes hooks. */
-    const DEFAULT_SECONDS_VALUE: number = 0;
+    const DEFAULT_SECONDS_VALUE: number = 1;
     const DEFAULT_MINUTES_VALUE: number = 1;
 
     /** Describes upper seconds breakpoint for counting minutes. */
