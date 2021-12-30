@@ -1,7 +1,8 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { SetStateAction, useState } from 'react';
+import MetaMaskOnboarding from '@metamask/onboarding';
+import { useMemo, SetStateAction, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -10,10 +11,12 @@ import { UserDataArea } from '@components/common/UserDataArea';
 
 import facebook from '@static/img/registerPage/facebook_logo.svg';
 import google from '@static/img/registerPage/google_logo.svg';
+import metamask from '@static/img/registerPage/metamask.svg';
 import ultimate from '@static/img/registerPage/ultimate.svg';
 
 import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { RouteConfig } from '@/app/routes';
+import { ServicePlugin } from '@/app/plugins/service';
 import { loginUser } from '@/app/store/actions/users';
 import { Validator } from '@/users/validation';
 
@@ -22,6 +25,11 @@ export const SignIn: React.FC<{
     showResetPasswordComponent: () => void;
     showSignUpComponent: () => void;
 }> = ({ showResetPasswordComponent, showSignUpComponent }) => {
+    const onboarding = useMemo(() => new MetaMaskOnboarding(), []);
+
+    /** Creates ethers provider. */
+    const service = ServicePlugin.create();
+
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -103,6 +111,38 @@ export const SignIn: React.FC<{
         },
     ];
 
+    /** Logins with matamask. */
+    const metamaskLogin = async() => {
+        /** Error code which indicates that 'eth_requestAccounts' already processing. */
+        const METAMASK_RPC_ERROR_CODE = -32002;
+        if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+            try {
+                // @ts-ignore
+                await window.ethereum.request({
+                    method: 'eth_requestAccounts',
+                });
+
+                await service.login();
+
+                setLocalStorageItem('IS_LOGGINED', true);
+
+                history.push(RouteConfig.MarketPlace.path);
+            } catch (error: any) {
+                error.code === METAMASK_RPC_ERROR_CODE
+                    ? toast.error('Please open metamask manually!', {
+                        position: toast.POSITION.TOP_RIGHT,
+                        theme: 'colored',
+                    })
+                    : toast.error('Something went wrong', {
+                        position: toast.POSITION.TOP_RIGHT,
+                        theme: 'colored',
+                    });
+            }
+        } else {
+            onboarding.startOnboarding();
+        }
+    };
+
     return (
         <div className="register">
             <div className="register__represent">
@@ -167,6 +207,12 @@ export const SignIn: React.FC<{
                                 src={facebook}
                                 alt="Facebook logo"
                                 className="register__sign-in__sign-form__logos__facebook"
+                            />
+                            <img
+                                src={metamask}
+                                alt="Metamask logo"
+                                className="register__sign-in__sign-form__logos__metamask"
+                                onClick={metamaskLogin}
                             />
                         </div>
                     </div>
