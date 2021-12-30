@@ -1,8 +1,12 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import { NavLink } from 'react-router-dom';
+
 import discord from '@static/img/gameLanding/footer/discord.svg';
 import twitter from '@static/img/gameLanding/footer/twitter.svg';
+
+import { RouteConfig } from '@/app/routes';
 
 import './index.scss';
 
@@ -26,16 +30,10 @@ export const Footer: React.FC = () => {
         <footer className="footer">
             <div className="footer__wrapper">
                 <div className="footer__links">
-                    <a
-                        className="footer__link"
-                        href="https://ultimatedivision.com/ud/whitepaper/summary"
-                    >
-                        Whitepaper
+                    <a className="footer__link" href={RouteConfig.Spending.path}>
+                    Whitepaper
                     </a>
-                    <a
-                        className="footer__link"
-                        href="https://ultimatedivision.com/ud/whitepaper/summary"
-                    >
+                    <a className="footer__link" href={RouteConfig.Summary.path}>
                         FAQ
                     </a>
                 </div>
