@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -19,7 +20,6 @@ import (
 	"ultimatedivision/console/emails"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/auth"
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/users"
 )
 
@@ -212,7 +212,7 @@ func (service *Service) authorize(ctx context.Context, claims *auth.Claims) (err
 }
 
 // Register - registers a new user.
-func (service *Service) Register(ctx context.Context, email, password, nickName, firstName, lastName string, wallet cryptoutils.Address) error {
+func (service *Service) Register(ctx context.Context, email, password, nickName, firstName, lastName string, wallet evmsignature.Address) error {
 	// check if the user email address already exists.
 	_, err := service.users.GetByEmail(ctx, email)
 	if err == nil {
@@ -433,7 +433,7 @@ func (service *Service) LoginWithMetamask(ctx context.Context, loginMetamaskFiel
 		return "", Error.New("login metamask fields are wrong")
 	}
 
-	wallet := cryptoutils.Address(strings.ToLower(string(loginMetamaskFields.Address)))
+	wallet := evmsignature.Address(strings.ToLower(string(loginMetamaskFields.Address)))
 
 	user, err := service.users.GetByWalletAddress(ctx, wallet)
 	switch {
@@ -478,7 +478,7 @@ func verifyLoginMetamaskFields(loginMetamaskFields users.LoginMetamaskFields) (b
 	}
 	hash[64] -= 27
 
-	pubKey, err := crypto.SigToPub(cryptoutils.SignHash([]byte(loginMetamaskFields.Message)), hash)
+	pubKey, err := crypto.SigToPub(evmsignature.SignHash([]byte(loginMetamaskFields.Message)), hash)
 	if err != nil {
 		return false, Error.Wrap(err)
 	}

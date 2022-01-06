@@ -8,10 +8,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
-
-	"ultimatedivision/pkg/cryptoutils"
 )
 
 // ErrUsers indicates that there was an error in the service.
@@ -50,7 +49,7 @@ func (service *Service) GetByEmail(ctx context.Context, email string) (User, err
 }
 
 // GetByWalletAddress returns user by wallet address from the data base.
-func (service *Service) GetByWalletAddress(ctx context.Context, walletAddress cryptoutils.Address) (User, error) {
+func (service *Service) GetByWalletAddress(ctx context.Context, walletAddress evmsignature.Address) (User, error) {
 	user, err := service.users.GetByWalletAddress(ctx, walletAddress)
 	return user, ErrUsers.Wrap(err)
 }
@@ -116,8 +115,8 @@ func (service *Service) GetNickNameByID(ctx context.Context, id uuid.UUID) (stri
 }
 
 // UpdateWalletAddress updates wallet address.
-func (service *Service) UpdateWalletAddress(ctx context.Context, wallet cryptoutils.Address, id uuid.UUID) error {
-	wallet = cryptoutils.Address(strings.ToLower(string(wallet)))
+func (service *Service) UpdateWalletAddress(ctx context.Context, wallet evmsignature.Address, id uuid.UUID) error {
+	wallet = evmsignature.Address(strings.ToLower(string(wallet)))
 
 	_, err := service.GetByWalletAddress(ctx, wallet)
 	if err == nil {

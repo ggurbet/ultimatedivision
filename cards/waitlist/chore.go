@@ -7,13 +7,13 @@ import (
 	"context"
 	"strconv"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/nfts"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/pkg/jsonrpc"
 	"ultimatedivision/pkg/sync"
 	"ultimatedivision/users"
@@ -54,13 +54,13 @@ func NewChore(config Config, log logger.Logger, waitList *Service, nfts *nfts.Se
 func (chore *Chore) RunCheckMintEvent(ctx context.Context) (err error) {
 	filter := []*jsonrpc.CreateFilter{
 		{
-			ToBlock: cryptoutils.BlockTagLatest,
+			ToBlock: evmsignature.BlockTagLatest,
 			Address: chore.config.NFTContract.Address,
-			Topics:  []cryptoutils.Hex{chore.config.NFTContract.AddressEvent},
+			Topics:  []evmsignature.Hex{chore.config.NFTContract.AddressEvent},
 		},
 	}
 
-	transaction := jsonrpc.NewTransaction(jsonrpc.MethodEthNewFilter, filter, cryptoutils.ChainIDRinkeby)
+	transaction := jsonrpc.NewTransaction(jsonrpc.MethodEthNewFilter, filter, evmsignature.ChainIDRinkeby)
 	body, err := jsonrpc.Send(chore.config.AddressNodeServer, transaction)
 	if err != nil {
 		return ChoreError.Wrap(err)
@@ -72,7 +72,7 @@ func (chore *Chore) RunCheckMintEvent(ctx context.Context) (err error) {
 	}
 
 	return chore.Loop.Run(ctx, func(ctx context.Context) error {
-		transaction := jsonrpc.NewTransaction(jsonrpc.MethodEthGetFilterChanges, []cryptoutils.Address{addressOfFilter}, cryptoutils.ChainIDRinkeby)
+		transaction := jsonrpc.NewTransaction(jsonrpc.MethodEthGetFilterChanges, []evmsignature.Address{addressOfFilter}, evmsignature.ChainIDRinkeby)
 		events, err := jsonrpc.GetEvents(chore.config.AddressNodeServer, transaction)
 		if err != nil {
 			return ChoreError.Wrap(err)
@@ -80,13 +80,13 @@ func (chore *Chore) RunCheckMintEvent(ctx context.Context) (err error) {
 
 		for _, event := range events {
 			fromStr := string(event.Topics[1])
-			from, _ := strconv.ParseInt(fromStr[cryptoutils.LengthHexPrefix:], 16, 64)
+			from, _ := strconv.ParseInt(fromStr[evmsignature.LengthHexPrefix:], 16, 64)
 
 			toStr := string(event.Topics[2])
-			toAddress := cryptoutils.CreateValidAddress(cryptoutils.Hex(toStr))
+			toAddress := evmsignature.CreateValidAddress(evmsignature.Hex(toStr))
 
 			tokenIDStr := string(event.Topics[3])
-			tokenID, err := strconv.ParseInt(tokenIDStr[cryptoutils.LengthHexPrefix:], 16, 64)
+			tokenID, err := strconv.ParseInt(tokenIDStr[evmsignature.LengthHexPrefix:], 16, 64)
 			if err != nil {
 				return ChoreError.Wrap(err)
 			}
@@ -99,7 +99,7 @@ func (chore *Chore) RunCheckMintEvent(ctx context.Context) (err error) {
 
 				nft := nfts.NFT{
 					CardID:        nftWaitList.CardID,
-					Chain:         cryptoutils.ChainPolygon,
+					Chain:         evmsignature.ChainPolygon,
 					TokenID:       tokenID,
 					WalletAddress: toAddress,
 				}
@@ -109,7 +109,7 @@ func (chore *Chore) RunCheckMintEvent(ctx context.Context) (err error) {
 				continue
 			}
 
-			nft, err := chore.nfts.Get(ctx, tokenID, cryptoutils.ChainPolygon)
+			nft, err := chore.nfts.Get(ctx, tokenID, evmsignature.ChainPolygon)
 			if err != nil {
 				return ChoreError.Wrap(err)
 			}

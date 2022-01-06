@@ -8,12 +8,12 @@ import (
 	"math/big"
 	"testing"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"ultimatedivision"
 	"ultimatedivision/database/dbtesting"
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/udts/currencywaitlist"
 )
 
@@ -67,7 +67,7 @@ func TestCurrencycurrencywaitlist(t *testing.T) {
 		})
 
 		t.Run("UpdateSignature", func(t *testing.T) {
-			item1.Signature = cryptoutils.Signature("707fb93c61be8d54c6d1fdf4b83c8642831c480194f7cc93ebdd6fe1ac7474ae63efd077cf6398bf00dc0f7ea96be9f3f9a05dfac1382c4d2f1bb11ec46148491b")
+			item1.Signature = evmsignature.Signature("707fb93c61be8d54c6d1fdf4b83c8642831c480194f7cc93ebdd6fe1ac7474ae63efd077cf6398bf00dc0f7ea96be9f3f9a05dfac1382c4d2f1bb11ec46148491b")
 			err := repositoryCurrencyWaitList.UpdateSignature(ctx, item1.Signature, item1.WalletAddress, item1.Nonce)
 			require.NoError(t, err)
 

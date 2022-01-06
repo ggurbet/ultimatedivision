@@ -8,9 +8,9 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/udts/currencywaitlist"
 )
 
@@ -37,7 +37,7 @@ func (currencywaitlistDB *currencywaitlistDB) Create(ctx context.Context, item c
 }
 
 // GetByWalletAddressAndNonce returns item of currency wait list by wallet address and nonce.
-func (currencywaitlistDB *currencywaitlistDB) GetByWalletAddressAndNonce(ctx context.Context, walletAddress cryptoutils.Address, nonce int64) (currencywaitlist.Item, error) {
+func (currencywaitlistDB *currencywaitlistDB) GetByWalletAddressAndNonce(ctx context.Context, walletAddress evmsignature.Address, nonce int64) (currencywaitlist.Item, error) {
 	var (
 		item  currencywaitlist.Item
 		value []byte
@@ -114,7 +114,7 @@ func (currencywaitlistDB *currencywaitlistDB) ListWithoutSignature(ctx context.C
 }
 
 // UpdateSignature updates signature of item by wallet address and nonce in the database.
-func (currencywaitlistDB *currencywaitlistDB) UpdateSignature(ctx context.Context, signature cryptoutils.Signature, walletAddress cryptoutils.Address, nonce int64) error {
+func (currencywaitlistDB *currencywaitlistDB) UpdateSignature(ctx context.Context, signature evmsignature.Signature, walletAddress evmsignature.Address, nonce int64) error {
 	query := `UPDATE currency_waitlist
 	          SET signature = $1
 	          WHERE wallet_address = $2 and nonce = $3`
@@ -133,7 +133,7 @@ func (currencywaitlistDB *currencywaitlistDB) UpdateSignature(ctx context.Contex
 }
 
 // Delete deletes item of currency waitlist by wallet address and nonce in the database.
-func (currencywaitlistDB *currencywaitlistDB) Delete(ctx context.Context, walletAddress cryptoutils.Address, nonce int64) error {
+func (currencywaitlistDB *currencywaitlistDB) Delete(ctx context.Context, walletAddress evmsignature.Address, nonce int64) error {
 	result, err := currencywaitlistDB.conn.ExecContext(ctx, "DELETE FROM currency_waitlist WHERE wallet_address = $1 and nonce = $2", walletAddress, nonce)
 	if err != nil {
 		return ErrCurrencyWaitlist.Wrap(err)

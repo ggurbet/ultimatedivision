@@ -8,11 +8,10 @@ import (
 	"time"
 	"unicode"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 	"golang.org/x/crypto/bcrypt"
-
-	"ultimatedivision/pkg/cryptoutils"
 )
 
 // ErrNoUser indicated that user does not exist.
@@ -29,7 +28,7 @@ type DB interface {
 	// GetByEmail returns user by email from the data base.
 	GetByEmail(ctx context.Context, email string) (User, error)
 	// GetByWalletAddress returns user by wallet address from the data base.
-	GetByWalletAddress(ctx context.Context, walletAddress cryptoutils.Address) (User, error)
+	GetByWalletAddress(ctx context.Context, walletAddress evmsignature.Address) (User, error)
 	// Create creates a user and writes to the database.
 	Create(ctx context.Context, user User) error
 	// Update updates a status in the database.
@@ -37,7 +36,7 @@ type DB interface {
 	// UpdatePassword updates a password in the database.
 	UpdatePassword(ctx context.Context, passwordHash []byte, id uuid.UUID) error
 	// UpdateWalletAddress updates user's address of wallet in the database.
-	UpdateWalletAddress(ctx context.Context, wallet cryptoutils.Address, id uuid.UUID) error
+	UpdateWalletAddress(ctx context.Context, wallet evmsignature.Address, id uuid.UUID) error
 	// Delete deletes a user in the database.
 	Delete(ctx context.Context, id uuid.UUID) error
 	// GetNickNameByID returns nickname by user id from the database.
@@ -60,16 +59,16 @@ const (
 
 // User describes user entity.
 type User struct {
-	ID           uuid.UUID           `json:"id"`
-	Email        string              `json:"email"`
-	PasswordHash []byte              `json:"passwordHash"`
-	NickName     string              `json:"nickName"`
-	FirstName    string              `json:"firstName"`
-	LastName     string              `json:"lastName"`
-	Wallet       cryptoutils.Address `json:"wallet"`
-	LastLogin    time.Time           `json:"lastLogin"`
-	Status       Status              `json:"status"`
-	CreatedAt    time.Time           `json:"createdAt"`
+	ID           uuid.UUID            `json:"id"`
+	Email        string               `json:"email"`
+	PasswordHash []byte               `json:"passwordHash"`
+	NickName     string               `json:"nickName"`
+	FirstName    string               `json:"firstName"`
+	LastName     string               `json:"lastName"`
+	Wallet       evmsignature.Address `json:"wallet"`
+	LastLogin    time.Time            `json:"lastLogin"`
+	Status       Status               `json:"status"`
+	CreatedAt    time.Time            `json:"createdAt"`
 }
 
 // EncodePass encode the password and generate "hash" to store from users password.
@@ -84,21 +83,21 @@ func (user *User) EncodePass() error {
 
 // CreateUserFields for crete user.
 type CreateUserFields struct {
-	Email     string              `json:"email"`
-	Password  string              `json:"password"`
-	NickName  string              `json:"nickName"`
-	FirstName string              `json:"firstName"`
-	LastName  string              `json:"lastName"`
-	Wallet    cryptoutils.Address `json:"wallet"`
+	Email     string               `json:"email"`
+	Password  string               `json:"password"`
+	NickName  string               `json:"nickName"`
+	FirstName string               `json:"firstName"`
+	LastName  string               `json:"lastName"`
+	Wallet    evmsignature.Address `json:"wallet"`
 }
 
 // Profile for user profile.
 type Profile struct {
-	Email     string              `json:"email"`
-	NickName  string              `json:"nickName"`
-	CreatedAt time.Time           `json:"registerDate"`
-	LastLogin time.Time           `json:"lastLogin"`
-	Wallet    cryptoutils.Address `json:"wallet"`
+	Email     string               `json:"email"`
+	NickName  string               `json:"nickName"`
+	CreatedAt time.Time            `json:"registerDate"`
+	LastLogin time.Time            `json:"lastLogin"`
+	Wallet    evmsignature.Address `json:"wallet"`
 }
 
 // Password for old/new passwords.
@@ -109,9 +108,9 @@ type Password struct {
 
 // LoginMetamaskFields for login user from metamask.
 type LoginMetamaskFields struct {
-	Message string              `json:"message"`
-	Hash    string              `json:"hash"`
-	Address cryptoutils.Address `json:"address"`
+	Message string               `json:"message"`
+	Hash    string               `json:"hash"`
+	Address evmsignature.Address `json:"address"`
 }
 
 // IsValid for check login user from metamask fields.

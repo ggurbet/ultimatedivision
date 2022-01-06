@@ -9,21 +9,20 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/zeebo/errs"
-
-	"ultimatedivision/pkg/cryptoutils"
 )
 
 // Transaction entity describes the values required to send the transaction.
 type Transaction struct {
-	JSONRPC Version             `json:"jsonrpc"`
-	Method  MethodEth           `json:"method"`
-	Params  interface{}         `json:"params"`
-	ID      cryptoutils.ChainID `json:"id"`
+	JSONRPC Version              `json:"jsonrpc"`
+	Method  MethodEth            `json:"method"`
+	Params  interface{}          `json:"params"`
+	ID      evmsignature.ChainID `json:"id"`
 }
 
 // NewTransaction is a constructor for transaction entity.
-func NewTransaction(method MethodEth, params interface{}, id cryptoutils.ChainID) Transaction {
+func NewTransaction(method MethodEth, params interface{}, id evmsignature.ChainID) Transaction {
 	return Transaction{
 		JSONRPC: VersionTwo,
 		Method:  method,
@@ -34,41 +33,41 @@ func NewTransaction(method MethodEth, params interface{}, id cryptoutils.ChainID
 
 // Parameter entity describes parameters of transaction.
 type Parameter struct {
-	To   cryptoutils.Address `json:"to"`
-	Data cryptoutils.Hex     `json:"data"`
+	To   evmsignature.Address `json:"to"`
+	Data evmsignature.Hex     `json:"data"`
 }
 
 // CreateFilter entity describes the values required to create filter.
 type CreateFilter struct {
-	ToBlock cryptoutils.BlockTag `json:"toBlock"`
-	Address cryptoutils.Address  `json:"address"`
-	Topics  []cryptoutils.Hex    `json:"topics"`
+	ToBlock evmsignature.BlockTag `json:"toBlock"`
+	Address evmsignature.Address  `json:"address"`
+	Topics  []evmsignature.Hex    `json:"topics"`
 }
 
 // ResponseAddress entity describes values of the response from server, where the result is equal to the address.
 type ResponseAddress struct {
-	ID      cryptoutils.ChainID `json:"id"`
-	JSONRPC Version             `json:"jsonrpc"`
-	Result  cryptoutils.Hex     `json:"result"`
+	ID      evmsignature.ChainID `json:"id"`
+	JSONRPC Version              `json:"jsonrpc"`
+	Result  evmsignature.Hex     `json:"result"`
 }
 
 // ResponseEvents entity describes values of the response from server, where the result is equal to the list events.
 type ResponseEvents struct {
-	ID      cryptoutils.ChainID `json:"id"`
-	JSONRPC Version             `json:"jsonrpc"`
-	Result  []Event             `json:"result"`
+	ID      evmsignature.ChainID `json:"id"`
+	JSONRPC Version              `json:"jsonrpc"`
+	Result  []Event              `json:"result"`
 }
 
 // Event entity describes event which happens in blockchain when nft is minted or transferred.
 type Event struct {
-	LogIndex         cryptoutils.Hex     `json:"logIndex"`
-	BlockNumber      cryptoutils.Hex     `json:"blockNumber"`
-	BlockHash        cryptoutils.Hex     `json:"blockHash"`
-	TransactionHash  cryptoutils.Hex     `json:"transactionHash"`
-	TransactionIndex cryptoutils.Hex     `json:"transactionIndex"`
-	Address          cryptoutils.Address `json:"address"`
-	Data             cryptoutils.Hex     `json:"data"`
-	Topics           []cryptoutils.Hex   `json:"topics"`
+	LogIndex         evmsignature.Hex     `json:"logIndex"`
+	BlockNumber      evmsignature.Hex     `json:"blockNumber"`
+	BlockHash        evmsignature.Hex     `json:"blockHash"`
+	TransactionHash  evmsignature.Hex     `json:"transactionHash"`
+	TransactionIndex evmsignature.Hex     `json:"transactionIndex"`
+	Address          evmsignature.Address `json:"address"`
+	Data             evmsignature.Hex     `json:"data"`
+	Topics           []evmsignature.Hex   `json:"topics"`
 }
 
 // Version defines the list of possible json rpc version of server.
@@ -124,7 +123,7 @@ func Send(url string, transaction Transaction) (io.ReadCloser, error) {
 }
 
 // GetOwnersWalletAddress returns owner's wallet address.
-func GetOwnersWalletAddress(body io.ReadCloser) (cryptoutils.Address, error) {
+func GetOwnersWalletAddress(body io.ReadCloser) (evmsignature.Address, error) {
 	var (
 		response ResponseAddress
 		err      error
@@ -134,11 +133,11 @@ func GetOwnersWalletAddress(body io.ReadCloser) (cryptoutils.Address, error) {
 	}()
 
 	err = json.NewDecoder(body).Decode(&response)
-	return cryptoutils.CreateValidAddress(response.Result), err
+	return evmsignature.CreateValidAddress(response.Result), err
 }
 
 // GetAddressOfFilter returns address of new filter.
-func GetAddressOfFilter(body io.ReadCloser) (cryptoutils.Address, error) {
+func GetAddressOfFilter(body io.ReadCloser) (evmsignature.Address, error) {
 	var (
 		response ResponseAddress
 		err      error
@@ -148,7 +147,7 @@ func GetAddressOfFilter(body io.ReadCloser) (cryptoutils.Address, error) {
 	}()
 
 	err = json.NewDecoder(body).Decode(&response)
-	return cryptoutils.Address(response.Result), err
+	return evmsignature.Address(response.Result), err
 }
 
 // ListEvents returns list events of filter.

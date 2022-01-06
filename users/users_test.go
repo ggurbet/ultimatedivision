@@ -8,13 +8,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"ultimatedivision"
 	"ultimatedivision/database/dbtesting"
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/users"
 )
 
@@ -103,7 +103,7 @@ func TestUsers(t *testing.T) {
 		})
 
 		t.Run("update wallet address sql no rows", func(t *testing.T) {
-			err := repository.UpdateWalletAddress(ctx, cryptoutils.Address("wallet_address"), uuid.New())
+			err := repository.UpdateWalletAddress(ctx, evmsignature.Address("wallet_address"), uuid.New())
 			require.Error(t, err)
 			assert.Equal(t, true, users.ErrNoUser.Has(err))
 		})

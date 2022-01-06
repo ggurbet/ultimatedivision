@@ -7,12 +7,12 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/nftdrop/whitelist"
-	"ultimatedivision/pkg/cryptoutils"
 )
 
 var (
@@ -42,7 +42,7 @@ func (controller *Whitelist) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	address := cryptoutils.Address(params["address"])
+	address := evmsignature.Address(params["address"])
 
 	if !address.IsValidAddress() {
 		controller.serveError(w, http.StatusBadRequest, ErrWhitelist.New("invalid address"))

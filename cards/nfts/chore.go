@@ -6,11 +6,11 @@ package nfts
 import (
 	"context"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/pkg/jsonrpc"
 	"ultimatedivision/pkg/sync"
 	"ultimatedivision/users"
@@ -54,18 +54,18 @@ func (chore *Chore) RunNFTSynchronization(ctx context.Context) (err error) {
 		}
 
 		for _, nft := range nfts {
-			data := cryptoutils.Data{
+			data := evmsignature.Data{
 				AddressContractMethod: chore.config.Contract.AddressMethod,
 				TokenID:               nft.TokenID,
 			}
 
-			dataHex := cryptoutils.NewDataHex(data)
+			dataHex := evmsignature.NewDataHex(data)
 			params := jsonrpc.Parameter{
 				To:   chore.config.Contract.Address,
 				Data: dataHex,
 			}
 
-			transaction := jsonrpc.NewTransaction(jsonrpc.MethodEthCall, []interface{}{&params, cryptoutils.BlockTagLatest}, cryptoutils.ChainIDRinkeby)
+			transaction := jsonrpc.NewTransaction(jsonrpc.MethodEthCall, []interface{}{&params, evmsignature.BlockTagLatest}, evmsignature.ChainIDRinkeby)
 			body, err := jsonrpc.Send(chore.config.AddressNodeServer, transaction)
 			if err != nil {
 				return ChoreError.Wrap(err)
@@ -81,7 +81,7 @@ func (chore *Chore) RunNFTSynchronization(ctx context.Context) (err error) {
 			}
 
 			nft := NFT{
-				Chain:         cryptoutils.ChainPolygon,
+				Chain:         evmsignature.ChainPolygon,
 				TokenID:       nft.TokenID,
 				WalletAddress: ownersWalletAddress,
 			}

@@ -3,7 +3,8 @@ module ultimatedivision
 go 1.15
 
 require (
-	github.com/ethereum/go-ethereum v1.10.13
+	github.com/BoostyLabs/evmsignature v0.0.0-20211230083242-81addd1bdfe1
+	github.com/ethereum/go-ethereum v1.10.14
 	github.com/fogleman/gg v1.3.0
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0

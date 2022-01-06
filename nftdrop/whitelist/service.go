@@ -6,10 +6,10 @@ package whitelist
 import (
 	"context"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/pkg/pagination"
 )
 
@@ -34,7 +34,7 @@ func NewService(config Config, whitelist DB) *Service {
 
 // Create adds whitelist in the database.
 func (service *Service) Create(ctx context.Context, wallet CreateWallet) error {
-	var password cryptoutils.Signature
+	var password evmsignature.Signature
 
 	if wallet.PrivateKey != "" {
 		privateKeyECDSA, err := crypto.HexToECDSA(string(wallet.PrivateKey))
@@ -42,7 +42,7 @@ func (service *Service) Create(ctx context.Context, wallet CreateWallet) error {
 			return ErrWhitelist.Wrap(err)
 		}
 
-		password, err = cryptoutils.GenerateSignature(wallet.Address, service.config.NFTSaleContract, privateKeyECDSA)
+		password, err = evmsignature.GenerateSignature(wallet.Address, service.config.NFTSaleContract, privateKeyECDSA)
 		if err != nil {
 			return ErrWhitelist.Wrap(err)
 		}
@@ -56,7 +56,7 @@ func (service *Service) Create(ctx context.Context, wallet CreateWallet) error {
 }
 
 // GetByAddress returns whitelist by address from the database.
-func (service *Service) GetByAddress(ctx context.Context, address cryptoutils.Address) (Transaction, error) {
+func (service *Service) GetByAddress(ctx context.Context, address evmsignature.Address) (Transaction, error) {
 	whitelist, err := service.whitelist.GetByAddress(ctx, address)
 	if err != nil {
 		return Transaction{}, ErrWhitelist.Wrap(err)
@@ -98,12 +98,12 @@ func (service *Service) Update(ctx context.Context, whitelist Wallet) error {
 }
 
 // Delete deletes whitelist.
-func (service *Service) Delete(ctx context.Context, address cryptoutils.Address) error {
+func (service *Service) Delete(ctx context.Context, address evmsignature.Address) error {
 	return ErrWhitelist.Wrap(service.whitelist.Delete(ctx, address))
 }
 
 // SetPassword generates passwords for all whitelist items.
-func (service *Service) SetPassword(ctx context.Context, privateKey cryptoutils.PrivateKey) error {
+func (service *Service) SetPassword(ctx context.Context, privateKey evmsignature.PrivateKey) error {
 	privateKeyECDSA, err := crypto.HexToECDSA(string(privateKey))
 	if err != nil {
 		return ErrWhitelist.Wrap(err)
@@ -115,7 +115,7 @@ func (service *Service) SetPassword(ctx context.Context, privateKey cryptoutils.
 	}
 
 	for _, v := range whitelist {
-		password, err := cryptoutils.GenerateSignature(v.Address, service.config.NFTSaleContract, privateKeyECDSA)
+		password, err := evmsignature.GenerateSignature(v.Address, service.config.NFTSaleContract, privateKeyECDSA)
 		if err != nil {
 			return ErrWhitelist.Wrap(err)
 		}

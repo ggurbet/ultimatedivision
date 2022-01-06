@@ -8,12 +8,12 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards/waitlist"
-	"ultimatedivision/pkg/cryptoutils"
 )
 
 // ensures that waitlistDB implements waitlist.DB.
@@ -30,7 +30,7 @@ type waitlistDB struct {
 }
 
 // Create creates item of wait list in the database.
-func (waitlistDB *waitlistDB) Create(ctx context.Context, cardID uuid.UUID, wallet cryptoutils.Address) error {
+func (waitlistDB *waitlistDB) Create(ctx context.Context, cardID uuid.UUID, wallet evmsignature.Address) error {
 	query := `INSERT INTO waitlist(card_id, wallet_address, password)
 	          VALUES($1,$2,$3)`
 
@@ -146,7 +146,7 @@ func (waitlistDB *waitlistDB) ListWithoutPassword(ctx context.Context) ([]waitli
 }
 
 // Update updates signature of item by token id.
-func (waitlistDB *waitlistDB) Update(ctx context.Context, tokenID int64, password cryptoutils.Signature) error {
+func (waitlistDB *waitlistDB) Update(ctx context.Context, tokenID int64, password evmsignature.Signature) error {
 	query := `UPDATE waitlist
 	          SET password = $1
 	          WHERE token_id = $2`

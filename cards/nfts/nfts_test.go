@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -16,7 +17,6 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/nfts"
 	"ultimatedivision/database/dbtesting"
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/users"
 )
 
@@ -159,15 +159,15 @@ func TestNFTs(t *testing.T) {
 	nft1 := nfts.NFT{
 		CardID:        card1.ID,
 		TokenID:       1,
-		Chain:         cryptoutils.ChainEthereum,
-		WalletAddress: cryptoutils.Address("0x96216849c49358b10257cb55b28ea603c874b05e"),
+		Chain:         evmsignature.ChainEthereum,
+		WalletAddress: evmsignature.Address("0x96216849c49358b10257cb55b28ea603c874b05e"),
 	}
 
 	nft2 := nfts.NFT{
 		CardID:        card2.ID,
 		TokenID:       2,
-		Chain:         cryptoutils.ChainPolygon,
-		WalletAddress: cryptoutils.Address("0x96216849c49358B10254cb55b28eA603c874b05E"),
+		Chain:         evmsignature.ChainPolygon,
+		WalletAddress: evmsignature.Address("0x96216849c49358B10254cb55b28eA603c874b05E"),
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {

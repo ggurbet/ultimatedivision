@@ -8,10 +8,10 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/udts"
 	"ultimatedivision/users"
 )
@@ -73,7 +73,7 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, value big.
 }
 
 // GetByWalletAddressAndNonce returns item of currency wait list by wallet address and nonce.
-func (service *Service) GetByWalletAddressAndNonce(ctx context.Context, walletAddress cryptoutils.Address, nonce int64) (Item, error) {
+func (service *Service) GetByWalletAddressAndNonce(ctx context.Context, walletAddress evmsignature.Address, nonce int64) (Item, error) {
 	item, err := service.currencyWaitList.GetByWalletAddressAndNonce(ctx, walletAddress, nonce)
 	return item, ErrCurrencyWaitlist.Wrap(err)
 }
@@ -91,11 +91,11 @@ func (service *Service) ListWithoutSignature(ctx context.Context) ([]Item, error
 }
 
 // UpdateSignature updates signature of item by wallet address and nonce.
-func (service *Service) UpdateSignature(ctx context.Context, signature cryptoutils.Signature, walletAddress cryptoutils.Address, nonce int64) error {
+func (service *Service) UpdateSignature(ctx context.Context, signature evmsignature.Signature, walletAddress evmsignature.Address, nonce int64) error {
 	return ErrCurrencyWaitlist.Wrap(service.currencyWaitList.UpdateSignature(ctx, signature, walletAddress, nonce))
 }
 
 // Delete deletes item of currency wait list by wallet address and nonce.
-func (service *Service) Delete(ctx context.Context, walletAddress cryptoutils.Address, nonce int64) error {
+func (service *Service) Delete(ctx context.Context, walletAddress evmsignature.Address, nonce int64) error {
 	return ErrCurrencyWaitlist.Wrap(service.currencyWaitList.Delete(ctx, walletAddress, nonce))
 }

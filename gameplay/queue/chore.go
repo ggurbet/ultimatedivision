@@ -8,12 +8,12 @@ import (
 	"math/big"
 	"net/http"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/clubs"
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/pkg/sync"
 	"ultimatedivision/seasons"
 	"ultimatedivision/udts/currencywaitlist"
@@ -314,7 +314,7 @@ func (chore *Chore) FinishWithWinResult(ctx context.Context, winResult WinResult
 	}
 
 	winResult.GameResult.Question = "do you allow us to take your address?"
-	winResult.GameResult.Transaction.Value = cryptoutils.WeiToEthereum(winResult.Value).String()
+	winResult.GameResult.Transaction.Value = evmsignature.WeiToEthereum(winResult.Value).String()
 	winResult.GameResult.Transaction.UDTContract.Address = chore.config.UDTContract.Address
 	if err := winResult.Client.WriteJSON(http.StatusOK, winResult.GameResult); err != nil {
 		chore.log.Error("could not write json", ChoreError.Wrap(err))

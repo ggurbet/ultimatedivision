@@ -8,11 +8,11 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/BoostyLabs/evmsignature"
 	_ "github.com/lib/pq" // using postgres driver
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/nftdrop/whitelist"
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/pkg/pagination"
 )
 
@@ -42,7 +42,7 @@ func (whitelistDB *whitelistDB) Create(ctx context.Context, wallet whitelist.Wal
 }
 
 // GetByAddress returns wallet by address from the data base.
-func (whitelistDB *whitelistDB) GetByAddress(ctx context.Context, address cryptoutils.Address) (whitelist.Wallet, error) {
+func (whitelistDB *whitelistDB) GetByAddress(ctx context.Context, address evmsignature.Address) (whitelist.Wallet, error) {
 	wallet := whitelist.Wallet{}
 	query :=
 		`SELECT
@@ -134,7 +134,7 @@ func (whitelistDB *whitelistDB) totalCount(ctx context.Context) (int, error) {
 }
 
 // Delete deletes wallet from the database.
-func (whitelistDB *whitelistDB) Delete(ctx context.Context, address cryptoutils.Address) error {
+func (whitelistDB *whitelistDB) Delete(ctx context.Context, address evmsignature.Address) error {
 	query := `DELETE FROM whitelist
               WHERE address = $1`
 

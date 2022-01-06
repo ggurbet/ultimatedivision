@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
@@ -16,7 +17,6 @@ import (
 	"ultimatedivision/cards/avatars"
 	"ultimatedivision/cards/nfts"
 	"ultimatedivision/internal/remotefilestorage/storj"
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/pkg/imageprocessing"
 	"ultimatedivision/users"
 )
@@ -74,7 +74,7 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 		return transaction, ErrWaitlist.Wrap(err)
 	}
 
-	client, err := storj.NewClient(service.config.Storj)
+	client, err := storj.NewClient(service.config.FileStorage)
 	if err != nil {
 		return transaction, ErrWaitlist.Wrap(err)
 	}
@@ -158,7 +158,7 @@ func (service *Service) ListWithoutPassword(ctx context.Context) ([]Item, error)
 }
 
 // Update updates signature to nft token.
-func (service *Service) Update(ctx context.Context, tokenID int64, password cryptoutils.Signature) error {
+func (service *Service) Update(ctx context.Context, tokenID int64, password evmsignature.Signature) error {
 	return ErrWaitlist.Wrap(service.waitList.Update(ctx, tokenID, password))
 }
 

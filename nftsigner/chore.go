@@ -7,12 +7,12 @@ import (
 	"context"
 	"time"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards/waitlist"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/pkg/cryptoutils"
 	"ultimatedivision/pkg/sync"
 )
 
@@ -21,9 +21,9 @@ var ChoreError = errs.Class("nft signer chore error")
 
 // ChoreConfig is the global configuration for nftsigner.
 type ChoreConfig struct {
-	RenewalInterval      time.Duration          `json:"renewalInterval"`
-	PrivateKey           cryptoutils.PrivateKey `json:"privateKey"`
-	SmartContractAddress cryptoutils.Address    `json:"smartContractAddress"`
+	RenewalInterval      time.Duration           `json:"renewalInterval"`
+	PrivateKey           evmsignature.PrivateKey `json:"privateKey"`
+	SmartContractAddress evmsignature.Address    `json:"smartContractAddress"`
 }
 
 // Chore requests for unsigned nft tokens and sign all of them .
@@ -60,7 +60,7 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 		}
 
 		for _, token := range unsignedNFTs {
-			signature, err := cryptoutils.GenerateSignatureWithValue(token.Wallet, chore.config.SmartContractAddress, token.TokenID, privateKeyECDSA)
+			signature, err := evmsignature.GenerateSignatureWithValue(token.Wallet, chore.config.SmartContractAddress, token.TokenID, privateKeyECDSA)
 			if err != nil {
 				return ChoreError.Wrap(err)
 			}

@@ -8,12 +8,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/gameplay/matches"
-	"ultimatedivision/pkg/cryptoutils"
 )
 
 // ErrNoClient indicated that client does not exist.
@@ -53,10 +53,10 @@ type Client struct {
 
 // Request entity describes values sent by client.
 type Request struct {
-	Action        Action              `json:"action"`
-	SquadID       uuid.UUID           `json:"squadId"`
-	WalletAddress cryptoutils.Address `json:"walletAddress"`
-	Nonce         int64               `json:"nonce"`
+	Action        Action               `json:"action"`
+	SquadID       uuid.UUID            `json:"squadId"`
+	WalletAddress evmsignature.Address `json:"walletAddress"`
+	Nonce         int64                `json:"nonce"`
 }
 
 // Action defines list of possible clients action.
@@ -85,10 +85,10 @@ type Response struct {
 
 // Config defines configuration for queue.
 type Config struct {
-	PlaceRenewalInterval time.Duration        `json:"placeRenewalInterval"`
-	WinValue             string               `json:"winValue"`
-	DrawValue            string               `json:"drawValue"`
-	UDTContract          cryptoutils.Contract `json:"udtContract"`
+	PlaceRenewalInterval time.Duration         `json:"placeRenewalInterval"`
+	WinValue             string                `json:"winValue"`
+	DrawValue            string                `json:"drawValue"`
+	UDTContract          evmsignature.Contract `json:"udtContract"`
 }
 
 // ReadJSON reads request sent by client.
