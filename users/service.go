@@ -127,8 +127,8 @@ func (service *Service) UpdateWalletAddress(ctx context.Context, wallet evmsigna
 }
 
 // ChangeWalletAddress changes wallet address.
-func (service *Service) ChangeWalletAddress(ctx context.Context, wallet cryptoutils.Address, id uuid.UUID) error {
-	wallet = cryptoutils.Address(strings.ToLower(string(wallet)))
+func (service *Service) ChangeWalletAddress(ctx context.Context, wallet evmsignature.Address, id uuid.UUID) error {
+	wallet = evmsignature.Address(strings.ToLower(string(wallet)))
 
 	user, err := service.GetByWalletAddress(ctx, wallet)
 	if err != nil {
@@ -137,7 +137,7 @@ func (service *Service) ChangeWalletAddress(ctx context.Context, wallet cryptout
 	if user.ID == id {
 		return ErrUsers.New("this address is used by you")
 	}
-	emptyWallet := cryptoutils.Address("")
+	emptyWallet := evmsignature.Address("")
 	err = service.users.UpdateWalletAddress(ctx, emptyWallet, user.ID)
 	if err != nil {
 		return ErrUsers.Wrap(err)
