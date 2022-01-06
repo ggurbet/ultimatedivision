@@ -10,7 +10,6 @@ import { openMarketplaceCard } from '@/app/store/actions/marketplace';
 import { FootballerCardIllustrations } from '@/app/components/common/Card/CardIllustrations';
 import { FootballerCardPrice } from '@/app/components/common/Card/CardPrice';
 import { FootballerCardStatsArea } from '@/app/components/common/Card/CardStatsArea';
-import { FootballerCardInformation } from '@/app/components/common/Card/CardInformation';
 
 import './index.scss';
 
@@ -44,9 +43,8 @@ const Lot: React.FC = () => {
                     </div>
                     <FootballerCardIllustrations card={card} />
                     <div className="lot__stats-area">
-                        <FootballerCardPrice card={card} />
+                        <FootballerCardPrice card={card} isMinted={false} />
                         <FootballerCardStatsArea card={card} />
-                        <FootballerCardInformation card={card} />
                     </div>
                 </div>
             </div>

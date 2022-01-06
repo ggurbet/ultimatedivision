@@ -41,7 +41,7 @@
         justify-content: center;
         width: 70%;
         height: 400px;
-        margin: 500px auto 0 auto;
+        margin: 400px auto 0 auto;
         border-top: 1px solid #675eae;
         border-image: linear-gradient(
             270deg,
@@ -56,20 +56,5 @@
             width: 205px;
             height: 258px;
         }
-    }
-}
-
-@media screen and (max-width: $phoneBreakPoint - 100px) {
-
-    .footballer-card-illustrations-radar {
-        height: 300px;
-        margin: 500px auto 0 auto;
-    }
-}
-
-@media screen and (max-width: $phoneBreakPoint - 200px) {
-
-    .footballer-card-illustrations-radar {
-        margin: 500px auto 0 auto;
     }
 }

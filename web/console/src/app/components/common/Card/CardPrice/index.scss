@@ -4,211 +4,297 @@
 @import "@/index.scss";
 
 .footballer-card-price {
-    width: 90%;
-    margin: 5% 5% 0 auto;
-    border-radius: 15px;
-    padding: 1px;
-    background: linear-gradient(0deg, rgb(40, 40, 70), rgb(89, 89, 148));
+    width: 542px;
+    margin: 5% 5% 0 5%;
+    font-family: "BebasNeue", sans-serif;
 
     &__wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-        padding: 24px 4%;
-        background: $highlightBackground;
-        border-radius: 15px;
-    }
-
-    &__diagram {
-        width: 160px;
-        height: 160px;
-        display: flex;
-        position: relative;
-        margin: 0;
-        padding: 1px;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 10px;
-    }
-
-    &__diagram-value {
-        position: absolute;
-        top: calc(50% - 10px);
-        text-align: center;
-        font-weight: lighter;
-        font-size: 24px;
-    }
-
-    &__diagram-value-quantity {
-        color: $textColor;
-    }
-
-    &__info-area {
-        width: 90%;
-        position: relative;
-        margin: 5%;
         display: flex;
         flex-direction: column;
     }
 
-    &__price {
+    &__info-area {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        width: 542px;
+    }
+
+    &__bid {
         display: flex;
         align-items: center;
-        font-size: 64px;
-        font-weight: 100;
-        margin-bottom: 30px;
 
-        &:after {
-            @extend %pseudoelementsInFootballerCard;
+        .bid {
+            display: flex;
+            flex-direction: column;
 
-            width: 90%;
-            top: 60%;
-            margin-left: 0;
+            &__title {
+                font-style: normal;
+                font-weight: bold;
+                font-size: 18.3913px;
+                line-height: 18px;
+                color: #ffffff;
+            }
+
+            &__value {
+                font-style: normal;
+                font-weight: normal;
+                font-size: 82.7609px;
+                line-height: 99px;
+                color: #ffffff;
+            }
+        }
+
+        &__coin {
+            padding: 18px;
+            margin-top: 13px;
+            
+            img {
+                width: 45px;
+            }
         }
     }
 
-    &__price-currency {
-        margin-left: 8px;
-    }
-
-    &__additional-info {
-        width: 70%;
+    &__auction {
         display: flex;
-        justify-content: space-between;
-        font-size: 18px;
+        flex-direction: column;
+        align-items: flex-end;
+
+        .auction-title {
+            margin-bottom: 8px;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 18.3913px;
+            line-height: 18px;
+            color: #ffffff;
+        }
+
+        .auction-expire-time {
+            margin-bottom: 15px;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 32px;
+            line-height: 38px;
+            color: #ffffff;
+        }
     }
 
-    &__value {
-        color: $textColor;
+    &__buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 28px 0 18px;
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .place-bid {
+            width: 275.97px;
+            height: 42.53px;
+            border: none;
+            background: radial-gradient(
+                    254.55% 254.55% at 50% 50%,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.8) 100%
+                ),
+                linear-gradient(180deg, #5cff79 0%, #3ccf56 100%);
+
+            &__text {
+                font-family: "BebasNeue", sans-serif;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 18.3913px;
+                line-height: 18px;
+                text-align: center;
+                color: #181829;
+                text-transform: uppercase;
+            }
+        }
+
+        .buy-now {
+            display: flex;
+            align-items: center;
+            background: #4f4f8b;
+            width: 258.97px;
+            height: 42.53px;
+            border: none;
+
+            span {
+                font-family: "BebasNeue", sans-serif;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 18.3913px;
+                line-height: 22px;
+                color: #ffffff;
+                text-transform: uppercase;
+            }
+
+            img {
+                padding: 0 5px 0 17px;
+            }
+        }
+    }
+
+    &__last {
+        display: flex;
+        align-items: center;
+
+        .title {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18.3913px;
+            line-height: 22px;
+            color: #9999AC;
+        }
+
+        .value {
+            padding: 0 5px;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18.3913px;
+            line-height: 22px;
+            color: #FFFFFF;
+        }
+
+        img {
+            margin-bottom: 3px;
+            width: 13px;
+            height: 13px;
+        }
     }
 }
 
-@media screen and (max-width: $desktopBreakPoint) {
+.card__sell-btn {
+    width: 248px;
+    height: 33px;
+    margin: 26px 5%;
+    border: none;
+    background: radial-gradient(254.55% 254.55% at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%), linear-gradient(180deg, #5CFF79 0%, #3CCF56 100%);
+    cursor: not-allowed;
 
-    .footballer-card-price {
-
-        &__price {
-            font-size: 48px;
-        }
-
-        &__additional-info {
-            width: 80%;
-            padding-left: 4px;
-            font-size: 18px;
-            text-align: center;
-        }
+    &__text {
+        font-family: "BebasNeue", sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 16px;
+        text-align: center;
+        color: #181829;
+        
     }
 }
 
 @media screen and (max-width: $tabletBreakPoint) {
-
     .footballer-card-price {
-
-        &__diagram {
-            width: 120px;
-            height: 120px;
+        width: 362px;
+    
+        &__info-area {
+            width: 362px;
         }
-
-        &__diagram-value {
-            top: calc(50% - 5px);
-            font-size: 20px;
-        }
-
-        &__price {
-            font-size: 32px;
-
-            &:after {
-                width: 90%;
-                top: 50%;
-                margin-left: 0;
+    
+        &__bid {
+            .bid {
+                &__value {
+                    font-size: 65px;
+                    line-height: 70px;
+                }
+            }
+    
+            &__coin {
+                
+                img {
+                    width: 40px;
+                }
             }
         }
+    
+        &__buttons {
+            .place-bid {
+                width: 175px;
 
-        &__additional-info {
-            width: 90%;
-            padding-left: 4px;
-            font-size: 12px;
-            text-align: center;
-
-            div {
-                display: flex;
-                flex-direction: column;
+                &__text {
+                    margin-top: 3px;
+                }
             }
+    
+            .buy-now {
+                width: 175px;
+    
+                span {
+                    margin-top: 3px;
+                }
+    
+                img {
+                    padding: 0 5px 0 8px;
+                }
+            }
+        }
+    
+        &__last {
+            margin-bottom: 30px;
         }
     }
 }
 
 @media screen and (max-width: $phoneBreakPoint) {
-
     .footballer-card-price {
         position: absolute;
-        margin: -1250px 5% 0 5%;
+        margin: -760px 5% 0 5%;
+        width: 90%;
         border: none;
         background: none;
 
-        &__wrapper {
-            flex-direction: column;
-            background: none;
-        }
-
         &__info-area {
-            align-items: center;
-        }
-
-        &__diagram {
-            width: 224px;
-            height: 224px;
-        }
-
-        &__diagram-value {
-            top: calc(50% - 10px);
-            font-size: 34.9091px;
-            line-height: 42px;
-        }
-
-        &__price {
-            font-size: 64px;
-            line-height: 77px;
-
-            &:after {
-                width: 70%;
-                top: 50%;
-                margin: auto;
-            }
-        }
-
-        &__additional-info {
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             width: 100%;
-            padding-left: 0;
-            font-size: 24px;
-            line-height: 29px;
-            gap: 10px;
-
-            div {
-                display: flex;
-                flex-direction: row;
-
-                span {
-                    padding-left: 5px;
+        }
+    
+        &__bid {
+            .bid {
+                &__value {
+                    font-size: 50px;
+                    line-height: 70px;
+                }
+            }
+    
+            &__coin {
+                
+                img {
+                    width: 35px;
                 }
             }
         }
-    }
-}
+    
+        &__buttons {
+            .place-bid {
+                width: 45%;
 
-@media screen and (max-width: $phoneBreakPoint - 100px) {
-
-    .footballer-card-price {
-        margin: -1100px 5% auto 5%;
-    }
-}
-
-@media screen and (max-width: $phoneBreakPoint - 200px) {
-
-    .footballer-card-price {
-        margin: -1050px 5% auto 5%;
+                &__text {
+                    margin-top: 3px;
+                    font-size: 12px;
+                }
+            }
+    
+            .buy-now {
+                width: 45%;
+    
+                span {
+                    margin-top: 3px;
+                    font-size: 12px;
+                }
+    
+                img {
+                    width: 30px;
+                    padding: 0 5px 0 8px;
+                }
+            }
+        }
+    
+        &__last {
+            margin-bottom: 30px;
+        }
     }
 }

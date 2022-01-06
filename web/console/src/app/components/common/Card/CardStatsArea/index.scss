@@ -10,87 +10,28 @@
     row-gap: 5%;
     column-gap: 10%;
     justify-content: flex-start;
-
-    &:after {
-        @extend %pseudoelementsInFootballerCard;
-
-        bottom: 46%;
-        width: 90%;
-    }
-
-    &:before {
-        @extend %pseudoelementsInFootballerCard;
-
-        bottom: -5%;
-        width: 90%;
-    }
 }
 
 @media screen and (max-width: $desktopBreakPoint) {
-
     .footballer-card-stats {
         grid-template-columns: repeat(3, 29.5%);
         row-gap: 5%;
         column-gap: 5%;
-
-        &:after {
-            bottom: 46%;
-        }
-
-        &:before {
-            bottom: -5%;
-        }
     }
 }
 
 @media screen and (max-width: $tabletBreakPoint) {
-
     .footballer-card-stats {
         grid-template-columns: repeat(3, 29.5%);
         row-gap: 5%;
         column-gap: 5%;
-
-        &:after {
-            @extend %pseudoelementsInFootballerCard;
-
-            bottom: 47%;
-        }
-
-        &:before {
-            @extend %pseudoelementsInFootballerCard;
-
-            bottom: -2%;
-        }
     }
 }
 
 @media screen and (max-width: $tabletBreakPoint - 100px) {
-
     .footballer-card-stats {
         display: flex;
         flex-direction: column;
         height: auto;
-
-        &:after {
-            bottom: 44.5%;
-        }
-
-        &:before {
-            bottom: 0%;
-        }
-    }
-}
-
-@media screen and (max-width: $phoneBreakPoint) {
-
-    .footballer-card-stats {
-
-        &:after {
-            bottom: 45%;
-        }
-
-        &:before {
-            bottom: -1%;
-        }
     }
 }
