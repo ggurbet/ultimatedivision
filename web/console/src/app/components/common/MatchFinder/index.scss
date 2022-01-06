@@ -61,6 +61,7 @@
 
         &__accept,
         &__accept-not-allowed,
+        &__cancel-not-allowed,
         &__cancel {
             cursor: pointer;
             text-align: center;
@@ -72,11 +73,13 @@
             background: linear-gradient($matchFinderMainLinearGradientColor 100%, $matchFinderSecondLinearGradientColor 100%);
         }
 
-        &__accept-not-allow {
+        &__accept-not-allowed,
+        &__cancel-not-allowed {
             cursor: not-allowed;
         }
 
-        &__cancel {
+        &__cancel,
+        &__cancel-not-allowed {
             background: $matchFinderBackground;
             width: 140px;
             border: 2px solid $matchFinderTextColor;

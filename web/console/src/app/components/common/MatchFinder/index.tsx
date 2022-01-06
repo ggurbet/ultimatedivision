@@ -37,6 +37,9 @@ const MatchFinder: React.FC = () => {
     /** Indicates if match is found. */
     const [isMatchFound, setIsMatchFound] = useState<boolean>(false);
 
+    /** Indicates if match is confirmed. */
+    const [isMatchConfirmed, setIsMatchConfirmed] = useState<boolean>(false);
+
     /** CANCEL_GAME_DELAY is time delay for auto cancel game. */
     const CANCEL_GAME_DELAY: number = 30000;
 
@@ -61,13 +64,14 @@ const MatchFinder: React.FC = () => {
 
     /** Sends confirm action. */
     const confirmMatch = () => {
+        setIsMatchConfirmed(true);
         queueSendAction('confirm', squad.id);
     };
 
     /** Canceles confirmation game. */
     const cancelConfirmationGame = () => {
-        queueSendAction('reject', squad.id);
-        setIsRejectedUser(true);
+        !isMatchConfirmed && queueSendAction('reject', squad.id);
+        !isMatchConfirmed && setIsRejectedUser(true);
     };
 
     // TODO: rework after ./queue/chore.go solution.
@@ -156,6 +160,7 @@ const MatchFinder: React.FC = () => {
                 return;
             case YOU_CONFIRM_PLAY_MESSAGE:
                 setIsMatchFound(true);
+                setIsMatchConfirmed(false);
 
                 return;
             case YOU_LEAVED_MESSAGE:
@@ -226,7 +231,7 @@ const MatchFinder: React.FC = () => {
                     type="button"
                 />}
                 {isMatchFound ? <input
-                    className="match-finder__form__cancel"
+                    className={`match-finder__form__cancel${isMatchConfirmed ? '-not-allowed' : ''}`}
                     value="Cancel"
                     type="button"
                     onClick={cancelConfirmationGame}
