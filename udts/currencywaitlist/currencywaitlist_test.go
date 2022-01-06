@@ -77,6 +77,22 @@ func TestCurrencycurrencywaitlist(t *testing.T) {
 			compareItemsSlice(t, itemList, []currencywaitlist.Item{item2, item1})
 		})
 
+		t.Run("Update", func(t *testing.T) {
+			item1.Signature = evmsignature.Signature("")
+
+			var value = new(big.Int)
+			value.SetString("25000000000000000000", 10)
+			item1.Value = *value
+
+			err := repositoryCurrencyWaitList.Update(ctx, item1)
+			require.NoError(t, err)
+
+			itemList, err := repositoryCurrencyWaitList.List(ctx)
+			require.NoError(t, err)
+
+			compareItemsSlice(t, itemList, []currencywaitlist.Item{item2, item1})
+		})
+
 		t.Run("Delete", func(t *testing.T) {
 			err := repositoryCurrencyWaitList.Delete(ctx, item1.WalletAddress, item1.Nonce)
 			require.NoError(t, err)

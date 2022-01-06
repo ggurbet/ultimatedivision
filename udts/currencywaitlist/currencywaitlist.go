@@ -27,6 +27,8 @@ type DB interface {
 	List(ctx context.Context) ([]Item, error)
 	// ListWithoutSignature returns items of currency waitlist without signature from database.
 	ListWithoutSignature(ctx context.Context) ([]Item, error)
+	// Update updates item by wallet address and nonce in the database.
+	Update(ctx context.Context, item Item) error
 	// Update updates signature of item by wallet address and nonce in the database.
 	UpdateSignature(ctx context.Context, signature evmsignature.Signature, walletAddress evmsignature.Address, nonce int64) error
 	// Delete deletes item of currency waitlist by wallet address and nonce in the database.
