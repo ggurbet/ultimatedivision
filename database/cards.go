@@ -210,7 +210,7 @@ func (cardsDB *cardsDB) ListByUserID(ctx context.Context, id uuid.UUID, cursor p
 		return userCardsPage, ErrCard.Wrap(err)
 	}
 
-	totalCount, err := cardsDB.totalCount(ctx)
+	totalCount, err := cardsDB.totalCountWithFilters(ctx, "WHERE user_id = $1", []interface{}{id})
 	if err != nil {
 		return userCardsPage, ErrCard.Wrap(err)
 	}
