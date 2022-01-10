@@ -6,6 +6,7 @@
     animation: darken 1s 0 1 normal forwards;
 
     @keyframes darken {
+
         from {
             opacity: 0;
         }
@@ -61,10 +62,10 @@
         padding: 10px 70px;
         z-index: 2;
         background: radial-gradient(
-                254.55% 254.55% at 50% 50%,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.8) 100%
-            ),
+            254.55% 254.55% at 50% 50%,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.8) 100%
+        ),
             linear-gradient(180deg, #5cff79 0%, #3ccf56 100%);
         border: none;
         cursor: pointer;
@@ -105,7 +106,9 @@
 }
 
 @media (max-width: $tabletBreakPoint) {
+
     .box-keeping {
+
         &__card-wrapper {
             row-gap: 20px;
             width: 100%;
@@ -126,7 +129,9 @@
 }
 
 @media (max-width: $phoneBreakPoint) {
+
     .box-keeping {
+
         &__title {
             font-size: 32px;
             font-weight: normal;
@@ -164,7 +169,9 @@
 }
 
 @media (max-width: 330px) {
+
     .box-keeping {
+
         &__title {
             margin-left: 30px;
         }

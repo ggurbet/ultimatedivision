@@ -86,7 +86,7 @@ const FootballField: React.FC = () => {
     /** TO DO: ADD TYPE FOR Event */
     function drop(e: any) {
         if (e.target.className === 'football-field__wrapper') {
-            dragStartIndex &&
+            dragStartIndex !== null &&
                 dispatch(
                     deleteCard(
                         new CardEditIdentificators(

@@ -111,7 +111,7 @@ export const FieldPlayingArea: React.FC = () => {
 
     /** deleting card when release beyond playing area */
     function removeFromArea() {
-        if (isDragging && dragStartIndex) {
+        if (isDragging && dragStartIndex !== null) {
             dispatch(deleteCard(
                 new CardEditIdentificators(squad.clubId, squad.id, club.squadCards[dragStartIndex].card.id, dragStartIndex))
             );
