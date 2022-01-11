@@ -270,27 +270,29 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		Database: db,
 	}
 
-	{ // email setup
-		from, err := mail.ParseAddress(config.Console.Emails.From)
-		if err != nil {
-			logger.Error("email address is not valid", err)
-			return nil, err
+	{ // emails setup
+		var sender mail2.Sender
+		if config.Console.Emails.Provider == "mock" {
+			sender = &mail2.MockSender{}
+		} else {
+			from, err := mail.ParseAddress(config.Console.Emails.From)
+			if err != nil {
+				logger.Error("invalid email address", errs.Wrap(err))
+				return nil, err
+			}
+
+			sender = &mail2.SMTPSender{
+				From: *from,
+				Auth: mail2.LoginAuth{
+					Password: config.Console.Emails.PlainPassword,
+					Username: config.Console.Emails.PlainLogin,
+				},
+				ServerAddress: config.Console.Emails.SMTPServerAddress,
+			}
 		}
 
-		sender := mail2.SMTPSender{
-			ServerAddress: config.Console.Emails.SMTPServerAddress,
-			From:          *from,
-			Auth: mail2.LoginAuth{
-				Username: config.Console.Emails.PlainLogin,
-				Password: config.Console.Emails.PlainPassword,
-			},
-		}
-
-		peer.Console.EmailService = emails.NewService(
-			logger,
-			&sender,
-			config.Console.Emails,
-		)
+		mailService := emails.NewService(peer.Log, sender, config.Console.Emails)
+		peer.Console.EmailService = mailService
 	}
 
 	{ // users setup

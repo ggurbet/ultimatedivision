@@ -11,8 +11,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"runtime"
-	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/zeebo/errs"
@@ -20,6 +18,7 @@ import (
 	"ultimatedivision"
 	"ultimatedivision/database"
 	"ultimatedivision/internal/logger/zaplog"
+	"ultimatedivision/pkg/fileutils"
 )
 
 // Error is a default error type for ultimatedivision cli.
@@ -73,7 +72,7 @@ var (
 	setupCfg Config
 	runCfg   Config
 
-	defaultConfigDir = ApplicationDir("ultimatedivision")
+	defaultConfigDir = fileutils.ApplicationDir("ultimatedivision")
 )
 
 func init() {
@@ -241,44 +240,4 @@ func readConfig() (config Config, err error) {
 	}
 
 	return config, json.Unmarshal(configBytes, &config)
-}
-
-// ApplicationDir returns best base directory for specific OS.
-func ApplicationDir(subdir ...string) string {
-	for i := range subdir {
-		if runtime.GOOS == "windows" || runtime.GOOS == "darwin" {
-			subdir[i] = strings.Title(subdir[i])
-		} else {
-			subdir[i] = strings.ToLower(subdir[i])
-		}
-	}
-
-	var appdir string
-
-	home := os.Getenv("HOME")
-	//
-	switch runtime.GOOS {
-	case "windows":
-		// Windows standards: https://msdn.microsoft.com/en-us/library/windows/apps/hh465094.aspx?f=255&MSPPError=-2147217396
-		for _, env := range []string{"AppData", "AppDataLocal", "UserProfile", "Home"} {
-			val := os.Getenv(env)
-			if val != "" {
-				appdir = val
-				break
-			}
-		}
-	case "darwin":
-		// Mac standards: https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/MacOSXDirectories/MacOSXDirectories.html
-		appdir = filepath.Join(home, "Library", "Application Support")
-	case "linux":
-		fallthrough
-	default:
-		// Linux standards: https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
-		appdir = os.Getenv("XDG_DATA_HOME")
-		if appdir == "" && home != "" {
-			appdir = filepath.Join(home, ".local", "share")
-		}
-	}
-
-	return filepath.Join(append([]string{appdir}, subdir...)...)
 }
