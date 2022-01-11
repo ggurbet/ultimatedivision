@@ -14,7 +14,7 @@ import (
 
 	"ultimatedivision"
 	"ultimatedivision/database/dbtesting"
-	"ultimatedivision/lootboxes"
+	"ultimatedivision/store/lootboxes"
 	"ultimatedivision/users"
 )
 

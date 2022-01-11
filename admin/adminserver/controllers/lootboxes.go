@@ -12,7 +12,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/lootboxes"
+	"ultimatedivision/store/lootboxes"
 )
 
 // ErrLootBoxes is an internal error type for loot boxes controller.

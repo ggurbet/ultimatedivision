@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/lootboxes"
+	"ultimatedivision/store/lootboxes"
 )
 
 // ensures that lootboxDB implements lootbox.DB.

@@ -18,8 +18,8 @@ import (
 	"ultimatedivision/divisions"
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/internal/mail"
-	"ultimatedivision/lootboxes"
 	"ultimatedivision/seasons"
+	"ultimatedivision/store/lootboxes"
 	"ultimatedivision/users"
 )
 

@@ -26,11 +26,12 @@ import (
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/pkg/auth"
 	mail2 "ultimatedivision/pkg/mail"
 	"ultimatedivision/seasons"
+	"ultimatedivision/store"
+	"ultimatedivision/store/lootboxes"
 	"ultimatedivision/udts"
 	"ultimatedivision/udts/currencywaitlist"
 	"ultimatedivision/users"
@@ -85,6 +86,9 @@ type DB interface {
 
 	// UDTs provides access to udts db.
 	UDTs() udts.DB
+
+	// Store provides access to store db.
+	Store() store.DB
 
 	// Close closes underlying db connection.
 	Close() error

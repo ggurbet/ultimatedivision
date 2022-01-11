@@ -12,8 +12,8 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/lootboxes"
 	"ultimatedivision/pkg/auth"
+	"ultimatedivision/store/lootboxes"
 )
 
 var (

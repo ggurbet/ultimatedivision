@@ -10,7 +10,6 @@ import (
 	"net"
 	"net/http"
 	"path/filepath"
-	"ultimatedivision/seasons"
 
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
@@ -27,9 +26,10 @@ import (
 	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/templatefuncs"
-	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/pkg/auth"
+	"ultimatedivision/seasons"
+	"ultimatedivision/store/lootboxes"
 	"ultimatedivision/users"
 )
 

@@ -21,10 +21,10 @@ import (
 	"ultimatedivision/console/consoleserver/controllers"
 	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/lootboxes"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/pkg/auth"
 	"ultimatedivision/seasons"
+	"ultimatedivision/store/lootboxes"
 	"ultimatedivision/users"
 	"ultimatedivision/users/userauth"
 )
