@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { PlayerCard } from '@components/common/PlayerCard';
@@ -13,30 +13,51 @@ import { RootState } from '@/app/store';
 
 import './index.scss';
 
-export const FootballerCard: React.FC<{ card: Card; index?: number; place?: string }> = ({ card }) => {
-    const dispatch = useDispatch();
-    const squad = useSelector((state: RootState) => state.clubsReducer.activeClub.squad);
-    const [isVisibile, setIsVisibile] = useState(false);
-    const visibilityBlock = isVisibile ? '-active' : '-inactive';
+type FootballerCardProps = {
+    card: Card;
+    index?: number;
+    place?: string;
+    setTargetCard: (targerCard: Element | null) => void;
+    targerCard: Element | null;
+};
 
-    /** show/hide delete block, preventing scroll to cardSelection */
-    function handleVisibility(e: React.MouseEvent<HTMLInputElement>) {
-        e.stopPropagation();
-        setIsVisibile((prevVisability) => !prevVisability);
-    }
-    /** remove player card implementation */
+export const FootballerCard: React.FC<FootballerCardProps> = ({
+    card,
+    index,
+    setTargetCard,
+    targerCard,
+}) => {
+    const dispatch = useDispatch();
+    const squad = useSelector(
+        (state: RootState) => state.clubsReducer.activeClub.squad
+    );
+
+    /** Remove player card implementation. */
     function handleDeletion(e: React.MouseEvent<HTMLInputElement>) {
         e.stopPropagation();
         e.preventDefault();
-        dispatch(deleteCard(new CardEditIdentificators(squad.clubId, squad.id, card.id)));
+
+        dispatch(
+            deleteCard(
+                new CardEditIdentificators(squad.clubId, squad.id, card.id)
+            )
+        );
     }
 
+    /** Changing the state of a card class. */
+    const visibilityBlock =
+        targerCard && parseInt(targerCard.id) === index ? '-active' : '-inactive';
+
     return (
-        <div onClick={handleVisibility} className="footballer-card">
+        <div className="footballer-card">
             <div
                 className={`football-field-card__wrapper${visibilityBlock}`}
             ></div>
-            <PlayerCard id={card.id} className="footballer-card" />
+            <PlayerCard
+                id={card.id}
+                className="footballer-card"
+                index={index}
+            />
             <div
                 onClick={handleDeletion}
                 className={`footballer-card__control${visibilityBlock}`}

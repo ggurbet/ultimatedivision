@@ -25,18 +25,32 @@ import './index.scss';
 export const FieldPlayingArea: React.FC = () => {
     const dispatch = useDispatch();
 
-    const cards = useSelector((state: RootState) => state.cardsReducer.cardsPage.cards);
-    const formation = useSelector((state: RootState) => state.clubsReducer.activeClub.squad.formation);
-    const dragStartIndex = useSelector((state: RootState) => state.clubsReducer.options.dragStart);
-    const club = useSelector((state: RootState) => state.clubsReducer.activeClub);
-    const squad = useSelector((state: RootState) => state.clubsReducer.activeClub.squad);
+    const cards = useSelector(
+        (state: RootState) => state.cardsReducer.cardsPage.cards
+    );
+    const formation = useSelector(
+        (state: RootState) => state.clubsReducer.activeClub.squad.formation
+    );
+    const dragStartIndex = useSelector(
+        (state: RootState) => state.clubsReducer.options.dragStart
+    );
+    const club = useSelector(
+        (state: RootState) => state.clubsReducer.activeClub
+    );
+    const squad = useSelector(
+        (state: RootState) => state.clubsReducer.activeClub.squad
+    );
 
+    const [targerCard, setTargetCard] = useState<Element | null>(null);
     /** MouseMove event Position */
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     /** This var created to not allow mouseUpEvent without Dragging before it */
     const [isDragging, handleDrag] = useState(false);
     /** Playing area position */
-    const [playingAreaPosition, setplayingAreaPosition] = useState({ x: 0, y: 0 });
+    const [playingAreaPosition, setplayingAreaPosition] = useState({
+        x: 0,
+        y: 0,
+    });
 
     const DEFAULT_VALUE = 0;
     const X_SCROLL_POINT = 0;
@@ -64,12 +78,16 @@ export const FieldPlayingArea: React.FC = () => {
     }
 
     /** Add card position, and shows card selection */
-    function handleClick(index: number) {
-        dispatch(choosePosition(index));
-        dispatch(cardSelectionVisibility(true));
-        setTimeout(() => {
-            window.scroll(X_SCROLL_POINT, Y_SCROLL_POINT);
-        }, DELAY);
+    function handleClick(index: number, e: React.MouseEvent<HTMLDivElement>) {
+        const target = e.target as Element;
+
+        if (target.className.includes('empty')) {
+            dispatch(choosePosition(index));
+            dispatch(cardSelectionVisibility(true));
+            setTimeout(() => {
+                window.scroll(X_SCROLL_POINT, Y_SCROLL_POINT);
+            }, DELAY);
+        }
     }
 
     /** getting dragged card index and changing state to allow mouseUp */
@@ -88,15 +106,33 @@ export const FieldPlayingArea: React.FC = () => {
         e.stopPropagation();
         if (isDragging && dragStartIndex !== null) {
             const cards = club.squadCards;
-            isCardDefined(cards[index].card.id) ?
-                dispatch(swapCards(
-                    new CardEditIdentificators(squad.clubId, squad.id, cards[dragStartIndex].card.id, index),
-                    new CardEditIdentificators(squad.clubId, squad.id, cards[index].card.id, dragStartIndex)
-                ))
-                :
-                dispatch(changeCardPosition(
-                    new CardEditIdentificators(squad.clubId, squad.id, cards[dragStartIndex].card.id, index),
-                ));
+            isCardDefined(cards[index].card.id)
+                ? dispatch(
+                    swapCards(
+                        new CardEditIdentificators(
+                            squad.clubId,
+                            squad.id,
+                            cards[dragStartIndex].card.id,
+                            index
+                        ),
+                        new CardEditIdentificators(
+                            squad.clubId,
+                            squad.id,
+                            cards[index].card.id,
+                            dragStartIndex
+                        )
+                    )
+                )
+                : dispatch(
+                    changeCardPosition(
+                        new CardEditIdentificators(
+                            squad.clubId,
+                            squad.id,
+                            cards[dragStartIndex].card.id,
+                            index
+                        )
+                    )
+                );
         }
 
         dispatch(setDragStart());
@@ -112,13 +148,35 @@ export const FieldPlayingArea: React.FC = () => {
     /** deleting card when release beyond playing area */
     function removeFromArea() {
         if (isDragging && dragStartIndex !== null) {
-            dispatch(deleteCard(
-                new CardEditIdentificators(squad.clubId, squad.id, club.squadCards[dragStartIndex].card.id, dragStartIndex))
+            dispatch(
+                deleteCard(
+                    new CardEditIdentificators(
+                        squad.clubId,
+                        squad.id,
+                        club.squadCards[dragStartIndex].card.id,
+                        dragStartIndex
+                    )
+                )
             );
         }
         dispatch(setDragStart());
         handleDrag(false);
     }
+
+    /** Show/hide delete block, preventing scroll to cardSelection. */
+    const handleVisibility = (e: React.MouseEvent<HTMLInputElement>): void => {
+        e.stopPropagation();
+
+        const target = e.target as Element;
+
+        if (target && target.id !== targerCard?.id) {
+            setTargetCard(target);
+
+            return;
+        }
+
+        setTargetCard(null);
+    };
 
     return (
         <div
@@ -126,6 +184,7 @@ export const FieldPlayingArea: React.FC = () => {
             onMouseMove={(ev) => useMousePosition(ev)}
             onMouseUp={removeFromArea}
             style={isDragging ? { cursor: 'not-allowed' } : {}}
+            onClick={handleVisibility}
         >
             <div className="playing-area" id="playingArea">
                 <div
@@ -141,19 +200,26 @@ export const FieldPlayingArea: React.FC = () => {
                             return (
                                 <div
                                     style={
-                                        isDragging ? {
-                                            left: mousePosition.x - playingAreaPosition.x,
-                                            top: mousePosition.y - playingAreaPosition.y,
-                                            transform: 'translate(-55%, -50%)',
-                                            zIndex: 5,
-                                            pointerEvents: 'none',
-                                        }
+                                        isDragging
+                                            ? {
+                                                left:
+                                                      mousePosition.x -
+                                                      playingAreaPosition.x,
+                                                top:
+                                                      mousePosition.y -
+                                                      playingAreaPosition.y,
+                                                transform:
+                                                      'translate(-55%, -50%)',
+                                                zIndex: 5,
+                                                pointerEvents: 'none',
+                                            }
                                             : undefined
                                     }
                                     key={index}
-                                    className={`playing-area__${formation}__${isDefined ? 'card' : 'empty-card'
+                                    className={`playing-area__${formation}__${
+                                        isDefined ? 'card' : 'empty-card'
                                     }`}
-                                    onClick={() => handleClick(index)}
+                                    onClick={(e) => handleClick(index, e)}
                                     onDragStart={(e) => dragStart(e, index)}
                                     onMouseUp={(e) => onMouseUp(e, index)}
                                     draggable={true}
@@ -163,11 +229,14 @@ export const FieldPlayingArea: React.FC = () => {
                                             card={fieldCard.card}
                                             index={index}
                                             place={'PlayingArea'}
+                                            setTargetCard={setTargetCard}
+                                            targerCard={targerCard}
                                         />
                                     }
                                 </div>
                             );
-                        })}
+                        }
+                    )}
                 </div>
                 <div className={`playing-area__${formation}-shadows`}>
                     {club.squadCards.map(

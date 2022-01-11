@@ -39,8 +39,6 @@ const FootballField: React.FC = () => {
 
                     setLocalStorageItem('IS_LOGGINED', false);
 
-                    setLocalStorageItem('IS_LOGGINED', false);
-
                     return;
                 }
 
