@@ -43,6 +43,8 @@ type DB interface {
 	GetNickNameByID(ctx context.Context, id uuid.UUID) (string, error)
 	// UpdateLastLogin updates last login time.
 	UpdateLastLogin(ctx context.Context, id uuid.UUID) error
+	// UpdateEmail updates an email address in the database.
+	UpdateEmail(ctx context.Context, id uuid.UUID, newEmail string) error
 }
 
 // Status defines the list of possible user statuses.

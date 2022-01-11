@@ -64,7 +64,7 @@ func (service *Service) SendVerificationEmail(email, token string) error {
 	verificationMessage.Subject = "confirm your email"
 	verificationMessage.From = mail.Address{Address: service.config.From}
 
-	return service.sender.SendEmail(&verificationMessage)
+	return Error.Wrap(service.sender.SendEmail(&verificationMessage))
 }
 
 // SendResetPasswordEmail is used to send email with verification link.
@@ -78,5 +78,19 @@ func (service *Service) SendResetPasswordEmail(email, token string) error {
 	verificationMessage.Subject = "reset your password"
 	verificationMessage.From = mail.Address{Address: service.config.From}
 
-	return service.sender.SendEmail(&verificationMessage)
+	return Error.Wrap(service.sender.SendEmail(&verificationMessage))
+}
+
+// SendVerificationEmailForChangeEmail is used to send email with verification link.
+func (service *Service) SendVerificationEmailForChangeEmail(email, token string) error {
+	var verificationMessage mail.Message
+	url := "change-email"
+
+	verificationMessage.To = []mail.Address{{Address: email, Name: "Verify"}}
+	verificationMessage.Date = time.Now().UTC()
+	verificationMessage.PlainText = fmt.Sprintf("%s/%s?token=%s", service.config.Domain, url, token)
+	verificationMessage.Subject = "confirm your email"
+	verificationMessage.From = mail.Address{Address: service.config.From}
+
+	return Error.Wrap(service.sender.SendEmail(&verificationMessage))
 }

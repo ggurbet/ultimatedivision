@@ -87,7 +87,7 @@ func (auth *Auth) ConfirmEmail(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	token := params["token"]
 	if token == "" {
-		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(errors.New("Unable to confirm address. Missing token")))
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("unable to confirm address. Missing token"))
 		return
 	}
 	err := auth.userAuth.ConfirmUserEmail(ctx, token)
@@ -396,4 +396,67 @@ func (auth *Auth) MetamaskLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	auth.cookie.SetTokenCookie(w, authToken)
+}
+
+// SendEmailForChangeEmail sends email for change users email.
+func (auth *Auth) SendEmailForChangeEmail(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	var err error
+	var request users.CreateUserFields
+	if err = json.NewDecoder(r.Body).Decode(&request); err != nil {
+		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
+		return
+	}
+
+	if request.Email == "" {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("you did not enter email address"))
+		return
+	}
+
+	err = auth.userAuth.SendEmailForChangeEmail(ctx, request.Email)
+	if err != nil {
+		auth.log.Error("Unable to change email address", AuthError.Wrap(err))
+		switch {
+		case users.ErrNoUser.Has(err):
+			auth.serveError(w, http.StatusNotFound, AuthError.Wrap(err))
+		case userauth.ErrUnauthenticated.Has(err):
+			auth.serveError(w, http.StatusUnauthorized, AuthError.Wrap(err))
+		default:
+			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		}
+
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode("success"); err != nil {
+		auth.log.Error("failed to write json response", AuthError.Wrap(err))
+		return
+	}
+}
+
+// ChangeEmail changes users email.
+func (auth *Auth) ChangeEmail(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	params := mux.Vars(r)
+	token := params["token"]
+	if token == "" {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("unable to confirm address. Missing token"))
+		return
+	}
+
+	err := auth.userAuth.ChangeEmail(ctx, token)
+	if userauth.ErrPermission.Has(err) {
+		auth.log.Error("Permission denied", AuthError.Wrap(err))
+		auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(errors.New("permission denied")))
+		return
+	}
+	if err != nil {
+		auth.log.Error("Unable to confirm address", AuthError.Wrap(err))
+		auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		return
+	}
 }

@@ -226,3 +226,20 @@ func (usersDB *usersDB) UpdateLastLogin(ctx context.Context, id uuid.UUID) error
 
 	return ErrUsers.Wrap(err)
 }
+
+// UpdateEmail updates an email address in the database.
+func (usersDB *usersDB) UpdateEmail(ctx context.Context, id uuid.UUID, newEmail string) error {
+	emailNormalized := mail.Normalize(newEmail)
+	result, err := usersDB.conn.ExecContext(ctx, "UPDATE users SET email=$1, email_normalized=$2 WHERE id=$3",
+		newEmail, emailNormalized, id)
+	if err != nil {
+		return ErrUsers.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return users.ErrNoUser.New("user does not exist")
+	}
+
+	return ErrUsers.Wrap(err)
+}
