@@ -119,7 +119,7 @@ export const FilterByVersion: React.FC<{
                 className="filter-item__dropdown-active__checkbox"
                 type="checkbox"
                 checked={isWoodQuality}
-                onClick={chooseWoodQuality}
+                onChange={chooseWoodQuality}
             />
             <label
                 className="filter-item__dropdown-active__text"
