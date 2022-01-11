@@ -21,6 +21,8 @@ type DB interface {
 	Create(ctx context.Context, setting Setting) error
 	// Get returns setting of store by id from database.
 	Get(ctx context.Context, id int) (Setting, error)
+	// List returns settings of store from database.
+	List(ctx context.Context) ([]Setting, error)
 	// Update updates setting of store in the database.
 	Update(ctx context.Context, setting Setting) error
 }

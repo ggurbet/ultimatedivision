@@ -39,6 +39,13 @@ func TestStore(t *testing.T) {
 			compareStoreSlice(t, []store.Setting{settingGet}, []store.Setting{setting1})
 		})
 
+		t.Run("List", func(t *testing.T) {
+			settingList, err := repositoryStore.List(ctx)
+			require.NoError(t, err)
+
+			compareStoreSlice(t, settingList, []store.Setting{setting1})
+		})
+
 		t.Run("Update", func(t *testing.T) {
 			setting1.CardsAmount = 15
 			setting1.IsRenewal = false

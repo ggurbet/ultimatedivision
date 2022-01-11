@@ -29,6 +29,7 @@ import (
 	"ultimatedivision/marketplace"
 	"ultimatedivision/pkg/auth"
 	"ultimatedivision/seasons"
+	"ultimatedivision/store"
 	"ultimatedivision/store/lootboxes"
 	"ultimatedivision/users"
 )
@@ -74,6 +75,7 @@ type Server struct {
 		queue       controllers.QueueTemplates
 		divisions   controllers.DivisionsTemplates
 		match       controllers.MatchesTemplate
+		store       controllers.StoreTemplates
 	}
 
 	cards.PercentageQualities
@@ -83,7 +85,7 @@ type Server struct {
 func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service,
 	admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities,
 	avatars *avatars.Service, marketplace *marketplace.Service, lootboxes *lootboxes.Service, clubs *clubs.Service,
-	queue *queue.Service, divisions *divisions.Service, matches *matches.Service, seasons *seasons.Service) (*Server, error) {
+	queue *queue.Service, divisions *divisions.Service, matches *matches.Service, seasons *seasons.Service, store *store.Service) (*Server, error) {
 	server := &Server{
 		log:    log,
 		config: config,
@@ -181,6 +183,12 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	divisionsRouter.HandleFunc("", divisionsController.List).Methods(http.MethodGet)
 	divisionsRouter.HandleFunc("/create", divisionsController.Create).Methods(http.MethodGet, http.MethodPost)
 	divisionsRouter.HandleFunc("/delete/{id}", divisionsController.Delete).Methods(http.MethodGet)
+
+	storeRouter := router.PathPrefix("/store").Subrouter()
+	storeRouter.Use(server.withAuth)
+	storeController := controllers.NewStore(log, store, server.templates.store)
+	storeRouter.HandleFunc("", storeController.List).Methods(http.MethodGet)
+	storeRouter.HandleFunc("/update/{id}", storeController.Update).Methods(http.MethodGet, http.MethodPost)
 
 	server.server = http.Server{
 		Handler: router,
@@ -361,8 +369,16 @@ func (server *Server) initializeTemplates() (err error) {
 	if err != nil {
 		return err
 	}
-
 	server.templates.divisions.Create, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "divisions", "create.html"))
+	if err != nil {
+		return err
+	}
+
+	server.templates.store.List, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "store", "list.html"))
+	if err != nil {
+		return err
+	}
+	server.templates.store.Update, err = template.ParseFiles(filepath.Join(server.config.StaticDir, "store", "update.html"))
 	if err != nil {
 		return err
 	}

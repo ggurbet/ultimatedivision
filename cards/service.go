@@ -50,7 +50,7 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentage
 	if card, err = service.Generate(ctx, userID, percentageQualities); err != nil {
 		return card, ErrCards.Wrap(err)
 	}
-	return card, service.cards.Create(ctx, card)
+	return card, ErrCards.Wrap(service.cards.Create(ctx, card))
 }
 
 // Generate generates card.

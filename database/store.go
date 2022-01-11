@@ -49,6 +49,31 @@ func (storeDB *storeDB) Get(ctx context.Context, id int) (store.Setting, error) 
 	return setting, ErrStore.Wrap(err)
 }
 
+// List returns settings of store from database.
+func (storeDB *storeDB) List(ctx context.Context) ([]store.Setting, error) {
+	var settings []store.Setting
+	query := `SELECT * FROM store`
+
+	rows, err := storeDB.conn.QueryContext(ctx, query)
+	if err != nil {
+		return settings, ErrNFTs.Wrap(err)
+	}
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	for rows.Next() {
+		var setting store.Setting
+
+		if err = rows.Scan(&setting.ID, &setting.CardsAmount, &setting.IsRenewal, &setting.DateRenewal); err != nil {
+			return settings, ErrStore.Wrap(err)
+		}
+		settings = append(settings, setting)
+	}
+
+	return settings, ErrStore.Wrap(rows.Err())
+}
+
 // Update updates setting of store in the database.
 func (storeDB *storeDB) Update(ctx context.Context, setting store.Setting) error {
 	query := `UPDATE store

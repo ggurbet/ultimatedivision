@@ -253,6 +253,11 @@ type Peer struct {
 		Service *udts.Service
 	}
 
+	// exposes store related logic.
+	Store struct {
+		Service *store.Service
+	}
+
 	// Admin web server server with web UI.
 	Admin struct {
 		Listener net.Listener
@@ -473,6 +478,12 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
+	{ // store setup
+		peer.Store.Service = store.NewService(
+			peer.Database.Store(),
+		)
+	}
+
 	{ // admin setup
 		peer.Admin.Listener, err = net.Listen("tcp", config.Admins.Server.Address)
 		if err != nil {
@@ -496,6 +507,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Divisions.Service,
 			peer.Matches.Service,
 			peer.Seasons.Service,
+			peer.Store.Service,
 		)
 		if err != nil {
 			return nil, err
