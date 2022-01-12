@@ -17,7 +17,7 @@ import { ServicePlugin } from '@/app/plugins/service';
 import './index.scss';
 
 const Card: React.FC = () => {
-    const [isMinted, setIsMinted] = useState<boolean>(true);
+    const [isMinted, setIsMinted] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const { card } = useSelector((state: RootState) => state.cardsReducer);

@@ -37,7 +37,7 @@ export const FootballerCardPrice: React.FC<{ card: Card; isMinted: boolean }> = 
     return (
         <>
             {isOpenSellPopup && <Sell setIsOpenSellPopup={setIsOpenSellPopup} />}
-            {!isMinted
+            {isMinted
                 ?
                 <div className="footballer-card-price">
                     {isOpenPlaceBidPopup &&
