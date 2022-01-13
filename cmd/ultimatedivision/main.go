@@ -19,6 +19,7 @@ import (
 	"ultimatedivision/database"
 	"ultimatedivision/internal/logger/zaplog"
 	"ultimatedivision/pkg/fileutils"
+	"ultimatedivision/seed"
 )
 
 // Error is a default error type for ultimatedivision cli.
@@ -155,6 +156,19 @@ func cmdRun(cmd *cobra.Command, args []string) (err error) {
 	peer, err := ultimatedivision.New(log, runCfg.Config, db)
 	if err != nil {
 		log.Error("Error starting ultimatedivision bank service", Error.Wrap(err))
+		return Error.Wrap(err)
+	}
+
+	err = peer.Divisions.Service.CreateDivisions(ctx, seed.Divisions)
+	if err != nil {
+		log.Error("Error starting ultimatedivision create divisions", Error.Wrap(err))
+		return Error.Wrap(err)
+	}
+
+	// TODO: remove after fixing bug with matches
+	err = peer.Seasons.Service.Create(ctx)
+	if err != nil {
+		log.Error("Error starting ultimatedivision create seasons", Error.Wrap(err))
 		return Error.Wrap(err)
 	}
 

@@ -170,7 +170,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
         );
         CREATE TABLE IF NOT EXISTS divisions (
             id              BYTEA   PRIMARY KEY      NOT NULL,
-            name            INTEGER                  NOT NULL,
+            name            INTEGER UNIQUE           NOT NULL,
             passing_percent INTEGER                  NOT NULL,
             created_at      TIMESTAMP WITH TIME ZONE NOT NULL
         );
