@@ -53,7 +53,7 @@ func (service *Service) Generate(ctx context.Context, nameFile int, playerName s
 		service.config.PercentageQualities.Diamond,
 	}
 
-	card, err := service.cards.Generate(ctx, uuid.Nil, percentageQualities)
+	card, err := service.cards.Generate(ctx, uuid.Nil, percentageQualities, cards.TypeWon)
 	if err != nil {
 		return nft.NFT{}, ErrCardAvatars.Wrap(err)
 	}
@@ -85,7 +85,7 @@ func (service *Service) TestGenerate(ctx context.Context, count int) ([]avatars.
 
 	for i := 0; i < count; i++ {
 		var cardAvatar CardAvatars
-		if cardAvatar.Card, err = service.cards.Generate(ctx, id, percentageQualities); err != nil {
+		if cardAvatar.Card, err = service.cards.Generate(ctx, id, percentageQualities, cards.TypeWon); err != nil {
 			return nil, ErrCardAvatars.Wrap(err)
 		}
 

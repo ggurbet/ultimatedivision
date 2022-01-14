@@ -28,9 +28,9 @@ type storeDB struct {
 
 // Create creates setting of store in the database.
 func (storeDB *storeDB) Create(ctx context.Context, setting store.Setting) error {
-	query := `INSERT INTO store(id, cards_amount, is_renewal, date_renewal) VALUES($1,$2,$3,$4)`
+	query := `INSERT INTO store(id, cards_amount, is_renewal, hour_renewal) VALUES($1,$2,$3,$4)`
 
-	_, err := storeDB.conn.ExecContext(ctx, query, setting.ID, setting.CardsAmount, setting.IsRenewal, setting.DateRenewal)
+	_, err := storeDB.conn.ExecContext(ctx, query, setting.ID, setting.CardsAmount, setting.IsRenewal, setting.HourRenewal)
 	return ErrStore.Wrap(err)
 }
 
@@ -41,7 +41,7 @@ func (storeDB *storeDB) Get(ctx context.Context, id int) (store.Setting, error) 
 
 	row := storeDB.conn.QueryRowContext(ctx, query, id)
 
-	err := row.Scan(&setting.ID, &setting.CardsAmount, &setting.IsRenewal, &setting.DateRenewal)
+	err := row.Scan(&setting.ID, &setting.CardsAmount, &setting.IsRenewal, &setting.HourRenewal)
 	if errors.Is(err, sql.ErrNoRows) {
 		return setting, store.ErrNoSetting.Wrap(err)
 	}
@@ -65,7 +65,7 @@ func (storeDB *storeDB) List(ctx context.Context) ([]store.Setting, error) {
 	for rows.Next() {
 		var setting store.Setting
 
-		if err = rows.Scan(&setting.ID, &setting.CardsAmount, &setting.IsRenewal, &setting.DateRenewal); err != nil {
+		if err = rows.Scan(&setting.ID, &setting.CardsAmount, &setting.IsRenewal, &setting.HourRenewal); err != nil {
 			return settings, ErrStore.Wrap(err)
 		}
 		settings = append(settings, setting)
@@ -77,10 +77,10 @@ func (storeDB *storeDB) List(ctx context.Context) ([]store.Setting, error) {
 // Update updates setting of store in the database.
 func (storeDB *storeDB) Update(ctx context.Context, setting store.Setting) error {
 	query := `UPDATE store
-	          SET cards_amount = $1, is_renewal = $2, date_renewal = $3
+	          SET cards_amount = $1, is_renewal = $2, hour_renewal = $3
 	          WHERE id = $4`
 
-	result, err := storeDB.conn.ExecContext(ctx, query, setting.CardsAmount, setting.IsRenewal, setting.DateRenewal, setting.ID)
+	result, err := storeDB.conn.ExecContext(ctx, query, setting.CardsAmount, setting.IsRenewal, setting.HourRenewal, setting.ID)
 	if err != nil {
 		return ErrStore.Wrap(err)
 	}

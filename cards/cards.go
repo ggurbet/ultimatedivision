@@ -25,11 +25,13 @@ type DB interface {
 	Get(ctx context.Context, id uuid.UUID) (Card, error)
 	// GetByPlayerName returns card by player name from DB.
 	GetByPlayerName(ctx context.Context, playerName string) (Card, error)
-	// ListByUserID returns cards by user id from the database.
-	ListByUserID(ctx context.Context, id uuid.UUID, cursor pagination.Cursor) (Page, error)
 	// List returns all cards from the data base.
 	List(ctx context.Context, cursor pagination.Cursor) (Page, error)
-	// ListWithFilters returns all cards from the data base with filters.
+	// ListByUserID returns cards by user id from the database.
+	ListByUserID(ctx context.Context, id uuid.UUID, cursor pagination.Cursor) (Page, error)
+	// ListByTypeOrdered returns cards where type is ordered from the database.
+	ListByTypeOrdered(ctx context.Context) ([]Card, error)
+	// ListWithFilters returns cards with filters from the database.
 	ListWithFilters(ctx context.Context, filters []Filters, cursor pagination.Cursor) (Page, error)
 	// ListCardIDsWithFiltersWhereActiveLot returns card ids where active lots from DB, taking the necessary filters.
 	ListCardIDsWithFiltersWhereActiveLot(ctx context.Context, filters []Filters) ([]uuid.UUID, error)
@@ -165,6 +167,8 @@ const (
 	TypeWon Type = "won"
 	// TypeBought indicates that the card bought on the marketplaced.
 	TypeBought Type = "bought"
+	// TypeOrdered indicates that the card ordered on the store.
+	TypeOrdered Type = "ordered"
 )
 
 // RangeValueForSkills defines the list of possible group skills.

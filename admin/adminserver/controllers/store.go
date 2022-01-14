@@ -7,7 +7,6 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
@@ -113,9 +112,13 @@ func (controller *Store) Update(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		dateRenewal, err := time.Parse("2006-01-02T15:04", r.FormValue("dateRenewal"))
+		hourRenewal, err := strconv.Atoi(r.FormValue("hourRenewal"))
 		if err != nil {
-			http.Error(w, "invalid dateRenewal", http.StatusBadRequest)
+			http.Error(w, "invalid hourRenewal", http.StatusBadRequest)
+			return
+		}
+		if hourRenewal < store.HourOfDayMin || hourRenewal > store.HourOfDayMax {
+			http.Error(w, "hourRenewal should be in the range of 0 to 23", http.StatusBadRequest)
 			return
 		}
 
@@ -123,7 +126,7 @@ func (controller *Store) Update(w http.ResponseWriter, r *http.Request) {
 			ID:          settingID,
 			CardsAmount: cardsAmount,
 			IsRenewal:   isRenewal,
-			DateRenewal: dateRenewal,
+			HourRenewal: hourRenewal,
 		}
 
 		if err = controller.store.Update(ctx, setting); err != nil {

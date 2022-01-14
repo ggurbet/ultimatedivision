@@ -377,7 +377,7 @@ func (chore *Chore) Finish(client Client, gameResult matches.GameResult) {
 	}()
 }
 
-// Close closes the chore chore for re-check the expiration time of the token.
+// Close closes the chore for re-check the expiration time of the token.
 func (chore *Chore) Close() {
 	chore.Loop.Close()
 }

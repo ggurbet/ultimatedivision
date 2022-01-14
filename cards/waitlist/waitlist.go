@@ -5,6 +5,7 @@ package waitlist
 
 import (
 	"context"
+	"math/big"
 	"time"
 
 	"github.com/BoostyLabs/evmsignature"
@@ -22,7 +23,7 @@ var ErrNoItem = errs.Class("item for wait list does not exist")
 // architecture: DB
 type DB interface {
 	// Create creates nft for wait list in the database.
-	Create(ctx context.Context, cardID uuid.UUID, wallet evmsignature.Address) error
+	Create(ctx context.Context, item Item) error
 	// Get returns nft for wait list by token id.
 	GetByTokenID(ctx context.Context, tokenID int64) (Item, error)
 	// GetByCardID returns nft for wait list by card id.
@@ -44,6 +45,7 @@ type Item struct {
 	TokenID  int64                  `json:"tokenId"`
 	CardID   uuid.UUID              `json:"cardId"`
 	Wallet   evmsignature.Address   `json:"wallet"`
+	Value    big.Int                `json:"value"`
 	Password evmsignature.Signature `json:"password"`
 }
 
@@ -52,6 +54,7 @@ type CreateNFT struct {
 	CardID        uuid.UUID            `json:"cardId"`
 	WalletAddress evmsignature.Address `json:"walletAddress"`
 	UserID        uuid.UUID            `json:"userId"`
+	Value         big.Int              `json:"value"`
 }
 
 // Transaction entity describes password wallet, smart contracts address and token id.
@@ -59,6 +62,7 @@ type Transaction struct {
 	Password evmsignature.Signature `json:"password"`
 	Contract evmsignature.Contract  `json:"contract"`
 	TokenID  int64                  `json:"tokenId"`
+	Value    big.Int                `json:"value"`
 }
 
 // Config defines values needed by check mint nft in blockchain.
@@ -69,9 +73,12 @@ type Config struct {
 		Address      evmsignature.Address `json:"address"`
 		AddressEvent evmsignature.Hex     `json:"addressEvent"`
 	} `json:"nftContract"`
-	evmsignature.Contract `json:"contract"`
-	AddressNodeServer     string       `json:"addressNodeServer"`
-	FileStorage           storj.Config `json:"fileStorage"`
-	Bucket                string       `json:"bucket"`
-	URLToAvatar           string       `json:"urlToAvatar"`
+	Contract struct {
+		Address       evmsignature.Address `json:"address"`
+		AddressMethod evmsignature.Hex     `json:"addressMethod"`
+	} `json:"contract"`
+	AddressNodeServer string       `json:"addressNodeServer"`
+	FileStorage       storj.Config `json:"fileStorage"`
+	Bucket            string       `json:"bucket"`
+	URLToAvatar       string       `json:"urlToAvatar"`
 }

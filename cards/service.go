@@ -41,20 +41,20 @@ func NewService(cards DB, config Config) *Service {
 }
 
 // Create adds card in DB.
-func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentageQualities []int) (Card, error) {
+func (service *Service) Create(ctx context.Context, userID uuid.UUID, percentageQualities []int, cardType Type) (Card, error) {
 	var (
 		err  error
 		card Card
 	)
 
-	if card, err = service.Generate(ctx, userID, percentageQualities); err != nil {
+	if card, err = service.Generate(ctx, userID, percentageQualities, cardType); err != nil {
 		return card, ErrCards.Wrap(err)
 	}
 	return card, ErrCards.Wrap(service.cards.Create(ctx, card))
 }
 
 // Generate generates card.
-func (service *Service) Generate(ctx context.Context, userID uuid.UUID, percentageQualities []int) (Card, error) {
+func (service *Service) Generate(ctx context.Context, userID uuid.UUID, percentageQualities []int, cardType Type) (Card, error) {
 	var (
 		playerName string
 		err        error
@@ -162,7 +162,7 @@ func (service *Service) Generate(ctx context.Context, userID uuid.UUID, percenta
 		DominantFoot:     DominantFoot(searchValueByPercent(dominantFoots)),
 		IsTattoo:         isTattoo,
 		Status:           StatusActive,
-		Type:             TypeWon,
+		Type:             cardType,
 		UserID:           userID,
 		Tactics:          tactics,
 		Positioning:      generateSkill(tactics),
@@ -335,6 +335,12 @@ func (service *Service) List(ctx context.Context, cursor pagination.Cursor) (Pag
 
 	cardsListPage, err := service.cards.List(ctx, cursor)
 	return cardsListPage, ErrCards.Wrap(err)
+}
+
+// ListByTypeOrdered returns cards where type is ordered from the database.
+func (service *Service) ListByTypeOrdered(ctx context.Context) ([]Card, error) {
+	cardsList, err := service.cards.ListByTypeOrdered(ctx)
+	return cardsList, ErrCards.Wrap(err)
 }
 
 // ListWithFilters returns all cards from DB, taking the necessary filters.

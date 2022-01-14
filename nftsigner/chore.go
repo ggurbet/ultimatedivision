@@ -5,6 +5,7 @@ package nftsigner
 
 import (
 	"context"
+	"math/big"
 	"time"
 
 	"github.com/BoostyLabs/evmsignature"
@@ -60,13 +61,20 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 		}
 
 		for _, token := range unsignedNFTs {
-			signature, err := evmsignature.GenerateSignatureWithValue(token.Wallet, chore.config.SmartContractAddress, token.TokenID, privateKeyECDSA)
-			if err != nil {
-				return ChoreError.Wrap(err)
+			var signature evmsignature.Signature
+			if token.Value.Cmp(big.NewInt(0)) <= 0 {
+				signature, err = evmsignature.GenerateSignatureWithValue(token.Wallet, chore.config.SmartContractAddress, token.TokenID, privateKeyECDSA)
+				if err != nil {
+					return ChoreError.Wrap(err)
+				}
+			} else {
+				signature, err = evmsignature.GenerateSignatureWithValueAndNonce(token.Wallet, chore.config.SmartContractAddress, &token.Value, token.TokenID, privateKeyECDSA)
+				if err != nil {
+					return ChoreError.Wrap(err)
+				}
 			}
 
-			err = chore.nfts.Update(ctx, token.TokenID, signature)
-			if err != nil {
+			if err = chore.nfts.Update(ctx, token.TokenID, signature); err != nil {
 				return ChoreError.Wrap(err)
 			}
 		}

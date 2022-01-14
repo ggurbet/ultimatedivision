@@ -30,42 +30,45 @@ type waitlistDB struct {
 }
 
 // Create creates item of wait list in the database.
-func (waitlistDB *waitlistDB) Create(ctx context.Context, cardID uuid.UUID, wallet evmsignature.Address) error {
-	query := `INSERT INTO waitlist(card_id, wallet_address, password)
-	          VALUES($1,$2,$3)`
+func (waitlistDB *waitlistDB) Create(ctx context.Context, item waitlist.Item) error {
+	query := `INSERT INTO waitlist(card_id, wallet_address, value, password) VALUES($1,$2,$3,$4)`
 
-	_, err := waitlistDB.conn.ExecContext(ctx, query, cardID, wallet, "")
+	_, err := waitlistDB.conn.ExecContext(ctx, query, item.CardID, item.Wallet, item.Value.Bytes(), "")
 	return ErrWaitlist.Wrap(err)
 }
 
 // GetByTokenID returns item of wait list by token id.
 func (waitlistDB *waitlistDB) GetByTokenID(ctx context.Context, tokenID int64) (waitlist.Item, error) {
+	var value []byte
 	query := `SELECT *
 	          FROM waitlist
 	          WHERE token_id = $1`
 
 	var item waitlist.Item
 
-	err := waitlistDB.conn.QueryRowContext(ctx, query, tokenID).Scan(&item.TokenID, &item.CardID, &item.Wallet, &item.Password)
+	err := waitlistDB.conn.QueryRowContext(ctx, query, tokenID).Scan(&item.TokenID, &item.CardID, &item.Wallet, &value, &item.Password)
 	if errors.Is(err, sql.ErrNoRows) {
 		return item, waitlist.ErrNoItem.Wrap(err)
 	}
+	item.Value.SetBytes(value)
 
 	return item, ErrWaitlist.Wrap(err)
 }
 
 // GetByCardID returns item of wait list by card id.
 func (waitlistDB *waitlistDB) GetByCardID(ctx context.Context, cardID uuid.UUID) (waitlist.Item, error) {
+	var value []byte
 	query := `SELECT *
 	          FROM waitlist
 	          WHERE card_id = $1`
 
 	var item waitlist.Item
 
-	err := waitlistDB.conn.QueryRowContext(ctx, query, cardID).Scan(&item.TokenID, &item.CardID, &item.Wallet, &item.Password)
+	err := waitlistDB.conn.QueryRowContext(ctx, query, cardID).Scan(&item.TokenID, &item.CardID, &item.Wallet, &value, &item.Password)
 	if errors.Is(err, sql.ErrNoRows) {
 		return item, waitlist.ErrNoItem.Wrap(err)
 	}
+	item.Value.SetBytes(value)
 
 	return item, ErrWaitlist.Wrap(err)
 }
@@ -89,8 +92,8 @@ func (waitlistDB *waitlistDB) GetLastTokenID(ctx context.Context) (int64, error)
 
 // List returns items of wait list from database.
 func (waitlistDB *waitlistDB) List(ctx context.Context) ([]waitlist.Item, error) {
-	query := `SELECT *
-	          FROM waitlist`
+	var value []byte
+	query := `SELECT * FROM waitlist`
 
 	var waitList []waitlist.Item
 
@@ -104,10 +107,11 @@ func (waitlistDB *waitlistDB) List(ctx context.Context) ([]waitlist.Item, error)
 
 	for rows.Next() {
 		var item waitlist.Item
-		err = rows.Scan(&item.TokenID, &item.CardID, &item.Wallet, &item.Password)
+		err = rows.Scan(&item.TokenID, &item.CardID, &item.Wallet, &value, &item.Password)
 		if err != nil {
 			return waitList, ErrWaitlist.Wrap(err)
 		}
+		item.Value.SetBytes(value)
 
 		waitList = append(waitList, item)
 	}
@@ -120,6 +124,7 @@ func (waitlistDB *waitlistDB) List(ctx context.Context) ([]waitlist.Item, error)
 
 // ListWithoutPassword returns items of wait list without password from database.
 func (waitlistDB *waitlistDB) ListWithoutPassword(ctx context.Context) ([]waitlist.Item, error) {
+	var value []byte
 	query :=
 		`SELECT *
 	     FROM waitlist
@@ -136,9 +141,11 @@ func (waitlistDB *waitlistDB) ListWithoutPassword(ctx context.Context) ([]waitli
 	var waitListWithoutPassword []waitlist.Item
 	for rows.Next() {
 		var item waitlist.Item
-		if err = rows.Scan(&item.TokenID, &item.CardID, &item.Wallet, &item.Password); err != nil {
+		if err = rows.Scan(&item.TokenID, &item.CardID, &item.Wallet, &value, &item.Password); err != nil {
 			return nil, ErrWaitlist.Wrap(err)
 		}
+		item.Value.SetBytes(value)
+
 		waitListWithoutPassword = append(waitListWithoutPassword, item)
 	}
 

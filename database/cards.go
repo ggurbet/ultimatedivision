@@ -219,6 +219,40 @@ func (cardsDB *cardsDB) ListByUserID(ctx context.Context, id uuid.UUID, cursor p
 	return userCardsPage, ErrCard.Wrap(err)
 }
 
+// ListByTypeOrdered returns cards where type is ordered from the database.
+func (cardsDB *cardsDB) ListByTypeOrdered(ctx context.Context) ([]cards.Card, error) {
+	query := `SELECT * FROM cards WHERE type = $1`
+
+	rows, err := cardsDB.conn.QueryContext(ctx, query, cards.TypeOrdered)
+	if err != nil {
+		return nil, ErrCard.Wrap(err)
+	}
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	cardsList := []cards.Card{}
+	for rows.Next() {
+		card := cards.Card{}
+		if err = rows.Scan(
+			&card.ID, &card.PlayerName, &card.Quality, &card.Height, &card.Weight, &card.DominantFoot, &card.IsTattoo, &card.Status, &card.Type, &card.UserID, &card.Tactics, &card.Positioning,
+			&card.Composure, &card.Aggression, &card.Vision, &card.Awareness, &card.Crosses, &card.Physique, &card.Acceleration,
+			&card.RunningSpeed, &card.ReactionSpeed, &card.Agility, &card.Stamina, &card.Strength, &card.Jumping, &card.Balance, &card.Technique,
+			&card.Dribbling, &card.BallControl, &card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing,
+			&card.LongPassing, &card.ForwardPass, &card.Offence, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance,
+			&card.Penalty, &card.FreeKicks, &card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles,
+			&card.BallFocus, &card.Interceptions, &card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping,
+			&card.Throwing,
+		); err != nil {
+			return nil, ErrCard.Wrap(err)
+		}
+
+		cardsList = append(cardsList, card)
+	}
+
+	return cardsList, ErrCard.Wrap(rows.Err())
+}
+
 // ListWithFilters returns cards from DB, taking the necessary filters.
 func (cardsDB *cardsDB) ListWithFilters(ctx context.Context, filters []cards.Filters, cursor pagination.Cursor) (cards.Page, error) {
 	var cardsListPage cards.Page

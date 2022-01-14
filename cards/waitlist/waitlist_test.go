@@ -5,6 +5,7 @@ package waitlist_test
 
 import (
 	"context"
+	"math/big"
 	"testing"
 	"time"
 
@@ -155,16 +156,18 @@ func TestWaitList(t *testing.T) {
 		Throwing:         49,
 	}
 
-	nft1 := waitlist.Item{
+	item1 := waitlist.Item{
 		TokenID: 1,
 		CardID:  card1.ID,
 		Wallet:  "0x96216849c49358b10257cb55b28ea603c874b05e",
+		Value:   *big.NewInt(100),
 	}
 
-	nft2 := waitlist.Item{
+	item2 := waitlist.Item{
 		TokenID: 2,
 		CardID:  card2.ID,
 		Wallet:  "0x96216849c49358B10254cb55b28eA603c874b05E",
+		Value:   *big.NewInt(200),
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
@@ -182,10 +185,10 @@ func TestWaitList(t *testing.T) {
 			err = repositoryCards.Create(ctx, card2)
 			require.NoError(t, err)
 
-			err = repositoryWaitList.Create(ctx, nft1.CardID, nft1.Wallet)
+			err = repositoryWaitList.Create(ctx, item1)
 			require.NoError(t, err)
 
-			err = repositoryWaitList.Create(ctx, nft2.CardID, nft2.Wallet)
+			err = repositoryWaitList.Create(ctx, item2)
 			require.NoError(t, err)
 		})
 
@@ -193,28 +196,28 @@ func TestWaitList(t *testing.T) {
 			nftList, err := repositoryWaitList.List(ctx)
 			require.NoError(t, err)
 
-			compareNFTsSlice(t, nftList, []waitlist.Item{nft1, nft2})
+			compareNFTsSlice(t, nftList, []waitlist.Item{item1, item2})
 		})
 
 		t.Run("List without password", func(t *testing.T) {
 			nftList, err := repositoryWaitList.ListWithoutPassword(ctx)
 			require.NoError(t, err)
 
-			compareNFTsSlice(t, nftList, []waitlist.Item{nft1, nft2})
+			compareNFTsSlice(t, nftList, []waitlist.Item{item1, item2})
 		})
 
 		t.Run("GetByTokenID", func(t *testing.T) {
 			nftDB, err := repositoryWaitList.GetByTokenID(ctx, 1)
 			require.NoError(t, err)
 
-			compareNFTs(t, nftDB, nft1)
+			compareNFTs(t, nftDB, item1)
 		})
 
 		t.Run("GetByCardID", func(t *testing.T) {
-			nftDB, err := repositoryWaitList.GetByCardID(ctx, nft1.CardID)
+			nftDB, err := repositoryWaitList.GetByCardID(ctx, item1.CardID)
 			require.NoError(t, err)
 
-			compareNFTs(t, nftDB, nft1)
+			compareNFTs(t, nftDB, item1)
 		})
 
 		t.Run("Get last token id", func(t *testing.T) {
@@ -247,18 +250,20 @@ func TestWaitList(t *testing.T) {
 	})
 }
 
-func compareNFTsSlice(t *testing.T, nft1, nft2 []waitlist.Item) {
-	assert.Equal(t, len(nft1), len(nft2))
+func compareNFTsSlice(t *testing.T, item1, item2 []waitlist.Item) {
+	assert.Equal(t, len(item1), len(item2))
 
-	for i := 0; i < len(nft1); i++ {
-		assert.Equal(t, nft1[i].TokenID, nft2[i].TokenID)
-		assert.Equal(t, nft1[i].CardID, nft2[i].CardID)
-		assert.Equal(t, nft1[i].Wallet, nft2[i].Wallet)
+	for i := 0; i < len(item1); i++ {
+		assert.Equal(t, item1[i].TokenID, item2[i].TokenID)
+		assert.Equal(t, item1[i].CardID, item2[i].CardID)
+		assert.Equal(t, item1[i].Wallet, item2[i].Wallet)
+		assert.Equal(t, item1[i].Value, item2[i].Value)
 	}
 }
 
-func compareNFTs(t *testing.T, nft1, nft2 waitlist.Item) {
-	assert.Equal(t, nft1.TokenID, nft2.TokenID)
-	assert.Equal(t, nft1.CardID, nft2.CardID)
-	assert.Equal(t, nft1.Wallet, nft2.Wallet)
+func compareNFTs(t *testing.T, item1, item2 waitlist.Item) {
+	assert.Equal(t, item1.TokenID, item2.TokenID)
+	assert.Equal(t, item1.CardID, item2.CardID)
+	assert.Equal(t, item1.Wallet, item2.Wallet)
+	assert.Equal(t, item1.Value, item2.Value)
 }

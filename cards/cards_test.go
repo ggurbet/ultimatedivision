@@ -121,6 +121,7 @@ func TestCards(t *testing.T) {
 		DominantFoot:     "right",
 		IsTattoo:         true,
 		Status:           cards.StatusSale,
+		Type:             cards.TypeOrdered,
 		UserID:           uuid.New(),
 		Tactics:          2,
 		Positioning:      2,
@@ -291,6 +292,13 @@ func TestCards(t *testing.T) {
 			require.NoError(t, err)
 
 			compareCards(t, userCard.Cards[0], card1)
+		})
+
+		t.Run("ListByTypeOrdered", func(t *testing.T) {
+			userCard, err := repositoryCards.ListByTypeOrdered(ctx)
+			require.NoError(t, err)
+
+			compareCards(t, userCard[0], card2)
 		})
 
 		t.Run("list with filters", func(t *testing.T) {

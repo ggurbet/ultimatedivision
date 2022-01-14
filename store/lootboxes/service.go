@@ -71,7 +71,7 @@ func (service *Service) Open(ctx context.Context, userID, lootboxID uuid.UUID) (
 	var lootBoxCards []cards.Card
 
 	for i := 0; i < cardsNum; i++ {
-		card, err := service.cards.Create(ctx, userID, probabilities)
+		card, err := service.cards.Create(ctx, userID, probabilities, cards.TypeWon)
 		if err != nil {
 			return lootBoxCards, ErrLootBoxes.Wrap(err)
 		}

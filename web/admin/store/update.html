@@ -24,17 +24,26 @@
         <div class = "wrapper">
             <form action="/store/update/{{.ID}}" method="post" class="update-form">
                 <label for='cards-amount'>Cards amount:</label>
-                <input type="number" name="cardsAmount" id='cards-amount'>
+                <input type="number" name="cardsAmount" id='cards-amount' value="{{.CardsAmount}}">
 
                 <label for='is-renewal'>Is renewal:</label>
                 <label for='is-renewal-true'>True:</label>
-                <input type="radio" name="isRenewal" id='is-renewal-true' value="true">
+                {{ if eq .IsRenewal true }}
+                    <input type="radio" name="isRenewal" id='is-renewal-true' value="true" checked>
+                {{ else }}
+                    <input type="radio" name="isRenewal" id='is-renewal-true' value="true">
+                {{ end }}
+
                 <label for='is-renewal-false'>False:</label>
-                <input type="radio" name="isRenewal" id='is-renewal-false' value="false">
+                {{ if eq .IsRenewal false }}
+                    <input type="radio" name="isRenewal" id='is-renewal-false' value="false" checked>
+                {{ else }}
+                    <input type="radio" name="isRenewal" id='is-renewal-false' value="false">
+                {{ end }}
 
 
-                <label for='date-renewal'>Date renewal:</label>
-                <input type="datetime-local" name="dateRenewal" id='date-renewal'>
+                <label for='hour-renewal'>Hour renewal(UTC):</label>
+                <input type="number" name="hourRenewal" id='hour-renewal' min="0" max="23" value="{{.HourRenewal}}">
 
                 <input type="submit" value="Update">
             </form>

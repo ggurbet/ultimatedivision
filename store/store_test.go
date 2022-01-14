@@ -6,7 +6,6 @@ package store_test
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -21,7 +20,7 @@ func TestStore(t *testing.T) {
 		ID:          1,
 		CardsAmount: 10,
 		IsRenewal:   true,
-		DateRenewal: time.Now().UTC(),
+		HourRenewal: 15,
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
@@ -49,7 +48,7 @@ func TestStore(t *testing.T) {
 		t.Run("Update", func(t *testing.T) {
 			setting1.CardsAmount = 15
 			setting1.IsRenewal = false
-			setting1.DateRenewal = time.Now().UTC()
+			setting1.HourRenewal = 16
 
 			err := repositoryStore.Update(ctx, setting1)
 			require.NoError(t, err)
@@ -70,6 +69,6 @@ func compareStoreSlice(t *testing.T, setting1, setting2 []store.Setting) {
 		assert.Equal(t, setting1[i].ID, setting2[i].ID)
 		assert.Equal(t, setting1[i].CardsAmount, setting2[i].CardsAmount)
 		assert.Equal(t, setting1[i].IsRenewal, setting2[i].IsRenewal)
-		assert.WithinDuration(t, setting1[i].DateRenewal, setting2[i].DateRenewal, 1*time.Second)
+		assert.Equal(t, setting1[i].HourRenewal, setting2[i].HourRenewal)
 	}
 }
