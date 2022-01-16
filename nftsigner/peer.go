@@ -46,7 +46,7 @@ func New(logger logger.Logger, config Config, database DB) (peer *Peer, err erro
 	}
 
 	{ // chore setup
-		peer.Chore = NewChore(logger, config.Chore.ChoreConfig, peer.Database.WaitList())
+		peer.Chore = NewChore(config.Chore.ChoreConfig, peer.Database.WaitList())
 	}
 
 	return peer, nil

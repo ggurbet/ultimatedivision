@@ -9,12 +9,11 @@ import (
 	"time"
 
 	"github.com/BoostyLabs/evmsignature"
+	"github.com/BoostyLabs/thelooper"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards/waitlist"
-	"ultimatedivision/internal/logger"
-	"ultimatedivision/pkg/sync"
 )
 
 // ChoreError represents nft signer chore error type.
@@ -31,19 +30,17 @@ type ChoreConfig struct {
 //
 // architecture: Chore
 type Chore struct {
-	log    logger.Logger
-	nfts   *waitlist.Service
-	loop   *sync.Cycle
+	loop   *thelooper.Loop
 	config ChoreConfig
+	nfts   *waitlist.Service
 }
 
 // NewChore instantiates Chore.
-func NewChore(log logger.Logger, config ChoreConfig, db waitlist.DB) *Chore {
+func NewChore(config ChoreConfig, db waitlist.DB) *Chore {
 	return &Chore{
-		log:    log,
-		loop:   sync.NewCycle(config.RenewalInterval),
-		nfts:   waitlist.NewService(waitlist.Config{}, db, nil, nil, nil, nil),
+		loop:   thelooper.NewLoop(config.RenewalInterval),
 		config: config,
+		nfts:   waitlist.NewService(waitlist.Config{}, db, nil, nil, nil, nil),
 	}
 }
 

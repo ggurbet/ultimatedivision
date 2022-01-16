@@ -6,12 +6,10 @@ package marketplace
 import (
 	"context"
 
+	"github.com/BoostyLabs/thelooper"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
-	"ultimatedivision/internal/logger"
-	"ultimatedivision/pkg/sync"
-	"ultimatedivision/users"
 )
 
 var (
@@ -23,29 +21,22 @@ var (
 //
 // architecture: Chore
 type Chore struct {
-	log     logger.Logger
-	service *Service
-	Loop    *sync.Cycle
+	Loop        *thelooper.Loop
+	marketplace *Service
 }
 
 // NewChore instantiates Chore.
-func NewChore(log logger.Logger, config Config, marketplace DB, users *users.Service, cards *cards.Service) *Chore {
+func NewChore(config Config, marketplace *Service) *Chore {
 	return &Chore{
-		log: log,
-		service: NewService(
-			config,
-			marketplace,
-			users,
-			cards,
-		),
-		Loop: sync.NewCycle(config.LotRenewalInterval),
+		marketplace: marketplace,
+		Loop:        thelooper.NewLoop(config.LotRenewalInterval),
 	}
 }
 
 // Run starts the chore for re-check the expiration time of the lot.
 func (chore *Chore) Run(ctx context.Context) (err error) {
 	return chore.Loop.Run(ctx, func(ctx context.Context) error {
-		lots, err := chore.service.ListExpiredLot(ctx)
+		lots, err := chore.marketplace.ListExpiredLot(ctx)
 		if err != nil {
 			return ChoreError.Wrap(err)
 		}
@@ -65,20 +56,20 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 					Amount:    lot.MaxPrice,
 				}
 
-				err := chore.service.WinLot(ctx, winLot)
+				err := chore.marketplace.WinLot(ctx, winLot)
 				if err != nil {
 					return ChoreError.Wrap(err)
 				}
 				continue
 			}
 
-			err := chore.service.UpdateStatusLot(ctx, lot.ID, StatusExpired)
+			err := chore.marketplace.UpdateStatusLot(ctx, lot.ID, StatusExpired)
 			if err != nil {
 				return ChoreError.Wrap(err)
 			}
 
 			if lot.Type == TypeCard {
-				if err := chore.service.cards.UpdateStatus(ctx, lot.ItemID, cards.StatusActive); err != nil {
+				if err := chore.marketplace.cards.UpdateStatus(ctx, lot.ItemID, cards.StatusActive); err != nil {
 					return ErrMarketplace.Wrap(err)
 				}
 			}

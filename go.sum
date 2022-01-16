@@ -34,6 +34,8 @@ github.com/Azure/go-autorest/logger v0.1.0/go.mod h1:oExouG+K6PryycPJfVSxi/koC6L
 github.com/Azure/go-autorest/tracing v0.5.0/go.mod h1:r/s2XiOKccPW3HrqB+W0TQzfbtp2fGCgRFtBroKn4Dk=
 github.com/BoostyLabs/evmsignature v0.0.0-20211230083242-81addd1bdfe1 h1:n/eMF0clt2z09XOS6MIxTFVlsXfvCwGE//WYq9y/SrE=
 github.com/BoostyLabs/evmsignature v0.0.0-20211230083242-81addd1bdfe1/go.mod h1:IaSGEcsHyi4hv4+oBBTd48IjHPiypfXPyiMXMllwhFU=
+github.com/BoostyLabs/thelooper v0.0.0-20220114103907-5df44f497033 h1:plDZ/TPJHRjHQSKKQeVcvKldqErDmAfOXupDygjJBZA=
+github.com/BoostyLabs/thelooper v0.0.0-20220114103907-5df44f497033/go.mod h1:Rq/HLCZmRrupJ1TFjbDBUgW17RPHiP8dvytFoK7HbgE=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=

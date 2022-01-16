@@ -8,11 +8,11 @@ import (
 	"time"
 
 	"github.com/BoostyLabs/evmsignature"
+	"github.com/BoostyLabs/thelooper"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/pkg/sync"
 	"ultimatedivision/udts/currencywaitlist"
 )
 
@@ -32,7 +32,7 @@ type ChoreConfig struct {
 type Chore struct {
 	log              logger.Logger
 	currencywaitlist *currencywaitlist.Service
-	Loop             *sync.Cycle
+	Loop             *thelooper.Loop
 	config           ChoreConfig
 }
 
@@ -40,7 +40,7 @@ type Chore struct {
 func NewChore(log logger.Logger, config ChoreConfig, db currencywaitlist.DB) *Chore {
 	return &Chore{
 		log:              log,
-		Loop:             sync.NewCycle(config.RenewalInterval),
+		Loop:             thelooper.NewLoop(config.RenewalInterval),
 		currencywaitlist: currencywaitlist.NewService(currencywaitlist.Config{}, db, nil, nil),
 		config:           config,
 	}

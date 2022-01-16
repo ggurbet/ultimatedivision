@@ -6,9 +6,8 @@ package seasons
 import (
 	"context"
 
+	"github.com/BoostyLabs/thelooper"
 	"github.com/zeebo/errs"
-
-	"ultimatedivision/pkg/sync"
 )
 
 var (
@@ -20,15 +19,15 @@ var (
 //
 // architecture: Chore
 type Chore struct {
+	Loop    *thelooper.Loop
 	seasons *Service
-	Loop    *sync.Cycle
 }
 
 // NewChore instantiates Chore.
 func NewChore(config Config, service *Service) *Chore {
 	return &Chore{
+		Loop:    thelooper.NewLoop(config.SeasonTime),
 		seasons: service,
-		Loop:    sync.NewCycle(config.SeasonTime),
 	}
 }
 

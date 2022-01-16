@@ -9,12 +9,12 @@ import (
 	"net/http"
 
 	"github.com/BoostyLabs/evmsignature"
+	"github.com/BoostyLabs/thelooper"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/clubs"
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/internal/logger"
-	"ultimatedivision/pkg/sync"
 	"ultimatedivision/seasons"
 	"ultimatedivision/udts/currencywaitlist"
 	"ultimatedivision/users"
@@ -32,7 +32,7 @@ type Chore struct {
 	config           Config
 	log              logger.Logger
 	service          *Service
-	Loop             *sync.Cycle
+	Loop             *thelooper.Loop
 	matches          *matches.Service
 	seasons          *seasons.Service
 	clubs            *clubs.Service
@@ -46,7 +46,7 @@ func NewChore(config Config, log logger.Logger, service *Service, matches *match
 		config:           config,
 		log:              log,
 		service:          service,
-		Loop:             sync.NewCycle(config.PlaceRenewalInterval),
+		Loop:             thelooper.NewLoop(config.PlaceRenewalInterval),
 		matches:          matches,
 		seasons:          seasons,
 		clubs:            clubs,

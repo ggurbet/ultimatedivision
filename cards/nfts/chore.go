@@ -7,12 +7,11 @@ import (
 	"context"
 
 	"github.com/BoostyLabs/evmsignature"
+	"github.com/BoostyLabs/thelooper"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
-	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/jsonrpc"
-	"ultimatedivision/pkg/sync"
 	"ultimatedivision/users"
 )
 
@@ -26,19 +25,17 @@ var (
 // architecture: Chore
 type Chore struct {
 	config Config
-	log    logger.Logger
-	Loop   *sync.Cycle
+	Loop   *thelooper.Loop
 	nfts   *Service
 	users  *users.Service
 	cards  *cards.Service
 }
 
 // NewChore instantiates Chore.
-func NewChore(config Config, log logger.Logger, nfts *Service, users *users.Service, cards *cards.Service) *Chore {
+func NewChore(config Config, nfts *Service, users *users.Service, cards *cards.Service) *Chore {
 	return &Chore{
 		config: config,
-		log:    log,
-		Loop:   sync.NewCycle(config.NFTRenewalInterval),
+		Loop:   thelooper.NewLoop(config.NFTRenewalInterval),
 		nfts:   nfts,
 		users:  users,
 		cards:  cards,

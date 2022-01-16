@@ -7,12 +7,12 @@ import (
 	"context"
 	"time"
 
+	"github.com/BoostyLabs/thelooper"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/avatars"
-	"ultimatedivision/pkg/sync"
 )
 
 var (
@@ -24,8 +24,8 @@ var (
 //
 // architecture: Chore
 type Chore struct {
+	Loop    *thelooper.Loop
 	config  Config
-	Loop    *sync.Cycle
 	store   *Service
 	cards   *cards.Service
 	avatars *avatars.Service
@@ -34,8 +34,8 @@ type Chore struct {
 // NewChore instantiates Chore.
 func NewChore(config Config, store *Service, cards *cards.Service, avatars *avatars.Service) *Chore {
 	return &Chore{
+		Loop:    thelooper.NewLoop(config.StoreRenewalInterval),
 		config:  config,
-		Loop:    sync.NewCycle(config.StoreRenewalInterval),
 		store:   store,
 		cards:   cards,
 		avatars: avatars,

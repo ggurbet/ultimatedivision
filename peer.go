@@ -355,7 +355,6 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 		peer.NFTs.NFTChore = nfts.NewChore(
 			config.NFTs.Config,
-			peer.Log,
 			peer.NFTs.Service,
 			peer.Users.Service,
 			peer.Cards.Service,
@@ -374,7 +373,6 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 
 		peer.WaitList.WaitListChore = waitlist.NewChore(
 			config.WaitList.Config,
-			peer.Log,
 			peer.WaitList.Service,
 			peer.NFTs.Service,
 			peer.Users.Service,
@@ -410,11 +408,8 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 
 		peer.Marketplace.ExpirationLotChore = marketplace.NewChore(
-			peer.Log,
 			config.Marketplace.Config,
-			peer.Database.Marketplace(),
-			peer.Users.Service,
-			peer.Cards.Service,
+			peer.Marketplace.Service,
 		)
 	}
 
@@ -573,9 +568,9 @@ func (peer *Peer) Run(ctx context.Context) error {
 		return ignoreCancel(peer.Queue.PlaceChore.Run(ctx))
 	})
 	// TODO: commented while fixing bug with matches
-	//group.Go(func() error {
-	//	return ignoreCancel(peer.Seasons.ExpirationSeasons.Run(ctx))
-	//})
+	// group.Go(func() error {
+	// 	return ignoreCancel(peer.Seasons.ExpirationSeasons.Run(ctx))
+	// })
 	// TODO: uncomment when the Ethereum node is running
 	// group.Go(func() error {
 	// 	return ignoreCancel(peer.NFTs.NFTChore.RunNFTSynchronization(ctx))
