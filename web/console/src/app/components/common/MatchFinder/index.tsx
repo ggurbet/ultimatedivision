@@ -26,9 +26,6 @@ const MatchFinder: React.FC = () => {
         (state: RootState) => state.clubsReducer
     );
 
-    /** Indicates that user have rejected game. */
-    const [isRejectedUser, setIsRejectedUser] = useState<boolean>(false);
-
     const [queueClient, setQueueClient] = useState<QueueClient | null>(null);
 
     const dispatch = useDispatch();
@@ -54,9 +51,6 @@ const MatchFinder: React.FC = () => {
     /** Delay is time delay for redirect user to match page. */
     const DELAY: number = 2000;
 
-    /** DELAY_AFTER_REJECT is time delay in milliseconds for searching match after reject. */
-    const DELAY_AFTER_REJECT: number = 500;
-
     /** Variable describes that webscoket connection responsed with error. */
     const ERROR_MESSAGE: string = 'could not write to websocket';
     /** Variable describes that user still searching game. */
@@ -66,9 +60,9 @@ const MatchFinder: React.FC = () => {
     /** Variable describes that user added to gueue. */
     const YOU_ADDED_MESSAGE: string = 'you added!';
     /** Variable describes that it needs confirm game from user. */
-    const YOU_CONFIRM_PLAY_MESSAGE: string = 'you confirm play?';
+    const YOU_CONFIRM_PLAY_MESSAGE: string = 'do you confirm play?';
     /** Variable describes that user have leaved from searching game. */
-    const YOU_LEAVED_MESSAGE: string = 'you leaved!';
+    const YOU_LEAVED_MESSAGE: string = 'you left!';
 
     /** Sends confirm action. */
     const confirmMatch = () => {
@@ -78,30 +72,11 @@ const MatchFinder: React.FC = () => {
 
     /** Canceles confirmation game. */
     const cancelConfirmationGame = () => {
-        !isMatchConfirmed && queueSendAction('reject', squad.id);
-        !isMatchConfirmed && setIsRejectedUser(true);
-    };
-
-    // TODO: rework after ./queue/chore.go solution.
-    /** Starts searching match after rejected by user. */
-    const startSearchAfterReject = () => {
-        onOpenConnectionSendAction('startSearch', squad.id);
-
-        /** Updates current queue client. */
-        const updatedClient = getCurrentQueueClient();
-        setQueueClient(updatedClient);
-
-        toast.error('Your game was canceled. You are still in search.', {
-            position: toast.POSITION.TOP_RIGHT,
-            theme: 'colored',
-        });
+        queueSendAction('reject', squad.id);
     };
 
     /** Canceles searching game and closes MatchFinder component. */
     const canselSearchingGame = () => {
-        // TODO: rework after ./queue/chore.go solution
-        queueClient && queueClient.ws.close();
-
         onOpenConnectionSendAction('finishSearch', squad.id);
 
         /** Updates current queue client. */
@@ -113,7 +88,6 @@ const MatchFinder: React.FC = () => {
 
     /** Exposes start searching match logic. */
     const startSearchMatch = () => {
-        // TODO: rework after ./queue/chore.go solution.
         onOpenConnectionSendAction('startSearch', squad.id);
         /** Updates current queue client. */
         const newclient = getCurrentQueueClient();
@@ -138,21 +112,11 @@ const MatchFinder: React.FC = () => {
 
                 return;
             case STILL_SEARCHING_MESSAGE:
-                /** TODO: will be deleted after ./queue/chore.go reworks. */
-                queueClient && queueClient.ws.close();
                 setIsMatchFound(false);
-
-                if (isRejectedUser) {
-                    setTimeout(() => {
-                        startSearchAfterReject();
-                    }, DELAY_AFTER_REJECT);
-
-                    setIsRejectedUser(false);
-
-                    return;
-                };
-
-                startSearchAfterReject();
+                toast.error('Your game was canceled. You are still in search.', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    theme: 'colored',
+                });
 
                 return;
             case WRONG_ACTION_MESSAGE:
@@ -210,7 +174,6 @@ const MatchFinder: React.FC = () => {
         if (isMatchFound) {
             autoCancelConfirmGame = setTimeout(() => {
                 queueSendAction('reject', squad.id);
-                setIsRejectedUser(true);
             }, getRandomTimeDelayForCancelGame(CANCEL_GAME_DELAY_MIN, CANCEL_GAME_DELAY_MAX));
         }
 
