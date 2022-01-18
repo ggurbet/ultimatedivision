@@ -1,0 +1,130 @@
+@import "@/index.scss";
+
+.profile__player-list {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+
+    .players-wrapper-hidden {
+        height: 335px;
+        overflow: hidden;
+    }
+
+    .players-wrapper-open {
+        overflow: none;
+    }
+
+    &__title {
+        display: flex;
+
+        .logo {
+            margin-bottom: 5px;
+        }
+
+        .title {
+            padding-left: 5px;
+            font-family: 'BebasNeue', sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 32px;
+            line-height: 38px;
+            color: #FFFFFF;
+        }
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        height: 55px;
+        margin-bottom: 12px;
+        border-radius: 12.0474px;
+        background: linear-gradient(0deg, rgba(100, 91, 169, 0.15), rgba(100, 91, 169, 0.15));
+
+
+        &__number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 26.5px;
+            height: 26.5px;
+            margin-left: 8px;
+            border-radius: 50%;
+            background: #404070;
+
+            &-text {
+                font-family: 'BebasNeue', sans-serif;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 16.8664px;
+                text-align: center;
+                color: #FFFFFF;
+            }
+        }
+
+        &__name {
+            padding-left: 19px;
+            font-family: "BebasNeue", sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 24px;
+            line-height: 29px;
+            color: #FFFFFF;
+        }
+    }
+
+    &__btn-disable {
+        cursor: not-allowed;
+    }
+
+    &__btn {
+        cursor: pointer;
+    }
+
+    .open {
+
+        &:after {
+            content: "";
+            border-style: solid;
+            border-width: 6px 6px 6px 0;
+            border-color: transparent #fff transparent transparent;
+            opacity: 0.5;
+            transform: rotate(90deg);
+            margin: auto 0 auto 8px;
+        }
+    }
+
+    .hidden {
+
+        &:after {
+            content: "";
+            border-style: solid;
+            border-width: 6px 6px 6px 0;
+            border-color: transparent #fff transparent transparent;
+            opacity: 0.5;
+            transform: rotate(-90deg);
+            margin: auto 0 auto 8px;
+        }
+    }
+
+    &__btn-disable,
+    &__btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 55px;
+        border: 2px solid #404070;
+        box-sizing: border-box;
+        border-radius: 12.0474px;
+        background: none;
+
+        .btn-text {
+            font-family: 'BebasNeue', sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 24px;
+            line-height: 29px;
+            color: #FFFFFF;
+            opacity: 0.5;
+        }
+    }
+}

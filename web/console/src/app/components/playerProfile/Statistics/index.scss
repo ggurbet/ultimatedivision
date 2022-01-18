@@ -1,0 +1,76 @@
+@import "@/index.scss";
+
+.profile__statistics {
+    grid-column: 1/4;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 211px;
+    background: linear-gradient(180deg, rgba(36, 36, 62, 0.496) 0%, rgba(31, 31, 52, 0.8) 100%), radial-gradient(170.68% 341.01% at 97.11% 95.96%, rgba(46, 46, 80, 0) 0%, rgba(99, 62, 146, 0.9) 100%), radial-gradient(130.06% 157.22% at 46.4% 72.11%, rgba(46, 46, 80, 0) 0%, rgba(57, 89, 137, 0.9) 100%), radial-gradient(158.27% 83.8% at 50% 50%, #2E2E50 0%, #3B3B68 100%);
+    border-radius: 10px;
+    padding: 32px;
+    margin-top: 48px;
+    border: 2px solid;
+    border-image-slice: 1;
+    border-image-source: radial-gradient(82.72% 78.92% at 37.11% 0%, #898DED 0%, rgba(32, 32, 56, 0.81) 100%);
+
+    &__title {
+        font-family: 'BebasNeue', sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 32px;
+        line-height: 38px;
+        color: #FFFFFF;
+    }
+
+    &__info {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 33px;
+
+        &__divider {
+            border: 2px solid #444683;
+        }
+
+        &__section {
+            display: flex;
+            align-items: flex-start;
+
+            &:first-child {
+                width: 12%;
+            }
+
+            &:nth-child(5),
+            &:nth-child(7),
+            &:nth-child(8),
+            &:nth-child(10) {
+                width: 9%;
+            }
+
+            .info {
+                display: flex;
+                flex-direction: column;
+                margin-left: 8px;
+
+                &__value {
+                    margin-top: -7px;
+                    font-family: 'BebasNeue', sans-serif;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 48px;
+                    line-height: 58px;
+                    color: #FFFFFF;
+                }
+
+                &__title {
+                    font-family: 'Montserrat', sans-serif;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 12px;
+                    line-height: 15px;
+                    color: #FFFFFF;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,47 @@
+@import "@/index.scss";
+
+.profile {
+    display: flex;
+    background: #181829;
+
+    &__wrapper {
+        display: grid;
+        grid-template-columns: 1.5fr 2fr 2fr;
+        width: 1440px;
+        max-width: 1440px;
+        margin: 5% auto 10%;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        width: 75%;
+
+        &__gradient {
+            position: absolute;
+            width: 421px;
+            height: 268px;
+            background: linear-gradient(260.42deg, #FF00CB 14.71%, #00A3FF 96.59%);
+            filter: blur(244px);
+        }
+
+        .logo {
+            z-index: 1;
+            width: 186.64px;
+            height: 186.64px;
+        }
+
+        .player-name {
+            z-index: 1;
+            font-family: 'BebasNeue', sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 48px;
+            line-height: 58px;
+            text-align: center;
+            color: #FFFFFF;
+        }
+    }
+}
