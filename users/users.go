@@ -37,6 +37,8 @@ type DB interface {
 	UpdatePassword(ctx context.Context, passwordHash []byte, id uuid.UUID) error
 	// UpdateWalletAddress updates user's address of wallet in the database.
 	UpdateWalletAddress(ctx context.Context, wallet evmsignature.Address, id uuid.UUID) error
+	// UpdateNonce updates nonce by user.
+	UpdateNonce(ctx context.Context, id uuid.UUID, nonce []byte) error
 	// Delete deletes a user in the database.
 	Delete(ctx context.Context, id uuid.UUID) error
 	// GetNickNameByID returns nickname by user id from the database.
@@ -59,6 +61,9 @@ const (
 	StatusSuspended Status = 2
 )
 
+// DefaultMessageForRegistration use for registration user by metamask.
+const DefaultMessageForRegistration = "Register with metamask"
+
 // User describes user entity.
 type User struct {
 	ID           uuid.UUID            `json:"id"`
@@ -68,6 +73,7 @@ type User struct {
 	FirstName    string               `json:"firstName"`
 	LastName     string               `json:"lastName"`
 	Wallet       evmsignature.Address `json:"wallet"`
+	Nonce        []byte               `json:"nonce"`
 	LastLogin    time.Time            `json:"lastLogin"`
 	Status       Status               `json:"status"`
 	CreatedAt    time.Time            `json:"createdAt"`
@@ -106,27 +112,6 @@ type Profile struct {
 type Password struct {
 	Password    string `json:"password"`
 	NewPassword string `json:"newPassword"`
-}
-
-// LoginMetamaskFields for login user from metamask.
-type LoginMetamaskFields struct {
-	Message string               `json:"message"`
-	Hash    string               `json:"hash"`
-	Address evmsignature.Address `json:"address"`
-}
-
-// IsValid for check login user from metamask fields.
-func (lm LoginMetamaskFields) IsValid() bool {
-	switch {
-	case lm.Hash == "":
-		return false
-	case lm.Message == "":
-		return false
-	case lm.Address == "":
-		return false
-	default:
-		return true
-	}
 }
 
 // IsPasswordValid check the password for all conditions.

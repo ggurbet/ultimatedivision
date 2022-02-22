@@ -79,6 +79,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             first_name       VARCHAR                  NOT NULL,
             last_name        VARCHAR                  NOT NULL,
             wallet_address   VARCHAR,
+            nonce            BYTEA,
             last_login       TIMESTAMP WITH TIME ZONE NOT NULL,
             status           INTEGER                  NOT NULL,
             created_at       TIMESTAMP WITH TIME ZONE NOT NULL

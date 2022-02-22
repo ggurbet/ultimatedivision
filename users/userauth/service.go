@@ -4,13 +4,13 @@
 package userauth
 
 import (
+	"bytes"
 	"context"
+	"crypto/rand"
 	"crypto/subtle"
-	"strings"
 	"time"
 
 	"github.com/BoostyLabs/evmsignature"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/google/uuid"
@@ -393,64 +393,71 @@ func (service *Service) ResetPassword(ctx context.Context, newPassword string) e
 	return Error.Wrap(service.users.UpdatePassword(ctx, user.PasswordHash, user.ID))
 }
 
-// TokenMessage creates message token and send to metamask for login.
-func (service *Service) TokenMessage(ctx context.Context) (token string, err error) {
-	claims := auth.Claims{
-		ExpiresAt: time.Now().UTC().Add(PreAuthTokenExpirationTime),
+// Nonce creates nonce and send to metamask for login.
+func (service *Service) Nonce(ctx context.Context, address evmsignature.Address) (string, error) {
+	user, err := service.users.GetByWalletAddress(ctx, address)
+	if err != nil {
+		return "", Error.Wrap(err)
 	}
 
-	token, err = service.signer.CreateToken(ctx, &claims)
-	return token, Error.Wrap(err)
+	nonce := hexutil.Encode(user.Nonce)
+
+	return nonce, nil
 }
 
-// CheckMetamaskTokenMessage - parses token-message and checks for expiration time.
-func (service *Service) CheckMetamaskTokenMessage(ctx context.Context, tokenMessage string) error {
-	token, err := auth.FromBase64URLString(tokenMessage)
+// RegisterWithMetamask creates user by credentials.
+func (service *Service) RegisterWithMetamask(ctx context.Context, signature []byte) error {
+	walletAddress, err := recoverWalletAddress([]byte(users.DefaultMessageForRegistration), signature)
 	if err != nil {
 		return Error.Wrap(err)
 	}
 
-	claims, err := service.authenticate(token)
+	_, err = service.users.GetByWalletAddress(ctx, walletAddress)
+	if !users.ErrNoUser.Has(err) {
+		return Error.New("this user already exist")
+	}
+
+	nonce := make([]byte, 32)
+	_, err = rand.Read(nonce)
 	if err != nil {
-		return ErrUnauthenticated.Wrap(err)
+		return Error.Wrap(err)
 	}
 
-	if !claims.ExpiresAt.IsZero() && claims.ExpiresAt.Before(time.Now()) {
-		return ErrUnauthenticated.New("token expiration time has expired")
+	user := users.User{
+		ID:        uuid.New(),
+		Nonce:     nonce,
+		LastLogin: time.Time{},
+		Status:    users.StatusActive,
+		CreatedAt: time.Now().UTC(),
+		Wallet:    walletAddress,
+	}
+	err = service.users.Create(ctx, user)
+	if err != nil {
+		return Error.Wrap(err)
 	}
 
-	return Error.Wrap(err)
+	return nil
 }
 
 // LoginWithMetamask authenticates user by credentials and returns login token.
-func (service *Service) LoginWithMetamask(ctx context.Context, loginMetamaskFields users.LoginMetamaskFields) (token string, err error) {
-	verifyLoginMetamaskFields, err := verifyLoginMetamaskFields(loginMetamaskFields)
+func (service *Service) LoginWithMetamask(ctx context.Context, nonce string, signature []byte) (string, error) {
+	walletAddress, err := recoverWalletAddress([]byte(nonce), signature)
 	if err != nil {
 		return "", Error.Wrap(err)
 	}
 
-	if !verifyLoginMetamaskFields {
-		return "", Error.New("login metamask fields are wrong")
+	user, err := service.users.GetByWalletAddress(ctx, walletAddress)
+	if err != nil {
+		return "", Error.Wrap(err)
 	}
 
-	wallet := evmsignature.Address(strings.ToLower(string(loginMetamaskFields.Address)))
-
-	user, err := service.users.GetByWalletAddress(ctx, wallet)
-	switch {
-	case users.ErrNoUser.Has(err):
-		user = users.User{
-			ID:        uuid.New(),
-			LastLogin: time.Time{},
-			Status:    users.StatusActive,
-			CreatedAt: time.Now().UTC(),
-			Wallet:    wallet,
-		}
-		err = service.users.Create(ctx, user)
-		if err != nil {
-			return "", Error.Wrap(err)
-		}
-	case err != nil:
+	decodeNonce, err := hexutil.Decode(nonce)
+	if err != nil {
 		return "", Error.Wrap(err)
+	}
+
+	if !bytes.Equal(decodeNonce, user.Nonce) {
+		return "", Error.New("nonce is invalid")
 	}
 
 	claims := auth.Claims{
@@ -458,34 +465,45 @@ func (service *Service) LoginWithMetamask(ctx context.Context, loginMetamaskFiel
 		ExpiresAt: time.Now().UTC().Add(TokenExpirationTime),
 	}
 
-	token, err = service.signer.CreateToken(ctx, &claims)
+	token, err := service.signer.CreateToken(ctx, &claims)
+	if err != nil {
+		return "", Error.Wrap(err)
+	}
+
+	newNonce := make([]byte, 32)
+	_, err = rand.Read(newNonce)
+	if err != nil {
+		return "", Error.Wrap(err)
+	}
+
+	err = service.users.UpdateNonce(ctx, user.ID, newNonce)
 	if err != nil {
 		return "", Error.Wrap(err)
 	}
 
 	err = service.users.UpdateLastLogin(ctx, user.ID)
+	if err != nil {
+		service.log.Error("could not update last login", Error.Wrap(err))
+	}
 
-	return token, Error.Wrap(err)
+	return token, nil
 }
 
-// verifyLoginMetamaskFields function that verifies the authenticity of the address.
-func verifyLoginMetamaskFields(loginMetamaskFields users.LoginMetamaskFields) (bool, error) {
-	fromAddr := common.HexToAddress(string(loginMetamaskFields.Address))
-	hash := hexutil.MustDecode(loginMetamaskFields.Hash)
-
-	if hash[64] != 27 && hash[64] != 28 {
-		return false, Error.New("hash is wrong")
+// recoverWalletAddress function that verifies the authenticity of the address.
+func recoverWalletAddress(message, signature []byte) (evmsignature.Address, error) {
+	if signature[64] != 27 && signature[64] != 28 {
+		return "", Error.New("hash is wrong")
 	}
-	hash[64] -= 27
+	signature[64] -= 27
 
-	pubKey, err := crypto.SigToPub(evmsignature.SignHash([]byte(loginMetamaskFields.Message)), hash)
+	pubKey, err := crypto.SigToPub(evmsignature.SignHash(message), signature)
 	if err != nil {
-		return false, Error.Wrap(err)
+		return "", Error.Wrap(err)
 	}
 
 	recoveredAddr := crypto.PubkeyToAddress(*pubKey)
 
-	return fromAddr == recoveredAddr, nil
+	return evmsignature.Address(recoveredAddr.String()), nil
 }
 
 // SendEmailForChangeEmail - sends email for change users email address.

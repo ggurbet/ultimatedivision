@@ -29,7 +29,7 @@ type usersDB struct {
 
 // List returns all users from the data base.
 func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
-	rows, err := usersDB.conn.QueryContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, last_login, status, created_at FROM users")
+	rows, err := usersDB.conn.QueryContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, nonce, last_login, status, created_at FROM users")
 	if err != nil {
 		return nil, ErrUsers.Wrap(err)
 	}
@@ -40,7 +40,7 @@ func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
 	var data []users.User
 	for rows.Next() {
 		var user users.User
-		err := rows.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.LastLogin, &user.Status, &user.CreatedAt)
+		err := rows.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.Nonce, &user.LastLogin, &user.Status, &user.CreatedAt)
 		if err != nil {
 			return nil, ErrUsers.Wrap(err)
 		}
@@ -58,9 +58,9 @@ func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
 func (usersDB *usersDB) Get(ctx context.Context, id uuid.UUID) (users.User, error) {
 	var user users.User
 
-	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, last_login, status, created_at FROM users WHERE id=$1", id)
+	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, nonce, last_login, status, created_at FROM users WHERE id=$1", id)
 
-	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.LastLogin, &user.Status, &user.CreatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.Nonce, &user.LastLogin, &user.Status, &user.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return user, users.ErrNoUser.Wrap(err)
@@ -77,9 +77,9 @@ func (usersDB *usersDB) GetByEmail(ctx context.Context, email string) (users.Use
 	var user users.User
 	emailNormalized := mail.Normalize(email)
 
-	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, last_login, status, created_at FROM users WHERE email_normalized=$1", emailNormalized)
+	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, nonce, last_login, status, created_at FROM users WHERE email_normalized=$1", emailNormalized)
 
-	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.LastLogin, &user.Status, &user.CreatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.Nonce, &user.LastLogin, &user.Status, &user.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return user, users.ErrNoUser.Wrap(err)
@@ -94,9 +94,9 @@ func (usersDB *usersDB) GetByEmail(ctx context.Context, email string) (users.Use
 func (usersDB *usersDB) GetByWalletAddress(ctx context.Context, walletAddress evmsignature.Address) (users.User, error) {
 	var user users.User
 
-	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, last_login, status, created_at FROM users WHERE wallet_address = $1", walletAddress)
+	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, nonce, last_login, status, created_at FROM users WHERE wallet_address = $1", walletAddress)
 
-	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.LastLogin, &user.Status, &user.CreatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.Nonce, &user.LastLogin, &user.Status, &user.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return user, users.ErrNoUser.Wrap(err)
@@ -119,13 +119,14 @@ func (usersDB *usersDB) Create(ctx context.Context, user users.User) error {
                   first_name, 
                   last_name,
                   wallet_address,
+                  nonce,
                   last_login, 
                   status, 
                   created_at) 
-                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`
 
 	_, err := usersDB.conn.ExecContext(ctx, query, user.ID, user.Email, emailNormalized, user.PasswordHash,
-		user.NickName, user.FirstName, user.LastName, user.Wallet, user.LastLogin, user.Status, user.CreatedAt)
+		user.NickName, user.FirstName, user.LastName, user.Wallet, user.Nonce, user.LastLogin, user.Status, user.CreatedAt)
 
 	return ErrUsers.Wrap(err)
 }
@@ -199,6 +200,21 @@ func (usersDB *usersDB) UpdatePassword(ctx context.Context, passwordHash []byte,
 // UpdateWalletAddress updates wallet address in the database.
 func (usersDB *usersDB) UpdateWalletAddress(ctx context.Context, wallet evmsignature.Address, id uuid.UUID) error {
 	result, err := usersDB.conn.ExecContext(ctx, "UPDATE users SET wallet_address=$1 WHERE id=$2", wallet, id)
+	if err != nil {
+		return ErrUsers.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return users.ErrNoUser.New("user does not exist")
+	}
+
+	return ErrUsers.Wrap(err)
+}
+
+// UpdateNonce updates nonce by user.
+func (usersDB *usersDB) UpdateNonce(ctx context.Context, id uuid.UUID, nonce []byte) error {
+	result, err := usersDB.conn.ExecContext(ctx, "UPDATE users SET nonce=$1 WHERE id=$2", nonce, id)
 	if err != nil {
 		return ErrUsers.Wrap(err)
 	}

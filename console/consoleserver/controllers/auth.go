@@ -9,6 +9,9 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/BoostyLabs/evmsignature"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 
@@ -333,19 +336,37 @@ func (auth *Auth) serveError(w http.ResponseWriter, status int, err error) {
 	}
 }
 
-// SendTokenMessageForMetamask is an endpoint to send message to metamask for login.
-func (auth *Auth) SendTokenMessageForMetamask(w http.ResponseWriter, r *http.Request) {
+// Nonce is an endpoint to send nonce to metamask for login.
+func (auth *Auth) Nonce(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
+	query := r.URL.Query()
 
-	tokenMessage, err := auth.userAuth.TokenMessage(ctx)
-	if err != nil {
-		auth.log.Error("could not get message token", AuthError.Wrap(err))
-		auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+	address := query.Get("address")
+	if address == "" {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("address is empty"))
 		return
 	}
 
-	if err = json.NewEncoder(w).Encode(tokenMessage); err != nil {
+	if !common.IsHexAddress(address) {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("address is wrong"))
+		return
+	}
+
+	nonce, err := auth.userAuth.Nonce(ctx, evmsignature.Address(address))
+	if err != nil {
+		switch {
+		case users.ErrNoUser.Has(err):
+			auth.serveError(w, http.StatusNotFound, AuthError.Wrap(err))
+		case userauth.ErrUnauthenticated.Has(err):
+			auth.serveError(w, http.StatusUnauthorized, AuthError.Wrap(err))
+		default:
+			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		}
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(nonce); err != nil {
 		auth.log.Error("failed to write json response", AuthError.Wrap(err))
 		return
 	}
@@ -356,33 +377,29 @@ func (auth *Auth) MetamaskLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 
-	var err error
-	var request users.LoginMetamaskFields
-	if err = json.NewDecoder(r.Body).Decode(&request); err != nil {
+	type MetamaskFields struct {
+		Nonce     string `json:"nonce"`
+		Signature string `json:"signature"`
+	}
+
+	var request MetamaskFields
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
 		return
 	}
 
-	if !request.IsValid() {
+	if request.Signature == "" || request.Nonce == "" {
 		auth.serveError(w, http.StatusBadRequest, AuthError.New("did not fill in all the fields"))
 		return
 	}
 
-	err = auth.userAuth.CheckMetamaskTokenMessage(ctx, request.Message)
+	signature, err := hexutil.Decode(request.Signature)
 	if err != nil {
-		auth.log.Error("could not get auth token", AuthError.Wrap(err))
-		switch {
-		case userauth.ErrUnauthenticated.Has(err):
-			auth.serveError(w, http.StatusUnauthorized, AuthError.Wrap(err))
-		default:
-			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
-		}
-		return
+		auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
 	}
 
-	authToken, err := auth.userAuth.LoginWithMetamask(ctx, request)
+	authToken, err := auth.userAuth.LoginWithMetamask(ctx, request.Nonce, signature)
 	if err != nil {
-		auth.log.Error("could not get auth token", AuthError.Wrap(err))
 		switch {
 		case users.ErrNoUser.Has(err):
 			auth.serveError(w, http.StatusNotFound, AuthError.Wrap(err))
@@ -396,6 +413,42 @@ func (auth *Auth) MetamaskLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	auth.cookie.SetTokenCookie(w, authToken)
+}
+
+// MetamaskRegister is an endpoint to register user.
+func (auth *Auth) MetamaskRegister(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	var sig string
+	if err := json.NewDecoder(r.Body).Decode(&sig); err != nil {
+		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
+		return
+	}
+
+	if sig == "" {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("signature is empty"))
+		return
+	}
+
+	signature, err := hexutil.Decode(sig)
+	if err != nil {
+		auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+	}
+
+	err = auth.userAuth.RegisterWithMetamask(ctx, signature)
+	if err != nil {
+		switch {
+		case users.ErrNoUser.Has(err):
+			auth.serveError(w, http.StatusNotFound, AuthError.Wrap(err))
+		case userauth.ErrUnauthenticated.Has(err):
+			auth.serveError(w, http.StatusUnauthorized, AuthError.Wrap(err))
+		default:
+			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		}
+
+		return
+	}
 }
 
 // SendEmailForChangeEmail sends email for change users email.
