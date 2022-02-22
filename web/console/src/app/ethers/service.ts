@@ -5,7 +5,7 @@ import { ethers } from 'ethers';
 
 import { EthersClient } from '@/api/ethers';
 import { buildHash } from '../internal/ethers';
-import { SignedMessage, Transaction } from '.';
+import { Transaction } from '.';
 import { TransactionIdentificators } from '@/app/ethers';
 import { web3Provider } from '@/app/plugins/service';
 import { MatchTransaction } from '../../matches';
@@ -41,17 +41,11 @@ export class Service {
         return await this.client.getTransaction(signature);
     }
 
-    /** Gets message from API for sign */
-    public async getMessage() {
-        return await this.client.getMessage();
-    }
 
     /** Returns required fields for metamask login */
-    public async login() {
-        const message = await this.getMessage();
-        const adress = await this.getWallet();
+    public async login(message: string) {
         const signedMessage = await this.signMessage(message);
-        await this.client.signMessage(new SignedMessage(message, signedMessage, adress));
+        return signedMessage;
     }
 
     public async getNonce(UDTContractAddress: string, abi: any) {

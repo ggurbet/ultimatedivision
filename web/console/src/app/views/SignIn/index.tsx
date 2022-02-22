@@ -19,12 +19,16 @@ import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { loginUser } from '@/app/store/actions/users';
 import { Validator } from '@/users/validation';
 import { ServicePlugin } from '@/app/plugins/service';
+import { SignedMessage } from '@/app/ethers';
+import { EthersClient } from '@/api/ethers';
 
 import './index.scss';
+import { NotFoundError } from '@/api';
 
 const SignIn: React.FC = () => {
     const onboarding = useMemo(() => new MetaMaskOnboarding(), []);
-    const service = ServicePlugin.create();
+    const ethersService = useMemo(() => ServicePlugin.create(), []);
+    const client = useMemo(() => new EthersClient(), []);
     const dispatch = useDispatch();
     const history = useHistory();
     /** controlled values for form inputs */
@@ -58,7 +62,7 @@ const SignIn: React.FC = () => {
     };
 
     /** user data that will send to server */
-    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!validateForm()) {
@@ -103,34 +107,46 @@ const SignIn: React.FC = () => {
     ];
 
     /** Login with matamask. */
-    const metamaskLogin = async() => {
-        /** Code which indicates that 'eth_requestAccounts' already processing */
-        const METAMASK_RPC_ERROR_CODE = -32002;
-        if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-            try {
-                // @ts-ignore
-                await window.ethereum.request({
-                    method: 'eth_requestAccounts',
+    const login: () => Promise<void> = async () => {
+        if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+            onboarding.startOnboarding();
+
+            return;
+        }
+        await window.ethereum.request({
+            method: 'eth_requestAccounts',
+        });
+        try {
+            const address = await ethersService.getWallet();
+            const message = await client.getNonce(address);
+            const signedMessage = await ethersService.signMessage(message);
+            await client.login(new SignedMessage(message, signedMessage));
+            history.push(RouteConfig.MarketPlace.path);
+            setLocalStorageItem('IS_LOGGED_IN', true);
+        } catch (error: any) {
+            if (!(error instanceof NotFoundError)) {
+                toast.error('Something went wrong', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    theme: 'colored',
                 });
 
-                await service.login();
-
-                setLocalStorageItem('IS_LOGGINED', true);
-
-                history.push(RouteConfig.MarketPlace.path);
-            } catch (error: any) {
-                error.code === METAMASK_RPC_ERROR_CODE
-                    ? toast.error('Please open metamask manually!', {
-                        position: toast.POSITION.TOP_RIGHT,
-                        theme: 'colored',
-                    })
-                    : toast.error('Something went wrong', {
-                        position: toast.POSITION.TOP_RIGHT,
-                        theme: 'colored',
-                    });
+                return;
             }
-        } else {
-            onboarding.startOnboarding();
+            try {
+                const signedMessage = await ethersService.signMessage('Register with metamask');
+                await client.register(signedMessage);
+                const address = await ethersService.getWallet();
+                const message = await client.getNonce(address);
+                const signedNonce = await ethersService.signMessage(message);
+                await client.login(new SignedMessage(message, signedNonce));
+                history.push(RouteConfig.MarketPlace.path);
+                setLocalStorageItem('IS_LOGGED_IN', true);
+            } catch (error: any) {
+                toast.error('Something went wrong', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    theme: 'colored',
+                });
+            }
         }
     };
 
@@ -203,7 +219,7 @@ const SignIn: React.FC = () => {
                                 src={metamask}
                                 alt="Metamask logo"
                                 className="register__sign-in__sign-form__logos__metamask"
-                                onClick={() => metamaskLogin()}
+                                onClick={login}
                             />
                         </div>
                     </div>
