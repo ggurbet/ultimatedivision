@@ -80,6 +80,12 @@ module.exports = (env, argv) => {
         },
         entry: "./src/index.tsx",
         target: "web",
+        watch: !isProduction,
+        watchOptions: {
+            aggregateTimeout: 200,
+            poll: 1000,
+            ignored: /node_modules/,
+        },
         output: {
             path: path.resolve(__dirname, "dist/"),
             filename: "[name].[hash].js",
