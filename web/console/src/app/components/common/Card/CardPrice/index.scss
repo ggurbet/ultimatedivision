@@ -169,13 +169,14 @@
 }
 
 .card__sell-btn {
+    display: none;
     width: 248px;
     height: 33px;
     margin: 26px 5%;
     border: none;
     background: radial-gradient(254.55% 254.55% at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%), linear-gradient(180deg, #5CFF79 0%, #3CCF56 100%);
     cursor: not-allowed;
-
+    
     &__text {
         font-family: "BebasNeue", sans-serif;
         font-style: normal;
