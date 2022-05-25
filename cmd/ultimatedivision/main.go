@@ -82,6 +82,7 @@ func init() {
 	rootCmd.AddCommand(seedCmd)
 	rootCmd.AddCommand(matchCmd)
 	rootCmd.AddCommand(destroyCmd)
+	rootCmd.PersistentFlags().StringVar(&defaultConfigDir, "config", defaultConfigDir, "Config file path")
 }
 
 func main() {

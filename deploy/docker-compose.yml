@@ -1,0 +1,62 @@
+version: "3"
+
+services:
+  app:
+    container_name: UDApp
+    image: ${HOST_FOR_DOCKER_IMAGE}/ultimate_division${ENVIRONMENT}:latest
+    ports:
+      - "8087:8087" # Forward the exposed port 5000 on the container to port 8088 on the host machine (8088:5000).
+      - "8088:8088"
+    restart: unless-stopped
+    volumes:
+      - ${PROJECT_DATA_PATH}/ultimate_division:/app/data
+      - ${PROJECT_CONFIGS_PATH}/ultimate_division:/config
+      - ${PROJECT_ASSETS_PATH}:/assets
+    depends_on:
+      - ultimatedivision_db # This service depends on postgres. Start that first.
+    networks:
+      - fullstack
+
+  nft_signer:
+    container_name: UDNFTSigner
+    image: ${HOST_FOR_DOCKER_IMAGE}/ultimate_division_nft_signer${ENVIRONMENT}:latest
+    restart: unless-stopped
+    volumes:
+      - ${PROJECT_DATA_PATH}/signer:/app/data
+      - ${PROJECT_CONFIGS_PATH}/nft_signer:/config
+    depends_on:
+      - ultimatedivision_db # This service depends on postgres. Start that first.
+    networks:
+      - fullstack
+
+  currency_signer:
+    container_name: UDCurrencySigner
+    image: ${HOST_FOR_DOCKER_IMAGE}/ultimate_division_currency_signer${ENVIRONMENT}:latest
+    restart: unless-stopped
+    volumes:
+      - ${PROJECT_DATA_PATH}/currency_signer:/app/data
+      - ${PROJECT_CONFIGS_PATH}/currency_signer:/config
+    depends_on:
+      - ultimatedivision_db # This service depends on postgres. Start that first.
+    networks:
+      - fullstack
+
+  ultimatedivision_db:
+    restart: always
+    image: postgres:latest
+    container_name: ultimatedivision_db
+    ports:
+      - "5635:5432"
+    volumes:
+      - ${PROJECT_DATA_PATH}/db:/var/lib/postgresql/data
+    networks:
+      - fullstack
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+# Networks to be created to facilitate communication between containers
+networks:
+  fullstack:
+    driver: bridge

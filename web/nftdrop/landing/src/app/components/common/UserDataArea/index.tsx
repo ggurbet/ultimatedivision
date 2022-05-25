@@ -60,12 +60,12 @@ export const UserDataArea: React.FC<{
                 onChange={handleChange}
                 type={type}
             />
-            {error && <label className={`${className}__error`} htmlFor={value}>
-                {error}
-            </label>}
-            {successLabel && <label className={`${className}__success`} htmlFor={value}>
-                {successLabel}
-            </label>}
+            {/*{error && <label className={`${className}__error`} htmlFor={value}>*/}
+            {/*    {error}*/}
+            {/*</label>}*/}
+            {/*{successLabel && <label className={`${className}__success`} htmlFor={value}>*/}
+            {/*    {successLabel}*/}
+            {/*</label>}*/}
         </div>
     );
 };

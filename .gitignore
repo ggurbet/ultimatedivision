@@ -13,3 +13,10 @@
 /.vs
 .idea/
 node_modules
+
+# Depependenci
+/vendor
+/deploy/.env
+
+# secrets
+/deploy/configs/
