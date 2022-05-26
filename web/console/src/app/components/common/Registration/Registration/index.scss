@@ -2,7 +2,8 @@
 @import "@/app/views/SignIn/index.scss";
 
 .pop-up-registration {
-    background-color: rgba(0, 0, 0, 0.685);
+    z-index: 10;
+    overflow: hidden;
     position: fixed;
     height: 100vh;
     width: 100vw;
@@ -11,72 +12,28 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10;
-    overflow: hidden;
+    background: rgba(35, 34, 27, 0.13);
+    backdrop-filter: blur(54px);
+    -webkit-backdrop-filter: blur(54px);
 
     &__wrapper {
         position: absolute;
-        top: 30px;
-        background-color: white;
+        top: 50%;
+        left: 50%;
+        max-height: 456px;
         height: 100%;
-        width: 1024px;
+        width: 656px;
+        transform: translate(-50%, -50%);
+        border-radius: 30px;
         overflow: hidden;
-        max-height: 780px;
+        background-color: white;
 
         &__close {
-            line-height: 20px;
             position: absolute;
-            right: 10px;
-            top: 10px;
             cursor: pointer;
-        }
-    }
-}
-
-@media (max-width: $desktopBreakPoint) {
-
-    .pop-up-registration {
-
-        &__wrapper {
-            max-height: 640px;
-            width: 80%;
-            top: 10px;
-            height: 100%;
-        }
-    }
-}
-
-@media (max-width: $tabletBreakPoint) {
-
-    .pop-up-registration {
-
-        &__wrapper {
-            max-height: 620px;
-            width: 90%;
-            top: 100px;
-        }
-    }
-}
-
-@media (max-width: $phoneBreakPoint) {
-
-    .pop-up-registration {
-
-        &__wrapper {
-            width: 90%;
-            top: 30px;
-        }
-    }
-}
-
-@media (max-width: $phoneBreakPoint - 240px) {
-
-    .pop-up-registration {
-
-        &__wrapper {
-            width: 90%;
-            top: 10px;
-            max-height: 550px;
+            right: 26.5px;
+            top: 26.5px;
+            line-height: 20px;
         }
     }
 }

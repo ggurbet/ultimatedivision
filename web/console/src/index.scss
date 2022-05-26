@@ -58,6 +58,22 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: "Orbitron";
+    src: url("@static/fonts/Orbitron-Black.ttf") format("truetype");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Urbanist";
+    src: url("@static/fonts/Urbanist-Black.ttf") format("truetype");
+    font-style: normal;
+    font-weight: lighter;
+    font-display: swap;
+}
+
 html {
     font-family: "BebasNeue", sans-serif;
     scroll-behavior: smooth;

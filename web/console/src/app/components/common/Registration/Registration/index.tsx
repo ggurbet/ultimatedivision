@@ -3,21 +3,16 @@
 
 import { useState } from 'react';
 
-import { ResetPassword }
-    from '@/app/components/common/Registration/ResetPassword';
-import { SignUp }
-    from '@/app/components/common/Registration/SignUp';
-import { SignIn }
-    from '@/app/components/common/Registration/SignIn';
+import { ResetPassword } from '@/app/components/common/Registration/ResetPassword';
+import { SignUp } from '@/app/components/common/Registration/SignUp';
+import { SignIn } from '@/app/components/common/Registration/SignIn';
 
-import closeButton from '@static/img/registerPage/close.svg';
+import closeButton from '@static/img/login/close-icon.svg';
 
 import './index.scss';
 
 // TODO: it will be reworked on wrapper with children props.
-export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }> = ({
-    closeRegistrationPopup,
-}) => {
+export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }> = ({ closeRegistrationPopup }) => {
     /** Checks if concret popup component is visible */
     const [isShowSignIn, setIsShowSignIn] = useState(true);
     const [isShowSignUp, setIsShowSignUp] = useState(false);
@@ -35,31 +30,16 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
         setIsShowSignUp(!isShowSignUp);
     };
 
-    /** Shows ResetPasswordPopUp component and closes others. */
-    const showResetPasswordComponent = () => {
-        setIsShowSignIn(!isShowSignIn);
-        setIsShowResetPassword(!isShowResetPassword);
-    };
-
-    return <div className="pop-up-registration">
-        <div className="pop-up-registration__wrapper">
-            <div
-                className="pop-up-registration__wrapper__close"
-                onClick={closeRegistrationPopup}
-            >
-                <img
-                    src={closeButton}
-                    alt="close button"
-                />
+    return (
+        <div className="pop-up-registration">
+            <div className="pop-up-registration__wrapper">
+                <div className="pop-up-registration__wrapper__close" onClick={closeRegistrationPopup}>
+                    <img src={closeButton} alt="close button" />
+                </div>
+                {isShowSignIn && <SignIn />}
+                {isShowSignUp && <SignUp showSignUpComponent={showSignUpComponent} />}
+                {isShowResetPassword && <ResetPassword showSignInComponent={showSignInComponent} />}
             </div>
-            {isShowSignIn && <SignIn
-                showResetPasswordComponent={showResetPasswordComponent}
-                showSignUpComponent={showSignUpComponent}
-            />}
-            {isShowSignUp && <SignUp showSignUpComponent={showSignUpComponent} />}
-            {isShowResetPassword && <ResetPassword
-                showSignInComponent={showSignInComponent}
-            />}
         </div>
-    </div>;
+    );
 };
