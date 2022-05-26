@@ -10,6 +10,9 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // ReadLine reads certain line from the file.
@@ -48,16 +51,16 @@ func CountLines(r io.Reader) (int, error) {
 func ApplicationDir(subdir ...string) string {
 	for i := range subdir {
 		if runtime.GOOS == "windows" || runtime.GOOS == "darwin" {
-			subdir[i] = strings.Title(subdir[i])
+			subdir[i] = cases.Title(language.English).String(subdir[i])
 		} else {
-			subdir[i] = strings.ToLower(subdir[i])
+			subdir[i] = cases.Lower(language.English).String(subdir[i])
 		}
 	}
 
 	var appdir string
 
 	home := os.Getenv("HOME")
-	//
+
 	switch runtime.GOOS {
 	case "windows":
 		// Windows standards: https://msdn.microsoft.com/en-us/library/windows/apps/hh465094.aspx?f=255&MSPPError=-2147217396

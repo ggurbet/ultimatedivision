@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	_ "github.com/lib/pq" // using postgres driver
+	_ "github.com/lib/pq" // using postgres driver.
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"

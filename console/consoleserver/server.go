@@ -224,7 +224,7 @@ func (server *Server) appHandler(w http.ResponseWriter, r *http.Request) {
 	header := w.Header()
 
 	header.Set("Content-Type", "text/html; charset=UTF-8")
-	// header.Set("X-Content-Type-Options", "nosniff")
+	// header.Set("X-Content-Type-Options", "nosniff").
 	header.Set("Referrer-Policy", "same-origin")
 
 	if server.templates.index == nil {

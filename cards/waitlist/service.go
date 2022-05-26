@@ -83,7 +83,7 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 		return transaction, ErrWaitlist.Wrap(err)
 	}
 
-	// TODO: add transaction and mb lock db
+	// TODO: add transaction and mb lock db.
 	lastTokenID, err := service.GetLastTokenID(ctx)
 	if err != nil {
 		if !ErrNoItem.Has(err) {

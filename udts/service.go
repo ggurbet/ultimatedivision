@@ -15,7 +15,7 @@ var ErrUDTs = errs.Class("UDTs service error")
 
 // Service is handling UDTs related logic.
 //
-// architecture: Service
+// architecture: Service.
 type Service struct {
 	udts DB
 }

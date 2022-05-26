@@ -99,7 +99,7 @@ const Division: React.FC = () => {
     const changeChoosedDivisionClass = (div: string) =>
         `division__item${activeDivisions === div ? '-active' : '-inactive'}`;
 
-    // TODO: Mock data (waiting backend)
+    // TODO: Mock data (waiting backend).
     const divisions: string[] = [
         '1',
         '2',

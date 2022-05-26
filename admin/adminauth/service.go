@@ -30,7 +30,7 @@ var (
 
 // Service is handling all admin authentication logic.
 //
-// architecture: Service
+// architecture: Service.
 type Service struct {
 	admins admins.DB
 	signer auth.TokenSigner

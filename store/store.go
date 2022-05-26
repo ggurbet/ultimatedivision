@@ -17,7 +17,7 @@ var ErrNoSetting = errs.Class("setting does not exist")
 
 // DB is exposing access to store db.
 //
-// architecture: DB
+// architecture: DB.
 type DB interface {
 	// Create creates setting of store in the database.
 	Create(ctx context.Context, setting Setting) error

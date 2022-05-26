@@ -19,7 +19,7 @@ var ErrNoUser = errs.Class("user does not exist")
 
 // DB exposes access to users db.
 //
-// architecture: DB
+// architecture: DB.
 type DB interface {
 	// List returns all users from the data base.
 	List(ctx context.Context) ([]User, error)

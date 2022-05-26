@@ -73,7 +73,7 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 					return ErrMarketplace.Wrap(err)
 				}
 			}
-			// TODO: check other items
+			// TODO: check other items.
 
 		}
 		return ChoreError.Wrap(err)

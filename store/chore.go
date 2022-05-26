@@ -22,7 +22,7 @@ var (
 
 // Chore requests access token for contis api calls, re-requests it after token's expiration time.
 //
-// architecture: Chore
+// architecture: Chore.
 type Chore struct {
 	Loop    *thelooper.Loop
 	config  Config

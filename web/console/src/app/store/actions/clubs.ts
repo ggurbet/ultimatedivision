@@ -76,7 +76,7 @@ export const exchangeCards = (
     },
 });
 
-// Thunks
+// Thunks.
 
 export const createClubs = () =>
     async function(dispatch: Dispatch) {

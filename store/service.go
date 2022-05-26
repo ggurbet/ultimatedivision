@@ -19,7 +19,7 @@ var ErrStore = errs.Class("store service error")
 
 // Service is handling store related logic.
 //
-// architecture: Service
+// architecture: Service.
 type Service struct {
 	config   Config
 	store    DB
@@ -51,10 +51,10 @@ func (service *Service) Buy(ctx context.Context, createNFT waitlist.CreateNFT) (
 
 	randNumberCard := rand.Intn(len(cards)) - 1
 	createNFT.CardID = cards[randNumberCard].ID
-	// TODO: add price in setting of store
+	// TODO: add price in setting of store.
 	createNFT.Value = *big.NewInt(100)
 
-	// TODO: change selector of buy method
+	// TODO: change selector of buy method.
 	transaction, err = service.waitlist.Create(ctx, createNFT)
 
 	return transaction, ErrStore.Wrap(err)

@@ -18,7 +18,7 @@ var ErrNoAdmin = errs.Class("admin does not exist")
 
 // DB is exposing access to admins db.
 //
-// architecture: DB
+// architecture: DB.
 type DB interface {
 	// List returns all admins from database.
 	List(ctx context.Context) ([]Admin, error)

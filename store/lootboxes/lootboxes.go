@@ -18,7 +18,7 @@ var ErrNoLootBox = errs.Class("loot box does not exist")
 
 // DB is exposing access to lootboxes db.
 //
-// architecture: DB
+// architecture: DB.
 type DB interface {
 	// Create creates lootbox of user in db.
 	Create(ctx context.Context, lootBox LootBox) error

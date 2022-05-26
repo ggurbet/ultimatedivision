@@ -7,7 +7,7 @@ import './index.scss';
 
 // The maximum length of the list of players that is shown on the page.
 const MAX_PLAYERS_LENGTH: number = 5;
-// TODO: Mock data (so that the list of players does not start from 0)
+// TODO: Mock data (so that the list of players does not start from 0).
 const INCREMENT_INDEX: number = 1;
 
 const PlayersList: React.FC<{title: string; logo: string; players: string[]}> = ({ title, logo, players }) =>

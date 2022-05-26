@@ -9,7 +9,7 @@ import (
 	"errors"
 
 	"github.com/BoostyLabs/evmsignature"
-	_ "github.com/lib/pq" // using postgres driver
+	_ "github.com/lib/pq" // using postgres driver.
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/nftdrop/whitelist"
@@ -24,7 +24,7 @@ var ErrWhitelist = errs.Class("whitelist repository error")
 
 // whitelistDB provides access to whitelist db.
 //
-// architecture: Database
+// architecture: Database.
 type whitelistDB struct {
 	conn *sql.DB
 }

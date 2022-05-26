@@ -105,21 +105,21 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		Database: db,
 	}
 
-	{ // whitelist setup
+	{ // whitelist setup.
 		peer.Whitelist.Service = whitelist.NewService(
 			config.Whitelist.Config,
 			peer.Database.Whitelist(),
 		)
 	}
 
-	{ // subscribers setup
+	{ // subscribers setup.
 		peer.Subscribers.Service = subscribers.NewService(
 			peer.Database.Subscribers(),
 			config.Subscribers.Config,
 		)
 	}
 
-	{ // admins setup
+	{ // admins setup.
 		peer.Admins.Service = admins.NewService(
 			peer.Database.Admins(),
 		)
@@ -131,7 +131,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // admin setup
+	{ // admin setup.
 		peer.Admin.Listener, err = net.Listen("tcp", config.Admins.Server.Address)
 		if err != nil {
 			return nil, err
@@ -151,7 +151,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		}
 	}
 
-	{ // landing setup
+	{ // landing setup.
 		peer.Landing.Listener, err = net.Listen("tcp", config.Landing.Server.Address)
 		if err != nil {
 			return nil, err

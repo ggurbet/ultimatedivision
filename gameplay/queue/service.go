@@ -52,7 +52,7 @@ func (service *Service) Create(ctx context.Context, client Client) error {
 		return ErrQueue.Wrap(err)
 	}
 
-	// TODO: add division ID to client
+	// TODO: add division ID to client.
 
 	err = service.queues.Delete(client.UserID)
 	if ErrNoClient.Has(err) || err == nil {

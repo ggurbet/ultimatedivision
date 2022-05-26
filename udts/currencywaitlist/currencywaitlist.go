@@ -17,7 +17,7 @@ var ErrNoItem = errs.Class("item of currency wait list does not exist")
 
 // DB is exposing access to currencywaitlist db.
 //
-// architecture: DB
+// architecture: DB.
 type DB interface {
 	// Create creates item of currency waitlist in the database.
 	Create(ctx context.Context, item Item) error

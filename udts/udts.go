@@ -15,7 +15,7 @@ var ErrNoUDT = errs.Class("udt does not exist")
 
 // DB is exposing access to udts db.
 //
-// architecture: DB
+// architecture: DB.
 type DB interface {
 	// Create creates udt in the database.
 	Create(ctx context.Context, udt UDT) error

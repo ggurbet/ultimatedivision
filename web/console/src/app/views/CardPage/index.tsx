@@ -44,7 +44,7 @@ const Card: React.FC = () => {
         const METAMASK_RPC_ERROR_CODE = -32002;
         if (MetaMaskOnboarding.isMetaMaskInstalled()) {
             try {
-                // @ts-ignore
+                // @ts-ignore .
                 await window.ethereum.request({
                     method: 'eth_requestAccounts',
                 });

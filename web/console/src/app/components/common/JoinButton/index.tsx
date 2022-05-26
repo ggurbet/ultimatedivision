@@ -12,7 +12,7 @@ export const JoinButton: React.FC = () => {
     const [setLocalStorageItem, getLocalStorageItem] = useLocalStorage();
 
     /* Boolean value from localstorge that indicates whether the user is logged in or not. */
-    // @ts-ignore
+    // @ts-ignore .
     const isLoggined = JSON.parse(getLocalStorageItem('IS_LOGGINED'));
 
     return (

@@ -23,7 +23,7 @@ var ErrMarketplace = errs.Class("marketplace service error")
 
 // Service is handling marketplace related logic.
 //
-// architecture: Service
+// architecture: Service.
 type Service struct {
 	config      Config
 	marketplace DB
@@ -43,7 +43,7 @@ func NewService(config Config, marketplace DB, users *users.Service, cards *card
 
 // CreateLot add lot in DB.
 func (service *Service) CreateLot(ctx context.Context, createLot CreateLot) error {
-	// TODO: add transaction
+	// TODO: add transaction.
 	card, err := service.cards.Get(ctx, createLot.ItemID)
 	if err == nil {
 		if card.UserID != createLot.UserID {
@@ -60,7 +60,7 @@ func (service *Service) CreateLot(ctx context.Context, createLot CreateLot) erro
 
 		createLot.Type = TypeCard
 	}
-	// TODO: check other items
+	// TODO: check other items.
 
 	if createLot.Type == "" {
 		return ErrMarketplace.New("not found item by id")
@@ -142,7 +142,7 @@ func (service *Service) ListActiveLotsByPlayerName(ctx context.Context, filter c
 	var lotsPage Page
 	strings.ToValidUTF8(filter.Value, "")
 
-	// TODO: add best check
+	// TODO: add best check.
 	_, err := strconv.Atoi(filter.Value)
 	if err == nil {
 		return lotsPage, ErrMarketplace.Wrap(cards.ErrInvalidFilter.New("%s %s", filter.Value, err))
@@ -240,7 +240,7 @@ func (service *Service) WinLot(ctx context.Context, winLot WinLot) error {
 		return ErrMarketplace.Wrap(err)
 	}
 
-	// TODO: transfer money to the old cardholder from new user. If userID == shopperID not transfer mb
+	// TODO: transfer money to the old cardholder from new user. If userID == shopperID not transfer mb.
 
 	if winLot.Type == TypeCard {
 		if err := service.cards.UpdateStatus(ctx, winLot.ItemID, cards.StatusActive); err != nil {
@@ -253,7 +253,7 @@ func (service *Service) WinLot(ctx context.Context, winLot WinLot) error {
 			}
 		}
 	}
-	// TODO: check other items
+	// TODO: check other items.
 
 	return nil
 }

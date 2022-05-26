@@ -24,7 +24,7 @@ var ErrWalletAddressAlreadyInUse = errs.Class("wallet address is already in use"
 
 // Service is handling users related logic.
 //
-// architecture: Service
+// architecture: Service.
 type Service struct {
 	users DB
 }

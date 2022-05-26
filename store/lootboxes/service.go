@@ -20,7 +20,7 @@ var ErrLootBoxes = errs.Class("lootboxes service error")
 
 // Service is handling lootboxes related logic.
 //
-// architecture: Service
+// architecture: Service.
 type Service struct {
 	log       logger.Logger
 	config    Config

@@ -41,7 +41,7 @@ export class DivisionSeasonsStatistics {
     ) {}
 }
 
-// TODO: Can be changed (waiting for backend)
+// TODO: Can be changed (waiting for backend).
 /** divisions reducer initial state. */
 export class DivisionsState {
     constructor(

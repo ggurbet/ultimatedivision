@@ -26,7 +26,7 @@ var ErrCards = errs.Class("cards service error")
 
 // Service is handling cards related logic.
 //
-// architecture: Service
+// architecture: Service.
 type Service struct {
 	cards  DB
 	config Config
@@ -389,7 +389,7 @@ func (service *Service) ListByUserIDAndPlayerName(ctx context.Context, userID uu
 	var cardsListPage Page
 	strings.ToValidUTF8(filter.Value, "")
 
-	// TODO: add best check
+	// TODO: add best check.
 	_, err := strconv.Atoi(filter.Value)
 	if err == nil {
 		return cardsListPage, ErrInvalidFilter.New("%s %s", filter.Value, err)
@@ -410,7 +410,7 @@ func (service *Service) ListByUserIDAndPlayerName(ctx context.Context, userID uu
 func (service *Service) ListCardIDsByPlayerNameWhereActiveLot(ctx context.Context, filter Filters) ([]uuid.UUID, error) {
 	strings.ToValidUTF8(filter.Value, "")
 
-	// TODO: add best check
+	// TODO: add best check.
 	_, err := strconv.Atoi(filter.Value)
 	if err == nil {
 		return nil, ErrInvalidFilter.New("%s %s", filter.Value, err)

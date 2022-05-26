@@ -25,7 +25,7 @@ var ErrAvatar = errs.Class("avatar service error")
 
 // Service is handling avatars related logic.
 //
-// architecture: Service
+// architecture: Service.
 type Service struct {
 	avatars DB
 	config  Config
@@ -59,7 +59,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		PictureType: PictureTypeFirst,
 	}
 
-	// FaceColor
+	// FaceColor.
 	if count, err = imageprocessing.LayerComponentsCount(service.config.PathToAvararsComponents, service.config.FaceColorFolder); err != nil {
 		return avatar, ErrNoAvatarFile.Wrap(err)
 	}
@@ -67,7 +67,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
-	// FaceType
+	// FaceType.
 	pathToFaceColor := filepath.Join(service.config.PathToAvararsComponents, fmt.Sprintf(service.config.FaceColorFolder, avatar.FaceColor))
 	if count, err = imageprocessing.LayerComponentsCount(pathToFaceColor, service.config.FaceTypeFolder); err != nil {
 		return avatar, ErrNoAvatarFile.Wrap(err)
@@ -82,7 +82,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 	}
 	layers = append(layers, layer)
 
-	// NoseType
+	// NoseType.
 	pathToNoseType := filepath.Join(pathToFaceType, service.config.NoseFolder)
 	if count, err = imageprocessing.LayerComponentsCount(pathToNoseType, service.config.NoseTypeFolder); err != nil {
 		return avatar, ErrNoAvatarFile.Wrap(err)
@@ -97,7 +97,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 	}
 	layers = append(layers, layer)
 
-	// LipsType
+	// LipsType.
 	pathToLipsType := filepath.Join(pathToNoseType, service.config.LipsFolder)
 	if count, err = imageprocessing.LayerComponentsCount(pathToLipsType, service.config.LipsFile); err != nil {
 		return avatar, ErrNoAvatarFile.Wrap(err)
@@ -111,7 +111,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 	}
 	layers = append(layers, layer)
 
-	// EyeBrowsType
+	// EyeBrowsType.
 	pathToEyeBrowsType := filepath.Join(pathToFaceType, service.config.EyeBrowsFolder)
 	if count, err = imageprocessing.LayerComponentsCount(pathToEyeBrowsType, service.config.EyeBrowsTypeFolder); err != nil {
 		return avatar, ErrNoAvatarFile.Wrap(err)
@@ -120,7 +120,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
-	// EyeBrowsColor
+	// EyeBrowsColor.
 	pathToBrowsColor := filepath.Join(pathToEyeBrowsType, fmt.Sprintf(service.config.EyeBrowsTypeFolder, avatar.EyeBrowsType))
 	if count, err = imageprocessing.LayerComponentsCount(pathToBrowsColor, service.config.EyeBrowsColorFile); err != nil {
 		return avatar, ErrNoAvatarFile.Wrap(err)
@@ -134,7 +134,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 	}
 	layers = append(layers, layer)
 
-	// Tattoo
+	// Tattoo.
 	if card.IsTattoo {
 		pathToTattoo := filepath.Join(service.config.PathToAvararsComponents, service.config.TattooFolder, fmt.Sprintf(service.config.TattooTypeFolder, avatar.FaceType))
 		if count, err = imageprocessing.LayerComponentsCount(pathToTattoo, service.config.TattooFile); err != nil {
@@ -150,9 +150,9 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		layers = append(layers, layer)
 	}
 
-	// Hairstyles
+	// Hairstyles.
 	if rand.IsIncludeRange(service.config.PercentageFacialFeatures.Hairstyle) {
-		// HairstylesColor
+		// HairstylesColor.
 		pathToHairstylesColor := filepath.Join(pathToFaceType, service.config.HairstyleFolder)
 		if count, err = imageprocessing.LayerComponentsCount(pathToHairstylesColor, service.config.HairstyleColorFolder); err != nil {
 			return avatar, ErrNoAvatarFile.Wrap(err)
@@ -161,7 +161,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 			return avatar, ErrAvatar.Wrap(err)
 		}
 
-		// HairstylesType
+		// HairstylesType.
 		pathToHairstylesType := filepath.Join(pathToHairstylesColor, fmt.Sprintf(service.config.HairstyleColorFolder, avatar.HairstyleColor))
 		if count, err = imageprocessing.LayerComponentsCount(pathToHairstylesType, service.config.HairstyleTypeFile); err != nil {
 			return avatar, ErrNoAvatarFile.Wrap(err)
@@ -176,7 +176,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		layers = append(layers, layer)
 	}
 
-	// T-shirtType
+	// T-shirtType.
 	pathToTshirtType := filepath.Join(pathToFaceType, service.config.TshirtFolder)
 	if count, err = imageprocessing.LayerComponentsCount(pathToTshirtType, service.config.TshirtFile); err != nil {
 		return avatar, ErrNoAvatarFile.Wrap(err)
@@ -190,7 +190,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 	}
 	layers = append(layers, layer)
 
-	// BeardType
+	// BeardType.
 	if rand.IsIncludeRange(service.config.PercentageFacialFeatures.Beard) {
 		pathToBeardType := filepath.Join(pathToNoseType, service.config.BeardFolder)
 		if count, err = imageprocessing.LayerComponentsCount(pathToBeardType, service.config.BeardFile); err != nil {
@@ -206,7 +206,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		layers = append(layers, layer)
 	}
 
-	// EyeLaserType
+	// EyeLaserType.
 	if rand.IsIncludeRange(service.config.PercentageFacialFeatures.EyeLaser) {
 		pathToEyeLaserFolder := filepath.Join(pathToFaceType, service.config.EyeLaserFolder)
 		avatar.EyeLaserType = avatar.EyeBrowsType
@@ -220,7 +220,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 
 	originalAvatar := imageprocessing.Layering(layers, 0, 0)
 
-	// Background
+	// Background.
 	pathToBackground := filepath.Join(service.config.PathToAvararsComponents, service.config.BackgroundFolder)
 	if layer, err = imageprocessing.CreateLayer(pathToBackground, string(card.Quality)+"."+string(imageprocessing.TypeFilePNG)); err != nil {
 		return avatar, ErrNoAvatarFile.Wrap(err)
@@ -246,7 +246,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		return avatar, ErrAvatar.New("quality not exist")
 	}
 
-	// PlayerName
+	// PlayerName.
 	inscriptionPlayerName := imageprocessing.Inscription{
 		Img:         originalImage,
 		Width:       service.config.Sizes.Background.Width,
@@ -265,7 +265,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
-	// Tactics
+	// Tactics.
 	inscriptionTac := imageprocessing.Inscription{
 		Img:         originalImageWithLabelPlayerName,
 		Width:       service.config.Sizes.Background.Width,
@@ -284,7 +284,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
-	// Physique
+	// Physique.
 	inscriptionPhy := imageprocessing.Inscription{
 		Img:         originalImageWithLabelTac,
 		Width:       service.config.Sizes.Background.Width,
@@ -303,7 +303,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
-	// Technique
+	// Technique.
 	inscriptionTec := imageprocessing.Inscription{
 		Img:         originalImageWithLabelPhy,
 		Width:       service.config.Sizes.Background.Width,
@@ -322,7 +322,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
-	// Offence
+	// Offence.
 	inscriptionOff := imageprocessing.Inscription{
 		Img:         originalImageWithLabelTec,
 		Width:       service.config.Sizes.Background.Width,
@@ -341,7 +341,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
-	// Defence
+	// Defence.
 	inscriptionDef := imageprocessing.Inscription{
 		Img:         originalImageWithLabelOff,
 		Width:       service.config.Sizes.Background.Width,
@@ -360,7 +360,7 @@ func (service *Service) Generate(ctx context.Context, card cards.Card, nameFile 
 		return avatar, ErrAvatar.Wrap(err)
 	}
 
-	// Goalkeeping
+	// Goalkeeping.
 	inscriptionGk := imageprocessing.Inscription{
 		Img:         originalImageWithLabelDef,
 		Width:       service.config.Sizes.Background.Width,

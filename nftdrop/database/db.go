@@ -7,7 +7,7 @@ import (
 	"context"
 	"database/sql"
 
-	_ "github.com/lib/pq" // using postgres driver
+	_ "github.com/lib/pq" // using postgres driver.
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/admin/admins"

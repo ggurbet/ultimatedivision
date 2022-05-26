@@ -15,7 +15,7 @@ const Clubs: React.FC = () => {
     const [isActiveDropdown, setIsActiveDropdown] = useState<boolean>(false);
     const [clubId, setClubId] = useState<number | null>(null);
 
-    // TODO: Mock data
+    // TODO: Mock data.
     const clubs: Array<{ logo: any; name: string; whose: string }> = [
         { logo: <Owner />, name: 'CLUB 1', whose: 'owner' },
         { logo: <Owner />, name: 'CLUB 2', whose: 'owner' },
@@ -25,7 +25,7 @@ const Clubs: React.FC = () => {
         { logo: <Manager />, name: 'CLUB 6', whose: 'manager' },
     ];
 
-    // TODO: Mock data
+    // TODO: Mock data.
     const compositions: string[] = [
         'Composition 1',
         'Composition 2',

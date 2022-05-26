@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/BoostyLabs/evmsignature v0.0.0-20211230083242-81addd1bdfe1
-	github.com/BoostyLabs/thelooper v0.0.0-20220114103907-5df44f497033 // indirect
+	github.com/BoostyLabs/thelooper v0.0.0-20220114103907-5df44f497033
 	github.com/ethereum/go-ethereum v1.10.14
 	github.com/fogleman/gg v1.3.0
 	github.com/google/uuid v1.2.0
@@ -20,5 +20,6 @@ require (
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
 	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+	golang.org/x/text v0.3.7
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac
 )

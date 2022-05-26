@@ -62,7 +62,7 @@ func (auth *Auth) Login(w http.ResponseWriter, r *http.Request) {
 
 		email := r.Form["email"]
 		password := r.Form["password"]
-		// TODO: change chek
+		// TODO: change check.
 		if len(email) == 0 || len(password) == 0 {
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			return

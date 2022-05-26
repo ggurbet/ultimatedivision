@@ -119,7 +119,7 @@ func (controller *Matches) Create(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "could not get club", http.StatusInternalServerError)
 			return
 		}
-		// @TODO transfer it to queue
+		// @TODO transfer it to queue.
 		if firstClientClub.DivisionID != secondClientClub.DivisionID {
 			http.Error(w, "clubs are in different divisions", http.StatusInternalServerError)
 			return

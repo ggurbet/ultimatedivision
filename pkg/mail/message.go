@@ -40,7 +40,7 @@ func (msg *Message) Bytes() []byte {
 	// always returns nil error on read and write, so most of the errors can be ignored.
 	var body bytes.Buffer
 
-	// write headers
+	// write headers.
 	fmt.Fprintf(&body, "MIME-Version: 1.0\r\n")
 	fmt.Fprintf(&body, "Subject: %v\r\n", mime.QEncoding.Encode("utf-8", msg.Subject))
 	fmt.Fprintf(&body, "From: %s\r\n", &msg.From)

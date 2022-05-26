@@ -61,28 +61,28 @@ func New(logger logger.Logger, config Config, cardsTotal int) (peer *Peer, err e
 		cardsTotal: cardsTotal,
 	}
 
-	{ // cards setup
+	{ // cards setup.
 		peer.Cards.Service = cards.NewService(
 			nil,
 			config.CardAvatars.CardConfig,
 		)
 	}
 
-	{ // avatars setup
+	{ // avatars setup.
 		peer.Avatars.Service = avatars.NewService(
 			nil,
 			config.CardAvatars.AvatarConfig,
 		)
 	}
 
-	{ // nfts setup
+	{ // nfts setup.
 		peer.NFTs.Service = nfts.NewService(
 			config.CardAvatars.NFTConfig,
 			nil,
 		)
 	}
 
-	{ // avatar cards setup
+	{ // avatar cards setup.
 		peer.CardAvatars.Service = cardavatars.NewService(
 			config.CardAvatars.Config,
 			peer.Cards.Service,

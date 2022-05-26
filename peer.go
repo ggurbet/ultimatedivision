@@ -107,7 +107,7 @@ type Config struct {
 	} `json:"admins"`
 
 	Users struct {
-		// Server userserver.Config `json:"server"`
+		// Server userserver.Config `json:"server"`.
 		Auth struct {
 			TokenAuthSecret string `json:"tokenAuthSecret"`
 		} `json:"auth"`
@@ -284,7 +284,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		Database: db,
 	}
 
-	{ // emails setup
+	{ // emails setup.
 		var sender mail2.Sender
 		if config.Console.Emails.Provider == "mock" {
 			sender = &mail2.MockSender{}
@@ -309,7 +309,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		peer.Console.EmailService = mailService
 	}
 
-	{ // users setup
+	{ // users setup.
 		peer.Users.Service = users.NewService(
 			peer.Database.Users(),
 		)
@@ -322,7 +322,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			logger)
 	}
 
-	{ // admins setup
+	{ // admins setup.
 		peer.Admins.Service = admins.NewService(
 			peer.Database.Admins(),
 		)
@@ -334,21 +334,21 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // cards setup
+	{ // cards setup.
 		peer.Cards.Service = cards.NewService(
 			peer.Database.Cards(),
 			config.Cards.Config,
 		)
 	}
 
-	{ // avatars setup
+	{ // avatars setup.
 		peer.Avatars.Service = avatars.NewService(
 			peer.Database.Avatars(),
 			config.Avatars.Config,
 		)
 	}
 
-	{ // nfts setup
+	{ // nfts setup.
 		peer.NFTs.Service = nfts.NewService(
 			config.NFTs.Config,
 			peer.Database.NFTs(),
@@ -361,7 +361,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // waitlist setup
+	{ // waitlist setup.
 		peer.WaitList.Service = waitlist.NewService(
 			config.WaitList.Config,
 			peer.Database.WaitList(),
@@ -380,7 +380,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // clubs setup
+	{ // clubs setup.
 		peer.Clubs.Service = clubs.NewService(
 			peer.Database.Clubs(),
 			peer.Users.Service,
@@ -389,7 +389,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // lootboxes setup
+	{ // lootboxes setup.
 		peer.LootBoxes.Service = lootboxes.NewService(
 			peer.Log,
 			config.LootBoxes.Config,
@@ -399,7 +399,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // marketplace setup
+	{ // marketplace setup.
 		peer.Marketplace.Service = marketplace.NewService(
 			config.Marketplace.Config,
 			peer.Database.Marketplace(),
@@ -413,13 +413,13 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // divisions setup
+	{ // divisions setup.
 		peer.Divisions.Service = divisions.NewService(
 			peer.Database.Divisions(),
 			config.Divisions.Config)
 	}
 
-	{ // matches setup
+	{ // matches setup.
 		peer.Matches.Service = matches.NewService(
 			peer.Database.Matches(),
 			config.Matches.Config,
@@ -428,7 +428,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // seasons setup
+	{ // seasons setup.
 		peer.Seasons.Service = seasons.NewService(
 			peer.Database.Seasons(),
 			config.Seasons.Config,
@@ -443,13 +443,13 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // udts setup
+	{ // udts setup.
 		peer.UDTs.Service = udts.NewService(
 			peer.Database.UDTs(),
 		)
 	}
 
-	{ // currencywaitlist setup
+	{ // currencywaitlist setup.
 		peer.CurrencyWaitList.Service = currencywaitlist.NewService(
 			config.CurrencyWaitList.Config,
 			peer.Database.CurrencyWaitList(),
@@ -458,7 +458,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // queue setup
+	{ // queue setup.
 		peer.Queue.Service = queue.NewService(
 			config.Queue.Config,
 			peer.Database.Queue(),
@@ -478,7 +478,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // store setup
+	{ // store setup.
 		peer.Store.Service = store.NewService(
 			config.Store.Config,
 			peer.Database.Store(),
@@ -494,7 +494,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
-	{ // admin setup
+	{ // admin setup.
 		peer.Admin.Listener, err = net.Listen("tcp", config.Admins.Server.Address)
 		if err != nil {
 			return nil, err
@@ -524,7 +524,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		}
 	}
 
-	{ // console setup
+	{ // console setup.
 		peer.Console.Listener, err = net.Listen("tcp", config.Console.Server.Address)
 		if err != nil {
 			return nil, err
@@ -567,17 +567,18 @@ func (peer *Peer) Run(ctx context.Context) error {
 	group.Go(func() error {
 		return ignoreCancel(peer.Queue.PlaceChore.Run(ctx))
 	})
-	// TODO: commented while fixing bug with matches
+	// TODO: commented while fixing bug with matches.
 	// group.Go(func() error {
 	// 	return ignoreCancel(peer.Seasons.ExpirationSeasons.Run(ctx))
 	// })
-	// TODO: uncomment when the Ethereum node is running
+	// TODO: uncomment when the Ethereum node is running.
 	// group.Go(func() error {
 	// 	return ignoreCancel(peer.NFTs.NFTChore.RunNFTSynchronization(ctx))
 	// })
 	// group.Go(func() error {
 	// 	return ignoreCancel(peer.WaitList.WaitListChore.RunCheckMintEvent(ctx))
 	// })
+	// TODO: remove it.
 	group.Go(func() error {
 		return ignoreCancel(peer.Store.StoreRenewal.Run(ctx))
 	})

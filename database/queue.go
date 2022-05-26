@@ -35,7 +35,7 @@ func (queueHub *queueHub) Get(userID uuid.UUID) (queue.Client, error) {
 			return client, nil
 		}
 	}
-	// TODO: change error
+	// TODO: change error.
 	return queue.Client{}, queue.ErrNoClient.New("not found user's values")
 }
 
