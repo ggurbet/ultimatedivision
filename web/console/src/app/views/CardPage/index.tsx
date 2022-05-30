@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import MetaMaskOnboarding from '@metamask/onboarding';
-import { toast } from 'react-toastify';
 
 import { RootState } from '@/app/store';
 import { openUserCard } from '@/app/store/actions/cards';
@@ -13,6 +12,7 @@ import { FootballerCardIllustrations } from '@/app/components/common/Card/CardIl
 import { FootballerCardPrice } from '@/app/components/common/Card/CardPrice';
 import { FootballerCardStatsArea } from '@/app/components/common/Card/CardStatsArea';
 import { ServicePlugin } from '@/app/plugins/service';
+import { metamaskNotifications } from '../../internal/notifications';
 
 import './index.scss';
 
@@ -40,8 +40,6 @@ const Card: React.FC = () => {
 
     /** Mints chosed card */
     const mint = async() => {
-        /** Code which indicates that 'eth_requestAccounts' already processing */
-        const METAMASK_RPC_ERROR_CODE = -32002;
         if (MetaMaskOnboarding.isMetaMaskInstalled()) {
             try {
                 // @ts-ignore .
@@ -50,15 +48,7 @@ const Card: React.FC = () => {
                 });
                 await service.sendTransaction(id);
             } catch (error: any) {
-                error.code === METAMASK_RPC_ERROR_CODE
-                    ? toast.error('Please open metamask manually!', {
-                        position: toast.POSITION.TOP_RIGHT,
-                        theme: 'colored',
-                    })
-                    : toast.error('Something went wrong', {
-                        position: toast.POSITION.TOP_RIGHT,
-                        theme: 'colored',
-                    });
+                metamaskNotifications(error);
             }
         } else {
             onboarding.startOnboarding();

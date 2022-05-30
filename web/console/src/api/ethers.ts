@@ -17,7 +17,7 @@ export class EthersClient extends APIClient {
         }
         const transaction = await response.json();
 
-        return new Transaction(transaction.password, transaction.tokenId, transaction.contract);
+        return new Transaction(transaction.password, transaction.tokenId, transaction.nftCreateContract);
     }
 
     /** Gets message from API for sign with metamask */

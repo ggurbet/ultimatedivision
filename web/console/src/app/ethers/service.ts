@@ -96,19 +96,20 @@ export class Service {
         const signer = await this.provider.getSigner();
         const address = await this.getTransaction(new TransactionIdentificators(walletAddress, cardId));
         /* eslint-disable */
-        const data = `${address.contract.addressMethod}${buildHash(40)}${buildHash(address.tokenId.toString(16))}${buildHash(60)}${buildHash(
+        const data = `${address.nftCreateContract.mintWithSignatureSelector}${buildHash(40)}${buildHash(address.tokenId.toString(16))}${buildHash(60)}${buildHash(
             address.password.slice(-2)
         )}${address.password.slice(0, address.password.length - 2)}`;
+
         const gasLimit = await signer.estimateGas({
-            to: address.contract.address,
+            to: address.nftCreateContract.address,
             data,
         });
 
         await signer.sendTransaction({
-            to: address.contract.address,
+            to: address.nftCreateContract.address,
             data,
             gasLimit,
-            chainId: CHAIN_ID,
+            chainId: address.nftCreateContract.chainId,
         });
     }
 

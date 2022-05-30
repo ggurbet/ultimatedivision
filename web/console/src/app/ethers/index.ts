@@ -7,7 +7,9 @@ export class Contract {
     /** Includes address and addressMethod fields */
     constructor(
         public address: string = '',
-        public addressMethod: string = ''
+        public chainId: number = DEFAULT_VALUE,
+        public mintWithSignatureAndValueSelector: string = '',
+        public mintWithSignatureSelector: string = '',
     ) { }
 }
 /** Transaction props from api */
@@ -16,7 +18,7 @@ export class Transaction {
     constructor(
         public password: string = '',
         public tokenId: number = DEFAULT_VALUE,
-        public contract: Contract = new Contract()
+        public nftCreateContract: Contract = new Contract()
     ) { }
 }
 

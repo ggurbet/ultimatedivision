@@ -46,9 +46,21 @@ export class InternalError extends Error {
     };
 };
 
+/**
+ * TooManyRequestError is a custom error type which indicates the user
+ * has sent too many requests in a given amount of time.
+ */
+export class TooManyRequestsError extends Error {
+    /** Error message while bad request */
+    constructor(message = 'Too many requests') {
+        super(message);
+    };
+};
+
 const BAD_REQUEST_ERROR = 400;
 const UNAUTORISED_ERROR = 401;
 const NOT_FOUND_ERROR = 404;
+const TOO_MANY_REQUESTS_ERROR = 429;
 const INTERNAL_ERROR = 500;
 
 /**
@@ -74,11 +86,15 @@ export class APIClient {
      */
     /* eslint-disable */
     protected async handleError(response: Response): Promise<void> {
-
         switch (response.status) {
-            case BAD_REQUEST_ERROR: throw new BadRequestError();
-            case NOT_FOUND_ERROR: throw new NotFoundError();
-            case UNAUTORISED_ERROR: throw new UnauthorizedError();
+            case BAD_REQUEST_ERROR:
+                throw new BadRequestError();
+            case NOT_FOUND_ERROR:
+                throw new NotFoundError();
+            case UNAUTORISED_ERROR:
+                throw new UnauthorizedError();
+            case TOO_MANY_REQUESTS_ERROR:
+                throw new TooManyRequestsError();
             case INTERNAL_ERROR:
             default:
                 throw new InternalError();
