@@ -13,6 +13,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
+	"ultimatedivision/cards/nfts"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/auth"
 	"ultimatedivision/pkg/pagination"
@@ -29,13 +30,15 @@ type Cards struct {
 	log logger.Logger
 
 	cards *cards.Service
+	nfts  *nfts.Service
 }
 
 // NewCards is a constructor for cards controller.
-func NewCards(log logger.Logger, cards *cards.Service) *Cards {
+func NewCards(log logger.Logger, cards *cards.Service, nfts *nfts.Service) *Cards {
 	cardsController := &Cards{
 		log:   log,
 		cards: cards,
+		nfts:  nfts,
 	}
 
 	return cardsController
@@ -65,7 +68,26 @@ func (controller *Cards) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = json.NewEncoder(w).Encode(card); err != nil {
+	nftStatusCard, err := controller.nfts.GetStatusByCardID(ctx, card.ID)
+	if err != nil {
+		switch {
+		case nfts.ErrNoNFT.Has(err):
+			if err = json.NewEncoder(w).Encode(card); err != nil {
+				controller.log.Error("failed to write json response", ErrCards.Wrap(err))
+			}
+		default:
+			controller.log.Error("could not get status of card", ErrCards.Wrap(err))
+			controller.serveError(w, http.StatusInternalServerError, ErrCards.Wrap(err))
+		}
+		return
+	}
+
+	CardWithNFTStatus := nfts.CardWithNFTStatus{
+		Card: card,
+		Nft:  nftStatusCard,
+	}
+
+	if err = json.NewEncoder(w).Encode(CardWithNFTStatus); err != nil {
 		controller.log.Error("failed to write json response", ErrCards.Wrap(err))
 		return
 	}

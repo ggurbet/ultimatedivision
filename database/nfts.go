@@ -58,6 +58,27 @@ func (nftsDB *nftsDB) Get(ctx context.Context, tokenID int64, chain evmsignature
 	return nft, ErrNFTs.Wrap(err)
 }
 
+// GetByCardID returns nft by card id from database.
+func (nftsDB *nftsDB) GetByCardID(ctx context.Context, cardID uuid.UUID) (nfts.NFT, error) {
+	query := `
+		SELECT 
+			card_id, token_id, chain, wallet_address 
+		FROM 
+			nfts
+		WHERE 
+			card_id = $1`
+
+	var nft nfts.NFT
+	row := nftsDB.conn.QueryRowContext(ctx, query, cardID)
+
+	err := row.Scan(&nft.CardID, &nft.TokenID, &nft.Chain, &nft.WalletAddress)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nft, nfts.ErrNoNFT.Wrap(err)
+	}
+
+	return nft, ErrNFTs.Wrap(err)
+}
+
 // List returns nfts from database.
 func (nftsDB *nftsDB) List(ctx context.Context) ([]nfts.NFT, error) {
 	var nftList []nfts.NFT
