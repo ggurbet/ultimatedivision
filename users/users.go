@@ -28,7 +28,7 @@ type DB interface {
 	// GetByEmail returns user by email from the data base.
 	GetByEmail(ctx context.Context, email string) (User, error)
 	// GetByWalletAddress returns user by wallet address from the data base.
-	GetByWalletAddress(ctx context.Context, walletAddress evmsignature.Address) (User, error)
+	GetByWalletAddress(ctx context.Context, walletAddress evmsignature.Address, walletType WalletType) (User, error)
 	// Create creates a user and writes to the database.
 	Create(ctx context.Context, user User) error
 	// Update updates a status in the database.
@@ -73,6 +73,7 @@ type User struct {
 	FirstName    string               `json:"firstName"`
 	LastName     string               `json:"lastName"`
 	Wallet       evmsignature.Address `json:"wallet"`
+	VelasWallet  string               `json:"velas_wallet"`
 	Nonce        []byte               `json:"nonce"`
 	LastLogin    time.Time            `json:"lastLogin"`
 	Status       Status               `json:"status"`
@@ -140,13 +141,29 @@ func (createUserFields *CreateUserFields) IsValid() bool {
 		return false
 	case createUserFields.Password == "":
 		return false
-	case createUserFields.FirstName == "":
-		return false
-	case createUserFields.LastName == "":
-		return false
 	case createUserFields.NickName == "":
 		return false
 	default:
 		return true
 	}
+}
+
+// WalletType defines the list of possible wallets types.
+type WalletType string
+
+const (
+	// Wallet indicates that wallet type is wallet_address.
+	Wallet WalletType = "wallet_address"
+	// Velas indicates that wallet type is velas_wallet_address.
+	Velas WalletType = "velas_wallet_address"
+)
+
+// IsValid checks if type of wallet valid.
+func (w WalletType) IsValid() bool {
+	return w == Wallet || w == Velas
+}
+
+// ToString returns wallet type in string.
+func (w WalletType) ToString() string {
+	return string(w)
 }

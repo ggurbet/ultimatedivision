@@ -20,6 +20,7 @@ import (
 	"ultimatedivision/console/emails"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/auth"
+	"ultimatedivision/pkg/velas"
 	"ultimatedivision/users"
 )
 
@@ -52,15 +53,17 @@ type Service struct {
 	signer       auth.TokenSigner
 	emailService *emails.Service
 	log          logger.Logger
+	velas        *velas.Service
 }
 
 // NewService is a constructor for user auth service.
-func NewService(users users.DB, signer auth.TokenSigner, emails *emails.Service, log logger.Logger) *Service {
+func NewService(users users.DB, signer auth.TokenSigner, emails *emails.Service, log logger.Logger, velas *velas.Service) *Service {
 	return &Service{
 		users:        users,
 		signer:       signer,
 		emailService: emails,
 		log:          log,
+		velas:        velas,
 	}
 }
 
@@ -394,8 +397,8 @@ func (service *Service) ResetPassword(ctx context.Context, newPassword string) e
 }
 
 // Nonce creates nonce and send to metamask for login.
-func (service *Service) Nonce(ctx context.Context, address evmsignature.Address) (string, error) {
-	user, err := service.users.GetByWalletAddress(ctx, address)
+func (service *Service) Nonce(ctx context.Context, address evmsignature.Address, walletType users.WalletType) (string, error) {
+	user, err := service.users.GetByWalletAddress(ctx, address, walletType)
 	if err != nil {
 		return "", Error.Wrap(err)
 	}
@@ -412,7 +415,7 @@ func (service *Service) RegisterWithMetamask(ctx context.Context, signature []by
 		return Error.Wrap(err)
 	}
 
-	_, err = service.users.GetByWalletAddress(ctx, walletAddress)
+	_, err = service.users.GetByWalletAddress(ctx, walletAddress, users.Wallet)
 	if !users.ErrNoUser.Has(err) {
 		return Error.New("this user already exist")
 	}
@@ -446,7 +449,7 @@ func (service *Service) LoginWithMetamask(ctx context.Context, nonce string, sig
 		return "", Error.Wrap(err)
 	}
 
-	user, err := service.users.GetByWalletAddress(ctx, walletAddress)
+	user, err := service.users.GetByWalletAddress(ctx, walletAddress, users.Wallet)
 	if err != nil {
 		return "", Error.Wrap(err)
 	}
@@ -582,4 +585,83 @@ func (service *Service) PreAuthTokenToChangeEmail(ctx context.Context, email, ne
 	}
 
 	return token, nil
+}
+
+// RegisterWithVelas creates user by credentials.
+func (service *Service) RegisterWithVelas(ctx context.Context, address string) error {
+	_, err := service.users.GetByWalletAddress(ctx, evmsignature.Address(address), users.Velas)
+	if !users.ErrNoUser.Has(err) {
+		return Error.New("this user already exist")
+	}
+
+	nonce := make([]byte, 32)
+	_, err = rand.Read(nonce)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+
+	user := users.User{
+		ID:          uuid.New(),
+		Nonce:       nonce,
+		LastLogin:   time.Time{},
+		Status:      users.StatusActive,
+		CreatedAt:   time.Now().UTC(),
+		VelasWallet: address,
+	}
+	err = service.users.Create(ctx, user)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+
+	return nil
+}
+
+// LoginWithVelas authenticates user by credentials and returns login token.
+func (service *Service) LoginWithVelas(ctx context.Context, nonce string, address string) (string, error) {
+	user, err := service.users.GetByWalletAddress(ctx, evmsignature.Address(address), users.Velas)
+	if err != nil {
+		return "", Error.Wrap(err)
+	}
+
+	decodeNonce, err := hexutil.Decode(nonce)
+	if err != nil {
+		return "", Error.Wrap(err)
+	}
+
+	if !bytes.Equal(decodeNonce, user.Nonce) {
+		return "", Error.New("nonce is invalid")
+	}
+
+	claims := auth.Claims{
+		UserID:    user.ID,
+		ExpiresAt: time.Now().UTC().Add(TokenExpirationTime),
+	}
+
+	token, err := service.signer.CreateToken(ctx, &claims)
+	if err != nil {
+		return "", Error.Wrap(err)
+	}
+
+	newNonce := make([]byte, 32)
+	_, err = rand.Read(newNonce)
+	if err != nil {
+		return "", Error.Wrap(err)
+	}
+
+	err = service.users.UpdateNonce(ctx, user.ID, newNonce)
+	if err != nil {
+		return "", Error.Wrap(err)
+	}
+
+	err = service.users.UpdateLastLogin(ctx, user.ID)
+	if err != nil {
+		service.log.Error("could not update last login", Error.Wrap(err))
+	}
+
+	return token, nil
+}
+
+// VelasVAClientFields returns velas va client fields.
+func (service *Service) VelasVAClientFields() velas.VAClientFields {
+	return service.velas.Get()
 }

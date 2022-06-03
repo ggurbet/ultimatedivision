@@ -29,6 +29,7 @@ import (
 	"ultimatedivision/marketplace"
 	"ultimatedivision/pkg/auth"
 	mail2 "ultimatedivision/pkg/mail"
+	"ultimatedivision/pkg/velas"
 	"ultimatedivision/seasons"
 	"ultimatedivision/store"
 	"ultimatedivision/store/lootboxes"
@@ -166,6 +167,10 @@ type Config struct {
 	Store struct {
 		store.Config
 	} `json:"store"`
+
+	Velas struct {
+		velas.Config
+	} `json:"velas"`
 }
 
 // Peer is the representation of a ultimatedivision.
@@ -263,6 +268,11 @@ type Peer struct {
 		StoreRenewal *store.Chore
 	}
 
+	// exposes velas related logic.
+	Velas struct {
+		Service *velas.Service
+	}
+
 	// Admin web server server with web UI.
 	Admin struct {
 		Listener net.Listener
@@ -309,6 +319,8 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		peer.Console.EmailService = mailService
 	}
 
+	peer.Velas.Service = velas.NewService(config.Velas.Config)
+
 	{ // users setup.
 		peer.Users.Service = users.NewService(
 			peer.Database.Users(),
@@ -319,7 +331,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 				Secret: []byte(config.Users.Auth.TokenAuthSecret),
 			},
 			peer.Console.EmailService,
-			logger)
+			logger, peer.Velas.Service)
 	}
 
 	{ // admins setup.

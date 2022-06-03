@@ -105,6 +105,12 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	metamaskRouter.HandleFunc("/nonce", authController.Nonce).Methods(http.MethodGet)
 	metamaskRouter.HandleFunc("/login", authController.MetamaskLogin).Methods(http.MethodPost)
 
+	velasRouter := authRouter.PathPrefix("/velas").Subrouter()
+	velasRouter.HandleFunc("/register", authController.VelasRegister).Methods(http.MethodPost)
+	velasRouter.HandleFunc("/nonce", authController.Nonce).Methods(http.MethodGet)
+	velasRouter.HandleFunc("/login", authController.VelasLogin).Methods(http.MethodPost)
+	velasRouter.HandleFunc("/vaclient", authController.VelasVAClientFields).Methods(http.MethodGet)
+
 	authRouter.HandleFunc("/logout", authController.Logout).Methods(http.MethodPost)
 	authRouter.HandleFunc("/register", authController.Register).Methods(http.MethodPost)
 	authRouter.HandleFunc("/email/confirm/{token}", authController.ConfirmEmail).Methods(http.MethodGet)
@@ -118,6 +124,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	profileRouter := apiRouter.PathPrefix("/profile").Subrouter()
 	profileRouter.Use(server.withAuth)
 	profileRouter.HandleFunc("", userController.GetProfile).Methods(http.MethodGet)
+
 	metamaskRouterWithAuth := profileRouter.PathPrefix("/metamask").Subrouter()
 	metamaskRouterWithAuth.HandleFunc("/wallet", userController.CreateWalletFromMetamask).Methods(http.MethodPatch)
 	metamaskRouterWithAuth.HandleFunc("/wallet/change", userController.ChangeWalletFromMetamask).Methods(http.MethodPatch)

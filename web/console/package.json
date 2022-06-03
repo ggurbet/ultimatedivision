@@ -5,6 +5,9 @@
     "private": true,
     "dependencies": {
         "@metamask/onboarding": "1.0.1",
+        "@velas/account-client": "^0.2.27",
+        "@velas/web3": "^0.1.15",
+        "buffer": "^5.7.1",
         "chart.js": "3.4.1",
         "ethers": "5.5.1",
         "react": "17.0.2",

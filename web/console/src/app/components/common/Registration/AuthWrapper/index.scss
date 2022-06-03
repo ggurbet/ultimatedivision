@@ -1,0 +1,14 @@
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
+
+@import "@/index.scss";
+
+.auth-wrapper {
+    background-color: $mainBackground;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 100vw;
+    min-height: 100vh;
+    color: black;
+}

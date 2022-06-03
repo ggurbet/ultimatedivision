@@ -23,6 +23,7 @@ const MatchFinder = lazy(() => import('@components/common/MatchFinder'));
 const Home = lazy(() => import('@/app/views/Home'));
 const Navbar = lazy(() => import('@/app/components/common/Navbar'));
 const PlayerProfile = lazy(() => import('@/app/views/PlayerProfile'));
+const AuthWrapper = lazy(() => import('@/app/components/common/Registration/AuthWrapper'));
 
 import Summary from '@components/WhitePaper/Summary';
 import GameMechanics from '@components/WhitePaper/GameMechanics';
@@ -43,10 +44,7 @@ export class ComponentRoutes {
         public children?: ComponentRoutes[]
     ) {}
     /** Method for creating child subroutes path */
-    public with(
-        child: ComponentRoutes,
-        parrent: ComponentRoutes
-    ): ComponentRoutes {
+    public with(child: ComponentRoutes, parrent: ComponentRoutes): ComponentRoutes {
         child.path = `${parrent.path}/${child.path}`;
 
         return this;
@@ -61,107 +59,35 @@ export class ComponentRoutes {
 
 /** Route config implementation */
 export class RouteConfig {
-    public static MarketPlace: ComponentRoutes = new ComponentRoutes(
-        '/marketplace',
-        MarketPlace,
-        true
-    );
-    public static Lot: ComponentRoutes = new ComponentRoutes(
-        '/lot/:id',
-        Lot,
-        true
-    );
-    public static Card: ComponentRoutes = new ComponentRoutes(
-        '/card/:id',
-        Card,
-        false
-    );
+    public static MarketPlace: ComponentRoutes = new ComponentRoutes('/marketplace', MarketPlace, true);
+    public static Lot: ComponentRoutes = new ComponentRoutes('/lot/:id', Lot, true);
+    public static Card: ComponentRoutes = new ComponentRoutes('/card/:id', Card, false);
     public static Division: ComponentRoutes = new ComponentRoutes(
         /** TODO: it will be replaced with id parameter */
         '/divisions',
         Division,
         true
     );
-    public static Field: ComponentRoutes = new ComponentRoutes(
-        '/field',
-        Field,
-        true
-    );
-    public static Store: ComponentRoutes = new ComponentRoutes(
-        '/store',
-        Store,
-        true
-    );
-    public static Cards: ComponentRoutes = new ComponentRoutes(
-        '/cards',
-        UserCards,
-        true
-    );
-    public static Match: ComponentRoutes = new ComponentRoutes(
-        '/match',
-        Match,
-        true
-    );
-    public static Home: ComponentRoutes = new ComponentRoutes(
-        '/home',
-        Home,
-        true
-    );
-    public static PlayerProfile: ComponentRoutes = new ComponentRoutes(
-        '/player-profile',
-        PlayerProfile,
-        true
-    );
-    public static Whitepaper: ComponentRoutes = new ComponentRoutes(
-        '/whitepaper',
-        WhitePaper,
-        false
-    );
-    public static Tokenomics: ComponentRoutes = new ComponentRoutes(
-        '/tokenomics',
-        Tokenomics,
-        false
-    );
-    public static Summary: ComponentRoutes = new ComponentRoutes(
-        'summary',
-        Summary,
-        true
-    );
-    public static GameMechanics: ComponentRoutes = new ComponentRoutes(
-        'game-mechanics',
-        GameMechanics,
-        true
-    );
+    public static Field: ComponentRoutes = new ComponentRoutes('/field', Field, true);
+    public static Store: ComponentRoutes = new ComponentRoutes('/store', Store, true);
+    public static Cards: ComponentRoutes = new ComponentRoutes('/cards', UserCards, true);
+    public static Match: ComponentRoutes = new ComponentRoutes('/match', Match, true);
+    public static Home: ComponentRoutes = new ComponentRoutes('/home', Home, true);
+    public static PlayerProfile: ComponentRoutes = new ComponentRoutes('/player-profile', PlayerProfile, true);
+    public static Whitepaper: ComponentRoutes = new ComponentRoutes('/whitepaper', WhitePaper, false);
+    public static Tokenomics: ComponentRoutes = new ComponentRoutes('/tokenomics', Tokenomics, false);
+    public static Summary: ComponentRoutes = new ComponentRoutes('summary', Summary, true);
+    public static GameMechanics: ComponentRoutes = new ComponentRoutes('game-mechanics', GameMechanics, true);
     public static PayToEarnEconomy: ComponentRoutes = new ComponentRoutes(
         'pay-to-earn-and-economy',
         PayToEarnEconomy,
         true
     );
-    public static Technology: ComponentRoutes = new ComponentRoutes(
-        'technology',
-        Technology,
-        true
-    );
-    public static Spending: ComponentRoutes = new ComponentRoutes(
-        'udt-spending',
-        Spending,
-        true
-    );
-    public static PayToEarn: ComponentRoutes = new ComponentRoutes(
-        'pay-to-earn',
-        PlayToEarn,
-        true
-    );
-    public static Staking: ComponentRoutes = new ComponentRoutes(
-        'staking',
-        Staking,
-        true
-    );
-    public static Fund: ComponentRoutes = new ComponentRoutes(
-        'ud-dao-fund',
-        Fund,
-        true
-    );
+    public static Technology: ComponentRoutes = new ComponentRoutes('technology', Technology, true);
+    public static Spending: ComponentRoutes = new ComponentRoutes('udt-spending', Spending, true);
+    public static PayToEarn: ComponentRoutes = new ComponentRoutes('pay-to-earn', PlayToEarn, true);
+    public static Staking: ComponentRoutes = new ComponentRoutes('staking', Staking, true);
+    public static Fund: ComponentRoutes = new ComponentRoutes('ud-dao-fund', Fund, true);
 
     public static routes: ComponentRoutes[] = [
         RouteConfig.Home,
@@ -191,36 +117,14 @@ export class RouteConfig {
 
 /** Route config that implements auth actions */
 export class AuthRouteConfig {
-    public static SignIn: ComponentRoutes = new ComponentRoutes(
-        '/sign-in',
-        SignIn,
-        true
-    );
-    public static SignUp: ComponentRoutes = new ComponentRoutes(
-        '/sign-up',
-        SignUp,
-        true
-    );
-    public static ChangePassword: ComponentRoutes = new ComponentRoutes(
-        '/change-password',
-        ChangePassword,
-        true
-    );
-    public static ConfirmEmail: ComponentRoutes = new ComponentRoutes(
-        '/email/confirm',
-        ConfirmEmail,
-        true
-    );
-    public static ResetPassword: ComponentRoutes = new ComponentRoutes(
-        '/reset-password',
-        RecoverPassword,
-        true
-    );
-    public static Default: ComponentRoutes = new ComponentRoutes(
-        '/',
-        RouteConfig.Home.component,
-        true
-    );
+    public static SignIn: ComponentRoutes = new ComponentRoutes('/sign-in', SignIn, true);
+    public static SignUp: ComponentRoutes = new ComponentRoutes('/sign-up', SignUp, true);
+    public static ChangePassword: ComponentRoutes = new ComponentRoutes('/change-password', ChangePassword, true);
+    public static ConfirmEmail: ComponentRoutes = new ComponentRoutes('/email/confirm', ConfirmEmail, true);
+    public static ResetPassword: ComponentRoutes = new ComponentRoutes('/reset-password', RecoverPassword, true);
+    public static AuthWrapper: ComponentRoutes = new ComponentRoutes('/auth-velas', AuthWrapper, true);
+    public static Default: ComponentRoutes = new ComponentRoutes('/', RouteConfig.Home.component, true);
+
     public static routes: ComponentRoutes[] = [
         AuthRouteConfig.ConfirmEmail,
         AuthRouteConfig.Default,
@@ -228,29 +132,20 @@ export class AuthRouteConfig {
         AuthRouteConfig.ChangePassword,
         AuthRouteConfig.SignIn,
         AuthRouteConfig.SignUp,
+        AuthRouteConfig.AuthWrapper,
     ];
 }
 
 export const Routes = () =>
     <Switch>
         {AuthRouteConfig.routes.map((route, index) =>
-            <Route
-                key={index}
-                path={route.path}
-                component={route.component}
-                exact={route.exact}
-            />
+            <Route key={index} path={route.path} component={route.component} exact={route.exact} />
         )}
         <Route>
             <Navbar />
             <MatchFinder />
             {RouteConfig.routes.map((route, index) =>
-                <Route
-                    key={index}
-                    path={route.path}
-                    component={route.component}
-                    exact={route.exact}
-                />
+                <Route key={index} path={route.path} component={route.component} exact={route.exact} />
             )}
         </Route>
     </Switch>;

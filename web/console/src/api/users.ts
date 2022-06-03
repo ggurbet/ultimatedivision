@@ -17,30 +17,38 @@ export class UsersClient extends APIClient {
 
         if (!response.ok) {
             await this.handleError(response);
-        };
-    };
+        }
+    }
     /** exposes user login logic */
     public async login(email: string, password: string): Promise<void> {
         const path = `${this.ROOT_PATH}/login`;
-        const response = await this.http.post(path, JSON.stringify({
-            email, password,
-        }));
+        const response = await this.http.post(
+            path,
+            JSON.stringify({
+                email,
+                password,
+            })
+        );
 
         if (!response.ok) {
             await this.handleError(response);
-        };
-    };
+        }
+    }
     /** changes user password */
     public async changePassword(password: string, newPassword: string): Promise<void> {
         const path = `${this.ROOT_PATH}/change-password`;
-        const response = await this.http.post(path, JSON.stringify({
-            password, newPassword,
-        }));
+        const response = await this.http.post(
+            path,
+            JSON.stringify({
+                password,
+                newPassword,
+            })
+        );
 
         if (!response.ok) {
             await this.handleError(response);
-        };
-    };
+        }
+    }
     /** checks user token by email confirmation */
     public async checkEmailToken(token: string | null): Promise<void> {
         const path = `${this.ROOT_PATH}/email/confirm/${token}`;
@@ -48,8 +56,8 @@ export class UsersClient extends APIClient {
 
         if (!response.ok) {
             await this.handleError(response);
-        };
-    };
+        }
+    }
     /** checks user recover token */
     public async checkRecoverToken(token: string | null): Promise<void> {
         const path = `${this.ROOT_PATH}/reset-password/${token}`;
@@ -57,8 +65,8 @@ export class UsersClient extends APIClient {
 
         if (!response.ok) {
             await this.handleError(response);
-        };
-    };
+        }
+    }
     /** recovers user password */
     public async recoverPassword(newPassword: string): Promise<void> {
         const path = `${this.ROOT_PATH}/reset-password`;
@@ -66,8 +74,8 @@ export class UsersClient extends APIClient {
 
         if (!response.ok) {
             await this.handleError(response);
-        };
-    };
+        }
+    }
     /** resets user password by email confirmation */
     public async sendEmailForPasswordReset(email: string): Promise<void> {
         const path = `${this.ROOT_PATH}/password/${email}`;
@@ -75,6 +83,64 @@ export class UsersClient extends APIClient {
 
         if (!response.ok) {
             await this.handleError(response);
-        };
-    };
-};
+        }
+    }
+    /** sends data to register user with velas wallet */
+    public async velasRegister(walletAddress: string, accessToken: string, expiresAt: any): Promise<void> {
+        const path = `${this.ROOT_PATH}/velas/register`;
+        const response = await this.http.post(path, JSON.stringify({ walletAddress, accessToken, expiresAt }));
+
+        if (!response.ok) {
+            await this.handleError(response);
+        }
+    }
+    /** sends address to get nonce to login user */
+    public async velasNonce(address: string): Promise<string> {
+        const walletType = 'velas_wallet_address';
+
+        const path = `${this.ROOT_PATH}/velas/nonce?address=${address}&walletType=${walletType}`;
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        }
+        const status = response.json();
+
+        return status;
+    }
+    /** sends data to login user with velas wallet */
+    public async velasLogin(nonce: string, walletAddress: string, accessToken: string, expiresAt: any): Promise<void> {
+        const path = `${this.ROOT_PATH}/velas/login`;
+        const response = await this.http.post(path, JSON.stringify({ walletAddress, accessToken, expiresAt, nonce }));
+
+        if (!response.ok) {
+            await this.handleError(response);
+        }
+    }
+
+    /** gets token to login user with velas wallet */
+    public async velasCsrfToken(): Promise<string> {
+        const path = 'http://localhost:3002/csrf';
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        }
+        const result = await response.json();
+
+        return result.token;
+    }
+
+    /** gets creds to fill velas vaclient */
+    public async velasVaclientCreds(): Promise<any> {
+        const path = `${this.ROOT_PATH}/velas/vaclient`;
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        }
+        const result = await response.json();
+
+        return result;
+    }
+}

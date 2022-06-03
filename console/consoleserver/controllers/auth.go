@@ -8,6 +8,7 @@ import (
 	"errors"
 	"html/template"
 	"net/http"
+	"time"
 
 	"github.com/BoostyLabs/evmsignature"
 	"github.com/ethereum/go-ethereum/common"
@@ -17,6 +18,7 @@ import (
 
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/pkg/auth"
+	"ultimatedivision/pkg/velas"
 	"ultimatedivision/users"
 	"ultimatedivision/users/userauth"
 )
@@ -343,17 +345,18 @@ func (auth *Auth) Nonce(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 
 	address := query.Get("address")
-	if address == "" {
-		auth.serveError(w, http.StatusBadRequest, AuthError.New("address is empty"))
-		return
-	}
-
 	if !common.IsHexAddress(address) {
-		auth.serveError(w, http.StatusBadRequest, AuthError.New("address is wrong"))
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("address is invalid"))
 		return
 	}
 
-	nonce, err := auth.userAuth.Nonce(ctx, evmsignature.Address(address))
+	walletType := users.WalletType(query.Get("walletType"))
+	if !walletType.IsValid() {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("wallet type is invalid"))
+		return
+	}
+
+	nonce, err := auth.userAuth.Nonce(ctx, evmsignature.Address(address), walletType)
 	if err != nil {
 		switch {
 		case users.ErrNoUser.Has(err):
@@ -361,6 +364,7 @@ func (auth *Auth) Nonce(w http.ResponseWriter, r *http.Request) {
 		case userauth.ErrUnauthenticated.Has(err):
 			auth.serveError(w, http.StatusUnauthorized, AuthError.Wrap(err))
 		default:
+			auth.log.Error("Unable to get nonce", AuthError.Wrap(err))
 			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
 		}
 		return
@@ -413,6 +417,95 @@ func (auth *Auth) MetamaskLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	auth.cookie.SetTokenCookie(w, authToken)
+}
+
+// VelasRegister is an endpoint to register user.
+func (auth *Auth) VelasRegister(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	var velasAPIRequest velas.APIRequest
+	if err := json.NewDecoder(r.Body).Decode(&velasAPIRequest); err != nil {
+		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
+		return
+	}
+
+	if time.Now().Unix() > velasAPIRequest.ExpiresAt {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("token expiration time has expired"))
+		return
+	}
+
+	if !common.IsHexAddress(velasAPIRequest.WalletAddress) {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("wallet address is invalid"))
+		return
+	}
+
+	err := auth.userAuth.RegisterWithVelas(ctx, velasAPIRequest.WalletAddress)
+	if err != nil {
+		auth.log.Error("failed to write json response", AuthError.Wrap(err))
+		return
+	}
+}
+
+// VelasLogin is an endpoint to authorize user from velas and set auth cookie in browser.
+func (auth *Auth) VelasLogin(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	type VelasFields struct {
+		Nonce string `json:"nonce"`
+		velas.APIRequest
+	}
+
+	var request VelasFields
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
+		return
+	}
+
+	if request.Nonce == "" {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("invalid nonce"))
+		return
+	}
+
+	if time.Now().Unix() > request.ExpiresAt {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("token expiration time has expired"))
+		return
+	}
+
+	if !common.IsHexAddress(request.WalletAddress) {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("wallet address is invalid"))
+		return
+	}
+
+	authToken, err := auth.userAuth.LoginWithVelas(ctx, request.Nonce, request.WalletAddress)
+	if err != nil {
+		switch {
+		case users.ErrNoUser.Has(err):
+			auth.serveError(w, http.StatusNotFound, AuthError.Wrap(err))
+		case userauth.ErrUnauthenticated.Has(err):
+			auth.serveError(w, http.StatusUnauthorized, AuthError.Wrap(err))
+		default:
+			auth.log.Error("Unable to login with velas", AuthError.Wrap(err))
+			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		}
+
+		return
+	}
+
+	auth.cookie.SetTokenCookie(w, authToken)
+}
+
+// VelasVAClientFields is an endpoint that returns fields for velas client mb.
+func (auth *Auth) VelasVAClientFields(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	velasVAClientFields := auth.userAuth.VelasVAClientFields()
+
+	if err := json.NewEncoder(w).Encode(velasVAClientFields); err != nil {
+		auth.log.Error("failed to write json response", AuthError.Wrap(err))
+		return
+	}
 }
 
 // MetamaskRegister is an endpoint to register user.

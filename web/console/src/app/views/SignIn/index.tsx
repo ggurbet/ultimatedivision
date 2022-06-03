@@ -37,6 +37,7 @@ const SignIn: React.FC = () => {
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState<SetStateAction<null | string>>(null);
     const [isRemember, setIsRemember] = useState(false);
+
     /** TODO: rework remember me implementation  */
     const handleIsRemember = () => setIsRemember((prev) => !prev);
 
