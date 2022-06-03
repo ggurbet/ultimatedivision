@@ -16,7 +16,6 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"ultimatedivision/cards"
-	"ultimatedivision/cards/nfts"
 	"ultimatedivision/cards/waitlist"
 	"ultimatedivision/clubs"
 	"ultimatedivision/console/consoleserver/controllers"
@@ -70,7 +69,7 @@ type Server struct {
 // NewServer is a constructor for console web server.
 func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service,
 	marketplace *marketplace.Service, clubs *clubs.Service, userAuth *userauth.Service, users *users.Service,
-	queue *queue.Service, seasons *seasons.Service, waitList *waitlist.Service, store *store.Service, nfts *nfts.Service) *Server {
+	queue *queue.Service, seasons *seasons.Service, waitList *waitlist.Service, store *store.Service) *Server {
 	server := &Server{
 		log:         log,
 		config:      config,
@@ -84,7 +83,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 
 	authController := controllers.NewAuth(server.log, server.authService, server.cookieAuth, server.templates.auth)
 	userController := controllers.NewUsers(server.log, users)
-	cardsController := controllers.NewCards(log, cards, nfts)
+	cardsController := controllers.NewCards(log, cards)
 	clubsController := controllers.NewClubs(log, clubs)
 	lootBoxesController := controllers.NewLootBoxes(log, lootBoxes)
 	marketplaceController := controllers.NewMarketplace(log, marketplace)

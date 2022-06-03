@@ -10,8 +10,6 @@ import (
 	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
-
-	"ultimatedivision/cards"
 )
 
 // ErrNoNFT indicated that nft does not exist.
@@ -25,8 +23,6 @@ type DB interface {
 	Create(ctx context.Context, nft NFT) error
 	// Get returns nft by token id and chain from database.
 	Get(ctx context.Context, tokenID int64, chain evmsignature.Chain) (NFT, error)
-	// GetByCardID returns nft by card id from database.
-	GetByCardID(ctx context.Context, cardID uuid.UUID) (NFT, error)
 	// List returns all nft token from database.
 	List(ctx context.Context) ([]NFT, error)
 	// Update updates users wallet address for nft token in the database.
@@ -53,10 +49,4 @@ type Config struct {
 	NFTRenewalInterval time.Duration         `json:"nftRenewalInterval"`
 	Contract           evmsignature.Contract `json:"contract"`
 	AddressNodeServer  string                `json:"addressNodeServer"`
-}
-
-// CardWithNFTStatus entity describes values card with released nft token.
-type CardWithNFTStatus struct {
-	cards.Card
-	Nft NFT `json:"nft"`
 }
