@@ -3,7 +3,9 @@ version: "3"
 services:
   app:
     container_name: ultimatedivision_app
-    image: ${HOST_FOR_DOCKER_IMAGE}/ultimate_division${ENVIRONMENT}:latest
+    build:
+      context: ${PROJECT_PATH}
+      dockerfile: ${PROJECT_PATH}/deploy/ultimatedivision.Dockerfile
     ports:
       - "8087:8087" # Forward the exposed port 5000 on the container to port 8088 on the host machine (8088:5000).
       - "8088:8088"
@@ -11,7 +13,7 @@ services:
     volumes:
       - ${PROJECT_DATA_PATH}/ultimate_division:/app/data
       - ${PROJECT_CONFIGS_PATH}/ultimate_division:/config
-      - ${PROJECT_ASSETS_PATH}:/assets
+      - ${PROJECT_PATH}/assets:/assets
     depends_on:
       - ultimatedivision_db # This service depends on postgres. Start that first.
     networks:
@@ -19,7 +21,9 @@ services:
 
   nft_signer:
     container_name: ultimatedivision_nft_signer
-    image: ${HOST_FOR_DOCKER_IMAGE}/ultimate_division_nft_signer${ENVIRONMENT}:latest
+    build:
+      context: ${PROJECT_PATH}
+      dockerfile: ${PROJECT_PATH}/deploy/nftsigner.Dockerfile
     restart: unless-stopped
     volumes:
       - ${PROJECT_DATA_PATH}/signer:/app/data
@@ -31,7 +35,9 @@ services:
 
   currency_signer:
     container_name: ultimatedivision_currency_signer
-    image: ${HOST_FOR_DOCKER_IMAGE}/ultimate_division_currency_signer${ENVIRONMENT}:latest
+    build:
+      context: ${PROJECT_PATH}
+      dockerfile: ${PROJECT_PATH}/deploy/currencysigner.Dockerfile
     restart: unless-stopped
     volumes:
       - ${PROJECT_DATA_PATH}/currency_signer:/app/data
