@@ -10,7 +10,7 @@ help: ## Show this help
 	@:
 
 build_dist: ## Build dist folder that needed for frontend.
-	cd web/console && npm i --force && npm run build && cd .. && cd nftdrop/landing && npm i --force && npm run build
+	cd web/console && npm i --force && npm run build
 
 build_nft_signer: ## Build NFT Signer docker image.
 	docker build -f ./deploy/nftsigner.Dockerfile -t $(HOST_FOR_DOCKER_IMAGE)/ultimate_division_nft_signer:$(LATEST_COMMIT) . && docker build -f ./deploy/nftsigner.Dockerfile -t $(HOST_FOR_DOCKER_IMAGE)/ultimate_division_nft_signer$(ENVIRONMENT):$(VERSION) .
