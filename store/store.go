@@ -5,6 +5,7 @@ package store
 
 import (
 	"context"
+	"math/big"
 	"time"
 
 	"github.com/zeebo/errs"
@@ -31,10 +32,11 @@ type DB interface {
 
 // Setting entity describes the values required to configure the store.
 type Setting struct {
-	ID          int  `json:"id"`
-	CardsAmount int  `json:"cardsAmount"`
-	IsRenewal   bool `json:"isRenewal"`
-	HourRenewal int  `json:"dateRenewal"`
+	ID          int     `json:"id"`
+	CardsAmount int     `json:"cardsAmount"`
+	IsRenewal   bool    `json:"isRenewal"`
+	HourRenewal int     `json:"dateRenewal"`
+	Price       big.Int `json:"price"`
 }
 
 // Config defines values needed by create cards.

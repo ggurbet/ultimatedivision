@@ -21,9 +21,9 @@ var ChoreError = errs.Class("nft signer chore error")
 
 // ChoreConfig is the global configuration for nftsigner.
 type ChoreConfig struct {
-	RenewalInterval      time.Duration           `json:"renewalInterval"`
-	PrivateKey           evmsignature.PrivateKey `json:"privateKey"`
-	SmartContractAddress evmsignature.Address    `json:"smartContractAddress"`
+	RenewalInterval          time.Duration           `json:"renewalInterval"`
+	PrivateKey               evmsignature.PrivateKey `json:"privateKey"`
+	NFTCreateContractAddress evmsignature.Address    `json:"nftCreateContractAddress"`
 }
 
 // Chore requests for unsigned nft tokens and sign all of them .
@@ -60,12 +60,12 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 		for _, token := range unsignedNFTs {
 			var signature evmsignature.Signature
 			if token.Value.Cmp(big.NewInt(0)) <= 0 {
-				signature, err = evmsignature.GenerateSignatureWithValue(token.Wallet, chore.config.SmartContractAddress, token.TokenID, privateKeyECDSA)
+				signature, err = evmsignature.GenerateSignatureWithValue(token.Wallet, chore.config.NFTCreateContractAddress, token.TokenID, privateKeyECDSA)
 				if err != nil {
 					return ChoreError.Wrap(err)
 				}
 			} else {
-				signature, err = evmsignature.GenerateSignatureWithValueAndNonce(token.Wallet, chore.config.SmartContractAddress, &token.Value, token.TokenID, privateKeyECDSA)
+				signature, err = evmsignature.GenerateSignatureWithValueAndNonce(token.Wallet, chore.config.NFTCreateContractAddress, &token.Value, token.TokenID, privateKeyECDSA)
 				if err != nil {
 					return ChoreError.Wrap(err)
 				}

@@ -270,7 +270,8 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             id           INTEGER PRIMARY KEY NOT NULL,
             cards_amount INTEGER             NOT NULL,
             is_renewal   BOOLEAN             NOT NULL,
-            hour_renewal INTEGER             NOT NULL
+            hour_renewal INTEGER             NOT NULL,
+            price        BYTEA               NOT NULL
         );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)

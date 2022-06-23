@@ -57,12 +57,12 @@ type CreateNFT struct {
 	Value         big.Int              `json:"value"`
 }
 
-// Transaction entity describes password wallet, smart contracts address and token id.
+// Transaction entity describes values required to sent transaction.
 type Transaction struct {
-	Password evmsignature.Signature `json:"password"`
-	Contract evmsignature.Contract  `json:"contract"`
-	TokenID  int64                  `json:"tokenId"`
-	Value    big.Int                `json:"value"`
+	Password          evmsignature.Signature `json:"password"`
+	NFTCreateContract NFTCreateContract      `json:"nftCreateContract"`
+	TokenID           int64                  `json:"tokenId"`
+	Value             big.Int                `json:"value"`
 }
 
 // Config defines values needed by check mint nft in blockchain.
@@ -73,12 +73,17 @@ type Config struct {
 		Address      evmsignature.Address `json:"address"`
 		AddressEvent evmsignature.Hex     `json:"addressEvent"`
 	} `json:"nftContract"`
-	Contract struct {
-		Address       evmsignature.Address `json:"address"`
-		AddressMethod evmsignature.Hex     `json:"addressMethod"`
-	} `json:"contract"`
-	AddressNodeServer string       `json:"addressNodeServer"`
-	FileStorage       storj.Config `json:"fileStorage"`
-	Bucket            string       `json:"bucket"`
-	URLToAvatar       string       `json:"urlToAvatar"`
+	NFTCreateContract NFTCreateContract `json:"nftCreateContract"`
+	AddressNodeServer string            `json:"addressNodeServer"`
+	FileStorage       storj.Config      `json:"fileStorage"`
+	Bucket            string            `json:"bucket"`
+	URLToAvatar       string            `json:"urlToAvatar"`
+}
+
+// NFTCreateContract describes the meaning of the contract.
+type NFTCreateContract struct {
+	Address                           evmsignature.Address `json:"address"`
+	MintWithSignatureSelector         evmsignature.Hex     `json:"mintWithSignatureSelector"`
+	MintWithSignatureAndValueSelector evmsignature.Hex     `json:"mintWithSignatureAndValueSelector"`
+	ChainID                           int                  `json:"chainId"`
 }

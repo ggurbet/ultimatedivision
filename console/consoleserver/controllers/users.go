@@ -71,7 +71,7 @@ func (controller *Users) CreateWalletFromMetamask(w http.ResponseWriter, r *http
 		return
 	}
 
-	if !request.Wallet.IsValidAddress() {
+	if err := request.Wallet.IsValidAddress(); err != nil {
 		controller.serveError(w, http.StatusBadRequest, AuthError.New("wallet address is wrong"))
 		return
 	}
@@ -112,7 +112,7 @@ func (controller *Users) ChangeWalletFromMetamask(w http.ResponseWriter, r *http
 		return
 	}
 
-	if !request.Wallet.IsValidAddress() {
+	if err := request.Wallet.IsValidAddress(); err != nil {
 		controller.serveError(w, http.StatusBadRequest, AuthError.New("wallet address is wrong"))
 		return
 	}

@@ -28,30 +28,37 @@ type storeDB struct {
 
 // Create creates setting of store in the database.
 func (storeDB *storeDB) Create(ctx context.Context, setting store.Setting) error {
-	query := `INSERT INTO store(id, cards_amount, is_renewal, hour_renewal) VALUES($1,$2,$3,$4)`
+	query := `INSERT INTO store VALUES($1,$2,$3,$4,$5)`
 
-	_, err := storeDB.conn.ExecContext(ctx, query, setting.ID, setting.CardsAmount, setting.IsRenewal, setting.HourRenewal)
+	_, err := storeDB.conn.ExecContext(ctx, query, setting.ID, setting.CardsAmount, setting.IsRenewal, setting.HourRenewal, setting.Price.Bytes())
 	return ErrStore.Wrap(err)
 }
 
 // Get returns setting by id from database.
 func (storeDB *storeDB) Get(ctx context.Context, id int) (store.Setting, error) {
-	var setting store.Setting
+	var (
+		setting store.Setting
+		price   []byte
+	)
 	query := `SELECT * FROM store WHERE id = $1`
 
 	row := storeDB.conn.QueryRowContext(ctx, query, id)
 
-	err := row.Scan(&setting.ID, &setting.CardsAmount, &setting.IsRenewal, &setting.HourRenewal)
+	err := row.Scan(&setting.ID, &setting.CardsAmount, &setting.IsRenewal, &setting.HourRenewal, &price)
 	if errors.Is(err, sql.ErrNoRows) {
 		return setting, store.ErrNoSetting.Wrap(err)
 	}
+	setting.Price.SetBytes(price)
 
 	return setting, ErrStore.Wrap(err)
 }
 
 // List returns settings of store from database.
 func (storeDB *storeDB) List(ctx context.Context) ([]store.Setting, error) {
-	var settings []store.Setting
+	var (
+		settings []store.Setting
+		price    []byte
+	)
 	query := `SELECT * FROM store`
 
 	rows, err := storeDB.conn.QueryContext(ctx, query)
@@ -65,9 +72,11 @@ func (storeDB *storeDB) List(ctx context.Context) ([]store.Setting, error) {
 	for rows.Next() {
 		var setting store.Setting
 
-		if err = rows.Scan(&setting.ID, &setting.CardsAmount, &setting.IsRenewal, &setting.HourRenewal); err != nil {
+		if err = rows.Scan(&setting.ID, &setting.CardsAmount, &setting.IsRenewal, &setting.HourRenewal, &price); err != nil {
 			return settings, ErrStore.Wrap(err)
 		}
+		setting.Price.SetBytes(price)
+
 		settings = append(settings, setting)
 	}
 
@@ -77,10 +86,10 @@ func (storeDB *storeDB) List(ctx context.Context) ([]store.Setting, error) {
 // Update updates setting of store in the database.
 func (storeDB *storeDB) Update(ctx context.Context, setting store.Setting) error {
 	query := `UPDATE store
-	          SET cards_amount = $1, is_renewal = $2, hour_renewal = $3
-	          WHERE id = $4`
+	          SET cards_amount = $1, is_renewal = $2, hour_renewal = $3, price = $4
+	          WHERE id = $5`
 
-	result, err := storeDB.conn.ExecContext(ctx, query, setting.CardsAmount, setting.IsRenewal, setting.HourRenewal, setting.ID)
+	result, err := storeDB.conn.ExecContext(ctx, query, setting.CardsAmount, setting.IsRenewal, setting.HourRenewal, setting.Price.Bytes(), setting.ID)
 	if err != nil {
 		return ErrStore.Wrap(err)
 	}

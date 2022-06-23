@@ -121,7 +121,7 @@ func TestCards(t *testing.T) {
 		DominantFoot:     "right",
 		IsTattoo:         true,
 		Status:           cards.StatusSale,
-		Type:             cards.TypeOrdered,
+		Type:             cards.TypeUnordered,
 		UserID:           uuid.New(),
 		Tactics:          2,
 		Positioning:      2,
@@ -294,8 +294,8 @@ func TestCards(t *testing.T) {
 			compareCards(t, userCard.Cards[0], card1)
 		})
 
-		t.Run("ListByTypeOrdered", func(t *testing.T) {
-			userCard, err := repositoryCards.ListByTypeOrdered(ctx)
+		t.Run("ListByTypeUnordered", func(t *testing.T) {
+			userCard, err := repositoryCards.ListByTypeUnordered(ctx)
 			require.NoError(t, err)
 
 			compareCards(t, userCard[0], card2)
@@ -372,8 +372,20 @@ func TestCards(t *testing.T) {
 			require.NoError(t, err)
 
 			allCards, err := repositoryCards.List(ctx, cursor1)
-			assert.NoError(t, err)
-			assert.Equal(t, len(allCards.Cards), 2)
+			require.NoError(t, err)
+			require.Equal(t, len(allCards.Cards), 2)
+			compareCards(t, card1, allCards.Cards[1])
+			compareCards(t, card2, allCards.Cards[0])
+		})
+
+		t.Run("UpdateType", func(t *testing.T) {
+			card1.Type = cards.TypeOrdered
+			err := repositoryCards.UpdateType(ctx, card1.ID, card1.Type)
+			require.NoError(t, err)
+
+			allCards, err := repositoryCards.List(ctx, cursor1)
+			require.NoError(t, err)
+			require.Equal(t, len(allCards.Cards), 2)
 			compareCards(t, card1, allCards.Cards[1])
 			compareCards(t, card2, allCards.Cards[0])
 		})

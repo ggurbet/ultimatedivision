@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
@@ -38,6 +39,14 @@ func NewStore(log logger.Logger, store *store.Service) *Store {
 	return storeController
 }
 
+// TransactionResponse entity describes values required to sent transaction.
+type TransactionResponse struct {
+	Password          evmsignature.Signature     `json:"password"`
+	NFTCreateContract waitlist.NFTCreateContract `json:"nftCreateContract"`
+	TokenID           int64                      `json:"tokenId"`
+	Value             string                     `json:"value"`
+}
+
 // Buy is an endpoint that allows to view details of store.
 func (controller *Store) Buy(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -55,7 +64,7 @@ func (controller *Store) Buy(w http.ResponseWriter, r *http.Request) {
 		controller.serveError(w, http.StatusBadRequest, ErrStore.Wrap(err))
 		return
 	}
-	if !createNFT.WalletAddress.IsValidAddress() {
+	if err := createNFT.WalletAddress.IsValidAddress(); err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrStore.New("wallet address is invalid"))
 		return
 	}
@@ -73,7 +82,14 @@ func (controller *Store) Buy(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = json.NewEncoder(w).Encode(transaction); err != nil {
+	transactionResponse := TransactionResponse{
+		Password:          transaction.Password,
+		NFTCreateContract: transaction.NFTCreateContract,
+		TokenID:           transaction.TokenID,
+		Value:             transaction.Value.String(),
+	}
+
+	if err = json.NewEncoder(w).Encode(transactionResponse); err != nil {
 		controller.log.Error("failed to write json response", ErrStore.Wrap(err))
 		return
 	}

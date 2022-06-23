@@ -29,8 +29,8 @@ type DB interface {
 	List(ctx context.Context, cursor pagination.Cursor) (Page, error)
 	// ListByUserID returns cards by user id from the database.
 	ListByUserID(ctx context.Context, id uuid.UUID, cursor pagination.Cursor) (Page, error)
-	// ListByTypeOrdered returns cards where type is ordered from the database.
-	ListByTypeOrdered(ctx context.Context) ([]Card, error)
+	// ListByTypeUnordered returns cards where type is unordered from the database.
+	ListByTypeUnordered(ctx context.Context) ([]Card, error)
 	// ListWithFilters returns cards with filters from the database.
 	ListWithFilters(ctx context.Context, filters []Filters, cursor pagination.Cursor) (Page, error)
 	// ListCardIDsWithFiltersWhereActiveLot returns card ids where active lots from DB, taking the necessary filters.
@@ -43,6 +43,8 @@ type DB interface {
 	GetSquadCards(ctx context.Context, id uuid.UUID) ([]Card, error)
 	// UpdateStatus updates status card in the database.
 	UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error
+	// UpdateStatus updates type of card in the database.
+	UpdateType(ctx context.Context, id uuid.UUID, typeCard Type) error
 	// UpdateUserID updates user id card in the database.
 	UpdateUserID(ctx context.Context, id, userID uuid.UUID) error
 	// Delete deletes card record in the data base.
@@ -165,9 +167,11 @@ type Type string
 const (
 	// TypeWon indicates that the card won in a lootbox.
 	TypeWon Type = "won"
-	// TypeBought indicates that the card bought on the marketplaced.
+	// TypeBought indicates that the card bought in the marketplace.
 	TypeBought Type = "bought"
-	// TypeOrdered indicates that the card ordered on the store.
+	// TypeUnordered indicates that the card unordered in the store.
+	TypeUnordered Type = "unordered"
+	// TypeOrdered indicates that the card ordered in the store.
 	TypeOrdered Type = "ordered"
 )
 

@@ -70,7 +70,7 @@ func (controller *Whitelist) Create(w http.ResponseWriter, r *http.Request) {
 
 		var createFields whitelist.CreateWallet
 		createFields.Address = evmsignature.Address(r.FormValue("address"))
-		if !createFields.Address.IsValidAddress() {
+		if err := createFields.Address.IsValidAddress(); err != nil {
 			http.Error(w, errs.New("invalid wallet address").Error(), http.StatusBadRequest)
 			return
 		}
@@ -146,7 +146,7 @@ func (controller *Whitelist) Delete(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
 	walletAddress := evmsignature.Address(params["address"])
-	if !walletAddress.IsValidAddress() {
+	if err := walletAddress.IsValidAddress(); err != nil {
 		http.Error(w, errs.New("invalid wallet address").Error(), http.StatusBadRequest)
 		return
 	}

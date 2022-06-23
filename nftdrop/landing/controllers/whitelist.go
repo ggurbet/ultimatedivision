@@ -44,7 +44,7 @@ func (controller *Whitelist) Get(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	address := evmsignature.Address(params["address"])
 
-	if !address.IsValidAddress() {
+	if err := address.IsValidAddress(); err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrWhitelist.New("invalid address"))
 	}
 

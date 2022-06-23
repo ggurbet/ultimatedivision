@@ -5,6 +5,7 @@ package store_test
 
 import (
 	"context"
+	"math/big"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -21,6 +22,7 @@ func TestStore(t *testing.T) {
 		CardsAmount: 10,
 		IsRenewal:   true,
 		HourRenewal: 15,
+		Price:       *big.NewInt(100),
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
@@ -49,6 +51,7 @@ func TestStore(t *testing.T) {
 			setting1.CardsAmount = 15
 			setting1.IsRenewal = false
 			setting1.HourRenewal = 16
+			setting1.Price = *big.NewInt(200)
 
 			err := repositoryStore.Update(ctx, setting1)
 			require.NoError(t, err)
@@ -70,5 +73,6 @@ func compareStoreSlice(t *testing.T, setting1, setting2 []store.Setting) {
 		assert.Equal(t, setting1[i].CardsAmount, setting2[i].CardsAmount)
 		assert.Equal(t, setting1[i].IsRenewal, setting2[i].IsRenewal)
 		assert.Equal(t, setting1[i].HourRenewal, setting2[i].HourRenewal)
+		assert.Equal(t, setting1[i].Price, setting2[i].Price)
 	}
 }

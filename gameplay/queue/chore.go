@@ -314,7 +314,7 @@ func (chore *Chore) FinishWithWinResult(ctx context.Context, winResult WinResult
 	}
 
 	winResult.GameResult.Question = "do you allow us to take your address?"
-	winResult.GameResult.Transaction.Value = evmsignature.WeiToEthereum(winResult.Value).String()
+	winResult.GameResult.Transaction.Value = evmsignature.WeiBigToEthereumBig(winResult.Value).String()
 	winResult.GameResult.Transaction.UDTContract.Address = chore.config.UDTContract.Address
 	if err := winResult.Client.WriteJSON(http.StatusOK, winResult.GameResult); err != nil {
 		chore.log.Error("could not write json", ChoreError.Wrap(err))
@@ -335,7 +335,7 @@ func (chore *Chore) FinishWithWinResult(ctx context.Context, winResult WinResult
 	}
 
 	if request.Action == ActionAllowAddress {
-		if !request.WalletAddress.IsValidAddress() {
+		if err := request.WalletAddress.IsValidAddress(); err != nil {
 			if err := winResult.Client.WriteJSON(http.StatusBadRequest, "invalid address of user's wallet"); err != nil {
 				chore.log.Error("could not write json", ChoreError.Wrap(err))
 				return

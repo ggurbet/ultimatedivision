@@ -5,13 +5,12 @@ package store
 
 import (
 	"context"
-	"math/big"
-	"math/rand"
 
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/waitlist"
+	"ultimatedivision/pkg/rand"
 )
 
 // ErrStore indicated that there was an error in service.
@@ -41,23 +40,34 @@ func NewService(config Config, store DB, cards *cards.Service, waitlist *waitlis
 func (service *Service) Buy(ctx context.Context, createNFT waitlist.CreateNFT) (waitlist.Transaction, error) {
 	var transaction waitlist.Transaction
 
-	cards, err := service.cards.ListByTypeOrdered(ctx)
+	cardsList, err := service.cards.ListByTypeNoOrdered(ctx)
 	if err != nil {
 		return transaction, ErrStore.Wrap(err)
 	}
-	if len(cards) == 0 {
+	if len(cardsList) == 0 {
 		return transaction, ErrStore.New("all cards of store are minted")
 	}
 
-	randNumberCard := rand.Intn(len(cards)) - 1
-	createNFT.CardID = cards[randNumberCard].ID
-	// TODO: add price in setting of store.
-	createNFT.Value = *big.NewInt(100)
+	randNumberCard, err := rand.RandomInRange(len(cardsList))
+	if err != nil {
+		return transaction, ErrStore.Wrap(err)
+	}
+
+	createNFT.CardID = cardsList[randNumberCard-1].ID
+
+	setting, err := service.Get(ctx, ActiveSetting)
+	if err != nil {
+		return transaction, ErrStore.Wrap(err)
+	}
+	createNFT.Value = setting.Price
 
 	// TODO: change selector of buy method.
 	transaction, err = service.waitlist.Create(ctx, createNFT)
+	if err != nil {
+		return transaction, ErrStore.Wrap(err)
+	}
 
-	return transaction, ErrStore.Wrap(err)
+	return transaction, ErrStore.Wrap(service.cards.UpdateType(ctx, createNFT.CardID, cards.TypeOrdered))
 }
 
 // Create creates setting of store in database.

@@ -219,11 +219,11 @@ func (cardsDB *cardsDB) ListByUserID(ctx context.Context, id uuid.UUID, cursor p
 	return userCardsPage, ErrCard.Wrap(err)
 }
 
-// ListByTypeOrdered returns cards where type is ordered from the database.
-func (cardsDB *cardsDB) ListByTypeOrdered(ctx context.Context) ([]cards.Card, error) {
+// ListByTypeUnordered returns cards where type is unordered from the database.
+func (cardsDB *cardsDB) ListByTypeUnordered(ctx context.Context) ([]cards.Card, error) {
 	query := `SELECT * FROM cards WHERE type = $1`
 
-	rows, err := cardsDB.conn.QueryContext(ctx, query, cards.TypeOrdered)
+	rows, err := cardsDB.conn.QueryContext(ctx, query, cards.TypeUnordered)
 	if err != nil {
 		return nil, ErrCard.Wrap(err)
 	}
@@ -591,7 +591,22 @@ func (cardsDB *cardsDB) UpdateStatus(ctx context.Context, id uuid.UUID, status c
 
 	rowNum, err := result.RowsAffected()
 	if rowNum == 0 {
-		return cards.ErrNoCard.New("card does not exist")
+		return cards.ErrNoCard.New("")
+	}
+
+	return ErrCard.Wrap(err)
+}
+
+// UpdateStatus updates type of card in the database.
+func (cardsDB *cardsDB) UpdateType(ctx context.Context, id uuid.UUID, typeCard cards.Type) error {
+	result, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET type=$1 WHERE id=$2", typeCard, id)
+	if err != nil {
+		return ErrCard.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return cards.ErrNoCard.New("")
 	}
 
 	return ErrCard.Wrap(err)
@@ -606,7 +621,7 @@ func (cardsDB *cardsDB) UpdateUserID(ctx context.Context, id, userID uuid.UUID) 
 
 	rowNum, err := result.RowsAffected()
 	if rowNum == 0 {
-		return cards.ErrNoCard.New("card does not exist")
+		return cards.ErrNoCard.New("")
 	}
 
 	return ErrCard.Wrap(err)
@@ -627,7 +642,7 @@ func (cardsDB *cardsDB) Delete(ctx context.Context, id uuid.UUID) error {
 
 	rowNum, err := result.RowsAffected()
 	if rowNum == 0 {
-		return cards.ErrNoCard.New("card does not exist")
+		return cards.ErrNoCard.New("")
 	}
 
 	return ErrCard.Wrap(err)

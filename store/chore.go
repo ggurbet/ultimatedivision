@@ -5,6 +5,7 @@ package store
 
 import (
 	"context"
+	"math/big"
 	"time"
 
 	"github.com/BoostyLabs/thelooper"
@@ -54,6 +55,7 @@ func (chore *Chore) Run(ctx context.Context) error {
 			CardsAmount: 10,
 			IsRenewal:   true,
 			HourRenewal: 0,
+			Price:       *big.NewInt(100),
 		}
 		if err = chore.store.Create(ctx, setting); err != nil {
 			return ChoreError.Wrap(err)
@@ -78,7 +80,7 @@ func (chore *Chore) Run(ctx context.Context) error {
 			return nil
 		}
 
-		cardsList, err := chore.cards.ListByTypeOrdered(ctx)
+		cardsList, err := chore.cards.ListByTypeNoOrdered(ctx)
 		if err != nil {
 			return ChoreError.Wrap(err)
 		}
@@ -92,7 +94,7 @@ func (chore *Chore) Run(ctx context.Context) error {
 		}
 
 		for i := 0; i < cardsAmount; i++ {
-			card, err := chore.cards.Create(ctx, uuid.Nil, percentageQualities, cards.TypeOrdered)
+			card, err := chore.cards.Create(ctx, uuid.Nil, percentageQualities, cards.TypeUnordered)
 			if err != nil {
 				return ChoreError.Wrap(err)
 			}
