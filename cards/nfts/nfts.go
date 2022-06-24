@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/BoostyLabs/evmsignature"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 )
@@ -33,10 +34,10 @@ type DB interface {
 
 // NFT entity describes values released nft token.
 type NFT struct {
-	CardID        uuid.UUID            `json:"cardId"`
-	TokenID       int64                `json:"tokenId"`
-	Chain         evmsignature.Chain   `json:"chain"`
-	WalletAddress evmsignature.Address `json:"walletAddress"`
+	CardID        uuid.UUID          `json:"cardId"`
+	TokenID       int64              `json:"tokenId"`
+	Chain         evmsignature.Chain `json:"chain"`
+	WalletAddress common.Address     `json:"walletAddress"`
 }
 
 // MaxValueGameParameter indicates that max value game parameter is 100.
@@ -48,8 +49,8 @@ type Config struct {
 	ExternalURL        string        `json:"externalUrl"`
 	NFTRenewalInterval time.Duration `json:"nftRenewalInterval"`
 	NFTContract        struct {
-		Address         evmsignature.Address `json:"address"`
-		OwnerOfSelector evmsignature.Hex     `json:"ownerOfSelector"`
+		Address         common.Address   `json:"address"`
+		OwnerOfSelector evmsignature.Hex `json:"ownerOfSelector"`
 	} `json:"nftContract"`
 	AddressNodeServer string `json:"addressNodeServer"`
 }

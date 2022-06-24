@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/BoostyLabs/evmsignature"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -160,14 +161,14 @@ func TestNFTs(t *testing.T) {
 		CardID:        card1.ID,
 		TokenID:       1,
 		Chain:         evmsignature.ChainEthereum,
-		WalletAddress: evmsignature.Address("0x96216849c49358b10257cb55b28ea603c874b05e"),
+		WalletAddress: common.HexToAddress("0x96216849c49358b10257cb55b28ea603c874b05e"),
 	}
 
 	nft2 := nfts.NFT{
 		CardID:        card2.ID,
 		TokenID:       2,
 		Chain:         evmsignature.ChainPolygon,
-		WalletAddress: evmsignature.Address("0x96216849c49358B10254cb55b28eA603c874b05E"),
+		WalletAddress: common.HexToAddress("0x96216849c49358B10254cb55b28eA603c874b05E"),
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
@@ -207,7 +208,7 @@ func TestNFTs(t *testing.T) {
 		})
 
 		t.Run("Update", func(t *testing.T) {
-			nft1.WalletAddress = "0x"
+			nft1.WalletAddress = common.HexToAddress("0x")
 			err := repositoryNFTs.Update(ctx, nft1)
 			require.NoError(t, err)
 

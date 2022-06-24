@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/BoostyLabs/evmsignature"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/google/uuid"
@@ -215,7 +216,7 @@ func (service *Service) authorize(ctx context.Context, claims *auth.Claims) (err
 }
 
 // Register - registers a new user.
-func (service *Service) Register(ctx context.Context, email, password, nickName, firstName, lastName string, wallet evmsignature.Address) error {
+func (service *Service) Register(ctx context.Context, email, password, nickName, firstName, lastName string, wallet common.Address) error {
 	// check if the user email address already exists.
 	_, err := service.users.GetByEmail(ctx, email)
 	if err == nil {
@@ -397,7 +398,7 @@ func (service *Service) ResetPassword(ctx context.Context, newPassword string) e
 }
 
 // Nonce creates nonce and send to metamask for login.
-func (service *Service) Nonce(ctx context.Context, address evmsignature.Address, walletType users.WalletType) (string, error) {
+func (service *Service) Nonce(ctx context.Context, address common.Address, walletType users.WalletType) (string, error) {
 	user, err := service.users.GetByWalletAddress(ctx, address, walletType)
 	if err != nil {
 		return "", Error.Wrap(err)
@@ -493,20 +494,20 @@ func (service *Service) LoginWithMetamask(ctx context.Context, nonce string, sig
 }
 
 // recoverWalletAddress function that verifies the authenticity of the address.
-func recoverWalletAddress(message, signature []byte) (evmsignature.Address, error) {
+func recoverWalletAddress(message, signature []byte) (common.Address, error) {
 	if signature[64] != 27 && signature[64] != 28 {
-		return "", Error.New("hash is wrong")
+		return common.Address{}, Error.New("hash is wrong")
 	}
 	signature[64] -= 27
 
 	pubKey, err := crypto.SigToPub(evmsignature.SignHash(message), signature)
 	if err != nil {
-		return "", Error.Wrap(err)
+		return common.Address{}, Error.Wrap(err)
 	}
 
 	recoveredAddr := crypto.PubkeyToAddress(*pubKey)
 
-	return evmsignature.Address(recoveredAddr.String()), nil
+	return recoveredAddr, nil
 }
 
 // SendEmailForChangeEmail - sends email for change users email address.
@@ -588,8 +589,8 @@ func (service *Service) PreAuthTokenToChangeEmail(ctx context.Context, email, ne
 }
 
 // RegisterWithVelas creates user by credentials.
-func (service *Service) RegisterWithVelas(ctx context.Context, address string) error {
-	_, err := service.users.GetByWalletAddress(ctx, evmsignature.Address(address), users.Velas)
+func (service *Service) RegisterWithVelas(ctx context.Context, walletAddress common.Address) error {
+	_, err := service.users.GetByWalletAddress(ctx, walletAddress, users.Velas)
 	if !users.ErrNoUser.Has(err) {
 		return Error.New("this user already exist")
 	}
@@ -606,7 +607,7 @@ func (service *Service) RegisterWithVelas(ctx context.Context, address string) e
 		LastLogin:   time.Time{},
 		Status:      users.StatusActive,
 		CreatedAt:   time.Now().UTC(),
-		VelasWallet: address,
+		VelasWallet: walletAddress,
 	}
 	err = service.users.Create(ctx, user)
 	if err != nil {
@@ -617,8 +618,8 @@ func (service *Service) RegisterWithVelas(ctx context.Context, address string) e
 }
 
 // LoginWithVelas authenticates user by credentials and returns login token.
-func (service *Service) LoginWithVelas(ctx context.Context, nonce string, address string) (string, error) {
-	user, err := service.users.GetByWalletAddress(ctx, evmsignature.Address(address), users.Velas)
+func (service *Service) LoginWithVelas(ctx context.Context, nonce string, walletAddress common.Address) (string, error) {
+	user, err := service.users.GetByWalletAddress(ctx, walletAddress, users.Velas)
 	if err != nil {
 		return "", Error.Wrap(err)
 	}

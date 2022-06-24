@@ -13,6 +13,7 @@
 /.vs
 .idea/
 node_modules
+output
 
 # Depependenci
 /vendor

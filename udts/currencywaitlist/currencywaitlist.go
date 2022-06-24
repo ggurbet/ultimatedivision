@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/BoostyLabs/evmsignature"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/zeebo/errs"
 )
 
@@ -22,7 +23,7 @@ type DB interface {
 	// Create creates item of currency waitlist in the database.
 	Create(ctx context.Context, item Item) error
 	// GetByWalletAddressAndNonce returns item of currency wait list by wallet address and nonce.
-	GetByWalletAddressAndNonce(ctx context.Context, walletAddress evmsignature.Address, nonce int64) (Item, error)
+	GetByWalletAddressAndNonce(ctx context.Context, walletAddress common.Address, nonce int64) (Item, error)
 	// List returns items of currency waitlist from database.
 	List(ctx context.Context) ([]Item, error)
 	// ListWithoutSignature returns items of currency waitlist without signature from database.
@@ -30,14 +31,14 @@ type DB interface {
 	// Update updates item by wallet address and nonce in the database.
 	Update(ctx context.Context, item Item) error
 	// Update updates signature of item by wallet address and nonce in the database.
-	UpdateSignature(ctx context.Context, signature evmsignature.Signature, walletAddress evmsignature.Address, nonce int64) error
+	UpdateSignature(ctx context.Context, signature evmsignature.Signature, walletAddress common.Address, nonce int64) error
 	// Delete deletes item of currency waitlist by wallet address and nonce in the database.
-	Delete(ctx context.Context, walletAddress evmsignature.Address, nonce int64) error
+	Delete(ctx context.Context, walletAddress common.Address, nonce int64) error
 }
 
 // Item entity describes item of currency wait list.
 type Item struct {
-	WalletAddress evmsignature.Address   `json:"walletAddress"`
+	WalletAddress common.Address         `json:"walletAddress"`
 	Value         big.Int                `json:"value"`
 	Nonce         int64                  `json:"nonce"`
 	Signature     evmsignature.Signature `json:"signature"`

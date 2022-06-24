@@ -5,10 +5,9 @@ package users
 
 import (
 	"context"
-	"strings"
 	"time"
 
-	"github.com/BoostyLabs/evmsignature"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 )
@@ -49,7 +48,7 @@ func (service *Service) GetByEmail(ctx context.Context, email string) (User, err
 }
 
 // GetByWalletAddress returns user by wallet address from the data base.
-func (service *Service) GetByWalletAddress(ctx context.Context, walletAddress evmsignature.Address) (User, error) {
+func (service *Service) GetByWalletAddress(ctx context.Context, walletAddress common.Address) (User, error) {
 	user, err := service.users.GetByWalletAddress(ctx, walletAddress, Wallet)
 	return user, ErrUsers.Wrap(err)
 }
@@ -115,9 +114,7 @@ func (service *Service) GetNickNameByID(ctx context.Context, id uuid.UUID) (stri
 }
 
 // UpdateWalletAddress updates wallet address.
-func (service *Service) UpdateWalletAddress(ctx context.Context, wallet evmsignature.Address, id uuid.UUID) error {
-	wallet = evmsignature.Address(strings.ToLower(string(wallet)))
-
+func (service *Service) UpdateWalletAddress(ctx context.Context, wallet common.Address, id uuid.UUID) error {
 	_, err := service.GetByWalletAddress(ctx, wallet)
 	if err == nil {
 		return ErrWalletAddressAlreadyInUse.New("wallet address already in use")
@@ -127,9 +124,7 @@ func (service *Service) UpdateWalletAddress(ctx context.Context, wallet evmsigna
 }
 
 // ChangeWalletAddress changes wallet address.
-func (service *Service) ChangeWalletAddress(ctx context.Context, wallet evmsignature.Address, id uuid.UUID) error {
-	wallet = evmsignature.Address(strings.ToLower(string(wallet)))
-
+func (service *Service) ChangeWalletAddress(ctx context.Context, wallet common.Address, id uuid.UUID) error {
 	user, err := service.GetByWalletAddress(ctx, wallet)
 	if err != nil {
 		return ErrUsers.Wrap(err)
@@ -137,8 +132,8 @@ func (service *Service) ChangeWalletAddress(ctx context.Context, wallet evmsigna
 	if user.ID == id {
 		return ErrUsers.New("this address is used by you")
 	}
-	emptyWallet := evmsignature.Address("")
-	err = service.users.UpdateWalletAddress(ctx, emptyWallet, user.ID)
+
+	err = service.users.UpdateWalletAddress(ctx, common.Address{}, user.ID)
 	if err != nil {
 		return ErrUsers.Wrap(err)
 	}

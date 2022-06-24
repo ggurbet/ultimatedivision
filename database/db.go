@@ -78,8 +78,8 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             nick_name            VARCHAR                  NOT NULL,
             first_name           VARCHAR                  NOT NULL,
             last_name            VARCHAR                  NOT NULL,
-            wallet_address       VARCHAR,
-            velas_wallet_address VARCHAR,
+            wallet_address       BYTEA,
+            velas_wallet_address BYTEA,
             nonce                BYTEA,
             last_login           TIMESTAMP WITH TIME ZONE NOT NULL,
             status               INTEGER                  NOT NULL,
@@ -245,7 +245,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
         CREATE TABLE IF NOT EXISTS waitlist(
             token_id       SERIAL                                                     NOT NULL,
             card_id        BYTEA   PRIMARY KEY REFERENCES cards(id) ON DELETE CASCADE NOT NULL,
-            wallet_address VARCHAR                                                    NOT NULL,
+            wallet_address BYTEA                                                      NOT NULL,
             value          BYTEA                                                      NOT NULL,
             password       VARCHAR                                                    NOT NULL
         );
@@ -253,10 +253,10 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             card_id        BYTEA   PRIMARY KEY REFERENCES cards(id) NOT NULL,
             token_id       INTEGER                                  NOT NULL,
             chain          VARCHAR                                  NOT NULL,
-            wallet_address VARCHAR                                  NOT NULL
+            wallet_address BYTEA                                    NOT NULL
         );
         CREATE TABLE IF NOT EXISTS currency_waitlist(
-            wallet_address VARCHAR NOT NULL,
+            wallet_address BYTEA   NOT NULL,
             value          BYTEA   NOT NULL,
             nonce          INTEGER NOT NULL,
             signature      VARCHAR NOT NULL,

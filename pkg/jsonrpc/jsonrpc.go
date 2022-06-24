@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/BoostyLabs/evmsignature"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/zeebo/errs"
 )
 
@@ -33,14 +34,14 @@ func NewTransaction(method MethodEth, params interface{}, id evmsignature.ChainI
 
 // Parameter entity describes parameters of transaction.
 type Parameter struct {
-	To   evmsignature.Address `json:"to"`
-	Data evmsignature.Hex     `json:"data"`
+	To   common.Address   `json:"to"`
+	Data evmsignature.Hex `json:"data"`
 }
 
 // CreateFilter entity describes the values required to create filter.
 type CreateFilter struct {
 	ToBlock evmsignature.BlockTag `json:"toBlock"`
-	Address evmsignature.Address  `json:"address"`
+	Address common.Address        `json:"address"`
 	Topics  []evmsignature.Hex    `json:"topics"`
 }
 
@@ -60,14 +61,14 @@ type ResponseEvents struct {
 
 // Event entity describes event which happens in blockchain when nft is minted or transferred.
 type Event struct {
-	LogIndex         evmsignature.Hex     `json:"logIndex"`
-	BlockNumber      evmsignature.Hex     `json:"blockNumber"`
-	BlockHash        evmsignature.Hex     `json:"blockHash"`
-	TransactionHash  evmsignature.Hex     `json:"transactionHash"`
-	TransactionIndex evmsignature.Hex     `json:"transactionIndex"`
-	Address          evmsignature.Address `json:"address"`
-	Data             evmsignature.Hex     `json:"data"`
-	Topics           []evmsignature.Hex   `json:"topics"`
+	LogIndex         evmsignature.Hex   `json:"logIndex"`
+	BlockNumber      evmsignature.Hex   `json:"blockNumber"`
+	BlockHash        evmsignature.Hex   `json:"blockHash"`
+	TransactionHash  evmsignature.Hex   `json:"transactionHash"`
+	TransactionIndex evmsignature.Hex   `json:"transactionIndex"`
+	Address          common.Address     `json:"address"`
+	Data             evmsignature.Hex   `json:"data"`
+	Topics           []evmsignature.Hex `json:"topics"`
 }
 
 // Version defines the list of possible json rpc version of server.
@@ -123,7 +124,7 @@ func Send(url string, transaction Transaction) (io.ReadCloser, error) {
 }
 
 // GetOwnersWalletAddress returns owner's wallet address.
-func GetOwnersWalletAddress(body io.ReadCloser) (evmsignature.Address, error) {
+func GetOwnersWalletAddress(body io.ReadCloser) (common.Address, error) {
 	var (
 		response ResponseAddress
 		err      error
@@ -133,11 +134,12 @@ func GetOwnersWalletAddress(body io.ReadCloser) (evmsignature.Address, error) {
 	}()
 
 	err = json.NewDecoder(body).Decode(&response)
-	return evmsignature.CreateValidAddress(response.Result), err
+	validWalletAddress := evmsignature.CreateValidAddress(response.Result)
+	return common.HexToAddress(string(validWalletAddress)), err
 }
 
 // GetAddressOfFilter returns address of new filter.
-func GetAddressOfFilter(body io.ReadCloser) (evmsignature.Address, error) {
+func GetAddressOfFilter(body io.ReadCloser) (common.Address, error) {
 	var (
 		response ResponseAddress
 		err      error
@@ -147,7 +149,7 @@ func GetAddressOfFilter(body io.ReadCloser) (evmsignature.Address, error) {
 	}()
 
 	err = json.NewDecoder(body).Decode(&response)
-	return evmsignature.Address(response.Result), err
+	return common.HexToAddress(string(response.Result)), err
 }
 
 // ListEvents returns list events of filter.

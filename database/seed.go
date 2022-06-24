@@ -9,6 +9,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
@@ -52,7 +53,7 @@ func CreateUser(ctx context.Context, db *sql.DB) error {
 		NickName:     "Admin1",
 		FirstName:    "Test",
 		LastName:     "Test",
-		Wallet:       "0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b1",
+		Wallet:       common.HexToAddress("0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b1"),
 		LastLogin:    time.Time{},
 		Status:       1,
 		CreatedAt:    time.Now().UTC(),
@@ -65,7 +66,7 @@ func CreateUser(ctx context.Context, db *sql.DB) error {
 		NickName:     "Admin2",
 		FirstName:    "Test",
 		LastName:     "Test",
-		Wallet:       "0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b2",
+		Wallet:       common.HexToAddress("0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b2"),
 		LastLogin:    time.Time{},
 		Status:       1,
 		CreatedAt:    time.Now().UTC(),
@@ -78,7 +79,7 @@ func CreateUser(ctx context.Context, db *sql.DB) error {
 		NickName:     "Admin3",
 		FirstName:    "Test",
 		LastName:     "Test",
-		Wallet:       "0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b3",
+		Wallet:       common.HexToAddress("0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b3"),
 		LastLogin:    time.Time{},
 		Status:       1,
 		CreatedAt:    time.Now().UTC(),
@@ -91,7 +92,7 @@ func CreateUser(ctx context.Context, db *sql.DB) error {
 		NickName:     "Admin4",
 		FirstName:    "Test",
 		LastName:     "Test",
-		Wallet:       "0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b4",
+		Wallet:       common.HexToAddress("0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b4"),
 		LastLogin:    time.Time{},
 		Status:       1,
 		CreatedAt:    time.Now().UTC(),
@@ -104,7 +105,7 @@ func CreateUser(ctx context.Context, db *sql.DB) error {
 		NickName:     "Admin5",
 		FirstName:    "Test",
 		LastName:     "Test",
-		Wallet:       "0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b5",
+		Wallet:       common.HexToAddress("0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b5"),
 		LastLogin:    time.Time{},
 		Status:       1,
 		CreatedAt:    time.Now().UTC(),
@@ -117,7 +118,7 @@ func CreateUser(ctx context.Context, db *sql.DB) error {
 		NickName:     "Admin6",
 		FirstName:    "Test",
 		LastName:     "Test",
-		Wallet:       "0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b6",
+		Wallet:       common.HexToAddress("0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b6"),
 		LastLogin:    time.Time{},
 		Status:       1,
 		CreatedAt:    time.Now().UTC(),

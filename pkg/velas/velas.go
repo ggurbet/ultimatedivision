@@ -3,11 +3,13 @@
 
 package velas
 
+import "github.com/ethereum/go-ethereum/common"
+
 // APIRequest for velas response.
 type APIRequest struct {
-	WalletAddress string `json:"walletAddress"`
-	AccessToken   string `json:"accessToken"`
-	ExpiresAt     int64  `json:"expiresAt"`
+	WalletAddress common.Address `json:"walletAddress"`
+	AccessToken   string         `json:"accessToken"`
+	ExpiresAt     int64          `json:"expiresAt"`
 }
 
 // VAClientFields for velas va client fields from config.

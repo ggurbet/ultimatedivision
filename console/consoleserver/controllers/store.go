@@ -5,9 +5,12 @@ package controllers
 
 import (
 	"encoding/json"
+	"math/big"
 	"net/http"
 
 	"github.com/BoostyLabs/evmsignature"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
@@ -58,17 +61,28 @@ func (controller *Store) Buy(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var createNFT waitlist.CreateNFT
+	var request struct {
+		CardID        uuid.UUID `json:"cardId"`
+		WalletAddress string    `json:"walletAddress"`
+		UserID        uuid.UUID `json:"userId"`
+		Value         big.Int   `json:"value"`
+	}
 
-	if err = json.NewDecoder(r.Body).Decode(&createNFT); err != nil {
+	if err = json.NewDecoder(r.Body).Decode(&request); err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrStore.Wrap(err))
 		return
 	}
-	if err := createNFT.WalletAddress.IsValidAddress(); err != nil {
+	if !common.IsHexAddress(request.WalletAddress) {
 		controller.serveError(w, http.StatusBadRequest, ErrStore.New("wallet address is invalid"))
 		return
 	}
-	createNFT.UserID = claims.UserID
+
+	createNFT := waitlist.CreateNFT{
+		CardID:        request.CardID,
+		WalletAddress: common.HexToAddress(request.WalletAddress),
+		UserID:        claims.UserID,
+		Value:         request.Value,
+	}
 
 	transaction, err := controller.store.Buy(ctx, createNFT)
 	if err != nil {

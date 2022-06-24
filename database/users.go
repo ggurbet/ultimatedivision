@@ -9,7 +9,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/BoostyLabs/evmsignature"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
@@ -91,7 +91,7 @@ func (usersDB *usersDB) GetByEmail(ctx context.Context, email string) (users.Use
 }
 
 // GetByWalletAddress returns user by wallet address from the data base.
-func (usersDB *usersDB) GetByWalletAddress(ctx context.Context, walletAddress evmsignature.Address, walletType users.WalletType) (users.User, error) {
+func (usersDB *usersDB) GetByWalletAddress(ctx context.Context, walletAddress common.Address, walletType users.WalletType) (users.User, error) {
 	var user users.User
 
 	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, velas_wallet_address, nonce, last_login, status, created_at FROM users WHERE "+walletType.ToString()+"=$1", walletAddress)
@@ -199,7 +199,7 @@ func (usersDB *usersDB) UpdatePassword(ctx context.Context, passwordHash []byte,
 }
 
 // UpdateWalletAddress updates wallet address in the database.
-func (usersDB *usersDB) UpdateWalletAddress(ctx context.Context, wallet evmsignature.Address, id uuid.UUID) error {
+func (usersDB *usersDB) UpdateWalletAddress(ctx context.Context, wallet common.Address, id uuid.UUID) error {
 	result, err := usersDB.conn.ExecContext(ctx, "UPDATE users SET wallet_address=$1 WHERE id=$2", wallet, id)
 	if err != nil {
 		return ErrUsers.Wrap(err)

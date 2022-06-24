@@ -6,7 +6,6 @@ package nfts
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
@@ -37,7 +36,6 @@ func NewService(config Config, nfts DB) *Service {
 
 // Create creates nft in the database.
 func (service *Service) Create(ctx context.Context, nft NFT) error {
-	nft.WalletAddress = evmsignature.Address(strings.ToLower(string(nft.WalletAddress)))
 	return ErrNFTs.Wrap(service.nfts.Create(ctx, nft))
 }
 

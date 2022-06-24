@@ -8,7 +8,7 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/BoostyLabs/evmsignature"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 	"golang.org/x/crypto/bcrypt"
@@ -28,7 +28,7 @@ type DB interface {
 	// GetByEmail returns user by email from the data base.
 	GetByEmail(ctx context.Context, email string) (User, error)
 	// GetByWalletAddress returns user by wallet address from the data base.
-	GetByWalletAddress(ctx context.Context, walletAddress evmsignature.Address, walletType WalletType) (User, error)
+	GetByWalletAddress(ctx context.Context, walletAddress common.Address, walletType WalletType) (User, error)
 	// Create creates a user and writes to the database.
 	Create(ctx context.Context, user User) error
 	// Update updates a status in the database.
@@ -36,7 +36,7 @@ type DB interface {
 	// UpdatePassword updates a password in the database.
 	UpdatePassword(ctx context.Context, passwordHash []byte, id uuid.UUID) error
 	// UpdateWalletAddress updates user's address of wallet in the database.
-	UpdateWalletAddress(ctx context.Context, wallet evmsignature.Address, id uuid.UUID) error
+	UpdateWalletAddress(ctx context.Context, wallet common.Address, id uuid.UUID) error
 	// UpdateNonce updates nonce by user.
 	UpdateNonce(ctx context.Context, id uuid.UUID, nonce []byte) error
 	// Delete deletes a user in the database.
@@ -66,18 +66,18 @@ const DefaultMessageForRegistration = "Register with metamask"
 
 // User describes user entity.
 type User struct {
-	ID           uuid.UUID            `json:"id"`
-	Email        string               `json:"email"`
-	PasswordHash []byte               `json:"passwordHash"`
-	NickName     string               `json:"nickName"`
-	FirstName    string               `json:"firstName"`
-	LastName     string               `json:"lastName"`
-	Wallet       evmsignature.Address `json:"wallet"`
-	VelasWallet  string               `json:"velas_wallet"`
-	Nonce        []byte               `json:"nonce"`
-	LastLogin    time.Time            `json:"lastLogin"`
-	Status       Status               `json:"status"`
-	CreatedAt    time.Time            `json:"createdAt"`
+	ID           uuid.UUID      `json:"id"`
+	Email        string         `json:"email"`
+	PasswordHash []byte         `json:"passwordHash"`
+	NickName     string         `json:"nickName"`
+	FirstName    string         `json:"firstName"`
+	LastName     string         `json:"lastName"`
+	Wallet       common.Address `json:"wallet"`
+	VelasWallet  common.Address `json:"velasWallet"`
+	Nonce        []byte         `json:"nonce"`
+	LastLogin    time.Time      `json:"lastLogin"`
+	Status       Status         `json:"status"`
+	CreatedAt    time.Time      `json:"createdAt"`
 }
 
 // EncodePass encode the password and generate "hash" to store from users password.
@@ -92,21 +92,21 @@ func (user *User) EncodePass() error {
 
 // CreateUserFields for crete user.
 type CreateUserFields struct {
-	Email     string               `json:"email"`
-	Password  string               `json:"password"`
-	NickName  string               `json:"nickName"`
-	FirstName string               `json:"firstName"`
-	LastName  string               `json:"lastName"`
-	Wallet    evmsignature.Address `json:"wallet"`
+	Email     string         `json:"email"`
+	Password  string         `json:"password"`
+	NickName  string         `json:"nickName"`
+	FirstName string         `json:"firstName"`
+	LastName  string         `json:"lastName"`
+	Wallet    common.Address `json:"wallet"`
 }
 
 // Profile for user profile.
 type Profile struct {
-	Email     string               `json:"email"`
-	NickName  string               `json:"nickName"`
-	CreatedAt time.Time            `json:"registerDate"`
-	LastLogin time.Time            `json:"lastLogin"`
-	Wallet    evmsignature.Address `json:"wallet"`
+	Email     string         `json:"email"`
+	NickName  string         `json:"nickName"`
+	CreatedAt time.Time      `json:"registerDate"`
+	LastLogin time.Time      `json:"lastLogin"`
+	Wallet    common.Address `json:"wallet"`
 }
 
 // Password for old/new passwords.

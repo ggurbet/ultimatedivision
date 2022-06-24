@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/BoostyLabs/evmsignature"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -21,14 +22,14 @@ func TestCurrencycurrencywaitlist(t *testing.T) {
 	var value = new(big.Int)
 	value.SetString("5000000000000000000", 10)
 	item1 := currencywaitlist.Item{
-		WalletAddress: "0x96216849c49358b10257cb55b28ea603c874b05e",
+		WalletAddress: common.HexToAddress("0x96216849c49358b10257cb55b28ea603c874b05e"),
 		Value:         *value,
 		Nonce:         1,
 		Signature:     "",
 	}
 
 	item2 := currencywaitlist.Item{
-		WalletAddress: "0x96216849c49358b10257cb55b28ea603c874b05e",
+		WalletAddress: common.HexToAddress("0x96216849c49358b10257cb55b28ea603c874b05e"),
 		Value:         *value,
 		Nonce:         2,
 		Signature:     "",

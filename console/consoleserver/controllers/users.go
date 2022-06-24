@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/internal/logger"
@@ -61,17 +62,22 @@ func (controller *Users) GetProfile(w http.ResponseWriter, r *http.Request) {
 
 // CreateWalletFromMetamask creates wallet from metamask.
 func (controller *Users) CreateWalletFromMetamask(w http.ResponseWriter, r *http.Request) {
+	var (
+		request struct {
+			Wallet string `json:"wallet"`
+		}
+		err error
+	)
+
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 
-	var err error
-	var request users.User
 	if err = json.NewDecoder(r.Body).Decode(&request); err != nil {
 		controller.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
 		return
 	}
 
-	if err := request.Wallet.IsValidAddress(); err != nil {
+	if !common.IsHexAddress(request.Wallet) {
 		controller.serveError(w, http.StatusBadRequest, AuthError.New("wallet address is wrong"))
 		return
 	}
@@ -82,7 +88,7 @@ func (controller *Users) CreateWalletFromMetamask(w http.ResponseWriter, r *http
 		return
 	}
 
-	err = controller.users.UpdateWalletAddress(ctx, request.Wallet, claims.UserID)
+	err = controller.users.UpdateWalletAddress(ctx, common.HexToAddress(request.Wallet), claims.UserID)
 	if err != nil {
 		controller.log.Error("could not update wallet address", ErrUsers.Wrap(err))
 		switch {
@@ -102,28 +108,32 @@ func (controller *Users) CreateWalletFromMetamask(w http.ResponseWriter, r *http
 
 // ChangeWalletFromMetamask changes wallet from metamask.
 func (controller *Users) ChangeWalletFromMetamask(w http.ResponseWriter, r *http.Request) {
+	var (
+		request struct {
+			Wallet string `json:"wallet"`
+		}
+		err error
+	)
+
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 
-	var err error
-	var request users.User
 	if err = json.NewDecoder(r.Body).Decode(&request); err != nil {
 		controller.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
 		return
 	}
 
-	if err := request.Wallet.IsValidAddress(); err != nil {
+	if !common.IsHexAddress(request.Wallet) {
 		controller.serveError(w, http.StatusBadRequest, AuthError.New("wallet address is wrong"))
 		return
 	}
-
 	claims, err := auth.GetClaims(ctx)
 	if err != nil {
 		controller.serveError(w, http.StatusUnauthorized, ErrUsers.Wrap(err))
 		return
 	}
 
-	err = controller.users.ChangeWalletAddress(ctx, request.Wallet, claims.UserID)
+	err = controller.users.ChangeWalletAddress(ctx, common.HexToAddress(request.Wallet), claims.UserID)
 	if err != nil {
 		controller.log.Error("could not update wallet address", ErrUsers.Wrap(err))
 		controller.serveError(w, http.StatusInternalServerError, ErrUsers.Wrap(err))

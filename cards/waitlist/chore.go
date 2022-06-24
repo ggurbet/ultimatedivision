@@ -9,6 +9,7 @@ import (
 
 	"github.com/BoostyLabs/evmsignature"
 	"github.com/BoostyLabs/thelooper"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
@@ -69,7 +70,7 @@ func (chore *Chore) RunCheckMintEvent(ctx context.Context) (err error) {
 	}
 
 	return chore.Loop.Run(ctx, func(ctx context.Context) error {
-		transaction := jsonrpc.NewTransaction(jsonrpc.MethodEthGetFilterChanges, []evmsignature.Address{addressOfFilter}, evmsignature.ChainIDRinkeby)
+		transaction := jsonrpc.NewTransaction(jsonrpc.MethodEthGetFilterChanges, []common.Address{addressOfFilter}, evmsignature.ChainIDRinkeby)
 		events, err := jsonrpc.GetEvents(chore.config.AddressNodeServer, transaction)
 		if err != nil {
 			return ChoreError.Wrap(err)
@@ -98,7 +99,7 @@ func (chore *Chore) RunCheckMintEvent(ctx context.Context) (err error) {
 					CardID:        nftWaitList.CardID,
 					Chain:         evmsignature.ChainPolygon,
 					TokenID:       tokenID,
-					WalletAddress: toAddress,
+					WalletAddress: common.HexToAddress(string(toAddress)),
 				}
 				if err = chore.nfts.Create(ctx, nft); err != nil {
 					return ChoreError.Wrap(err)
@@ -111,7 +112,7 @@ func (chore *Chore) RunCheckMintEvent(ctx context.Context) (err error) {
 				return ChoreError.Wrap(err)
 			}
 
-			user, err := chore.users.GetByWalletAddress(ctx, toAddress)
+			user, err := chore.users.GetByWalletAddress(ctx, common.HexToAddress(string(toAddress)))
 			if err != nil {
 				if err = chore.nfts.Delete(ctx, nft.CardID); err != nil {
 					return ChoreError.Wrap(err)

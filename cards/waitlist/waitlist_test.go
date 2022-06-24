@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -159,14 +160,14 @@ func TestWaitList(t *testing.T) {
 	item1 := waitlist.Item{
 		TokenID: 1,
 		CardID:  card1.ID,
-		Wallet:  "0x96216849c49358b10257cb55b28ea603c874b05e",
+		Wallet:  common.HexToAddress("0x96216849c49358b10257cb55b28ea603c874b05e"),
 		Value:   *big.NewInt(100),
 	}
 
 	item2 := waitlist.Item{
 		TokenID: 2,
 		CardID:  card2.ID,
-		Wallet:  "0x96216849c49358B10254cb55b28eA603c874b05E",
+		Wallet:  common.HexToAddress("0x96216849c49358B10254cb55b28eA603c874b05E"),
 		Value:   *big.NewInt(200),
 	}
 

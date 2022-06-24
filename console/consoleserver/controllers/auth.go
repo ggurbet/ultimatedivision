@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/BoostyLabs/evmsignature"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/gorilla/mux"
@@ -349,6 +348,7 @@ func (auth *Auth) Nonce(w http.ResponseWriter, r *http.Request) {
 		auth.serveError(w, http.StatusBadRequest, AuthError.New("address is invalid"))
 		return
 	}
+	walletAddress := common.HexToAddress(address)
 
 	walletType := users.WalletType(query.Get("walletType"))
 	if !walletType.IsValid() {
@@ -356,7 +356,7 @@ func (auth *Auth) Nonce(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nonce, err := auth.userAuth.Nonce(ctx, evmsignature.Address(address), walletType)
+	nonce, err := auth.userAuth.Nonce(ctx, walletAddress, walletType)
 	if err != nil {
 		switch {
 		case users.ErrNoUser.Has(err):
@@ -424,20 +424,31 @@ func (auth *Auth) VelasRegister(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 
-	var velasAPIRequest velas.APIRequest
-	if err := json.NewDecoder(r.Body).Decode(&velasAPIRequest); err != nil {
+	var request struct {
+		WalletAddress string `json:"walletAddress"`
+		AccessToken   string `json:"accessToken"`
+		ExpiresAt     int64  `json:"expiresAt"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
 		return
 	}
 
-	if time.Now().Unix() > velasAPIRequest.ExpiresAt {
+	if time.Now().Unix() > request.ExpiresAt {
 		auth.serveError(w, http.StatusBadRequest, AuthError.New("token expiration time has expired"))
 		return
 	}
 
-	if !common.IsHexAddress(velasAPIRequest.WalletAddress) {
+	if !common.IsHexAddress(request.WalletAddress) {
 		auth.serveError(w, http.StatusBadRequest, AuthError.New("wallet address is invalid"))
 		return
+	}
+
+	velasAPIRequest := velas.APIRequest{
+		WalletAddress: common.HexToAddress(request.WalletAddress),
+		AccessToken:   request.WalletAddress,
+		ExpiresAt:     request.ExpiresAt,
 	}
 
 	err := auth.userAuth.RegisterWithVelas(ctx, velasAPIRequest.WalletAddress)
@@ -452,12 +463,12 @@ func (auth *Auth) VelasLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 
-	type VelasFields struct {
-		Nonce string `json:"nonce"`
-		velas.APIRequest
+	var request struct {
+		Nonce         string `json:"nonce"`
+		WalletAddress string `json:"walletAddress"`
+		AccessToken   string `json:"accessToken"`
+		ExpiresAt     int64  `json:"expiresAt"`
 	}
-
-	var request VelasFields
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
 		return
@@ -478,7 +489,7 @@ func (auth *Auth) VelasLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	authToken, err := auth.userAuth.LoginWithVelas(ctx, request.Nonce, request.WalletAddress)
+	authToken, err := auth.userAuth.LoginWithVelas(ctx, request.Nonce, common.HexToAddress(request.WalletAddress))
 	if err != nil {
 		switch {
 		case users.ErrNoUser.Has(err):

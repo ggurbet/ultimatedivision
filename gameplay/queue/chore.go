@@ -10,6 +10,7 @@ import (
 
 	"github.com/BoostyLabs/evmsignature"
 	"github.com/BoostyLabs/thelooper"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/clubs"
@@ -342,7 +343,7 @@ func (chore *Chore) FinishWithWinResult(ctx context.Context, winResult WinResult
 			}
 		}
 
-		if err = chore.users.UpdateWalletAddress(ctx, request.WalletAddress, winResult.Client.UserID); err != nil {
+		if err = chore.users.UpdateWalletAddress(ctx, common.HexToAddress(string(request.WalletAddress)), winResult.Client.UserID); err != nil {
 			if !users.ErrWalletAddressAlreadyInUse.Has(err) {
 				chore.log.Error("could not update user's wallet address", ChoreError.Wrap(err))
 				return
