@@ -1,0 +1,72 @@
+# This is workflow to automatically deploy on server.
+
+name: "CD"
+env:
+  CURRENT_BRANCH : ${{ github.ref_name }}
+on:
+  workflow_run:
+    workflows: [ "CI" ]
+    types: [ completed ]
+    branches:
+      - 'develop'
+      - 'stage'
+      - 'master'
+  # Allows you to run this workflow manually from the Actions tab.
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel.
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # Run jobs only if CI completed with success
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # The type of runner that the job will run on.
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job.
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it.
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ env.CURRENT_BRANCH }}
+      # Login into our docker registry.
+      - uses: docker/login-action@v1
+        with:
+          registry: dcloud.hicrystal.com
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Runs a single command using the runners shell.
+      - name: Build & push docker images to our server
+        if: env.CURRENT_BRANCH == 'develop'
+        run: make docker VERSION=${{ env.DOCKER_VERSION }} ENVIRONMENT=/develop
+
+      - name: Deploy DEVELOP environment images
+        uses: appleboy/ssh-action@master
+        if: env.CURRENT_BRANCH == 'develop'
+        with:
+          host:       ${{ secrets.SSH_HOST_DEVELOP }}
+          port:       ${{ secrets.SSH_PORT }}
+          username:   ${{ secrets.SSH_USERNAME }}
+          key:        ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH_DEVELOP }}
+            ./deploy.sh 
+
+      # Runs a single command using the runners shell.
+      - name: Build & push docker images to our server
+        if: env.CURRENT_BRANCH == 'stage'
+        run:  make docker VERSION=${{ env.DOCKER_VERSION }} ENVIRONMENT=/stage
+
+      - name: Deploy STAGE environment images
+        uses: appleboy/ssh-action@master
+        if: env.CURRENT_BRANCH == 'stage'
+        with:
+          host:       ${{ secrets.SSH_HOST_STAGE }}
+          port:       ${{ secrets.SSH_PORT }}
+          username:   ${{ secrets.SSH_USERNAME }}
+          key:        ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH_STAGE }}
+            ./deploy.sh 

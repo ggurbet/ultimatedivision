@@ -1,0 +1,72 @@
+name: "CI"
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'stage'
+      - 'master'
+  pull_request:
+    branches:
+      - 'develop'
+      - 'stage'
+      - 'master'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel.
+jobs:
+  build_and_test_go:
+    name: Build
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 123456
+          POSTGRES_DB: ultimatedivisiondb_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - name: Set up Go 1.17.4
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.17.4
+        id: go
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: Build
+        run: go install ./... .
+      - name: Lint
+        uses: BoostyLabs/golangci-lint@master
+        with:
+          args: "run"
+        env:
+          GOROOT: ""
+      - name: Test
+        run: go test ./... .
+
+  build_and_lint_web:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ${{ matrix.node-version }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install
+        run: npm install
+        working-directory: ./web/console
+      - name: Lint
+        run: npm run lint
+        working-directory: ./web/console
+      - name: Build
+        run: npm run build
+        working-directory: ./web/console
