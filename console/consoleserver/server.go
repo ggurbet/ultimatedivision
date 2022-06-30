@@ -21,6 +21,7 @@ import (
 	"ultimatedivision/console/consoleserver/controllers"
 	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/internal/metrics"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/pkg/auth"
 	"ultimatedivision/seasons"
@@ -69,7 +70,7 @@ type Server struct {
 // NewServer is a constructor for console web server.
 func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service,
 	marketplace *marketplace.Service, clubs *clubs.Service, userAuth *userauth.Service, users *users.Service,
-	queue *queue.Service, seasons *seasons.Service, waitList *waitlist.Service, store *store.Service) *Server {
+	queue *queue.Service, seasons *seasons.Service, waitList *waitlist.Service, store *store.Service, metric *metrics.Metric) *Server {
 	server := &Server{
 		log:         log,
 		config:      config,
@@ -81,7 +82,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 		}),
 	}
 
-	authController := controllers.NewAuth(server.log, server.authService, server.cookieAuth, server.templates.auth)
+	authController := controllers.NewAuth(server.log, server.authService, server.cookieAuth, server.templates.auth, metric)
 	userController := controllers.NewUsers(server.log, users)
 	cardsController := controllers.NewCards(log, cards)
 	clubsController := controllers.NewClubs(log, clubs)

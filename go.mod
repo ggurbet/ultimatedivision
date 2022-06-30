@@ -9,7 +9,6 @@ require (
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/ethereum/go-ethereum v1.10.19
 	github.com/fogleman/gg v1.3.0
-	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
@@ -21,6 +20,7 @@ require (
 	github.com/minio/minio-go/v7 v7.0.29
 	github.com/minio/sha256-simd v1.0.0 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
+	github.com/prometheus/client_golang v1.12.2
 	github.com/rjeczalik/notify v0.9.2 // indirect
 	github.com/rs/xid v1.4.0 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect

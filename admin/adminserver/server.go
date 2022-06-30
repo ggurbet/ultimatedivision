@@ -25,6 +25,7 @@ import (
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/internal/metrics"
 	"ultimatedivision/internal/templatefuncs"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/pkg/auth"
@@ -85,7 +86,7 @@ type Server struct {
 func NewServer(config Config, log logger.Logger, listener net.Listener, authService *adminauth.Service,
 	admins *admins.Service, users *users.Service, cards *cards.Service, percentageQualities cards.PercentageQualities,
 	avatars *avatars.Service, marketplace *marketplace.Service, lootboxes *lootboxes.Service, clubs *clubs.Service,
-	queue *queue.Service, divisions *divisions.Service, matches *matches.Service, seasons *seasons.Service, store *store.Service) (*Server, error) {
+	queue *queue.Service, divisions *divisions.Service, matches *matches.Service, seasons *seasons.Service, store *store.Service, metric *metrics.Metric) (*Server, error) {
 	server := &Server{
 		log:    log,
 		config: config,
@@ -189,6 +190,8 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, authServ
 	storeController := controllers.NewStore(log, store, server.templates.store)
 	storeRouter.HandleFunc("", storeController.List).Methods(http.MethodGet)
 	storeRouter.HandleFunc("/update/{id}", storeController.Update).Methods(http.MethodGet, http.MethodPost)
+
+	router.Handle("/metrics", metric.GetHandler())
 
 	server.server = http.Server{
 		Handler: router,

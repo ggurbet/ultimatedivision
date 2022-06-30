@@ -41,17 +41,72 @@ services:
     networks:
       - fullstack
 
-  docker-logs-to-web:
-    container_name: dozzle
+  dozzle:
+    container_name: ultimatedivision_dozzle
     image: amir20/dozzle:latest
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "9999:8080"
+    networks:
+      - fullstack
     depends_on:
       - app
     environment:
       - DOZZLE_NO_ANALYTICS=true
+      - DOZZLE_USERNAME=${DOZZLE_USERNAME}
+      - DOZZLE_PASSWORD=${DOZZLE_PASSWORD}
+      - DOZZLE_KEY=true
+
+  prometheus:
+    image: prom/prometheus
+    container_name: ultimatedivision_prometheus
+    hostname: prometheus
+    restart: always
+    volumes:
+      - ${PROJECT_CONFIGS_PATH}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - fullstack
+
+  grafana:
+    image: grafana/grafana
+    container_name: ultimatedivision_grafana
+    hostname: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ${PROJECT_CONFIGS_PATH}/grafana/provisioning:/etc/grafana/provisioning
+      - ${PROJECT_DATA_PATH}/grafana:/var/lib/grafana
+    networks:
+      - fullstack
+
+  node_exporter:
+    image: prom/node-exporter
+    container_name: ultimatedivision_node_exporter
+    hostname: node-exporter
+    restart: always
+    ports:
+      - "9100:9100"
+    networks:
+      - fullstack
+
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: ultimatedivision_cadvisor
+    hostname: cadvisor
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - fullstack
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
 
   ultimatedivision_db:
     restart: always
