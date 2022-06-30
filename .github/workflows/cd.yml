@@ -38,7 +38,7 @@ jobs:
       # Runs a single command using the runners shell.
       - name: Build & push docker images to our server
         if: env.CURRENT_BRANCH == 'develop'
-        run: make docker VERSION=${{ env.DOCKER_VERSION }} ENVIRONMENT=/develop
+        run: make docker ENVIRONMENT=/develop
 
       - name: Deploy DEVELOP environment images
         uses: appleboy/ssh-action@master
@@ -56,7 +56,7 @@ jobs:
       # Runs a single command using the runners shell.
       - name: Build & push docker images to our server
         if: env.CURRENT_BRANCH == 'stage'
-        run:  make docker VERSION=${{ env.DOCKER_VERSION }} ENVIRONMENT=/stage
+        run:  make docker ENVIRONMENT=/stage
 
       - name: Deploy STAGE environment images
         uses: appleboy/ssh-action@master
