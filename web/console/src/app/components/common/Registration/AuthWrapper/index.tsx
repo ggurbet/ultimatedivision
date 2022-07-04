@@ -2,19 +2,20 @@ import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { AuthRouteConfig, RouteConfig } from '@/app/routes';
-import { InternalError } from '@/api';
-import { UsersClient } from '@/api/users';
-import { UsersService } from '@/users/service';
-
-import ulimatedivisionLogo from '@static/img/registerPage/ultimate.svg';
-
 // @ts-ignore
-import { VAClient } from '@velas/account-client';
+import KeyStorageHandler from '../../../../velas/keyStorageHandler';
 // @ts-ignore
 import StorageHandler from '../../../../velas/storageHandler';
 // @ts-ignore
-import KeyStorageHandler from '../../../../velas/keyStorageHandler';
+import { VAClient } from '@velas/account-client';
+
+import { RouteConfig } from '@/app/routes';
+import { InternalError, NotFoundError } from '@/api';
+import { UsersClient } from '@/api/users';
+import { UsersService } from '@/users/service';
+import { useLocalStorage } from '@/app/hooks/useLocalStorage';
+
+import ulimatedivisionLogo from '@static/img/registerPage/ultimate.svg';
 
 import './index.scss';
 
@@ -23,6 +24,7 @@ const AuthWrapper = () => {
 
     const usersClient = new UsersClient();
     const usersService = new UsersService(usersClient);
+    const [setLocalStorageItem, getLocalStorageItem] = useLocalStorage();
 
     /** generates vaclient with the help of creds  */
     const vaclientService = async() => {
@@ -52,40 +54,70 @@ const AuthWrapper = () => {
         return null;
     };
 
+    /** logins via velas  */
+    const velasLogin = async(accountKeyEvm: string, accessToken: string, expiresAt: number) => {
+        const nonce = await usersService.velasNonce(accountKeyEvm);
+
+        await usersService.velasLogin(nonce, accountKeyEvm, accessToken, expiresAt);
+
+        setLocalStorageItem('IS_LOGGINED', true);
+        history.push(RouteConfig.MarketPlace.path);
+        window.location.reload();
+    };
+
+    /** register via velas */
+    const velasRegister = async(result: any, authResult: any) => {
+        try {
+            await velasLogin(result.userinfo.account_key_evm, authResult.access_token, authResult.expires_at);
+        } catch (e) {
+            if (!(e instanceof NotFoundError)) {
+                toast.error('Something went wrong', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    theme: 'colored',
+                });
+
+                return;
+            }
+            try {
+                await usersService.velasRegister(
+                    result.userinfo.account_key_evm,
+                    authResult.access_token,
+                    authResult.expires_at
+                );
+                await velasLogin(result.userinfo.account_key_evm, authResult.access_token, authResult.expires_at);
+            } catch (e) {
+                toast.error('Something went wrong', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    theme: 'colored',
+                });
+            }
+        }
+    };
+
     const sendAuthData = async(authResult: any) => {
         try {
             const vaclient = await vaclientService();
 
             await vaclient.userinfo(authResult.access_token, async(err: any, result: any) => {
                 if (err) {
-                    toast.error(`${err}`, {
+                    toast.error('Something went wrong', {
                         position: toast.POSITION.TOP_RIGHT,
                         theme: 'colored',
                     });
                 } else {
-                    await usersService.velasRegister(
-                        result.userinfo.account_key_evm,
-                        authResult.access_token,
-                        authResult.expires_at
-                    );
-                    const nonce = await usersService.velasNonce(result.userinfo.account_key_evm);
-                    await usersService.velasLogin(
-                        nonce,
-                        result.userinfo.account_key_evm,
-                        authResult.access_token,
-                        authResult.expires_at
-                    );
+                    await velasRegister(result, authResult);
                 }
             });
-
-            history.push(RouteConfig.MarketPlace.path);
-            window.location.reload();
         } catch (error) {
             if (error instanceof InternalError) {
-                history.push(AuthRouteConfig.SignIn.path);
+                history.push(RouteConfig.Home.path);
+                toast.error('Registration failed', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    theme: 'colored',
+                });
             }
 
-            toast.error(`${error}`, {
+            toast.error('Something went wrong', {
                 position: toast.POSITION.TOP_RIGHT,
                 theme: 'colored',
             });

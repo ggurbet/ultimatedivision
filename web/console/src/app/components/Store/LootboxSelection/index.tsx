@@ -23,7 +23,7 @@ export const LootboxSelection: React.FC<{
             box,
             LootboxTypes['Regular Box'],
             REGULAR_BOX_CARDS_QUANTITY,
-            // eslint-disable-next-line 
+            // eslint-disable-next-line
             [80, 15, 4, 1],
             '200,000'
         ),
@@ -32,7 +32,7 @@ export const LootboxSelection: React.FC<{
             coolBox,
             LootboxTypes['Cool box'],
             COOL_BOX_CARDS_QUANTITY,
-            // eslint-disable-next-line 
+            // eslint-disable-next-line
             [70, 20, 8, 2],
             '500,000'
         ),

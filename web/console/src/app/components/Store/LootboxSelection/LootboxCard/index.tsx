@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 import { LootboxCardQuality } from './LootboxCardQuality';
 
-import { RegistrationPopup } from '@/app/components/common/Registration/Registration';
+import { RegistrationPopup } from '@/app/components/common/Registration';
 
 import coin from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';
 import diamond from '@static/img/StorePage/BoxCard/diamond.svg';
@@ -56,6 +56,7 @@ export const LootboxCard: React.FC<{
             icon: diamond,
         },
     ];
+    const boxType = data.type === 'Regular Box' ? 'Regular Box' : 'Cool box';
 
     const handleAnimation = async() => {
         // TODO: need add id lootbox from BD after be create endpoint fetch lootboxex.
@@ -80,11 +81,7 @@ export const LootboxCard: React.FC<{
     };
 
     if (isRegistrationRequired) {
-        return (
-            <RegistrationPopup
-                closeRegistrationPopup={closeRegistrationPopup}
-            />
-        );
+        return <RegistrationPopup closeRegistrationPopup={closeRegistrationPopup} />;
     }
 
     return (
@@ -92,30 +89,17 @@ export const LootboxCard: React.FC<{
             <div className="box-card__wrapper">
                 <div className="box-card__description">
                     <img className="box-card__icon" src={data.icon} alt="box" />
-                    <h2 className="box-card__title">
-                        {data.type === 'Regular Box'
-                            ? 'Regular Box'
-                            : 'Cool box'}
-                    </h2>
+                    <h2 className="box-card__title">{boxType}</h2>
                     <div className="box-card__quantity">
                         <span className="box-card__quantity-label">Cards</span>
-                        <span className="box-card__quantity-value">
-                            {data.quantity}
-                        </span>
+                        <span className="box-card__quantity-value">{data.quantity}</span>
                     </div>
                 </div>
                 <div className="box-card__qualities">
                     {data.dropChance.map((item, index) =>
-                        <LootboxCardQuality
-                            label={qualities[index]}
-                            chance={item}
-                            key={index}
-                        />
+                        <LootboxCardQuality label={qualities[index]} chance={item} key={index} />
                     )}
-                    <button
-                        className="box-card__button"
-                        onClick={handleAnimation}
-                    >
+                    <button className="box-card__button" onClick={handleAnimation}>
                         <span className="box-card__button-text">OPEN</span>
                         <span className="box-card__button-value">
                             <img src={coin} alt="coin" />

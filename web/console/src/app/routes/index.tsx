@@ -4,11 +4,6 @@
 import { lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-const SignIn = lazy(() => import('@/app/views/SignIn'));
-const SignUp = lazy(() => import('@/app/views/SignUp'));
-const ChangePassword = lazy(() => import('@/app/views/ChangePassword'));
-const ConfirmEmail = lazy(() => import('@/app/views/ConfirmEmail'));
-const RecoverPassword = lazy(() => import('@/app/views/RecoverPassword'));
 const MarketPlace = lazy(() => import('@/app/views/MarketPlacePage'));
 const UserCards = lazy(() => import('@/app/views/UserCards'));
 const Card = lazy(() => import('@/app/views/CardPage'));
@@ -117,23 +112,10 @@ export class RouteConfig {
 
 /** Route config that implements auth actions */
 export class AuthRouteConfig {
-    public static SignIn: ComponentRoutes = new ComponentRoutes('/sign-in', SignIn, true);
-    public static SignUp: ComponentRoutes = new ComponentRoutes('/sign-up', SignUp, true);
-    public static ChangePassword: ComponentRoutes = new ComponentRoutes('/change-password', ChangePassword, true);
-    public static ConfirmEmail: ComponentRoutes = new ComponentRoutes('/email/confirm', ConfirmEmail, true);
-    public static ResetPassword: ComponentRoutes = new ComponentRoutes('/reset-password', RecoverPassword, true);
     public static AuthWrapper: ComponentRoutes = new ComponentRoutes('/auth-velas', AuthWrapper, true);
     public static Default: ComponentRoutes = new ComponentRoutes('/', RouteConfig.Home.component, true);
 
-    public static routes: ComponentRoutes[] = [
-        AuthRouteConfig.ConfirmEmail,
-        AuthRouteConfig.Default,
-        AuthRouteConfig.ResetPassword,
-        AuthRouteConfig.ChangePassword,
-        AuthRouteConfig.SignIn,
-        AuthRouteConfig.SignUp,
-        AuthRouteConfig.AuthWrapper,
-    ];
+    public static routes: ComponentRoutes[] = [AuthRouteConfig.Default, AuthRouteConfig.AuthWrapper];
 }
 
 export const Routes = () =>
