@@ -1,17 +1,19 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import MetaMaskOnboarding from '@metamask/onboarding';
 // @ts-ignore
-import KeyStorageHandler from '../../../velas/keyStorageHandler';
+import KeyStorageHandler from '@/app/velas/keyStorageHandler';
 // @ts-ignore
-import StorageHandler from '../../../velas/storageHandler';
+import StorageHandler from '@/app/velas/storageHandler';
 // @ts-ignore
 import { VAClient } from '@velas/account-client';
+import { JSEncrypt } from 'jsencrypt';
+import { Signer } from 'casper-js-sdk';
 
 import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { RouteConfig } from '@/app/routes';
@@ -110,6 +112,54 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
         setLocalStorageItem('IS_LOGGINED', true);
     };
 
+    const loginCasper = async(publicKey: string) => {
+        const encrypt = new JSEncrypt();
+        const message = await usersService.casperNonce(publicKey);
+
+        encrypt.setPublicKey(message);
+        const encrypted = encrypt.encrypt(publicKey);
+
+        if (encrypted) {
+            await usersService.casperLogin(message, encrypted);
+            history.push(RouteConfig.MarketPlace.path);
+            window.location.reload();
+        }
+    };
+
+    const casperRegistration = async() => {
+        try {
+            const publicKey = await window.casperlabsHelper.getActivePublicKey();
+
+            await loginCasper(publicKey);
+        } catch (error) {
+            if (!(error instanceof NotFoundError)) {
+                toast.error('Something went wrong', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    theme: 'colored',
+                });
+
+                return;
+            }
+
+            try {
+                const publicKey = await Signer.getActivePublicKey();
+
+                await usersService.casperRegister(publicKey);
+
+                await loginCasper(publicKey);
+            } catch (e) {
+                toast.error('Something went wrong', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    theme: 'colored',
+                });
+            }
+        }
+    };
+
+    const sendConnectionRequestCasper = () => {
+        Signer.sendConnectionRequest();
+    };
+
     /** Login with matamask. */
     const content: () => Promise<void> = async() => {
         if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
@@ -143,6 +193,11 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
             }
         }
     };
+    useEffect(() => {
+        window.addEventListener('signer:connected', casperRegistration);
+
+        return () => window.removeEventListener('signer:connected', casperRegistration);
+    }, []);
 
     return (
         <div className="registration-pop-up">
@@ -177,7 +232,10 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
                                 />
                                 <p className="registration-pop-up__content__block__item__text">Connect velas account</p>
                             </div>
-                            <div className="registration-pop-up__content__block__item">
+                            <div
+                                onClick={sendConnectionRequestCasper}
+                                className="registration-pop-up__content__block__item"
+                            >
                                 <img
                                     src={casper}
                                     alt="Casper logo"

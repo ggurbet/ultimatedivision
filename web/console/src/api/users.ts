@@ -143,4 +143,33 @@ export class UsersClient extends APIClient {
 
         return result;
     }
+    /** Sends signed message and registers user */
+    public async casperRegister(walletAddress: string): Promise<void> {
+        const response = await this.http.post(`${this.ROOT_PATH}/casper/register`, JSON.stringify(walletAddress));
+
+        if (!response.ok) {
+            await this.handleError(response);
+        }
+    }
+
+    /** Gets message from API for sign with casper */
+    public async casperNonce(walletAddress: string): Promise<string> {
+        const path = `${this.ROOT_PATH}/casper/nonce?address=${walletAddress}`;
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        }
+
+        return await response.json();
+    }
+
+    /** Sends signed message, and logs-in */
+    public async casperLogin(nonce: string, signature: string): Promise<void> {
+        const response = await this.http.post(`${this.ROOT_PATH}/casper/login`, JSON.stringify({ nonce, signature }));
+
+        if (!response.ok) {
+            await this.handleError(response);
+        }
+    }
 }

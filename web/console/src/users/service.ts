@@ -61,4 +61,16 @@ export class UsersService {
     public async velasVaclientCreds(): Promise<any> {
         return await this.users.velasVaclientCreds();
     }
+    /** sends data to register user with casper wallet */
+    public async casperRegister(walletAddress: string): Promise<void> {
+        await this.users.casperRegister(walletAddress);
+    }
+    /** sends address to get casper nonce to login user */
+    public async casperNonce(address: string): Promise<string> {
+        return await this.users.casperNonce(address);
+    }
+    /** sends data to login user with casper wallet */
+    public async casperLogin(nonce: string, walletAddress: string): Promise<void> {
+        await this.users.casperLogin(nonce, walletAddress);
+    }
 }
