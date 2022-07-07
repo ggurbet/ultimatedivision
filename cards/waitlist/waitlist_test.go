@@ -158,17 +158,19 @@ func TestWaitList(t *testing.T) {
 	}
 
 	item1 := waitlist.Item{
-		TokenID: 1,
-		CardID:  card1.ID,
-		Wallet:  common.HexToAddress("0x96216849c49358b10257cb55b28ea603c874b05e"),
-		Value:   *big.NewInt(100),
+		TokenID:    1,
+		CardID:     card1.ID,
+		Wallet:     common.HexToAddress("0x96216849c49358b10257cb55b28ea603c874b05e"),
+		Value:      *big.NewInt(100),
+		WalletType: users.WalletTypeETH,
 	}
 
 	item2 := waitlist.Item{
-		TokenID: 2,
-		CardID:  card2.ID,
-		Wallet:  common.HexToAddress("0x96216849c49358B10254cb55b28eA603c874b05E"),
-		Value:   *big.NewInt(200),
+		TokenID:    2,
+		CardID:     card2.ID,
+		Wallet:     common.HexToAddress("0x96216849c49358B10254cb55b28eA603c874b05E"),
+		Value:      *big.NewInt(200),
+		WalletType: users.WalletTypeETH,
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {

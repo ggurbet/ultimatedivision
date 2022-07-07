@@ -28,7 +28,7 @@ type DB interface {
 	// GetByEmail returns user by email from the data base.
 	GetByEmail(ctx context.Context, email string) (User, error)
 	// GetByWalletAddress returns user by wallet address from the data base.
-	GetByWalletAddress(ctx context.Context, walletAddress common.Address, walletType WalletType) (User, error)
+	GetByWalletAddress(ctx context.Context, walletAddress string, walletType WalletType) (User, error)
 	// Create creates a user and writes to the database.
 	Create(ctx context.Context, user User) error
 	// Update updates a status in the database.
@@ -36,7 +36,7 @@ type DB interface {
 	// UpdatePassword updates a password in the database.
 	UpdatePassword(ctx context.Context, passwordHash []byte, id uuid.UUID) error
 	// UpdateWalletAddress updates user's address of wallet in the database.
-	UpdateWalletAddress(ctx context.Context, wallet common.Address, id uuid.UUID) error
+	UpdateWalletAddress(ctx context.Context, wallet common.Address, walletType WalletType, id uuid.UUID) error
 	// UpdateNonce updates nonce by user.
 	UpdateNonce(ctx context.Context, id uuid.UUID, nonce []byte) error
 	// Delete deletes a user in the database.
@@ -47,6 +47,10 @@ type DB interface {
 	UpdateLastLogin(ctx context.Context, id uuid.UUID) error
 	// UpdateEmail updates an email address in the database.
 	UpdateEmail(ctx context.Context, id uuid.UUID, newEmail string) error
+	// GetByPublicKey returns user by public key from the data base.
+	GetByPublicKey(ctx context.Context, publicKey string) (User, error)
+	// UpdatePublicPrivateKey updates public and private key by user.
+	UpdatePublicPrivateKey(ctx context.Context, id uuid.UUID, publicKey, privateKey string) error
 }
 
 // Status defines the list of possible user statuses.
@@ -73,8 +77,11 @@ type User struct {
 	FirstName    string         `json:"firstName"`
 	LastName     string         `json:"lastName"`
 	Wallet       common.Address `json:"wallet"`
-	VelasWallet  common.Address `json:"velasWallet"`
+	CasperWallet string         `json:"casperWallet"`
+	WalletType   WalletType     `json:"walletType"`
 	Nonce        []byte         `json:"nonce"`
+	PublicKey    string         `json:"publicKey"`
+	PrivateKey   string         `json:"privateKey"`
 	LastLogin    time.Time      `json:"lastLogin"`
 	Status       Status         `json:"status"`
 	CreatedAt    time.Time      `json:"createdAt"`
@@ -152,15 +159,17 @@ func (createUserFields *CreateUserFields) IsValid() bool {
 type WalletType string
 
 const (
-	// Wallet indicates that wallet type is wallet_address.
-	Wallet WalletType = "wallet_address"
-	// Velas indicates that wallet type is velas_wallet_address.
-	Velas WalletType = "velas_wallet_address"
+	// WalletTypeETH indicates that wallet type is wallet_address.
+	WalletTypeETH WalletType = "wallet_address"
+	// WalletTypeVelas indicates that wallet type is velas_wallet_address.
+	WalletTypeVelas WalletType = "velas_wallet_address"
+	// WalletTypeCasper indicates that wallet type is casper_wallet_address.
+	WalletTypeCasper WalletType = "casper_wallet_address"
 )
 
 // IsValid checks if type of wallet valid.
 func (w WalletType) IsValid() bool {
-	return w == Wallet || w == Velas
+	return w == WalletTypeETH || w == WalletTypeVelas || w == WalletTypeCasper
 }
 
 // ToString returns wallet type in string.

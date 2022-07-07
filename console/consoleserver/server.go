@@ -112,6 +112,11 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	velasRouter.HandleFunc("/login", authController.VelasLogin).Methods(http.MethodPost)
 	velasRouter.HandleFunc("/vaclient", authController.VelasVAClientFields).Methods(http.MethodGet)
 
+	casperRouter := authRouter.PathPrefix("/casper").Subrouter()
+	casperRouter.HandleFunc("/register", authController.CasperRegister).Methods(http.MethodPost)
+	casperRouter.HandleFunc("/nonce", authController.PublicKey).Methods(http.MethodGet)
+	casperRouter.HandleFunc("/login", authController.CasperLogin).Methods(http.MethodPost)
+
 	authRouter.HandleFunc("/logout", authController.Logout).Methods(http.MethodPost)
 	authRouter.HandleFunc("/register", authController.Register).Methods(http.MethodPost)
 	authRouter.HandleFunc("/email/confirm/{token}", authController.ConfirmEmail).Methods(http.MethodGet)

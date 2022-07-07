@@ -88,7 +88,7 @@ func (controller *Users) CreateWalletFromMetamask(w http.ResponseWriter, r *http
 		return
 	}
 
-	err = controller.users.UpdateWalletAddress(ctx, common.HexToAddress(request.Wallet), claims.UserID)
+	err = controller.users.UpdateWalletAddress(ctx, common.HexToAddress(request.Wallet), claims.UserID, users.WalletTypeETH)
 	if err != nil {
 		controller.log.Error("could not update wallet address", ErrUsers.Wrap(err))
 		switch {

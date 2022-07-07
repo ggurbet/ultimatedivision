@@ -35,6 +35,7 @@ func TestUsers(t *testing.T) {
 		FirstName:    "Nikita",
 		LastName:     "Tarkovskyi",
 		Wallet:       common.HexToAddress("0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b7"),
+		WalletType:   users.WalletTypeETH,
 		LastLogin:    time.Now().UTC(),
 		Status:       0,
 		CreatedAt:    time.Now().UTC(),
@@ -48,6 +49,7 @@ func TestUsers(t *testing.T) {
 		FirstName:    "Stas",
 		LastName:     "Isakov",
 		Wallet:       common.HexToAddress("0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b8"),
+		WalletType:   users.WalletTypeVelas,
 		LastLogin:    time.Now().UTC(),
 		Status:       1,
 		CreatedAt:    time.Now().UTC(),
@@ -118,19 +120,19 @@ func TestUsers(t *testing.T) {
 			err = repository.UpdateNonce(ctx, user1.ID, nonce)
 			require.NoError(t, err)
 
-			userFromDB, err := repository.GetByWalletAddress(ctx, user1.Wallet, users.Wallet)
+			userFromDB, err := repository.GetByWalletAddress(ctx, user1.Wallet.String(), users.WalletTypeETH)
 			require.NoError(t, err)
 			assert.Equal(t, nonce, userFromDB.Nonce)
 		})
 
 		t.Run("update wallet address sql no rows", func(t *testing.T) {
-			err := repository.UpdateWalletAddress(ctx, common.HexToAddress("0x"), uuid.New())
+			err := repository.UpdateWalletAddress(ctx, common.HexToAddress("0x"), users.WalletTypeETH, uuid.New())
 			require.Error(t, err)
 			assert.Equal(t, true, users.ErrNoUser.Has(err))
 		})
 
 		t.Run("update wallet address", func(t *testing.T) {
-			err := repository.UpdateWalletAddress(ctx, common.HexToAddress("0x56f088767D91badc379155290c4205c7b917a36E"), user1.ID)
+			err := repository.UpdateWalletAddress(ctx, common.HexToAddress("0x56f088767D91badc379155290c4205c7b917a36E"), users.WalletTypeETH, user1.ID)
 			require.NoError(t, err)
 		})
 
@@ -184,11 +186,11 @@ func TestUserService(t *testing.T) {
 		})
 
 		t.Run("get nonce", func(t *testing.T) {
-			user, err := db.Users().GetByWalletAddress(ctx, common.HexToAddress("0x2346b33F2E379dDA22b2563B009382a0Fc9aA926"), users.Wallet)
+			user, err := db.Users().GetByWalletAddress(ctx, "0x2346b33F2E379dDA22b2563B009382a0Fc9aA926", users.WalletTypeETH)
 			require.NoError(t, err)
 			userNonce := hexutil.Encode(user.Nonce)
 
-			nonce, err := authService.Nonce(ctx, wallet, users.Wallet)
+			nonce, err := authService.Nonce(ctx, wallet, users.WalletTypeETH)
 			require.NoError(t, err)
 			require.Equal(t, nonce, userNonce)
 		})
@@ -204,6 +206,7 @@ func TestUserService(t *testing.T) {
 			user := users.User{
 				ID:           uuid.New(),
 				Wallet:       common.HexToAddress("0x2346b33F2E379dDA22b2563B009382a0Fc9aA926"),
+				WalletType:   users.WalletTypeETH,
 				Nonce:        userNonce,
 				Email:        "",
 				PasswordHash: nil,
@@ -212,7 +215,7 @@ func TestUserService(t *testing.T) {
 				CreatedAt:    time.Time{},
 			}
 
-			oldUser, err := db.Users().GetByWalletAddress(ctx, common.HexToAddress("0x2346b33F2E379dDA22b2563B009382a0Fc9aA926"), users.Wallet)
+			oldUser, err := db.Users().GetByWalletAddress(ctx, "0x2346b33F2E379dDA22b2563B009382a0Fc9aA926", users.WalletTypeETH)
 			require.NoError(t, err)
 
 			err = db.Users().Delete(ctx, oldUser.ID)

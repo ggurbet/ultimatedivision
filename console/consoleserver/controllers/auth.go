@@ -633,3 +633,104 @@ func (auth *Auth) ChangeEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// CasperRegister is an endpoint to register user.
+func (auth *Auth) CasperRegister(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	var walletAddress string
+	if err := json.NewDecoder(r.Body).Decode(&walletAddress); err != nil {
+		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
+		return
+	}
+
+	if walletAddress == "" {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("wallet address is empty"))
+		return
+	}
+
+	err := auth.userAuth.RegisterWithCasper(ctx, walletAddress)
+	if err != nil {
+		switch {
+		case users.ErrNoUser.Has(err):
+			auth.serveError(w, http.StatusNotFound, AuthError.Wrap(err))
+		case userauth.ErrUnauthenticated.Has(err):
+			auth.serveError(w, http.StatusUnauthorized, AuthError.Wrap(err))
+		default:
+			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		}
+
+		return
+	}
+}
+
+// PublicKey is an endpoint to send public key to casper for login.
+func (auth *Auth) PublicKey(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+	query := r.URL.Query()
+
+	address := query.Get("address")
+	if address == "" {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("address is invalid"))
+		return
+	}
+
+	publicKey, err := auth.userAuth.PublicKey(ctx, address)
+	if err != nil {
+		switch {
+		case users.ErrNoUser.Has(err):
+			auth.serveError(w, http.StatusNotFound, AuthError.Wrap(err))
+		case userauth.ErrUnauthenticated.Has(err):
+			auth.serveError(w, http.StatusUnauthorized, AuthError.Wrap(err))
+		default:
+			auth.log.Error("Unable to get nonce", AuthError.Wrap(err))
+			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		}
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(publicKey); err != nil {
+		auth.log.Error("failed to write json response", AuthError.Wrap(err))
+		return
+	}
+}
+
+// CasperLogin is an endpoint to authorize user from casper and set auth cookie in browser.
+func (auth *Auth) CasperLogin(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	type CasperFields struct {
+		Nonce     string `json:"nonce"`
+		Signature string `json:"signature"`
+	}
+
+	var request CasperFields
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
+		return
+	}
+
+	if request.Signature == "" || request.Nonce == "" {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("did not fill in all the fields"))
+		return
+	}
+
+	authToken, err := auth.userAuth.LoginWithCasper(ctx, request.Nonce, request.Signature)
+	if err != nil {
+		switch {
+		case users.ErrNoUser.Has(err):
+			auth.serveError(w, http.StatusNotFound, AuthError.Wrap(err))
+		case userauth.ErrUnauthenticated.Has(err):
+			auth.serveError(w, http.StatusUnauthorized, AuthError.Wrap(err))
+		default:
+			auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		}
+
+		return
+	}
+
+	auth.cookie.SetTokenCookie(w, authToken)
+}

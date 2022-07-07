@@ -86,7 +86,7 @@ func (chore *Chore) RunNFTSynchronization(ctx context.Context) (err error) {
 				return ChoreError.Wrap(err)
 			}
 
-			user, err := chore.users.GetByWalletAddress(ctx, ownersWalletAddress)
+			user, err := chore.users.GetByWalletAddress(ctx, ownersWalletAddress, users.WalletTypeETH)
 			if err != nil {
 				return ChoreError.Wrap(err)
 			}
