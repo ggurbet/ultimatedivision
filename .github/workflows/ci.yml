@@ -50,7 +50,6 @@ jobs:
         run: go test ./... .
 
   build_and_lint_web:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -70,3 +69,83 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: ./web/console
+
+  count_lines_of_code:
+    name: Count lines of code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: pr
+      - name: Checkout base code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+      - name: Count Lines Of Code
+        id: loc
+        run: |
+          curl -OL https://github.com/vearutop/sccdiff/releases/download/v1.0.1/linux_amd64.tar.gz && tar xf linux_amd64.tar.gz
+          OUTPUT=$(cd pr && ../sccdiff -basedir ../base)
+          OUTPUT="${OUTPUT//'%'/'%25'}"
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "::set-output name=diff::$OUTPUT"
+      - name: Comment Code Lines
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: LOC
+          message: |
+            ### Lines Of Code
+            ${{ steps.loc.outputs.diff }}
+
+  backend_check_PR_size:
+    name: Backend check PR size
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ookami-kb/gh-pr-size-watcher@v1
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }} # required
+          errorSize: 450 # optional
+          errorMessage: ':no_entry: PR has more than **{allowed} additions**. Split it into smaller PRs.' # optional
+          warningSize: 400 # optional
+          warningMessage: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.' # optional
+          excludeTitle: 'PR_SIZE_SKIP' # to skip validation if PR title matches regex, optional
+          excludePaths:  | # to exclude some files from calculation, optional
+            README.md
+            **/test/resources/*.json
+            **/go.mod
+            **/go.sum
+            **/*_test.go
+            **/*.yml
+            **/*.json
+            **/*.html
+            **/*.css
+            **/*.scss
+            **/*.jsx
+
+  frontend_check_PR_size:
+    name: Frontend check PR size
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ookami-kb/gh-pr-size-watcher@v1
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }} # required
+          errorSize: 900 # optional
+          errorMessage: ':no_entry: PR has more than **{allowed} additions**. Split it into smaller PRs.' # optional
+          warningSize: 850 # optional
+          warningMessage: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.' # optional
+          excludeTitle: 'PR_SIZE_SKIP' # to skip validation if PR title matches regex, optional
+          excludePaths:  | # to exclude some files from calculation, optional
+            README.md
+            **/test/resources/*.json
+            **/go.mod
+            **/go.sum
+            **/*_test.go
+            **/*.yml
+            **/*.go
+            **/*.js
+            **/*.ts
+            **/*.json
