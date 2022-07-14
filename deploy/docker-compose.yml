@@ -93,21 +93,6 @@ services:
     networks:
       - fullstack
 
-  cadvisor:
-    image: google/cadvisor:latest
-    container_name: ultimatedivision_cadvisor
-    hostname: cadvisor
-    restart: always
-    ports:
-      - "8080:8080"
-    networks:
-      - fullstack
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-
   ultimatedivision_db:
     restart: always
     image: postgres:latest
