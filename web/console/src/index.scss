@@ -4,6 +4,19 @@
 @import "./app/static/styles/mixins";
 @import "react-toastify/dist/ReactToastify.min.css";
 
+.page {
+    background: $pageBackground;
+
+    &__store {
+        background: url("@static/img/StorePage/background.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        overflow: hidden;
+    }
+}
+
 @font-face {
     font-family: "Montserrat";
     src: url("@static/fonts/Montserrat-Regular.ttf") format("truetype");

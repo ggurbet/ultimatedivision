@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import { lazy } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useLocation } from 'react-router-dom';
 
 const MarketPlace = lazy(() => import('@/app/views/MarketPlacePage'));
 const UserCards = lazy(() => import('@/app/views/UserCards'));
@@ -36,6 +36,7 @@ export class ComponentRoutes {
         public path: string,
         public component: any,
         public exact: boolean,
+        public className?: string,
         public children?: ComponentRoutes[]
     ) {}
     /** Method for creating child subroutes path */
@@ -64,7 +65,7 @@ export class RouteConfig {
         true
     );
     public static Field: ComponentRoutes = new ComponentRoutes('/field', Field, true);
-    public static Store: ComponentRoutes = new ComponentRoutes('/store', Store, true);
+    public static Store: ComponentRoutes = new ComponentRoutes('/store', Store, true, 'page__store');
     public static Cards: ComponentRoutes = new ComponentRoutes('/cards', UserCards, true);
     public static Match: ComponentRoutes = new ComponentRoutes('/match', Match, true);
     public static Home: ComponentRoutes = new ComponentRoutes('/home', Home, true);
@@ -118,17 +119,30 @@ export class AuthRouteConfig {
     public static routes: ComponentRoutes[] = [AuthRouteConfig.Default, AuthRouteConfig.AuthWrapper];
 }
 
-export const Routes = () =>
-    <Switch>
-        {AuthRouteConfig.routes.map((route, index) =>
-            <Route key={index} path={route.path} component={route.component} exact={route.exact} />
-        )}
-        <Route>
-            <Navbar />
-            <MatchFinder />
-            {RouteConfig.routes.map((route, index) =>
+export const Routes = () => {
+    const FILTERED_IS_PAGE_CLASSNAME = 0;
+
+    const location = useLocation();
+    const currentLocation = location.pathname;
+
+    const pageClassName = RouteConfig.routes.filter((route, _) =>
+        route.className && route.path === currentLocation ? route.className : ''
+    )[FILTERED_IS_PAGE_CLASSNAME]?.className;
+
+    return (
+        <Switch>
+            {AuthRouteConfig.routes.map((route, index) =>
                 <Route key={index} path={route.path} component={route.component} exact={route.exact} />
             )}
-        </Route>
-    </Switch>;
-
+            <Route>
+                <div className={`page ${pageClassName ? pageClassName : ''}`}>
+                    <Navbar />
+                    <MatchFinder />
+                    {RouteConfig.routes.map((route, index) =>
+                        <Route key={index} path={route.path} component={route.component} exact={route.exact} />
+                    )}
+                </div>
+            </Route>
+        </Switch>
+    );
+};

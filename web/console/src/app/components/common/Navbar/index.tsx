@@ -33,9 +33,7 @@ const Navbar: React.FC = () => {
     ];
 
     useEffect(() => {
-        location.pathname === '/home'
-            ? setIsHomePath(true)
-            : setIsHomePath(false);
+        location.pathname === '/home' ? setIsHomePath(true) : setIsHomePath(false);
     }, [location]);
 
     return (
@@ -44,31 +42,15 @@ const Navbar: React.FC = () => {
                 <HomeNavbar />
                 :
                 <div className="ultimatedivision-navbar">
-                    <a href={RouteConfig.Home.path}>
-                        <img
-                            className="ultimatedivision-navbar__logo"
-                            src={ultimate}
-                            alt="UltimateDivision logo"
-                        />
-                    </a>
                     <div
                         className="ultimatedivision-navbar__dropdown"
                         onClick={() => setIsDropdownActive(!isDropdownActive)}
                     >
-                        {isDropdownActive ?
-                            <CloseDropdownIcon />
-                            :
-                            <DropdownIcon />
-                        }
+                        {isDropdownActive ? <CloseDropdownIcon /> : <DropdownIcon />}
                     </div>
-                    <ul
-                        className={`ultimatedivision-navbar__list${visibleClassName}`}
-                    >
+                    <ul className={`ultimatedivision-navbar__list${visibleClassName}`}>
                         {navbarItems.map((item, index) =>
-                            <li
-                                key={index}
-                                className={`ultimatedivision-navbar__list${visibleClassName}__item`}
-                            >
+                            <li key={index} className={`ultimatedivision-navbar__list${visibleClassName}__item`}>
                                 <NavLink
                                     key={index}
                                     to={item.path}
