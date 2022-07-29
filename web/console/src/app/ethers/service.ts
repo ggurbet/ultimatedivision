@@ -45,6 +45,7 @@ export class Service {
     /** Returns required fields for metamask login */
     public async login(message: string) {
         const signedMessage = await this.signMessage(message);
+
         return signedMessage;
     }
 

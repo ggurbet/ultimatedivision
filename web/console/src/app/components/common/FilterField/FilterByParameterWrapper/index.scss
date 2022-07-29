@@ -1,113 +1,140 @@
 @import "@/index.scss";
 
 .filter-item {
-    color: $fieldMainTextColor;
+    width: 154px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     list-style: none;
     cursor: pointer;
     position: relative;
 
-    &__title-inactive,
-    &__title-active {
-        font-family: "Montserrat", sans-serif;
-        font-size: 14px;
-        color: $fieldMainTextColor;
-    }
-
-    &__title-active {
-        color: $highlightColor;
+    &__title {
+        cursor: pointer;
+        margin-right: 14px;
+        transition: background-color 0.3s;
+        text-transform: uppercase;
+        color: black;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 20px;
+        text-align: center;
+        letter-spacing: 0.12em;
     }
 
     &__picture {
         margin-left: 5px;
         vertical-align: middle;
+        transition: transform 0.5s;
     }
 
     &__dropdown-active {
+        z-index: 5;
+        box-sizing: border-box;
         position: absolute;
-        display: flex;
-        flex-direction: column;
+        display: grid;
         top: 30px;
-        min-width: 152px;
-        z-index: 4;
-        border-radius: 5px;
-        background-color: $highlightBackground;
+        height: auto;
+        margin: 10px 0;
+        padding: 22px;
+        border: 2px solid #f5ff63;
+        border-radius: 21px;
+        box-shadow: 0 10px 14px rgba(0, 23, 58, 0.14);
+        background: rgba(255, 255, 255, 0.19);
+        backdrop-filter: blur(44px);
 
         &__wrapper {
             display: flex;
             flex-direction: row;
-            margin-top: 20px;
-            width: 212px;
             justify-content: space-around;
+            width: 160px;
         }
 
         &__price {
-            width: 60px;
-            background: transparent;
-            color: $fieldMainTextColor;
+            width: 47%;
             border: none;
-            border-bottom: 1px solid $fieldMainBorderColor;
-            font-family: "Montserrat", sans-serif;
+            border-bottom: 2px solid #f5ff63;
+            font-family: "Urbanist", sans-serif;
+            font-style: normal;
+            font-weight: 500;
             font-size: 14px;
+            line-height: 17px;
+            letter-spacing: 0.12em;
+            text-transform: lowercase;
+            text-shadow: 0 4px 22px rgba(25, 54, 133, 0.25);
+            color: rgba(38, 55, 63, 0.52);
+            background: transparent;
 
             &:focus {
                 outline: none;
             }
         }
 
-        &:before {
-            content: "";
-            height: 20px;
-            width: 20px;
+        &__text {
+            font-family: "Urbanist", sans-serif;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 17px;
+            letter-spacing: 0.12em;
+            color: #26373f;
+            text-shadow: 0 4px 22px rgba(25, 54, 133, 0.25);
+            text-transform: capitalize;
+        }
+
+        &__switcher {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 160px;
+            height: 30px;
+
+            & input:checked + .filter-item__dropdown-active__slider {
+                background-color: #f5ff63;
+            }
+
+            & input:focus + .filter-item__dropdown-active__slider {
+                background-color: #f5ff63;
+            }
+
+            & input:checked + .filter-item__dropdown-active__slider:before {
+                -webkit-transform: translateX(15.5px);
+                -ms-transform: translateX(15.5px);
+                transform: translateX(15.5px);
+            }
+        }
+
+        &__slider {
+            width: 40px;
+            height: 24px;
             position: absolute;
-            top: -7px;
-            left: 20px;
-            border-radius: 3px;
-            background-color: $highlightBackground;
-            transform: rotate(45deg);
+            cursor: pointer;
+            top: 4px;
+            right: 0;
+            background-color: #5c80ea;
+            -webkit-transition: 0.4s;
+            transition: 0.4s;
+            border-radius: 24px;
+
+            &:before {
+                position: absolute;
+                content: "";
+                height: 21.5px;
+                width: 21.5px;
+                left: 2px;
+                bottom: 1.5px;
+                background-color: white;
+                box-shadow: 0 2.35294px 6.27451px rgba(0, 0, 0, 0.15), 0 2.35294px 0.784314px rgba(0, 0, 0, 0.06);
+                border-radius: 50%;
+                -webkit-transition: 0.4s;
+                transition: 0.4s;
+            }
         }
 
         &__checkbox {
-            position: absolute;
-            opacity: 0;
-
-            & + label {
-                position: relative;
-                cursor: pointer;
-                padding: 11px 0 11px 17px;
-                border-bottom: 1px solid $fieldMainBorderColor;
-            }
-
-            & + label:nth-child(8) {
-                border-bottom: unset;
-            }
-
-            & + label:before {
-                content: "";
-                margin-right: 10px;
-                display: inline-block;
-                vertical-align: text-top;
-                width: 16px;
-                height: 16px;
-                background: $highlightBackground;
-                border: 1px solid $divisionMainBackgroundColor;
-            }
-
-            &:checked + label:after {
-                content: "";
-                position: absolute;
-                left: 20px;
-                top: 18px;
-                background: $highlightColor;
-                width: 3px;
-                height: 3px;
-                box-shadow: 2px 0 0 $highlightColor,
-                    4px 0 0 $highlightColor,
-                    4px -2px 0 $highlightColor,
-                    4px -4px 0 $highlightColor,
-                    4px -6px 0 $highlightColor,
-                    4px -8px 0 $highlightColor;
-                transform: rotate(45deg);
-            }
+            display: none;
         }
 
         & #checkbox-unlocked {
@@ -118,11 +145,25 @@
         }
 
         &__apply {
-            font-family: "BebasNeue", sans-serif;
-            margin: 15px auto;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            background: #f5ff63;
+            box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
+            border-radius: 5px;
+            font-family: "Orbitron", sans-serif;
+            font-style: normal;
+            font-weight: 900;
+            font-size: 14px;
+            line-height: 18px;
+            text-align: center;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #26373f;
+            margin: 15px auto 0;
             height: 33px;
-            width: 77%;
-            background: linear-gradient($fieldMainLinearGradientColor 100%, $feildSecondLinearGradientColor 100%);
+            width: 100%;
             border: none;
             cursor: pointer;
         }
@@ -130,43 +171,71 @@
         &__stats {
 
             &__apply {
-                font-family: "BebasNeue", sans-serif;
-                margin: 10px 5px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                background: #f5ff63;
+                box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
+                border-radius: 5px;
+                font-family: "Orbitron", sans-serif;
+                font-style: normal;
+                font-weight: 900;
+                font-size: 14px;
+                line-height: 18px;
+                text-align: center;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: #26373f;
+                margin: 15px auto 0;
                 height: 33px;
-                width: 93%;
-                background: linear-gradient($fieldMainLinearGradientColor 100%, $feildSecondLinearGradientColor 100%);
+                width: 100%;
                 border: none;
                 cursor: pointer;
             }
 
             &__clear {
+                cursor: pointer;
+                margin: 18px 0 7px 24px;
+                height: 24px;
+                padding-left: 30px;
+                border: none;
+                font-family: "Orbitron", sans-serif;
+                font-style: normal;
+                font-weight: 900;
+                font-size: 14px;
+                line-height: 18px;
+                text-align: center;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: #26373f;
                 background: transparent;
                 background-image: url("@static/img/FilterField/clear.svg");
                 background-repeat: no-repeat;
                 background-size: contain;
-                margin: 15px 5px;
-                height: 24px;
-                padding-left: 30px;
-                border: none;
-                cursor: pointer;
-                color: $fieldMainTextColor;
             }
 
             &__wrapper {
-                margin-top: 20px;
-                padding: 0 10px;
                 display: grid;
                 grid-template-columns: 170px 170px;
-                grid-template-rows: 50px 50px;
+                grid-template-rows: 60px 60px;
             }
 
             &__area {
                 width: 45%;
-                margin-left: 5px;
-                background: transparent;
+                margin: 6px 0 0 5px;
                 border: none;
-                border-bottom: 1px solid $fieldMainBorderColor;
-                color: $fieldMainTextColor;
+                border-bottom: 2px solid #f5ff63;
+                font-family: "Urbanist", sans-serif;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 17px;
+                letter-spacing: 0.12em;
+                text-transform: lowercase;
+                color: rgba(38, 55, 63, 0.52);
+                background: transparent;
 
                 &:focus {
                     outline: none;
@@ -174,29 +243,21 @@
             }
 
             &__label {
-                font-size: 16px;
-                font-family: "BebasNeue", sans-serif;
-                margin-left: 5px;
                 display: inherit;
+                margin-left: 5px;
+                font-family: "Urbanist", sans-serif;
+                font-style: normal;
+                font-weight: 800;
+                font-size: 14px;
+                line-height: 17px;
+                letter-spacing: 0.12em;
+                color: #26373f;
+                text-shadow: 0 4px 22px rgba(25, 54, 133, 0.25);
             }
         }
     }
 
     &__dropdown-inactive {
         display: none;
-    }
-}
-
-@media (max-width: 1440px) {
-
-    .filter-item {
-
-        &__title {
-            font-size: 13px;
-        }
-
-        &__picture {
-            margin-left: 2px;
-        }
     }
 }

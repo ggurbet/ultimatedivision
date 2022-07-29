@@ -12,7 +12,11 @@ import { FilterByStatus } from '@components/common/FilterField/FilterByStatus';
 import { FilterByVersion } from '@components/common/FilterField/FilterByVersion';
 
 import { RootState } from '@/app/store';
-import { fieldCards, getCurrentFieldCardsQueryParameters, createFieldCardsQueryParameters } from '@/app/store/actions/cards';
+import {
+    fieldCards,
+    getCurrentFieldCardsQueryParameters,
+    createFieldCardsQueryParameters,
+} from '@/app/store/actions/cards';
 import { addCard, cardSelectionVisibility } from '@/app/store/actions/clubs';
 import { CardEditIdentificators } from '@/api/club';
 import { Card, CardsPage, CardsQueryParametersField } from '@/card';
@@ -33,28 +37,21 @@ export const FieldCardSelection = () => {
     const X_SCROLL_POINT = 0;
     const DELAY = 10;
 
-    /** Function filters card list each time when we add card on field */
-    function getAvailableCards() {
-        const squadCardsIds = squadCards.map(card => card.card.id);
-
-        return cards.filter((card: Card) => !squadCardsIds.includes(card.id));
-    };
+    const squadCardsIds = squadCards.map((card) => card.card.id);
 
     const fieldCardsQueryParameters = getCurrentFieldCardsQueryParameters();
 
     /** Add card to field, and hide card selection component */
-    function addCardOnField(cardId: string) {
-        dispatch(
-            addCard(
-                new CardEditIdentificators(squad.clubId, squad.id, cardId, club.options.chosedCard)
-            ));
-        dispatch(cardSelectionVisibility(false));
-        setTimeout(() => {
-            window.scroll(X_SCROLL_POINT, Y_SCROLL_POINT);
-        }, DELAY);
+    function addCardOnField(cardId: string, isSelected: boolean) {
+        if (!isSelected) {
+            dispatch(addCard(new CardEditIdentificators(squad.clubId, squad.id, cardId, club.options.chosedCard)));
+            dispatch(cardSelectionVisibility(false));
+            setTimeout(() => {
+                window.scroll(X_SCROLL_POINT, Y_SCROLL_POINT);
+            }, DELAY);
+        }
     }
 
-    const availableCards = getAvailableCards();
     /** Exposes default page number. */
     const DEFAULT_PAGE_INDEX: number = 1;
 
@@ -66,38 +63,29 @@ export const FieldCardSelection = () => {
 
     return (
         <div id="cardList" className="card-selection">
-            <FilterField >
-                <FilterByVersion
-                    submitSearch={submitSearch}
-                    cardsQueryParameters={fieldCardsQueryParameters}
-                />
-                <FilterByStats
-                    cardsQueryParameters={fieldCardsQueryParameters}
-                    submitSearch={submitSearch}
-                />
+            <FilterField>
+                <FilterByVersion submitSearch={submitSearch} cardsQueryParameters={fieldCardsQueryParameters} />
+                <FilterByStats cardsQueryParameters={fieldCardsQueryParameters} submitSearch={submitSearch} />
                 <FilterByPrice />
                 <FilterByStatus />
             </FilterField>
             <div className="card-selection__list">
-                {cards &&
-                    availableCards.map((card: Card, index: number) =>
+                {cards.map((card: Card, index: number) => {
+                    const isSelected = squadCardsIds.includes(card.id);
+
+                    return (
                         <div
                             key={index}
-                            className="card-selection__card"
-                            onClick={() => addCardOnField(card.id)}
+                            className={isSelected ? 'card-selection__card__selected' : 'card-selection__card'}
+                            onClick={() => addCardOnField(card.id, isSelected)}
                         >
-                            <PlayerCard
-                                id={card.id}
-                                className={'card-selection__card'}
-                            />
+                            <div className={isSelected ? 'card-selection__card__selected__label' : ''}></div>
+                            <PlayerCard id={card.id} className={'card-selection__card__picture'} />
                         </div>
-                    )}
+                    );
+                })}
             </div>
-            <Paginator
-                getCardsOnPage={fieldCards}
-                itemsCount={page.totalCount}
-                selectedPage={currentFieldCardsPage}
-            />
+            <Paginator getCardsOnPage={fieldCards} itemsCount={page.totalCount} selectedPage={currentFieldCardsPage} />
         </div>
     );
 };

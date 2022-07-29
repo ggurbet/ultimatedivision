@@ -89,7 +89,6 @@ const FootballField: React.FC = () => {
         <>
             {isRegistrationRequired && <RegistrationPopup closeRegistrationPopup={closeRegistrationPopup} />}
             <div className="football-field" onDrop={(e) => drop(e)} onDragOver={(e) => dragOverHandler(e)}>
-                <h1 className="football-field__title">Football Field</h1>
                 <FieldPlayingArea />
                 <div className="football-field__wrapper">{cardSelectionVisibility && <FieldCardSelection />}</div>
             </div>

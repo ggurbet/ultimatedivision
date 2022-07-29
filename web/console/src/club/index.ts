@@ -31,8 +31,8 @@ export class Club {
         public createdAt: string = '',
         public squad: Squad = new Squad(),
         public squadCards: SquadCard[] = [],
-        public status: number = ACTIVE_STATUS_VALUE,
-    ) { }
+        public status: number = ACTIVE_STATUS_VALUE
+    ) {}
 }
 
 /** Class defines fields for drag and drop */
@@ -40,13 +40,13 @@ export class Options {
     /** chosedCard for adding card on field
      * showCardSelection for showing/hiding list of cards
      * dragStart and dragTarget for changing card position or swapping cards
-    */
+     */
     constructor(
         public chosedCard: number = DEFAULT_VALUE,
         public showCardSeletion: boolean = false,
         public dragStart: number | null = null,
         public dragTarget: number | null = null
-    ) { }
+    ) {}
 }
 
 /** club reducer initial state  */

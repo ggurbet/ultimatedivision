@@ -7,7 +7,6 @@ import { NavLink, useLocation } from 'react-router-dom';
 import HomeNavbar from '@components/home/HomeNavbar';
 
 import { CloseDropdownIcon, DropdownIcon } from '@/app/static/img/Navbar';
-import ultimate from '@static/img/Navbar/ultimate.svg';
 
 import { RouteConfig } from '@/app/routes';
 
@@ -27,6 +26,7 @@ const Navbar: React.FC = () => {
     const navbarItems: Array<{ name: string; path: string }> = [
         { name: 'HOME', path: RouteConfig.Home.path },
         { name: 'STORE', path: RouteConfig.Store.path },
+        { name: 'Marketplace', path: RouteConfig.MarketPlace.path },
         { name: 'CARDS', path: RouteConfig.Cards.path },
         { name: 'FIELD', path: RouteConfig.Field.path },
         { name: 'DIVISIONS', path: RouteConfig.Division.path },

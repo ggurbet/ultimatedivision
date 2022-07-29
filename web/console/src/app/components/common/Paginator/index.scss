@@ -1,19 +1,15 @@
 @import "@/index.scss";
 
 .ultimatedivision-paginator {
-    margin: 50px auto;
-    clip-path: polygon(5% 7%, 93% 7%, 96% 95%, 7% 94%);
-    background: $marketPlaceBorderColor;
+    margin: 80px auto 0;
     position: relative;
 
     &__wrapper {
+        position: relative;
         display: flex;
         flex-direction: row;
         justify-content: space-around;
-        padding: 20px 0;
-        background: $mainBackground;
-        position: relative;
-        clip-path: polygon(5.3% 10%, 93% 10%, 95.7% 92%, 7% 91%);
+        padding-top: 20px;
     }
 
     &__previous,
@@ -21,26 +17,39 @@
     &__next,
     &__next-not-active {
         display: flex;
-        margin: auto;
 
         &__title {
-            line-height: 24px;
             vertical-align: middle;
-            font-size: 16px;
-            margin: 0 25px;
+            margin: 8px;
+            font-family: "Orbitron", sans-serif;
+            font-style: normal;
+            font-weight: 900;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
         }
+    }
+
+    &__previous,
+    &__previous-not-active {
+        margin-right: auto;
+    }
+
+    &__next,
+    &__next-not-active {
+        margin-left: auto;
     }
 
     &__previous,
     &__next {
         cursor: pointer;
-        color: $paginatorActivePageColor;
+        color: #f5ff63;
     }
 
     &__previous-not-active,
     &__next-not-active {
         cursor: not-allowed;
-        color: $paginatorNotActivePageColor;
+        color: #c3dcbb;
     }
 
     &__pages {
@@ -49,22 +58,31 @@
 
         &__item,
         &__item-active {
-            list-style-type: none;
-            padding: 5px 10px;
-            margin-left: 20px;
-            font-size: 13px;
             cursor: pointer;
-            color: $paginatorActivePageColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            margin-left: 20px;
+            list-style-type: none;
+            text-align: center;
+            color: #000;
+            font-family: "Orbitron", sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 12px;
+            line-height: 15px;
         }
 
         &__item-active {
-            background-color: $cardHighlightColor;
-            color: $mainBackground;
-            border-radius: 15px;
+            border: 1px solid #f5ff63;
+            color: #f5ff63;
+            border-radius: 50%;
         }
 
         &__dots {
-            color: $paginatorActivePageColor;
+            color: #000;
             margin-left: 20px;
         }
     }

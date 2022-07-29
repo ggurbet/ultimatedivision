@@ -17,53 +17,30 @@ type FootballerCardProps = {
     card: Card;
     index?: number;
     place?: string;
-    setTargetCard: (targerCard: Element | null) => void;
-    targerCard: Element | null;
+    setCurrentCard: (currentCard: Element | null) => void;
+    currentCard: Element | null;
 };
 
-export const FootballerCard: React.FC<FootballerCardProps> = ({
-    card,
-    index,
-    setTargetCard,
-    targerCard,
-}) => {
+export const FootballerCard: React.FC<FootballerCardProps> = ({ card, index, setCurrentCard, currentCard }) => {
     const dispatch = useDispatch();
-    const squad = useSelector(
-        (state: RootState) => state.clubsReducer.activeClub.squad
-    );
+    const squad = useSelector((state: RootState) => state.clubsReducer.activeClub.squad);
 
     /** Remove player card implementation. */
     function handleDeletion(e: React.MouseEvent<HTMLInputElement>) {
         e.stopPropagation();
         e.preventDefault();
 
-        dispatch(
-            deleteCard(
-                new CardEditIdentificators(squad.clubId, squad.id, card.id)
-            )
-        );
+        dispatch(deleteCard(new CardEditIdentificators(squad.clubId, squad.id, card.id)));
     }
 
     /** Changing the state of a card class. */
-    const visibilityBlock =
-        targerCard && parseInt(targerCard.id) === index ? '-active' : '-inactive';
+    const visibilityBlock = currentCard && parseInt(currentCard.id) === index ? '-active' : '-inactive';
 
     return (
         <div className="footballer-card">
-            <div
-                className={`football-field-card__wrapper${visibilityBlock}`}
-            ></div>
-            <PlayerCard
-                id={card.id}
-                className="footballer-card"
-                index={index}
-            />
-            <div
-                onClick={handleDeletion}
-                className={`footballer-card__control${visibilityBlock}`}
-            >
-                &#10006; delete a player
-            </div>
+            <div className={`football-field-card__wrapper${visibilityBlock}`}></div>
+            <PlayerCard id={card.id} className="footballer-card" index={index} />
+            <div onClick={handleDeletion} className={`footballer-card__control${visibilityBlock}`}></div>
         </div>
     );
 };

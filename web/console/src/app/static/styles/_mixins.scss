@@ -7,3 +7,14 @@
     top: calc(#{$top} - 162px / 2);
     left: calc(#{$left} - 50px / 2);
 }
+
+@mixin fieldDropdownAmountsColumns {
+    @for $i from 1 to 3 {
+        @for $j from 1 to 6 {
+            &.field-dropdown__#{$i}--columns__#{$j}--rows {
+                grid-template: repeat(#{$j}, 1fr) / repeat(#{$i}, max-content);
+                grid-auto-flow: column;
+            }
+        }
+    }
+}

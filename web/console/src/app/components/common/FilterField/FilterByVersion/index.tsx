@@ -13,7 +13,10 @@ export const FilterByVersion: React.FC<{
     submitSearch: (queryParameters: CardsQueryParametersField[]) => void;
     cardsQueryParameters: CardsQueryParameters;
 }> = ({ submitSearch, cardsQueryParameters }) => {
-    const { activeFilterIndex, setActiveFilterIndex }: {
+    const {
+        activeFilterIndex,
+        setActiveFilterIndex,
+    }: {
         activeFilterIndex: number;
         setActiveFilterIndex: React.Dispatch<React.SetStateAction<number>>;
     } = useContext(FilterContext);
@@ -28,7 +31,7 @@ export const FilterByVersion: React.FC<{
     /** Shows and closes FilterByVersion component. */
     const showFilterByVersion = () => {
         setActiveFilterIndex(FILTER_BY_VERSION_INDEX);
-        setIsFilterByVersionShown(isFilterByVersionShown => !isFilterByVersionShown);
+        setIsFilterByVersionShown((isFilterByVersionShown) => !isFilterByVersionShown);
     };
 
     /** Describes version parameters. */
@@ -45,22 +48,22 @@ export const FilterByVersion: React.FC<{
 
     /** Chooses diamond quality of cards. */
     const chooseDiamondQuality = () => {
-        setIsDiamondQuality(isDiamondQuality => !isDiamondQuality);
+        setIsDiamondQuality((isDiamondQuality) => !isDiamondQuality);
     };
 
     /** Chooses gold quality of cards. */
     const chooseGoldQuality = () => {
-        setIsGoldQuality(isGoldQuality => !isGoldQuality);
+        setIsGoldQuality((isGoldQuality) => !isGoldQuality);
     };
 
     /** Chooses silver quality of cards. */
     const chooseSilverQuality = () => {
-        setIsSilverQuality(isSilverQuality => !isSilverQuality);
+        setIsSilverQuality((isSilverQuality) => !isSilverQuality);
     };
 
     /** Chooses wood quality of cards. */
     const chooseWoodQuality = () => {
-        setIsWoodQuality(isWoodQuality => !isWoodQuality);
+        setIsWoodQuality((isWoodQuality) => !isWoodQuality);
     };
 
     /** Changes quality of cards. */
@@ -69,19 +72,19 @@ export const FilterByVersion: React.FC<{
 
         if (isDiamondQuality) {
             qualities.push('diamond');
-        };
+        }
 
         if (isGoldQuality) {
             qualities.push('gold');
-        };
+        }
 
         if (isSilverQuality) {
             qualities.push('silver');
-        };
+        }
 
         if (isWoodQuality) {
             qualities.push('wood');
-        };
+        }
 
         return qualities;
     };
@@ -109,69 +112,54 @@ export const FilterByVersion: React.FC<{
     }, [activeFilterIndex, cardsQueryParameters]);
 
     return (
-        <FilterByParameterWrapper
-            showComponent={showFilterByVersion}
-            isVisible={isVisible}
-            title="Version"
-        >
-            <input
-                id="division-checkbox-wood"
-                className="filter-item__dropdown-active__checkbox"
-                type="checkbox"
-                checked={isWoodQuality}
-                onChange={chooseWoodQuality}
-            />
-            <label
-                className="filter-item__dropdown-active__text"
-                htmlFor="division-checkbox-wood"
-            >
-                wood
-            </label>
-            <input
-                id="checkbox-silver"
-                className="filter-item__dropdown-active__checkbox"
-                type="checkbox"
-                checked={isSilverQuality}
-                onChange={chooseSilverQuality}
-            />
-            <label
-                className="filter-item__dropdown-active__text"
-                htmlFor="checkbox-silver"
-            >
-                silver
-            </label>
-            <input
-                id="checkbox-gold"
-                className="filter-item__dropdown-active__checkbox"
-                type="checkbox"
-                checked={isGoldQuality}
-                onChange={chooseGoldQuality}
-            />
-            <label
-                className="filter-item__dropdown-active__text"
-                htmlFor="checkbox-gold"
-            >
-                gold
-            </label>
-            <input
-                id="checkbox-diamond"
-                className="filter-item__dropdown-active__checkbox"
-                type="checkbox"
-                checked={isDiamondQuality}
-                onChange={chooseDiamondQuality}
-            />
-            <label
-                className="filter-item__dropdown-active__text"
-                htmlFor="checkbox-diamond"
-            >
-                diamond
-            </label>
-            <input
-                value="APPLY"
-                type="submit"
-                className="filter-item__dropdown-active__apply"
-                onClick={handleSubmit}
-            />
+        <FilterByParameterWrapper showComponent={showFilterByVersion} isVisible={isVisible} title="Version">
+            <div className="filter-item__dropdown-active__switcher">
+                <input
+                    id="division-checkbox-wood"
+                    className="filter-item__dropdown-active__checkbox"
+                    type="checkbox"
+                    checked={isWoodQuality}
+                    onChange={chooseWoodQuality}
+                />
+                <label className="filter-item__dropdown-active__slider" htmlFor="division-checkbox-wood"></label>
+                <p className="filter-item__dropdown-active__text">wood</p>
+            </div>
+            <div className="filter-item__dropdown-active__switcher">
+                <input
+                    id="checkbox-silver"
+                    className="filter-item__dropdown-active__checkbox"
+                    type="checkbox"
+                    checked={isSilverQuality}
+                    onChange={chooseSilverQuality}
+                />
+
+                <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-silver"></label>
+                <p className="filter-item__dropdown-active__text">silver</p>
+            </div>
+            <div className="filter-item__dropdown-active__switcher">
+                <input
+                    id="checkbox-gold"
+                    className="filter-item__dropdown-active__checkbox"
+                    type="checkbox"
+                    checked={isGoldQuality}
+                    onChange={chooseGoldQuality}
+                />
+
+                <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-gold"></label>
+                <p className="filter-item__dropdown-active__text">gold</p>
+            </div>
+            <div className="filter-item__dropdown-active__switcher">
+                <input
+                    id="checkbox-diamond"
+                    className="filter-item__dropdown-active__checkbox"
+                    type="checkbox"
+                    checked={isDiamondQuality}
+                    onChange={chooseDiamondQuality}
+                />
+                <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-diamond"></label>
+                <p className="filter-item__dropdown-active__text">diamond</p>
+            </div>
+            <input value="APPLY" type="submit" className="filter-item__dropdown-active__apply" onClick={handleSubmit} />
         </FilterByParameterWrapper>
     );
 };

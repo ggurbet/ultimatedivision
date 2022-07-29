@@ -1,9 +1,7 @@
 @import "@/index.scss";
 
 .football-field {
-    background-color: $mainBackground;
-    color: white;
-    padding: 50px 5%;
+    padding-top: 30px;
 
     &__title {
         font-family: "BebasNeue", sans-serif;
@@ -14,7 +12,7 @@
     }
 
     &__wrapper {
-        padding: 5px;
+        padding: 0 143px 143px;
         overflow: hidden;
     }
 }

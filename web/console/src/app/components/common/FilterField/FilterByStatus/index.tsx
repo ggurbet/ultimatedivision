@@ -11,7 +11,10 @@ import { FilterContext } from '../index';
 
 // TODO: rework functionality.
 export const FilterByStatus: React.FC = () => {
-    const { activeFilterIndex, setActiveFilterIndex }: {
+    const {
+        activeFilterIndex,
+        setActiveFilterIndex,
+    }: {
         activeFilterIndex: number;
         setActiveFilterIndex: React.Dispatch<React.SetStateAction<number>>;
     } = useContext(FilterContext);
@@ -28,7 +31,7 @@ export const FilterByStatus: React.FC = () => {
     /** Shows and closes FilterByStatus component. */
     const showFilterByStatus = () => {
         setActiveFilterIndex(FILTER_BY_STATUS_INDEX);
-        setIsFilterByStatusShown(isFilterByStatusShown => !isFilterByStatusShown);
+        setIsFilterByStatusShown((isFilterByStatusShown) => !isFilterByStatusShown);
     };
 
     /** Indicates if is choosed locked status of cards. */
@@ -38,12 +41,12 @@ export const FilterByStatus: React.FC = () => {
 
     /** Chooses locked status of cards. */
     const chooseLockedStatus = () => {
-        setIsLockedStatus(isLockedStatus => !isLockedStatus);
+        setIsLockedStatus((isLockedStatus) => !isLockedStatus);
     };
 
     /** Chooses unlocked status of cards. */
     const chooseUnlockedStatus = () => {
-        setIsUnlockedStatus(isUnLockedStatus => !isUnLockedStatus);
+        setIsUnlockedStatus((isUnLockedStatus) => !isUnLockedStatus);
     };
 
     /** Exposes default page number. */
@@ -62,41 +65,30 @@ export const FilterByStatus: React.FC = () => {
     }, [activeFilterIndex]);
 
     return (
-        <FilterByParameterWrapper
-            showComponent={showFilterByStatus}
-            isVisible={isVisible}
-            title="Status"
-        >
-            <input
-                id="checkbox-locked"
-                className="filter-item__dropdown-active__checkbox"
-                type="checkbox"
-                onClick={chooseLockedStatus}
-            />
-            <label
-                className="filter-item__dropdown-active__text"
-                htmlFor="checkbox-locked"
-            >
-                    Locked
-            </label>
-            <input
-                id="checkbox-unlocked"
-                className="filter-item__dropdown-active__checkbox"
-                type="checkbox"
-                onClick={chooseUnlockedStatus}
-            />
-            <label
-                className="filter-item__dropdown-active__text"
-                htmlFor="checkbox-unlocked"
-            >
-                    Unlocked
-            </label>
-            <input
-                value="APPLY"
-                type="submit"
-                className="filter-item__dropdown-active__apply"
-                onClick={handleSubmit}
-            />
+        <FilterByParameterWrapper showComponent={showFilterByStatus} isVisible={isVisible} title="Status">
+            <div className="filter-item__dropdown-active__switcher">
+                <input
+                    id="checkbox-locked"
+                    className="filter-item__dropdown-active__checkbox"
+                    type="checkbox"
+                    onClick={chooseLockedStatus}
+                />
+
+                <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-locked"></label>
+                <p className="filter-item__dropdown-active__text">Locked</p>
+            </div>
+            <div className="filter-item__dropdown-active__switcher">
+                <input
+                    id="checkbox-unlocked"
+                    className="filter-item__dropdown-active__checkbox"
+                    type="checkbox"
+                    onClick={chooseUnlockedStatus}
+                />
+
+                <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-unlocked"></label>
+                <p className="filter-item__dropdown-active__text"> Unlocked</p>
+            </div>
+            <input value="APPLY" type="submit" className="filter-item__dropdown-active__apply" onClick={handleSubmit} />
         </FilterByParameterWrapper>
     );
 };

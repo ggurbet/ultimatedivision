@@ -73,10 +73,37 @@
 
 @font-face {
     font-family: "Orbitron";
-    src: url("@static/fonts/Orbitron-Black.ttf") format("truetype");
+    src: url("@static/fonts/Orbitron-Bold.ttf") format("truetype");
     font-style: normal;
-    font-weight: lighter;
-    font-display: swap;
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Orbitron";
+    src: url("@static/fonts/Orbitron-ExtraBold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 900;
+}
+
+@font-face {
+    font-family: "Orbitron";
+    src: url("@static/fonts/Orbitron-Medium.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "Orbitron";
+    src: url("@static/fonts/Orbitron-Regular.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "Orbitron";
+    src: url("@static/fonts/Orbitron-SemiBold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 600;
 }
 
 @font-face {
@@ -84,7 +111,41 @@
     src: url("@static/fonts/Urbanist-Black.ttf") format("truetype");
     font-style: normal;
     font-weight: lighter;
-    font-display: swap;
+}
+
+@font-face {
+    font-family: "Urbanist";
+    src: url("@static/fonts/Urbanist-Bold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Urbanist";
+    src: url("@static/fonts/Urbanist-ExtraBold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 900;
+}
+
+@font-face {
+    font-family: "Urbanist";
+    src: url("@static/fonts/Urbanist-Medium.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "Urbanist";
+    src: url("@static/fonts/Urbanist-Regular.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "Urbanist";
+    src: url("@static/fonts/Urbanist-SemiBold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 600;
 }
 
 html {

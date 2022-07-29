@@ -1,7 +1,7 @@
 @import "@/index.scss";
 
 .card-selection {
-    padding: 40px 0;
+    padding: 40px 0 0;
 
     &__list {
         width: 80%;
@@ -28,6 +28,61 @@
         box-shadow: white;
         margin: 20px;
         cursor: pointer;
+
+        &__picture {
+            text-decoration: none;
+            width: 178px;
+            background: none;
+            border-radius: 10px;
+            box-shadow: white;
+        }
+
+        &__selected {
+            cursor: not-allowed;
+            position: relative;
+
+            &__label {
+                position: absolute;
+                right: 20px;
+                top: 5px;
+                padding: 7px;
+                z-index: 4;
+                color: white;
+                background-color: #4b5255;
+                font-size: 11px;
+                font-weight: lighter;
+                transition: all 0.2s;
+                width: 26px;
+                height: 28px;
+                border-radius: 0 0 3px 3px;
+
+                &:before {
+                    content: "";
+                    z-index: 3;
+                    position: absolute;
+                    width: 0;
+                    height: 0;
+                    border-style: solid;
+                    border-width: 8px 13px 0 13px;
+                    border-color: #4b5255 transparent transparent transparent;
+                    top: 26.5px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+
+                &:after {
+                    content: "";
+                    z-index: 4;
+                    position: absolute;
+                    background: url("@static/img/FieldPage/checked-icon.svg");
+                    left: 50%;
+                    top: 80%;
+                    width: 18px;
+                    height: 18px;
+                    transform: translate(-50%, -80%);
+                }
+            }
+        }
 
         &__background-type {
             z-index: 1;

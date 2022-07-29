@@ -4,64 +4,52 @@
 @import "@/index.scss";
 
 .filter-field {
-    margin-top: 50px;
-    width: 100%;
-
-    &__wrapper {
-        position: relative;
-
-        &:before {
-            position: absolute;
-            content: "";
-            top: 0;
-            left: 0;
-            width: 80vw;
-            height: 2px;
-            background: $marketPlaceBorderColor;
-        }
-
-        &:after {
-            position: absolute;
-            content: "";
-            bottom: 0;
-            right: 0;
-            width: 80vw;
-            height: 2px;
-            background: $marketPlaceBorderColor;
-        }
-    }
+    margin: 140px auto 60px;
 
     &__use-filters {
         display: none;
     }
 
     &__list {
-        background-image: url("@/app/static/img/FilterField/filterShape.svg");
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
         display: flex;
-        padding: 15px 40px;
-        width: 90%;
-        margin: 0 auto;
-        list-style: none;
-        justify-content: space-around;
         align-items: center;
+        margin: 0 auto;
+        padding: 12px 30px;
+        height: 44px;
+        width: min-content;
+        list-style: none;
+        border: 3px solid #f5ff63;
+        font-family: "Montserrat", sans-serif;
+        box-shadow: 0 10px 14px rgba(0, 23, 58, 0.14);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.12);
 
         &__item {
 
-            &:first-child {
-                min-width: 160px;
+            &:not(:last-child) {
+                margin-right: 12px;
             }
 
             &__search {
-                background-color: transparent;
-                border: none;
-                width: 150px;
-                padding: 5px 10px;
-                color: white;
-                margin: 0 5px;
-                border-radius: 20px;
-                outline: none;
+                cursor: pointer;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                width: 154px;
+                color: #f5ff63;
+                font-family: "Orbitron", sans-serif;
+                font-style: normal;
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 20px;
+                text-align: center;
+                letter-spacing: 0.12em;
+                text-transform: lowercase;
+
+                .filter-field__list__item__picture {
+                    margin-right: 7px;
+                }
 
                 &::placeholder {
                     color: rgb(189, 189, 189);
@@ -78,21 +66,6 @@
                         left: 95px;
                     }
                 }
-            }
-        }
-    }
-}
-
-@media (max-width: 1440px) {
-
-    .filter-field {
-
-        &__list {
-            padding: 15px 20px;
-            width: 96%;
-
-            &__item {
-                font-size: 13px;
             }
         }
     }

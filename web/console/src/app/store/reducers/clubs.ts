@@ -22,7 +22,7 @@ export const clubsReducer = (state = clubState, action: any = {}) => {
         return {
             ...state,
             clubs: action.clubs,
-            activeClub: action.clubs.find((club:Club) => club.status === ACTIVE_STATUS_VALUE),
+            activeClub: action.clubs.find((club: Club) => club.status === ACTIVE_STATUS_VALUE),
         };
     case SELECTION_VISIBILITY:
         state.options.showCardSeletion = action.isVisible;

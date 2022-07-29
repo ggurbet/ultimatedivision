@@ -10,7 +10,7 @@ import { Context } from '@/app/types/filters';
 
 import './index.scss';
 
-export const FilterContext = createContext(new Context);
+export const FilterContext = createContext(new Context());
 
 export const FilterField: React.FC = ({ children }) => {
     /** Exposes default index which does not exist in array. */
@@ -20,28 +20,17 @@ export const FilterField: React.FC = ({ children }) => {
     return (
         <FilterContext.Provider value={new Context(activeFilterIndex, setActiveFilterIndex)}>
             <section className="filter-field">
-                <div className="filter-field__wrapper">
-                    <div className="filter-field__use-filters">
-                        <img
-                            className="filter-field__use-filters__picture"
-                            src={filters}
-                            alt="use fitlers"
-                        />
-                        <span className="filter-field__use-filters__title">
-                            Use filters
-                        </span>
-                    </div>
-                    <ul className="filter-field__list">
-                        <li className="filter-field__list__item">
-                            <img
-                                src={search}
-                                alt="Filter Icon"
-                                className="filter-field__list__item__picture"
-                            />
-                        </li>
-                        {children}
-                    </ul>
+                <div className="filter-field__use-filters">
+                    <img className="filter-field__use-filters__picture" src={filters} alt="use fitlers" />
+                    <span className="filter-field__use-filters__title">Use filters</span>
                 </div>
+                <ul className="filter-field__list">
+                    <li className="filter-field__list__item filter-field__list__item__search">
+                        <img src={search} alt="Filter Icon" className="filter-field__list__item__picture" />
+                        Search
+                    </li>
+                    {children}
+                </ul>
             </section>
         </FilterContext.Provider>
     );
