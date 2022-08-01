@@ -71,6 +71,7 @@ jobs:
         working-directory: ./web/console
 
   count_lines_of_code:
+    if: github.event_name == 'pull_request'
     name: Count lines of code
     runs-on: ubuntu-latest
     steps:
@@ -102,6 +103,7 @@ jobs:
             ${{ steps.loc.outputs.diff }}
 
   backend_check_PR_size:
+    if: github.event_name == 'pull_request'
     name: Backend check PR size
     runs-on: ubuntu-latest
     steps:
@@ -127,6 +129,7 @@ jobs:
             **/*.jsx
 
   frontend_check_PR_size:
+    if: github.event_name == 'pull_request'
     name: Frontend check PR size
     runs-on: ubuntu-latest
     steps:
