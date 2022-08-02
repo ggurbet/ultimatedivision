@@ -3,10 +3,13 @@
 name: "CD"
 env:
   CURRENT_BRANCH : ${{ github.ref_name }}
+  DOCKER_VERSION : ${{ github.event.workflow_run.head_sha }}
+
 on:
   workflow_run:
     workflows: [ "CI" ]
-    types: [ completed ]
+    types:
+      - completed
     branches:
       - 'develop'
       - 'stage'
@@ -35,9 +38,8 @@ jobs:
 
       # Runs a single command using the runners shell.
       - name: Build & push docker images to our server
-        uses: pr-mpt/actions-commit-hash@v1
         if: env.CURRENT_BRANCH == 'develop'
-        run: make docker ENVIRONMENT=/develop VERSION=${{ github.event.workflow_run.head_sha }}
+        run: make docker VERSION=${{ env.DOCKER_VERSION }} ENVIRONMENT=/develop
 
       - name: Deploy DEVELOP environment images
         uses: appleboy/ssh-action@master
@@ -54,9 +56,8 @@ jobs:
 
       # Runs a single command using the runners shell.
       - name: Build & push docker images to our server
-        uses: pr-mpt/actions-commit-hash@v1
         if: env.CURRENT_BRANCH == 'stage'
-        run:  make docker ENVIRONMENT=/stage VERSION=${{ github.event.workflow_run.head_sha }}
+        run:  make docker VERSION=${{ env.DOCKER_VERSION }} ENVIRONMENT=/stage
 
       - name: Deploy STAGE environment images
         uses: appleboy/ssh-action@master
