@@ -65,7 +65,6 @@ const UserCards: React.FC = () => {
     return (
         <section className="user-cards">
             {isRegistrationRequired && <RegistrationPopup closeRegistrationPopup={closeRegistrationPopup} />}
-            <h1 className="user-cards__title">MY CARDS</h1>
             <FilterField>
                 <FilterByVersion submitSearch={submitSearch} cardsQueryParameters={cardsQueryParameters} />
                 <FilterByStats cardsQueryParameters={cardsQueryParameters} submitSearch={submitSearch} />

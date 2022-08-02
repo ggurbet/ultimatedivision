@@ -7,9 +7,7 @@ import { Card } from '@/card';
 
 import './index.scss';
 
-export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({
-    card,
-}) => {
+export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({ card }) => {
     const stats = card.statsArea;
     const labels = ['TAC', 'PHY', 'TEC', 'OFF', 'DEF', 'GK'];
 
@@ -18,12 +16,10 @@ export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({
             <Radar
                 type={Radar}
                 data={{
-                    labels: stats.map(
-                        (item, index) => `${labels[index]} ${item.average}`
-                    ),
+                    labels: stats.map((item, index) => `${item.average} ${labels[index]}`),
                     datasets: [
                         {
-                            backgroundColor: '#66FF8866',
+                            backgroundColor: 'rgba(245, 255, 99, 0.34)',
                             data: stats.map((item) => item.average),
                         },
                     ],
@@ -32,7 +28,7 @@ export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({
                     elements: {
                         line: {
                             borderWidth: 1,
-                            borderColor: '#66ff8791',
+                            borderColor: '#F5FF63',
                         },
                     },
                     animations: {
@@ -62,7 +58,7 @@ export const FootballerCardIllustrationsRadar: React.FC<{ card: Card }> = ({
                                 display: false,
                             },
                             pointLabels: {
-                                color: '#afafaf',
+                                color: '#F5FF63',
                             },
                             angleLines: {
                                 /* eslint-disable */

@@ -21,26 +21,20 @@ export const UserCard: React.FC<{
     position: number;
     sellingCardIndex: number;
     setIndex: React.Dispatch<React.SetStateAction<number>>;
-}> = ({
-    card,
-    position,
-    sellingCardIndex,
-    setIndex,
-}) => {
+}> = ({ card, position, sellingCardIndex, setIndex }) => {
     /** Default index which does not exist in array */
     const DEFAULT_INDEX = -1;
     const dispatch = useDispatch();
     const [sellButtonVisibility, setVisibility] = useState(false);
     const isVisible = sellButtonVisibility && position === sellingCardIndex;
     useEffect(() => {
-        position !== sellingCardIndex &&
-                setVisibility(false);
+        position !== sellingCardIndex && setVisibility(false);
     }, [sellingCardIndex]);
 
     const handleControls = (e: React.MouseEvent<HTMLInputElement>, position: number) => {
         e.preventDefault();
         setIndex(position);
-        setVisibility(prev => !prev);
+        setVisibility((prev) => !prev);
     };
 
     const handleSelling = (e: React.MouseEvent<HTMLInputElement>) => {
@@ -48,8 +42,8 @@ export const UserCard: React.FC<{
         e.nativeEvent.stopImmediatePropagation();
         /** TODO: create interface for adding selling parameters */
         /* eslint-disable */
-            dispatch(createLot(new CreatedLot(card.id, 200, 200, 1)));
-            /* eslint-enable */
+        dispatch(createLot(new CreatedLot(card.id, 200, 200, 1)));
+        /* eslint-enable */
         setIndex(DEFAULT_INDEX);
         setVisibility(false);
     };
@@ -59,30 +53,16 @@ export const UserCard: React.FC<{
             className="user-card"
             onContextMenu={(e: React.MouseEvent<HTMLInputElement>) => handleControls(e, position)}
         >
-            <Link
-                className="user-card__link"
-                to={`/card/${card.id}`}
-            >
-                <img
-                    className="user-card__confirm-icon"
-                    src={confirmIcon}
-                    alt="Confirm icon"
-                />
-                <img
-                    className="user-card__price-gold"
-                    src={priceGoldIcon}
-                    alt="Price icon"
-                />
-                <PlayerCard
-                    id={card.id}
-                    className={'user-card__image'}
-                />
+            <Link className="user-card__link" to={`/card/${card.id}`}>
+                <PlayerCard id={card.id} className={'user-card__image'} />
             </Link>
             {isVisible &&
-                    <div className="user-card__control"
-                        onClick={(e: React.MouseEvent<HTMLInputElement>) => handleSelling(e)}>
-                        Sell card
-                    </div>
+                <div
+                    className="user-card__control"
+                    onClick={(e: React.MouseEvent<HTMLInputElement>) => handleSelling(e)}
+                >
+                    Sell card
+                </div>
             }
         </div>
     );

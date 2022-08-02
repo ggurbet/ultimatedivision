@@ -5,7 +5,7 @@
 .footballer-card-illustrations-radar {
     width: 100%;
     height: auto;
-    margin: 10% 0;
+    margin-top: 28px;
 
     canvas {
         margin: 0 5%;
@@ -43,12 +43,7 @@
         height: 400px;
         margin: 400px auto 0 auto;
         border-top: 1px solid #675eae;
-        border-image: linear-gradient(
-            270deg,
-            rgba(41, 41, 72, 0) -11.8%,
-            #675eae 46.61%,
-            rgba(41, 41, 71, 0) 111.17%
-        );
+        border-image: linear-gradient(270deg, rgba(41, 41, 72, 0) -11.8%, #675eae 46.61%, rgba(41, 41, 71, 0) 111.17%);
         border-image-slice: 1;
 
         canvas {

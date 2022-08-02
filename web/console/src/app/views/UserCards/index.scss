@@ -4,15 +4,10 @@
 @import "@/index.scss";
 
 .user-cards {
-    background-color: $mainBackground;
-    padding: 15px 0;
+    padding: 0 150px 40px;
     position: relative;
 
-    &__title {
-        color: white;
-        margin: 70px 0 50px 40px;
-        font-size: 48px;
-        font-weight: 100;
-        position: relative;
+    & .filter-field {
+        margin: 30px auto 74px;
     }
 }
