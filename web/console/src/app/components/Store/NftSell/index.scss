@@ -1,0 +1,71 @@
+.sell-nft {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    margin: 50px auto;
+
+    &__info {
+        margin: 20px 0 0 54px;
+    }
+
+    &__card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 269px;
+        height: 410px;
+        border-radius: 34px;
+        box-shadow: 0 12px 34px rgba(0, 23, 58, 0.24);
+        background: linear-gradient(180deg, #8ff2ff -9.39%, #6a45fc 122.44%);
+
+        &__image {
+            width: 205px;
+            height: 203px;
+        }
+    }
+
+    &__title {
+        font-family: "Orbitron", sans-serif;
+        font-style: normal;
+        font-weight: 900;
+        margin-bottom: 20px;
+        font-size: 40px;
+        line-height: 50px;
+        text-align: center;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #26373f;
+    }
+
+    &__remainder {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 14px;
+
+        &__text {
+            font-family: "Orbitron", sans-serif;
+            font-style: normal;
+            font-weight: 800;
+            font-size: 16px;
+            line-height: 20px;
+            text-align: center;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #26373f;
+            text-shadow: 0 4px 22px rgba(25, 54, 133, 0.25);
+        }
+
+        &__amount {
+            font-family: "Orbitron", sans-serif;
+            font-style: normal;
+            font-weight: 800;
+            font-size: 16px;
+            line-height: 20px;
+            text-align: center;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #704dff;
+        }
+    }
+}

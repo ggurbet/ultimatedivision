@@ -1,0 +1,80 @@
+.minting-area {
+
+    &__button {
+        cursor: pointer;
+        border: none;
+        outline: none;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 22px;
+        gap: 10px;
+        width: 100%;
+        height: 58px;
+        background: #f5ff63;
+        box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
+        border-radius: 12px;
+
+        &__text {
+            font-family: "Orbitron", sans-serif;
+            font-style: normal;
+            font-weight: 900;
+            font-size: 18px;
+            line-height: 23px;
+            text-align: center;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #26373f;
+        }
+
+        &__value {
+            font-family: "Urbanist", sans-serif;
+            font-style: normal;
+            font-weight: 900;
+            font-size: 14px;
+            line-height: 17px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #26373f;
+        }
+
+        &:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+    }
+
+    &__timer {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+
+        &__text {
+            font-family: "Orbitron", sans-serif;
+            font-style: normal;
+            font-weight: 800;
+            font-size: 16px;
+            line-height: 20px;
+            text-align: center;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #26373f;
+            text-shadow: 0 4px 22px rgba(25, 54, 133, 0.25);
+        }
+
+        &__time {
+            font-family: "Orbitron", sans-serif;
+            font-style: normal;
+            font-weight: 800;
+            font-size: 16px;
+            line-height: 20px;
+            text-align: center;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #704dff;
+        }
+    }
+}

@@ -1,0 +1,22 @@
+.card {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    margin-bottom: 26px;
+    column-gap: 7px;
+    padding-right: 25px;
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 32px;
+        height: 48px;
+        border: 2px solid #819aff;
+        border-radius: 5px;
+    }
+
+    &__active-item {
+        border: 2px solid #736ffd;
+    }
+}
