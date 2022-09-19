@@ -1,16 +1,10 @@
 /** Dropdown Icon for mobile */
 export function DropdownIcon() {
     return (
-        <svg
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <rect width="28" height="6" fill="white" />
-            <rect y="11" width="28" height="6" fill="white" />
-            <rect y="22" width="28" height="6" fill="white" />
+        <svg width="44" height="32" viewBox="0 0 44 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="44" height="6" rx="3" fill="#F5FF63"/>
+            <rect y="13" width="44" height="6" rx="3" fill="#F5FF63"/>
+            <rect y="26" width="44" height="6" rx="3" fill="#F5FF63"/>
         </svg>
     );
 };
@@ -18,29 +12,9 @@ export function DropdownIcon() {
 /** Dropdown close icon */
 export function CloseDropdownIcon() {
     return (
-        <svg
-            className="cross-menu-svg"
-            width="40" height="40"
-            viewBox="0 0 40 40"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <rect
-                x="32.7266"
-                y="3.63672"
-                width="3.63636"
-                height="40.9091"
-                transform="rotate(45 32.7266 3.63672)"
-                fill="white"
-            />
-            <rect
-                x="35.4541"
-                y="32.7275"
-                width="3.63636"
-                height="40.9091"
-                transform="rotate(135 35.4541 32.7275)"
-                fill="white"
-            />
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4.6084" y="1.0332" width="36.6961" height="6" rx="3" transform="rotate(46.1585 4.6084 1.0332)" fill="#F5FF63"/>
+            <rect width="36.6961" height="6" rx="3" transform="matrix(-0.690457 0.723373 0.723373 0.690457 26.3721 1)" fill="#F5FF63"/>
         </svg>
     );
 };

@@ -14,7 +14,6 @@
 
     a {
         z-index: 10;
-        margin-left: 5%;
     }
 
     &__dropdown {
@@ -30,6 +29,7 @@
 
         &__item {
             cursor: pointer;
+            margin-right: 40px;
             list-style: none;
             font-family: "Orbitron", sans-serif;
             font-style: normal;
@@ -38,11 +38,10 @@
             line-height: 18px;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            margin-right: 40px;
 
             &__active {
-                color: #000;
                 text-decoration: none;
+                color: #000;
 
                 &:hover {
                     text-decoration: none;
@@ -50,8 +49,8 @@
             }
 
             .active {
-                color: #f5ff63;
                 text-decoration: none;
+                color: #f5ff63;
 
                 &:hover {
                     text-decoration: none;
@@ -61,35 +60,82 @@
     }
 }
 
-@media screen and (max-width: $phoneBreakPoint) {
+@media screen and (max-width: $tabletBreakPoint) {
 
     .ultimatedivision-navbar {
         position: relative;
+        padding: 0;
 
         &__dropdown {
             z-index: 10;
-            display: block;
-            margin: 0 5%;
+            padding: 43px 16px 39px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            &__logo {
+                width: 130px;
+                font-weight: 800;
+                font-size: 22px;
+                line-height: 114%;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                font-family: 'Wix Madefor Display', sans-serif;
+                text-shadow: 0px 1.16348px 2.9087px rgba(8, 36, 80, 0.36);
+                color: white;
+
+                &__first-part {
+                    color: #F5FF63;
+                }
+            }
+
+            &__button {
+                cursor: pointer;
+                padding: 0;
+                background: none;
+                border: none;
+                outline: none;
+            }
+
+            &__menu {
+                font-style: normal;
+                font-weight: 900;
+                font-size: 18px;
+                line-height: 23px;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+            }
+
+            &--active {
+                background: $pageBackground;
+            }
         }
 
         &__list {
             display: none;
 
             &-active {
-                top: 100px;
-                flex-direction: column;
                 position: absolute;
                 z-index: 5;
                 display: block;
                 width: 100%;
                 height: 100vh;
-                background: $navbarHighlightBackgroundColor;
+                top: 100px;
+                list-style: none;
+                background: $pageBackground;
 
                 &__item {
-                    border-top: 1px solid rgba($navbarSecondaryColor, 0.2);
-                    margin: auto;
-                    padding: 25px;
-                    font-size: 32px;
+                    margin: 0 16px;
+                    padding: 22px 0;
+                    text-align: left;
+                    border-bottom: 1.4px solid rgba(black, 0.2);
+                    font-size: 16px;
+                    text-transform: uppercase;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 20px;
+                    letter-spacing: 0.06em;
 
                     &__active {
                         text-decoration: none;
