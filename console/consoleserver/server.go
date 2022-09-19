@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"github.com/zeebo/errs"
 	"golang.org/x/sync/errgroup"
 
@@ -195,7 +196,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	router.PathPrefix("/").HandlerFunc(server.appHandler)
 
 	server.server = http.Server{
-		Handler: router,
+		Handler: cors.AllowAll().Handler(router),
 	}
 
 	return server
