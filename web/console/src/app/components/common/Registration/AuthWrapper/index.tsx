@@ -61,7 +61,7 @@ const AuthWrapper = () => {
         await usersService.velasLogin(nonce, accountKeyEvm, accessToken, expiresAt);
 
         setLocalStorageItem('IS_LOGGINED', true);
-        history.push(RouteConfig.MarketPlace.path);
+        history.push(RouteConfig.Cards.path);
         window.location.reload();
     };
 

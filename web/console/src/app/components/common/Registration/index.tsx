@@ -121,7 +121,7 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
 
         if (encrypted) {
             await usersService.casperLogin(message, encrypted);
-            history.push(RouteConfig.MarketPlace.path);
+            history.push(RouteConfig.Cards.path);
             window.location.reload();
         }
     };
