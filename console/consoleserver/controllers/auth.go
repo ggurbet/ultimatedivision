@@ -12,6 +12,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 
@@ -315,6 +316,33 @@ func (auth *Auth) LoginTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GetVelasData returns user's velas data.
+func (auth *Auth) GetVelasData(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	params := mux.Vars(r)
+
+	w.Header().Set("Content-Type", "application/json")
+
+	userID, err := uuid.Parse(params["user_id"])
+	if err != nil {
+		auth.serveError(w, http.StatusBadRequest, ErrCards.Wrap(err))
+		return
+	}
+
+	velasData, err := auth.userAuth.GetVelasData(ctx, userID)
+	if err != nil {
+		auth.log.Error("could not get velas data", ErrUsers.Wrap(err))
+		http.Error(w, "could not get velas data", http.StatusInternalServerError)
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(velasData); err != nil {
+		auth.log.Error("can not execute velas data", ErrUsers.Wrap(err))
+		auth.serveError(w, http.StatusInternalServerError, AuthError.Wrap(err))
+		return
+	}
+}
+
 // ChangePasswordTemplateHandler is web app http handler function.
 func (auth *Auth) ChangePasswordTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	header := w.Header()
@@ -438,6 +466,7 @@ func (auth *Auth) VelasRegister(w http.ResponseWriter, r *http.Request) {
 		WalletAddress string `json:"walletAddress"`
 		AccessToken   string `json:"accessToken"`
 		ExpiresAt     int64  `json:"expiresAt"`
+		VelasData     string `json:"velasData"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -464,6 +493,12 @@ func (auth *Auth) VelasRegister(w http.ResponseWriter, r *http.Request) {
 	err := auth.userAuth.RegisterWithVelas(ctx, velasAPIRequest.WalletAddress)
 	if err != nil {
 		auth.log.Error("failed to write json response", AuthError.Wrap(err))
+		return
+	}
+
+	err = auth.userAuth.SaveVelasData(ctx, velasAPIRequest.WalletAddress, request.VelasData)
+	if err != nil {
+		auth.log.Error("failed to save json response from velas", AuthError.Wrap(err))
 		return
 	}
 

@@ -622,6 +622,32 @@ func (service *Service) RegisterWithVelas(ctx context.Context, walletAddress com
 	return nil
 }
 
+// SaveVelasData save json to db while register velas user.
+func (service *Service) SaveVelasData(ctx context.Context, walletAddress common.Address, velasString string) error {
+	user, err := service.users.GetByWalletAddress(ctx, walletAddress.String(), users.WalletTypeVelas)
+	if err != nil {
+		return Error.New("can't get user by wallet")
+	}
+
+	var velasData = users.VelasData{
+		ID:       user.ID,
+		Response: velasString,
+	}
+
+	err = service.users.SetVelasData(ctx, velasData)
+	if err != nil {
+		return Error.Wrap(err)
+	}
+
+	return nil
+}
+
+// GetVelasData returns velas data by userId.
+func (service *Service) GetVelasData(ctx context.Context, userID uuid.UUID) (users.VelasData, error) {
+	velasData, err := service.users.GetVelasData(ctx, userID)
+	return velasData, Error.Wrap(err)
+}
+
 // LoginWithVelas authenticates user by credentials and returns login token.
 func (service *Service) LoginWithVelas(ctx context.Context, nonce string, walletAddress common.Address) (string, error) {
 	user, err := service.users.GetByWalletAddress(ctx, walletAddress.String(), users.WalletTypeVelas)

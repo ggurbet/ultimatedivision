@@ -276,6 +276,10 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             is_renewal   BOOLEAN             NOT NULL,
             hour_renewal INTEGER             NOT NULL,
             price        BYTEA               NOT NULL
+        );
+         CREATE TABLE IF NOT EXISTS velas_register_data(
+            user_id BYTEA   PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+            response        VARCHAR                                            NOT NULL
         );`
 
 	_, err = db.conn.ExecContext(ctx, createTableQuery)

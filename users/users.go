@@ -31,6 +31,8 @@ type DB interface {
 	GetByWalletAddress(ctx context.Context, walletAddress string, walletType WalletType) (User, error)
 	// Create creates a user and writes to the database.
 	Create(ctx context.Context, user User) error
+	// SetVelasData save json to db while register velas user.
+	SetVelasData(ctx context.Context, velasData VelasData) error
 	// Update updates a status in the database.
 	Update(ctx context.Context, status Status, id uuid.UUID) error
 	// UpdatePassword updates a password in the database.
@@ -43,6 +45,8 @@ type DB interface {
 	Delete(ctx context.Context, id uuid.UUID) error
 	// GetNickNameByID returns nickname by user id from the database.
 	GetNickNameByID(ctx context.Context, id uuid.UUID) (string, error)
+	// GetVelasData get json string by user id from the database.
+	GetVelasData(ctx context.Context, userID uuid.UUID) (VelasData, error)
 	// UpdateLastLogin updates last login time.
 	UpdateLastLogin(ctx context.Context, id uuid.UUID) error
 	// UpdateEmail updates an email address in the database.
@@ -85,6 +89,12 @@ type User struct {
 	LastLogin    time.Time      `json:"lastLogin"`
 	Status       Status         `json:"status"`
 	CreatedAt    time.Time      `json:"createdAt"`
+}
+
+// VelasData describes user's velas data entity.
+type VelasData struct {
+	ID       uuid.UUID `json:"id"`
+	Response string    `json:"response"`
 }
 
 // EncodePass encode the password and generate "hash" to store from users password.

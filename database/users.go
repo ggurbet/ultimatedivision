@@ -27,6 +27,24 @@ type usersDB struct {
 	conn *sql.DB
 }
 
+// GetVelasData get json string by user id from the database.
+func (usersDB usersDB) GetVelasData(ctx context.Context, userID uuid.UUID) (users.VelasData, error) {
+	var user users.VelasData
+
+	row := usersDB.conn.QueryRowContext(ctx, "SELECT user_id, response FROM velas_register_data WHERE user_id=$1", userID)
+
+	err := row.Scan(&user.ID, &user.Response)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return user, ErrUsers.Wrap(err)
+		}
+
+		return user, ErrUsers.Wrap(err)
+	}
+
+	return user, ErrUsers.Wrap(err)
+}
+
 // List returns all users from the data base.
 func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
 	rows, err := usersDB.conn.QueryContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users")
@@ -139,6 +157,19 @@ func (usersDB *usersDB) Create(ctx context.Context, user users.User) error {
 
 	_, err := usersDB.conn.ExecContext(ctx, query, user.ID, user.Email, emailNormalized, user.PasswordHash,
 		user.NickName, user.FirstName, user.LastName, user.Wallet, user.CasperWallet, user.WalletType, user.Nonce, user.PublicKey, user.PrivateKey, user.LastLogin, user.Status, user.CreatedAt)
+
+	return ErrUsers.Wrap(err)
+}
+
+// SetVelasData save json to db while register velas user.
+func (usersDB *usersDB) SetVelasData(ctx context.Context, velasData users.VelasData) error {
+	query := `INSERT INTO velas_register_data(
+                 user_id,
+                 response
+                )
+                 VALUES ($1, $2)`
+
+	_, err := usersDB.conn.ExecContext(ctx, query, velasData.ID, velasData.Response)
 
 	return ErrUsers.Wrap(err)
 }
