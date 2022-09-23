@@ -7,6 +7,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import HomeNavbar from '@components/home/HomeNavbar';
 
 import { CloseDropdownIcon, DropdownIcon } from '@/app/static/img/Navbar';
+import { setScrollAble } from '@/app/internal/setScrollAble';
 
 import { RouteConfig } from '@/app/routes';
 
@@ -30,6 +31,11 @@ const Navbar: React.FC = () => {
         { name: 'FIELD', path: RouteConfig.Field.path },
     ];
 
+    const setDropdownNavbarActivity = () => {
+        setScrollAble();
+        setIsDropdownActive(!isDropdownActive);
+    };
+
     useEffect(() => {
         location.pathname === '/home' ? setIsHomePath(true) : setIsHomePath(false);
     }, [location]);
@@ -39,10 +45,10 @@ const Navbar: React.FC = () => {
             {isHomePath ?
                 <HomeNavbar />
                 :
-                <div className="ultimatedivision-navbar">
+                <div className={`ultimatedivision-navbar 
+                        ${isDropdownActive ? 'ultimatedivision-navbar--active' : ''} `}>
                     <div
-                        className={`ultimatedivision-navbar__dropdown 
-                        ${isDropdownActive ? 'ultimatedivision-navbar__dropdown--active' : ''} `}
+                        className={'ultimatedivision-navbar__dropdown '}
                     >
                         {isDropdownActive ?
                             <p className="ultimatedivision-navbar__dropdown__menu">Menu</p>
@@ -52,7 +58,7 @@ const Navbar: React.FC = () => {
                                 division
                             </p>
                         }
-                        <button onClick={() => setIsDropdownActive(!isDropdownActive)}
+                        <button onClick={() => setDropdownNavbarActivity() }
                             className="ultimatedivision-navbar__dropdown__button">
                             {isDropdownActive ? <CloseDropdownIcon /> : <DropdownIcon />}
                         </button>
@@ -64,7 +70,7 @@ const Navbar: React.FC = () => {
                                     key={index}
                                     to={item.path}
                                     className={`ultimatedivision-navbar__list${visibleClassName}__item__active`}
-                                    onClick={() => setIsDropdownActive(false)}
+                                    onClick={() => setDropdownNavbarActivity()}
                                 >
                                     {item.name}
                                 </NavLink>

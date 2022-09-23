@@ -8,16 +8,17 @@ import { changeActiveClub, setFormation, startSearchingMatch } from '@/app/store
 import { RootState } from '@/app/store';
 import { amountColumnsElements, Control, MobileControl } from '@/app/types/club';
 import { Formations, SquadCard } from '@/club';
-import { DropdownStyle } from '@/app/internal/dropdownStyle';
 import { FieldDropdown } from './FieldDropdown';
 import { FieldFilterMobile } from './FieldFilterMobile';
+
+import { DropdownStyle } from '@/app/internal/dropdownStyle';
+import { setScrollAble } from '@/app/internal/setScrollAble';
 
 import arrowIcon from '@static/img/FieldPage/arrow.svg';
 import arrowActiveIcon from '@static/img/FieldPage/arrow-active.svg';
 import filterIcon from '@static/img/FieldPage/filter-icon.svg';
 
 import './index.scss';
-import { setScrollAble } from '@/app/internal/setScrollAble';
 
 export const FieldControlsArea: React.FC = () => {
     const dispatch = useDispatch();

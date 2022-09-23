@@ -6,7 +6,7 @@
 .filter-field {
     margin: 10px auto 60px;
 
-    &__use-filters {
+    &__filters {
         display: none;
     }
 
@@ -15,12 +15,12 @@
     }
 
     &__list {
-        display: flex;
-        align-items: center;
         height: 44px;
         width: min-content;
         margin: 0 auto;
         padding: 12px 30px;
+        display: flex;
+        align-items: center;
         list-style: none;
         border: 3px solid #f5ff63;
         border-radius: 24px;
@@ -34,11 +34,11 @@
             }
 
             &__search {
+                width: 154px;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
-                width: 154px;
                 text-align: center;
                 font-style: normal;
                 text-transform: lowercase;
@@ -86,12 +86,28 @@
             &__item:not(:last-child) {
                 margin-right: 0;
             }
+
+            &__item {
+
+                &__mobile-search {
+                    justify-content: flex-start;
+                    padding: 12px 36px;
+                    margin-bottom: 40px;
+                    width: 100%;
+                    text-align: left;
+                    border: 2px solid #f5ff63;
+                    box-shadow: 0 6px 12px rgba(0, 23, 58, 0.12);
+                    border-radius: 24px;
+                    background: rgba(255, 255, 255, 0.12);
+                }
+            }
         }
 
         &__mobile {
             overscroll-behavior: none;
             display: none;
             position: fixed;
+            overflow-y: scroll;
             width: 100vw;
             height: 100vh;
             z-index: 13;
@@ -137,12 +153,17 @@
             }
         }
 
+        &__filters {
+            display: block;
+        }
+
         &__use-filters {
             display: flex;
             align-items: center;
             cursor: pointer;
 
             &__title {
+                margin-left: 10px;
                 font-style: normal;
                 font-family: "Orbitron", sans-serif;
                 font-weight: 600;

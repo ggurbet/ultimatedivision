@@ -14,6 +14,7 @@ export const FootballerCardStats: React.FC<{ props: CardStats }> = ({ props }) =
         <div className="footballer-card-stats-item__diagram">
             <div className="footballer-card-stats-item__diagram-value" style={{ width: `${props.average}%` }}></div>
         </div>
+        <span className="footballer-card-stats-item__heading__mobile-value">{props.average}%</span>
         {props.fields.map((item, index) =>
             <div key={index} className="footballer-card-stats-item__row">
                 <span className="footballer-card-stats-item__row-name">{item.label}</span>

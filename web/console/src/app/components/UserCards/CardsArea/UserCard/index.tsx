@@ -1,20 +1,17 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { PlayerCard } from '@components/common/PlayerCard';
-
-import confirmIcon from '@static/img/MarketPlacePage/MyCard/ok.svg';
-import priceGoldIcon from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';
 
 import { createLot } from '@/app/store/actions/marketplace';
 import { CreatedLot } from '@/app/types/marketplace';
 import { Card } from '@/card';
 
 import './index.scss';
-import { useEffect, useState } from 'react';
 
 export const UserCard: React.FC<{
     card: Card;

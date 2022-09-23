@@ -5,6 +5,8 @@ import { useState, createContext } from 'react';
 
 import { Context } from '@/app/types/filters';
 
+import { setScrollAble } from '@/app/internal/setScrollAble';
+
 import search from '@static/img/FilterField/search.svg';
 import filterIcon from '@static/img/FieldPage/filter-icon.svg';
 import arrowLeftIcon from '@static/img/FilterField/arrow-left.svg'; ;
@@ -19,18 +21,35 @@ export const FilterField: React.FC = ({ children }) => {
     const [activeFilterIndex, setActiveFilterIndex] = useState(DEFAULT_FILTER_ITEM_INDEX);
     const [isActiveMobileCardsFilter, setIsActiveMobileCardsFilter] = useState(false);
 
+    const openCardsFilter = () => {
+        setIsActiveMobileCardsFilter(true);
+        setScrollAble();
+    };
+
+    const closeCardsFilter = () => {
+        setIsActiveMobileCardsFilter(false);
+        setScrollAble();
+    };
+
     return (
         <FilterContext.Provider value={new Context(activeFilterIndex, setActiveFilterIndex)}>
             <section className="filter-field">
-                <div className="filter-field__use-filters" onClick={() => setIsActiveMobileCardsFilter(true)}>
-                    <img className="filter-field__use-filters__picture" src={filterIcon} alt="use fitlers" />
-                    <span className="filter-field__use-filters__title">Card filter</span>
+                <div className="filter-field__filters">
+                    <div className="filter-field__list__item filter-field__list__item__search filter-field__list__item__mobile-search">
+                        <img src={search} alt="Filter Icon" className="filter-field__list__item__picture" />
+                        Search
+                    </div>
+
+                    <div className="filter-field__use-filters" onClick={() => openCardsFilter()}>
+                        <img className="filter-field__use-filters__picture" src={filterIcon} alt="use fitlers" />
+                        <span className="filter-field__use-filters__title">Card filter</span>
+                    </div>
                 </div>
                 {isActiveMobileCardsFilter ?
                     <div className={`filter-field__mobile ${isActiveMobileCardsFilter ? 'filter-field__mobile--active' : ''} `}>
                         <div className="filter-field__mobile__content">
                             <div className="filter-field__mobile__top-side">
-                                <span onClick={() => setIsActiveMobileCardsFilter(false)}
+                                <span onClick={() => closeCardsFilter()}
                                     className="filter-field__mobile__top-side__arrow-left">
                                     <img src={arrowLeftIcon} alt="arrow-left" />
                                 </span>

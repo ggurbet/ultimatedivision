@@ -2,14 +2,18 @@
 
 .card {
     z-index: 2;
+    position: relative;
     width: 100%;
     padding: 40px 100px 80px;
     color: #26373f;
-    position: relative;
 
     &__player {
         width: 268px;
         height: 404.95px;
+
+        &__info {
+            margin-left: 74px;
+        }
     }
 
     &__bg {
@@ -26,87 +30,87 @@
         flex-direction: column;
 
         &__nft {
+            margin-bottom: 22px;
             display: flex;
             align-items: center;
-            font-family: "Orbitron", sans-serif;
+            text-transform: uppercase;
             font-style: normal;
+            font-family: "Orbitron", sans-serif;
             font-weight: 900;
             font-size: 22px;
             line-height: 28px;
             letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 22px;
 
             &-title {
-                color: #26373f;
                 width: 100px;
+                color: #26373f;
             }
 
             &-value {
-                font-family: "Urbanist", sans-serif;
+                margin-left: 31px;
+                text-align: center;
+                text-transform: capitalize;
                 font-style: normal;
+                font-family: "Urbanist", sans-serif;
                 font-weight: 500;
                 font-size: 22px;
                 line-height: 26px;
-                text-align: center;
                 letter-spacing: 0.12em;
-                margin-left: 31px;
-                text-transform: capitalize;
             }
         }
 
         &__club {
             display: flex;
             align-items: center;
-            font-family: "Orbitron", sans-serif;
+            text-transform: uppercase;
             font-style: normal;
+            font-family: "Orbitron", sans-serif;
             font-weight: 900;
             font-size: 22px;
             line-height: 28px;
             letter-spacing: 0.12em;
-            text-transform: uppercase;
 
             &-title {
-                color: #26373f;
                 width: 100px;
+                color: #26373f;
             }
 
             &-name {
-                font-family: "Urbanist", sans-serif;
+                margin-left: 31px;
+                text-transform: uppercase;
                 font-style: normal;
+                text-align: center;
+                font-family: "Urbanist", sans-serif;
                 font-weight: 500;
                 font-size: 22px;
                 line-height: 26px;
-                text-align: center;
                 letter-spacing: 0.12em;
-                text-transform: uppercase;
-                margin-left: 31px;
             }
         }
     }
 
     &__mint {
-        cursor: pointer;
-        outline: none;
+        margin-left: 31px;
+        padding: 5px 29px;
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        margin-left: 31px;
-        padding: 5px 29px;
         border: 2px solid #f5ff63;
+        outline: none;
         box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
         border-radius: 10px;
-        font-family: "Orbitron", sans-serif;
+        text-transform: uppercase;
         font-style: normal;
+        text-align: center;
+        font-family: "Orbitron", sans-serif;
         font-weight: 900;
         font-size: 14px;
         line-height: 18px;
-        text-align: center;
         letter-spacing: 0.12em;
-        text-transform: uppercase;
         color: #f5ff63;
         background: none;
+        cursor: pointer;
     }
 
     &__wrapper {
@@ -120,40 +124,40 @@
 
         &__title {
             text-align: center;
-            font-family: "Orbitron", sans-serif;
+            text-transform: uppercase;
             font-style: normal;
+            font-family: "Orbitron", sans-serif;
             font-weight: 600;
             font-size: 36px;
             line-height: 45px;
             letter-spacing: 0.12em;
-            text-transform: uppercase;
             color: #26373f;
         }
     }
 
     &__info {
+        margin-bottom: 140px;
         display: flex;
         justify-content: space-between;
-        margin-bottom: 140px;
     }
 
     &__name-wrapper {
+        margin-left: 5%;
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        margin-left: 5%;
     }
 
     &__name {
-        font-family: "Orbitron", sans-serif;
+        margin-bottom: 26px;
+        text-transform: uppercase;
         font-style: normal;
+        font-family: "Orbitron", sans-serif;
         font-weight: 900;
         font-size: 40px;
         line-height: 50px;
         letter-spacing: 0.12em;
-        text-transform: uppercase;
         color: #26373f;
-        margin-bottom: 26px;
     }
 
     &__stats-area {
@@ -163,17 +167,110 @@
     }
 }
 
+@media screen and (max-width: 1200px) {
+
+    .card {
+        width: 100%;
+
+        &__name {
+            font-size: 30px;
+        }
+
+        &__player {
+
+            &__info {
+                margin-left: 30px;
+            }
+        }
+
+        &__mint {
+            padding: 5px 15px;
+            margin-left: 15px;
+            font-size: 12px;
+
+            &-info {
+
+                &__nft {
+
+                    &-value {
+                        margin-left: 21px;
+                        font-size: 18px;
+                    }
+                }
+
+                &__club {
+
+                    &-name {
+                        margin-left: 21px;
+                        font-size: 18px;
+                    }
+                }
+            }
+        }
+    }
+}
+
 @media screen and (max-width: $desktopBreakPoint) {
 
     .card {
         width: 100%;
 
+        &__name {
+            font-size: 30px;
+            line-height: 34px;
+        }
+
+        &__player {
+            max-width: 50%;
+
+            &__info {
+                width: 50%;
+                padding-top: 20px;
+                margin-left: 0;
+            }
+        }
+
+        &__info {
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        &__illustrator-radar {
+            width: 70%;
+            margin: 30px auto 0;
+        }
+
         &__stats-area {
-            width: 75%;
+            width: 100%;
+        }
+
+        &__mint {
+            margin-left: 20px;
+            padding: 5px 16px;
+            font-size: 12px;
         }
 
         &__mint-info {
-            width: 542px;
+            width: 100%;
+
+            &__club {
+
+                &-name {
+                    margin-left: 12px;
+                    font-size: 16px;
+                }
+            }
+
+            &__nft {
+                margin-bottom: 14px;
+                font-size: 20px;
+
+                &-value {
+                    margin-left: 10px;
+                    font-size: 16px;
+                }
+            }
         }
     }
 }
@@ -182,22 +279,72 @@
 
     .card {
         width: 100%;
-        padding: 60px 5%;
+        padding: 21px 48px 0;
 
         &__border {
-            width: 90%;
-            border-radius: 10px;
+            width: 100%;
+            border-radius: 0;
+        }
+
+        &__info {
+            width: 100%;
+            margin: 0;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        &__player {
+            width: 242px;
+            height: 365.52px;
+            margin-bottom: 33px;
+
+            &__info {
+                width: 100%;
+            }
+        }
+
+        &__name {
+            font-size: 26px;
+            line-height: 33px;
+            text-align: center;
+        }
+
+        &__illustrator-radar {
+            margin-bottom: 74px;
+
+            &__title {
+                font-weight: 500;
+                font-size: 24px;
+            }
         }
 
         &__mint-info {
-            width: 362px;
+            width: 100%;
+            margin-bottom: 26px;
 
             &__nft {
+                margin-bottom: 19.5px;
+                line-height: 23px;
                 font-size: 18px;
+                font-weight: 900;
+
+                &-value {
+                    font-weight: 500;
+                    font-size: 16px;
+                    line-height: 19px;
+                }
             }
 
             &__club {
+                margin-left: 0;
                 font-size: 18px;
+                font-weight: 900;
+
+                &-name {
+                    font-weight: 500;
+                    font-size: 16px;
+                    line-height: 19px;
+                }
             }
         }
 
@@ -207,17 +354,8 @@
             border: 1.14946px solid #675eae;
         }
 
-        &__name-wrapper {
-            width: 100%;
-            height: 50px;
-        }
-
-        &__name {
-            font-size: 47px;
-        }
-
         &__stats-area {
-            width: 65%;
+            width: 100%;
         }
     }
 }
@@ -225,38 +363,30 @@
 @media screen and (max-width: $phoneBreakPoint) {
 
     .card {
-        padding: 10px 5%;
+        padding: 21px 16px 0;
+
+        &__player {
+            max-width: 100%;
+        }
 
         &__wrapper {
+            width: 100%;
             position: relative;
             display: flex;
             flex-direction: column;
-            width: 100%;
         }
 
         .divider {
             width: 90%;
         }
 
-        &__mint-info {
-            width: 90%;
+        &__mint {
+            padding: 6px 19px;
+        }
 
-            &__nft {
-                font-size: 15px;
-
-                &-value {
-                    padding: 0 8px;
-                }
-            }
-
-            &__club {
-                margin-left: auto;
-                font-size: 15px;
-
-                &-name {
-                    padding: 0 8px;
-                }
-            }
+        &__illustrator-radar {
+            width: 100%;
+            margin-bottom: 51px;
         }
 
         .footballer-card-illustrations {
@@ -267,8 +397,6 @@
         &__stats-area {
             width: 100%;
             margin: 5% auto;
-            display: flex;
-            flex-direction: column;
         }
     }
 }

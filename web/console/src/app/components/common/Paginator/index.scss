@@ -104,6 +104,13 @@
     }
 }
 
+@media (max-width: $tabletBreakPoint) {
+
+    .ultimatedivision-paginator {
+        margin: 0;
+    }
+}
+
 @media (max-width: $phoneBreakPoint) {
 
     .ultimatedivision-paginator {
