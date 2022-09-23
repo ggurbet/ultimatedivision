@@ -16,6 +16,10 @@
         overflow: hidden;
     }
 
+    &__home {
+        background: #6facff;
+    }
+
     &.scroll-unset {
         overflow-y: hidden;
         max-height: 100vh;

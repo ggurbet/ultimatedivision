@@ -68,7 +68,7 @@ export class RouteConfig {
     public static Store: ComponentRoutes = new ComponentRoutes('/store', Store, true, 'page__store');
     public static Cards: ComponentRoutes = new ComponentRoutes('/cards', UserCards, true);
     public static Match: ComponentRoutes = new ComponentRoutes('/match', Match, true);
-    public static Home: ComponentRoutes = new ComponentRoutes('/home', Home, true);
+    public static Home: ComponentRoutes = new ComponentRoutes('/home', Home, true, 'page__home');
     public static PlayerProfile: ComponentRoutes = new ComponentRoutes('/player-profile', PlayerProfile, true);
     public static Whitepaper: ComponentRoutes = new ComponentRoutes('/whitepaper', WhitePaper, false);
     public static Tokenomics: ComponentRoutes = new ComponentRoutes('/tokenomics', Tokenomics, false);

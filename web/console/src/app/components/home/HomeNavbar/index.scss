@@ -2,8 +2,6 @@
 
 .ultimatedivision-home-navbar {
     width: 100%;
-    background-color: #2c3c8f;
-    border-bottom: 1px solid rgba(196, 196, 196, 0.3);
 
     .wrapper {
         display: flex;
@@ -13,6 +11,10 @@
         max-width: 1440px;
         height: 92px;
         margin: auto;
+    }
+
+    &__text {
+        display: none;
     }
 
     a {
@@ -25,21 +27,26 @@
     }
 
     &__list {
-        width: 60%;
+        width: 100%;
         display: flex;
         align-items: center;
-        margin: 0 5%;
+        justify-content: center;
+        padding: 40px 0;
 
         &__item {
             list-style: none;
-            margin-right: 38px;
-            font-family: "Russo One", sans-serif;
+            margin-right: 40px;
+            font-family: "Orbitron", sans-serif;
             font-style: normal;
-            font-weight: normal;
-            font-size: 18px;
-            line-height: 22px;
-            cursor: pointer;
+            font-weight: 900;
+            font-size: 14px;
+            line-height: 18px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 2px 3px rgba(8, 36, 80, 0.36);
             white-space: nowrap;
+            cursor: pointer;
 
             &__active {
                 color: white;
@@ -87,60 +94,84 @@
 @media screen and (max-width: $tabletBreakPoint) {
 
     .ultimatedivision-home-navbar {
-
-        &__list {
-            width: 70%;
-
-            &__item {
-                margin-right: 20px;
-            }
-        }
-
-        .ultimatedivision-join-btn {
-            width: 126px;
-            height: 46px;
-            margin: 0 0 0 auto;
-
-            &__text {
-                font-size: 17.8209px;
-                line-height: 19px;
-            }
-        }
-    }
-}
-
-@media screen and (max-width: $phoneBreakPoint) {
-
-    .ultimatedivision-home-navbar {
         position: relative;
 
         &__dropdown {
             z-index: 10;
             display: block;
-            margin: 0 5%;
+            cursor: pointer;
+        }
+
+        .wrapper {
+            z-index: 10;
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            background: #6facff;
+
+            &--active {
+                position: fixed;
+                left: 0;
+                top: 0;
+
+                .ultimatedivision-home-navbar__wrapper {
+                    padding: 42px 32px 20px;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+            }
+        }
+
+        &__wrapper {
+            width: 100%;
+            padding: 42px 32px 22px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+        }
+
+        &__text {
+            display: block;
+            text-transform: uppercase;
+            font-style: normal;
+            font-family: "Orbitron", sans-serif;
+            font-weight: 900;
+            font-size: 18px;
+            line-height: 23px;
+            letter-spacing: 0.06em;
+            color: #26373f;
         }
 
         &__list {
             display: none;
 
             &-active {
-                top: 92px;
-                flex-direction: column;
-                position: absolute;
                 z-index: 5;
+                padding: 0 32px;
+                flex-direction: column;
                 display: block;
-                width: 100%;
+                width: 100vw;
                 height: 100vh;
-                background: #2c3c8f;
+                list-style: none;
 
                 &__item {
-                    border-top: 1px solid rgba($navbarSecondaryColor, 0.2);
                     margin: auto;
-                    padding: 25px;
-                    font-size: 32px;
+                    padding: 22px 0;
+                    text-align: left;
+                    border-bottom: 1.4px solid rgba(38, 55, 63, 0.1);
+                    text-transform: uppercase;
+                    font-style: normal;
+                    font-family: "Orbitron", sans-serif;
+                    font-weight: 700;
+                    font-size: 16px;
+                    line-height: 20px;
+                    letter-spacing: 0.06em;
+                    color: #26373f;
 
                     a {
                         margin: 0;
+                        text-align: left;
                     }
 
                     &__active {
@@ -158,6 +189,42 @@
 
         .ultimatedivision-join-btn {
             display: none;
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
+
+    .ultimatedivision-home-navbar {
+        position: relative;
+
+        &__dropdown {
+            z-index: 10;
+            display: block;
+            cursor: pointer;
+        }
+
+        .wrapper {
+
+            &--active {
+
+                .ultimatedivision-home-navbar__wrapper {
+                    padding: 42px 16px 20px;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+            }
+        }
+
+        &__list {
+
+            &-active {
+                padding: 0 16px;
+            }
+        }
+
+        &__wrapper {
+            padding: 42px 16px 22px;
         }
     }
 }
