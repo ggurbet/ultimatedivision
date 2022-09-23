@@ -113,51 +113,53 @@ export const FilterByVersion: React.FC<{
 
     return (
         <FilterByParameterWrapper showComponent={showFilterByVersion} isVisible={isVisible} title="Version">
-            <div className="filter-item__dropdown-active__switcher">
-                <input
-                    id="division-checkbox-wood"
-                    className="filter-item__dropdown-active__checkbox"
-                    type="checkbox"
-                    checked={isWoodQuality}
-                    onChange={chooseWoodQuality}
-                />
-                <label className="filter-item__dropdown-active__slider" htmlFor="division-checkbox-wood"></label>
-                <p className="filter-item__dropdown-active__text">wood</p>
-            </div>
-            <div className="filter-item__dropdown-active__switcher">
-                <input
-                    id="checkbox-silver"
-                    className="filter-item__dropdown-active__checkbox"
-                    type="checkbox"
-                    checked={isSilverQuality}
-                    onChange={chooseSilverQuality}
-                />
+            <div className="filter-item__dropdown-active__wrapper">
+                <div className="filter-item__dropdown-active__switcher">
+                    <input
+                        id="division-checkbox-wood"
+                        className="filter-item__dropdown-active__checkbox"
+                        type="checkbox"
+                        checked={isWoodQuality}
+                        onChange={chooseWoodQuality}
+                    />
+                    <label className="filter-item__dropdown-active__slider" htmlFor="division-checkbox-wood"></label>
+                    <p className="filter-item__dropdown-active__text">wood</p>
+                </div>
+                <div className="filter-item__dropdown-active__switcher">
+                    <input
+                        id="checkbox-silver"
+                        className="filter-item__dropdown-active__checkbox"
+                        type="checkbox"
+                        checked={isSilverQuality}
+                        onChange={chooseSilverQuality}
+                    />
 
-                <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-silver"></label>
-                <p className="filter-item__dropdown-active__text">silver</p>
-            </div>
-            <div className="filter-item__dropdown-active__switcher">
-                <input
-                    id="checkbox-gold"
-                    className="filter-item__dropdown-active__checkbox"
-                    type="checkbox"
-                    checked={isGoldQuality}
-                    onChange={chooseGoldQuality}
-                />
+                    <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-silver"></label>
+                    <p className="filter-item__dropdown-active__text">silver</p>
+                </div>
+                <div className="filter-item__dropdown-active__switcher">
+                    <input
+                        id="checkbox-gold"
+                        className="filter-item__dropdown-active__checkbox"
+                        type="checkbox"
+                        checked={isGoldQuality}
+                        onChange={chooseGoldQuality}
+                    />
 
-                <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-gold"></label>
-                <p className="filter-item__dropdown-active__text">gold</p>
-            </div>
-            <div className="filter-item__dropdown-active__switcher">
-                <input
-                    id="checkbox-diamond"
-                    className="filter-item__dropdown-active__checkbox"
-                    type="checkbox"
-                    checked={isDiamondQuality}
-                    onChange={chooseDiamondQuality}
-                />
-                <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-diamond"></label>
-                <p className="filter-item__dropdown-active__text">diamond</p>
+                    <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-gold"></label>
+                    <p className="filter-item__dropdown-active__text">gold</p>
+                </div>
+                <div className="filter-item__dropdown-active__switcher">
+                    <input
+                        id="checkbox-diamond"
+                        className="filter-item__dropdown-active__checkbox"
+                        type="checkbox"
+                        checked={isDiamondQuality}
+                        onChange={chooseDiamondQuality}
+                    />
+                    <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-diamond"></label>
+                    <p className="filter-item__dropdown-active__text">diamond</p>
+                </div>
             </div>
             <input value="APPLY" type="submit" className="filter-item__dropdown-active__apply" onClick={handleSubmit} />
         </FilterByParameterWrapper>

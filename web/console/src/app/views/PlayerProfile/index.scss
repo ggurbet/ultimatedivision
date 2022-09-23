@@ -23,7 +23,7 @@
             position: absolute;
             width: 421px;
             height: 268px;
-            background: linear-gradient(260.42deg, #FF00CB 14.71%, #00A3FF 96.59%);
+            background: linear-gradient(260.42deg, #ff00cb 14.71%, #00a3ff 96.59%);
             filter: blur(244px);
         }
 
@@ -35,13 +35,13 @@
 
         .player-name {
             z-index: 1;
-            font-family: 'BebasNeue', sans-serif;
+            font-family: "BebasNeue", sans-serif;
             font-style: normal;
             font-weight: normal;
             font-size: 48px;
             line-height: 58px;
             text-align: center;
-            color: #FFFFFF;
+            color: #fff;
         }
     }
 }

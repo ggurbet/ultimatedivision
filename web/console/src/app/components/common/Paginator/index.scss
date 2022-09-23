@@ -42,14 +42,14 @@
 
     &__previous,
     &__next {
-        cursor: pointer;
         color: #f5ff63;
+        cursor: pointer;
     }
 
     &__previous-not-active,
     &__next-not-active {
-        cursor: not-allowed;
         color: #c3dcbb;
+        cursor: not-allowed;
     }
 
     &__pages {
@@ -58,7 +58,6 @@
 
         &__item,
         &__item-active {
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -73,6 +72,7 @@
             font-weight: 700;
             font-size: 12px;
             line-height: 15px;
+            cursor: pointer;
         }
 
         &__item-active {

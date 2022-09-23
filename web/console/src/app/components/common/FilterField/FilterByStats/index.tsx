@@ -217,15 +217,13 @@ export const FilterByStats: React.FC<{
                     changeMinValue={stat.changeMinValue}
                     changeMaxValue={stat.changeMaxValue}
                 />)}
-                <div className="filter-item__dropdown-active__stats">
+                <div className="filter-item__dropdown-active__stats__buttons">
                     <input
                         value="APPLY"
                         type="submit"
                         className="filter-item__dropdown-active__stats__apply"
                         onClick={handleSubmit}
                     />
-                </div>
-                <div className="filter-item__dropdown-active__stats">
                     <input
                         type="submit"
                         className="filter-item__dropdown-active__stats__clear"
@@ -233,6 +231,7 @@ export const FilterByStats: React.FC<{
                         onClick={clearStats}
                     />
                 </div>
+
             </div>
         </FilterByParameterWrapper>
     );

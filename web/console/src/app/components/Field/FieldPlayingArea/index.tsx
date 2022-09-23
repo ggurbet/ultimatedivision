@@ -9,7 +9,7 @@ import { FieldControlsArea } from '@components/Field/FieldControlsArea';
 import { CardEditIdentificators } from '@/api/club';
 import { RootState } from '@/app/store';
 import { Club, FormationsType, Squad, SquadCard } from '@/club';
-import { deleteCard, setDragStart } from '@/app/store/actions/clubs';
+import { deleteCard, setDragStart, startSearchingMatch } from '@/app/store/actions/clubs';
 import { FieldCardsFromation } from './FieldCardsFormation';
 import { FieldCardsShadows } from './FieldCardsShadows';
 
@@ -19,6 +19,8 @@ import './index.scss';
 import { Card } from '@/card';
 
 export const FieldPlayingArea: React.FC = () => {
+    const EMPTY_CARD_ID = '00000000-0000-0000-0000-000000000000';
+
     const dispatch = useDispatch();
 
     const cards: Card[] = useSelector((state: RootState) => state.cardsReducer.cardsPage.cards);
@@ -26,6 +28,7 @@ export const FieldPlayingArea: React.FC = () => {
     const dragStartIndex: number | null = useSelector((state: RootState) => state.clubsReducer.options.dragStart);
     const club: Club = useSelector((state: RootState) => state.clubsReducer.activeClub);
     const squad: Squad = useSelector((state: RootState) => state.clubsReducer.activeClub.squad);
+    const squadCards = useSelector((state: RootState) => state.clubsReducer.activeClub.squadCards);
 
     const [currentCard, setCurrentCard] = useState<Element | null>(null);
     /** MouseMove event Position */
@@ -37,6 +40,7 @@ export const FieldPlayingArea: React.FC = () => {
         x: 0,
         y: 0,
     });
+    const [isPossibleToStartMatch, setIsPossibleToStartMatch] = useState<boolean>(true);
 
     /** Gets playing area position */
     useEffect(() => {
@@ -57,6 +61,15 @@ export const FieldPlayingArea: React.FC = () => {
 
         return id !== defaultId;
     }
+
+    /** Shows matchFinder component */
+    const showMatchFinder = () => {
+        dispatch(startSearchingMatch(true));
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    };
 
     /** deleting card when release beyond playing area */
     function removeFromArea() {
@@ -90,6 +103,14 @@ export const FieldPlayingArea: React.FC = () => {
 
         setCurrentCard(null);
     };
+    useEffect(() => {
+        /** Function checks field cards and compare it with player cards array */
+        function isPossibleToStart() {
+            const emptyCard = squadCards.find((squadCard: SquadCard) => squadCard.card.id === EMPTY_CARD_ID);
+            emptyCard ? setIsPossibleToStartMatch(false) : setIsPossibleToStartMatch(true);
+        }
+        isPossibleToStart();
+    });
 
     return (
         <div
@@ -117,6 +138,13 @@ export const FieldPlayingArea: React.FC = () => {
                 </div>
                 <img src={footballField} className="playing-area__field" />
             </div>
+            <input
+                type="button"
+                value="Play"
+                className="playing-area__play"
+                onClick={showMatchFinder}
+                disabled={isPossibleToStartMatch}
+            />
         </div>
     );
 };

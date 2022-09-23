@@ -4,24 +4,27 @@
 @import "@/index.scss";
 
 .filter-field {
-    margin: 140px auto 60px;
+    margin: 10px auto 60px;
 
     &__use-filters {
+        display: none;
+    }
+
+    &__mobile {
         display: none;
     }
 
     &__list {
         display: flex;
         align-items: center;
-        margin: 0 auto;
-        padding: 12px 30px;
         height: 44px;
         width: min-content;
+        margin: 0 auto;
+        padding: 12px 30px;
         list-style: none;
         border: 3px solid #f5ff63;
-        font-family: "Montserrat", sans-serif;
-        box-shadow: 0 10px 14px rgba(0, 23, 58, 0.14);
         border-radius: 24px;
+        box-shadow: 0 10px 14px rgba(0, 23, 58, 0.14);
         background: rgba(255, 255, 255, 0.12);
 
         &__item {
@@ -31,21 +34,21 @@
             }
 
             &__search {
-                cursor: pointer;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
                 width: 154px;
-                color: #f5ff63;
-                font-family: "Orbitron", sans-serif;
+                text-align: center;
                 font-style: normal;
+                text-transform: lowercase;
+                font-family: "Orbitron", sans-serif;
                 font-weight: 600;
                 font-size: 16px;
                 line-height: 20px;
-                text-align: center;
                 letter-spacing: 0.12em;
-                text-transform: lowercase;
+                color: #f5ff63;
+                cursor: pointer;
 
                 .filter-field__list__item__picture {
                     margin-right: 7px;
@@ -71,49 +74,82 @@
     }
 }
 
-@media (max-width: $desktopBreakPoint) {
+@media (max-width: $tabletBreakPoint) {
 
     .filter-field {
+        margin: 0;
+        margin-bottom: 40px;
 
         &__list {
-            background-image: none;
+            display: none;
 
-            &__item {
-                display: none;
+            &__item:not(:last-child) {
+                margin-right: 0;
+            }
+        }
+
+        &__mobile {
+            overscroll-behavior: none;
+            display: none;
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            z-index: 13;
+            top: 0;
+            left: 0;
+            background: $pageBackground;
+
+            &--active {
+                display: block;
+            }
+
+            &__list {
+                list-style: none;
+            }
+
+            &__content {
+                padding: 30px 40px 30px;
+            }
+
+            &__top-side {
+                position: relative;
+                margin-bottom: 42px;
+
+                &__arrow-left {
+                    z-index: 20;
+                    position: absolute;
+                    left: 5px;
+                    top: 0;
+                    cursor: pointer;
+                }
+
+                &__title {
+                    text-align: center;
+                    text-transform: uppercase;
+                    font-style: normal;
+                    font-family: "Orbitron", sans-serif;
+                    font-weight: 900;
+                    font-size: 20px;
+                    line-height: 25px;
+                    letter-spacing: 0.06em;
+                    color: #26373f;
+                }
             }
         }
 
         &__use-filters {
-            display: block;
-            position: absolute;
-            left: 10vw;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
 
             &__title {
-                display: inline-block;
-                height: 46px;
-                font-size: 24px;
-                color: white;
-                vertical-align: middle;
-                margin-left: 20px;
-            }
-        }
-
-        &__wrapper {
-
-            &:before {
-                top: -15px;
-                left: 10vw;
-                width: 80vw;
-                height: 2px;
-                background: $marketPlaceBorderColor;
-            }
-
-            &:after {
-                bottom: -15px;
-                right: 10vw;
-                width: 80vw;
-                height: 2px;
-                background: $marketPlaceBorderColor;
+                font-style: normal;
+                font-family: "Orbitron", sans-serif;
+                font-weight: 600;
+                font-size: 18px;
+                line-height: 23px;
+                letter-spacing: 0.06em;
+                color: #131415;
             }
         }
     }

@@ -52,7 +52,7 @@ export const setDragTarget = (index: dragParamType = DEFAULT_CARD_INDEX) => ({
     index,
 });
 
-/** shows MatchFinder component that exposes logic of searching matches */
+/** Shows MatchFinder component that exposes logic of searching matches */
 export const startSearchingMatch = (isSearchingMatch: boolean) => ({
     type: START_SEARCHING_MATCH,
     isSearchingMatch,

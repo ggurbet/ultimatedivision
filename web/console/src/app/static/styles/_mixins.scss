@@ -3,6 +3,16 @@
     left: calc(#{$left} - 100px / 2);
 }
 
+@mixin footballFieldCardPositionDesktop($top, $left) {
+    top: calc(#{$top} - 162px / 2);
+    left: calc(#{$left} - 68px / 2);
+}
+
+@mixin footballFieldCardPositionTablet($top, $left) {
+    top: calc(#{$top} - 90px / 2);
+    left: calc(#{$left} - 50px / 2);
+}
+
 @mixin footballFieldCardPositionPhone($top, $left) {
     top: calc(#{$top} - 162px / 2);
     left: calc(#{$left} - 50px / 2);

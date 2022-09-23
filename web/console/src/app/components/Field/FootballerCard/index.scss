@@ -2,6 +2,7 @@
 //See LICENSE for copying information.
 
 @import "@/index.scss";
+
 /* stylelint-disable */
 .footballer-card {
     width: 102%;
@@ -17,31 +18,24 @@
         width: 105%;
         height: 107%;
         position: absolute;
-        background: linear-gradient(
-                    to right,
-                    #fff 20px,
-                    rgba(0, 0, 0, 0) 0,
-                    rgba(0, 0, 0, 0) 95px,
-                    rgba(0, 0, 0, 0) 0,
-                    #fff 20px
-                )
-                top/115px 2px repeat-x,
+        background: linear-gradient(to right,
+                #fff 20px,
+                rgba(0, 0, 0, 0) 0,
+                rgba(0, 0, 0, 0) 95px,
+                rgba(0, 0, 0, 0) 0,
+                #fff 20px) top/115px 2px repeat-x,
             /* top */
-                linear-gradient(#fff 30px, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 170px, rgba(0, 0, 0, 0) 0, #fff 20px)
-                right/2px 200px repeat-y,
+            linear-gradient(#fff 30px, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 170px, rgba(0, 0, 0, 0) 0, #fff 20px) right/2px 200px repeat-y,
             /* right */
-                linear-gradient(
-                    to right,
-                    #fff 20px,
-                    rgba(0, 0, 0, 0) 0,
-                    rgba(0, 0, 0, 0) 95px,
-                    rgba(0, 0, 0, 0) 0,
-                    #fff 20px
-                )
-                bottom/115px 2px repeat-x,
+            linear-gradient(to right,
+                #fff 20px,
+                rgba(0, 0, 0, 0) 0,
+                rgba(0, 0, 0, 0) 95px,
+                rgba(0, 0, 0, 0) 0,
+                #fff 20px) bottom/115px 2px repeat-x,
             /* bottom */
-                linear-gradient(#fff 30px, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 170px, rgba(0, 0, 0, 0) 0, #fff 20px)
-                left/2px 200px repeat-y; /* left */
+            linear-gradient(#fff 30px, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 170px, rgba(0, 0, 0, 0) 0, #fff 20px) left/2px 200px repeat-y;
+        /* left */
     }
 
     &__wrapper-inactive {
@@ -79,10 +73,12 @@
             left: 50%;
             transform: translateX(-50%);
         }
+
         &::after {
             content: "";
             position: absolute;
             background: url("@static/img/FieldPage/delete-card-icon.svg");
+            background-size: cover;
             left: 50%;
             top: 50%;
             width: 18px;
@@ -93,5 +89,65 @@
 
     &__control-inactive {
         display: none;
+    }
+}
+
+
+@media screen and (max-width: $desktopBreakPoint) {
+    .footballer-card {
+        &__control-active {
+            right: 8px;
+            width: 20px;
+            height: 22px;
+
+            &:before {
+                top: 20px;
+                border-width: 9px 10px 0 10px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $tabletBreakPoint) {
+    .footballer-card {
+        &__control-active {
+            right: 5px;
+            width: 15px;
+            height: 17px;
+
+            &:before {
+                top: 15px;
+                border-width: 6px 7px 0 7px;
+            }
+
+            &::after {
+                width: 12px;
+                height: 12px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
+    .footballer-card {
+        &__control-active {
+            .footballer-card {
+                &__control-active {
+                    right: 5px;
+                    width: 13px;
+                    height: 15px;
+
+                    &:before {
+                        top: 13px;
+                        border-width: 4px 5px 0 5px;
+                    }
+
+                    &::after {
+                        width: 10px;
+                        height: 10px;
+                    }
+                }
+            }
+        }
     }
 }

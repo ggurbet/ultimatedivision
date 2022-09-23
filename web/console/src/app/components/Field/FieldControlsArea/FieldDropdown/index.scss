@@ -67,7 +67,7 @@
 
             &:checked {
 
-                & ~ .field-dropdown__item__label {
+                & + .field-dropdown__item__label {
 
                     & .field-dropdown__item__radio {
                         border: 1px solid #f5ff63;
@@ -127,6 +127,67 @@
                     width: 18px;
                     height: 18px;
                 }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
+
+    .field-dropdown {
+        margin-bottom: 16px;
+        position: unset;
+        display: block;
+        display: flex;
+        flex-direction: column;
+        transform: none;
+        height: auto;
+
+        &__desktop {
+            display: none;
+        }
+
+        &__item {
+            width: 100%;
+            min-width: 100%;
+            max-width: 100%;
+
+            &__label {
+                width: 100%;
+            }
+
+            &__input {
+
+                &:checked {
+
+                    & + .field-dropdown__item__label {
+
+                        & .field-dropdown__item__radio {
+                            border: 1px solid #f5ff63;
+                            background: none;
+
+                            &:after {
+                                content: "";
+                                position: absolute;
+                                width: 8.3px;
+                                height: 8.3px;
+                                background: #f5ff63;
+                                border-radius: 50%;
+                                right: 4.2px;
+                                top: 50%;
+                                transform: translateY(-50%);
+                            }
+                        }
+
+                        & .field-dropdown__item__text {
+                            color: #f5ff63;
+                        }
+                    }
+                }
+            }
+
+            &:not(:last-child) {
+                margin-bottom: 17px;
             }
         }
     }

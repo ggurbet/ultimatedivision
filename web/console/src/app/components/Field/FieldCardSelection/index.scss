@@ -4,7 +4,7 @@
     padding: 40px 0 0;
 
     &__list {
-        width: 80%;
+        width: 100%;
         max-width: 1380px;
         margin: 0 auto;
         padding: 40px 0;
@@ -20,25 +20,24 @@
     }
 
     &__card {
-        text-decoration: none;
-        width: 178px;
         position: relative;
-        background: none;
+        width: 178px;
         border-radius: 10px;
         box-shadow: white;
-        margin: 20px;
+        text-decoration: none;
+        background: none;
         cursor: pointer;
 
         &__picture {
-            text-decoration: none;
             width: 178px;
+            text-decoration: none;
             background: none;
             border-radius: 10px;
             box-shadow: white;
         }
 
         &__selected {
-            cursor: not-allowed;
+            cursor: pointer;
             position: relative;
 
             &__label {
@@ -75,6 +74,7 @@
                     z-index: 4;
                     position: absolute;
                     background: url("@static/img/FieldPage/checked-icon.svg");
+                    background-size: cover;
                     left: 50%;
                     top: 80%;
                     width: 18px;
@@ -183,6 +183,11 @@
         &__list {
             grid-template-columns: repeat(4, 1fr);
             column-gap: 0;
+            padding: 0 70px 60px;
+        }
+
+        &__card {
+            width: auto;
         }
     }
 }
@@ -190,9 +195,14 @@
 @media (max-width: $tabletBreakPoint) {
 
     .card-selection {
+        width: 100%;
+        max-width: 100%;
 
         &__list {
+            width: 100%;
+            max-width: 100%;
             grid-template-columns: repeat(3, 1fr);
+            padding: 0;
         }
     }
 }
@@ -202,7 +212,48 @@
     .card-selection {
 
         &__list {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        &__card {
+            margin: 0;
+
+            &__picture {
+                width: 106px;
+                height: 159.67px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $phoneBreakPoint) {
+
+    .card-selection {
+
+        &__card {
+
+            &__selected {
+                position: relative;
+                cursor: pointer;
+
+                &__label {
+                    position: absolute;
+                    right: 10px;
+                    top: 3px;
+                    width: 20px;
+                    height: 22px;
+
+                    &:before {
+                        top: 20px;
+                        border-width: 9px 10px 0 10px;
+                    }
+
+                    &:after {
+                        width: 17px;
+                        height: 17px;
+                    }
+                }
+            }
         }
     }
 }

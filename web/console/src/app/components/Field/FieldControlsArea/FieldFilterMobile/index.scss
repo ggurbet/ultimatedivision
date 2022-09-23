@@ -1,0 +1,133 @@
+@import "@/index.scss";
+
+.field-filter {
+    z-index: 13;
+    position: fixed;
+    overflow-y: hidden;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    display: block;
+    background: $pageBackground;
+    background-attachment: fixed;
+
+    &__content {
+        overflow: scroll;
+        max-height: 100vh;
+        min-height: 100vh;
+        padding: 20px 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    &__top-side {
+        position: relative;
+        margin-bottom: 42px;
+
+        &__arrow-left {
+            z-index: 20;
+            position: absolute;
+            left: 5px;
+            top: 0;
+            cursor: pointer;
+        }
+
+        &__title {
+            text-align: center;
+            text-transform: uppercase;
+            font-style: normal;
+            font-family: "Orbitron", sans-serif;
+            font-weight: 900;
+            font-size: 20px;
+            line-height: 25px;
+            letter-spacing: 0.06em;
+            color: #26373f;
+        }
+    }
+
+    &__settings__item {
+        overflow: hidden;
+        user-select: none;
+        width: 100%;
+        padding: 20px 18px;
+        margin-bottom: 16px;
+        border: 2px solid #f5ff63;
+        border-radius: 12px;
+        text-transform: uppercase;
+        font-style: normal;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 800;
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: 0.06em;
+        color: #26373f;
+        box-shadow: 0 6px 14px rgba(0, 23, 58, 0.14);
+        backdrop-filter: blur(22px);
+        background: rgba(255, 255, 255, 0.12);
+        cursor: pointer;
+
+        &--active {
+            margin-bottom: 10px;
+        }
+
+        &:not(:last-child) {
+            margin-right: 50px;
+        }
+
+        &__heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+            color: black;
+            font-family: "Orbitron", sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+        }
+
+        &__title {
+            margin-right: 17px;
+        }
+
+        &__image {
+            transform: rotate(0deg);
+            transition: transform 0.5s;
+        }
+    }
+
+    &__save-button {
+        width: 100%;
+        border: none;
+        outline: none;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 14px 22px;
+        border-radius: 6px;
+        text-align: center;
+        text-transform: uppercase;
+        font-style: normal;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        font-size: 18px;
+        line-height: 23px;
+        letter-spacing: 0.12em;
+        background: #1f2d34;
+        color: #fff;
+        cursor: pointer;
+    }
+}
+
+@media screen and (min-width: $phoneBreakPoint) {
+
+    .field-filter {
+        display: none;
+    }
+}

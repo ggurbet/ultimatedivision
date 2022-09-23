@@ -2,11 +2,15 @@
 
 .field-controls {
     position: relative;
-    height: 300px;
+    height: 60px;
     width: min-content;
     margin: 0 auto;
     display: flex;
     flex-direction: row;
+
+    &__filter {
+        display: none;
+    }
 
     &__wrapper {
         display: flex;
@@ -16,14 +20,14 @@
     }
 
     &__settings {
-        height: 44px;
-        padding: 11.5px 31px;
-        font-family: "Montserrat", sans-serif;
         display: flex;
         flex-direction: row;
-        box-shadow: 0 10px 14px rgba(0, 0, 0, 0.14);
-        border-radius: 24px;
+        height: 44px;
+        padding: 11.5px 31px;
         border: 3px solid #f5ff63;
+        border-radius: 24px;
+        font-family: "Montserrat", sans-serif;
+        box-shadow: 0 10px 14px rgba(0, 0, 0, 0.14);
         background: rgba(255, 255, 255, 0.12);
 
         &__item {
@@ -42,14 +46,14 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                cursor: pointer;
                 transition: background-color 0.3s;
                 text-transform: uppercase;
-                color: black;
                 font-family: "Orbitron", sans-serif;
                 font-weight: 700;
                 font-size: 16px;
                 letter-spacing: 0.12em;
+                color: black;
+                cursor: pointer;
             }
 
             &__title {
@@ -64,21 +68,21 @@
     }
 
     &__play {
+        cursor: pointer;
         position: absolute;
         right: -240px;
-        background: #f5ff63;
-        box-shadow: 0 12px 14px rgba(9, 51, 82, 0.22);
-        border-radius: 10px;
         width: 200px;
         height: 44px;
         border: none;
-        cursor: pointer;
-        font-family: "Orbitron", sans-serif;
+        border-radius: 10px;
+        box-shadow: 0 12px 14px rgba(9, 51, 82, 0.22);
+        text-transform: uppercase;
         font-style: normal;
+        font-family: "Orbitron", sans-serif;
         font-weight: 900;
         font-size: 18px;
         letter-spacing: 0.12em;
-        text-transform: uppercase;
+        background: #f5ff63;
 
         &:disabled {
             opacity: 0.3;
@@ -99,28 +103,37 @@
 
 @media screen and (max-width: $tabletBreakPoint) {
 
-    .field-controls-area {
-        width: 100%;
-        margin: 1% 0;
+    .field-controls {
+        margin: 0 auto;
         max-width: none;
+        height: 100px;
 
-        &__wrapper {
-            width: 100%;
-            max-width: unset;
-        }
-
-        &__title {
-            font-size: 24px;
+        &__play {
+            display: none;
         }
     }
 }
 
 @media screen and (max-width: $phoneBreakPoint) {
 
-    .field-controls-area {
+    .field-controls {
+        margin-left: 22px;
 
-        &__title {
-            font-size: 24px;
+        &__settings {
+            display: none;
+        }
+
+        &__filter {
+            display: flex;
+            align-items: center;
+            font-family: "Orbitron", sans-serif;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 23px;
+            letter-spacing: 0.06em;
+            color: #131415;
+            cursor: pointer;
         }
     }
 }

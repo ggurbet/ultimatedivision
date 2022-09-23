@@ -66,27 +66,29 @@ export const FilterByStatus: React.FC = () => {
 
     return (
         <FilterByParameterWrapper showComponent={showFilterByStatus} isVisible={isVisible} title="Status">
-            <div className="filter-item__dropdown-active__switcher">
-                <input
-                    id="checkbox-locked"
-                    className="filter-item__dropdown-active__checkbox"
-                    type="checkbox"
-                    onClick={chooseLockedStatus}
-                />
+            <div className="filter-item__dropdown-active__wrapper">
+                <div className="filter-item__dropdown-active__switcher">
+                    <input
+                        id="checkbox-locked"
+                        className="filter-item__dropdown-active__checkbox"
+                        type="checkbox"
+                        onClick={chooseLockedStatus}
+                    />
 
-                <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-locked"></label>
-                <p className="filter-item__dropdown-active__text">Locked</p>
-            </div>
-            <div className="filter-item__dropdown-active__switcher">
-                <input
-                    id="checkbox-unlocked"
-                    className="filter-item__dropdown-active__checkbox"
-                    type="checkbox"
-                    onClick={chooseUnlockedStatus}
-                />
+                    <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-locked"></label>
+                    <p className="filter-item__dropdown-active__text">Locked</p>
+                </div>
+                <div className="filter-item__dropdown-active__switcher">
+                    <input
+                        id="checkbox-unlocked"
+                        className="filter-item__dropdown-active__checkbox"
+                        type="checkbox"
+                        onClick={chooseUnlockedStatus}
+                    />
 
-                <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-unlocked"></label>
-                <p className="filter-item__dropdown-active__text"> Unlocked</p>
+                    <label className="filter-item__dropdown-active__slider" htmlFor="checkbox-unlocked"></label>
+                    <p className="filter-item__dropdown-active__text"> Unlocked</p>
+                </div>
             </div>
             <input value="APPLY" type="submit" className="filter-item__dropdown-active__apply" onClick={handleSubmit} />
         </FilterByParameterWrapper>

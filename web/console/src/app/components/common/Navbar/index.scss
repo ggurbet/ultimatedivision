@@ -28,7 +28,6 @@
         align-items: center;
 
         &__item {
-            cursor: pointer;
             margin-right: 40px;
             list-style: none;
             font-family: "Orbitron", sans-serif;
@@ -38,6 +37,7 @@
             line-height: 18px;
             letter-spacing: 0.12em;
             text-transform: uppercase;
+            cursor: pointer;
 
             &__active {
                 text-decoration: none;
@@ -91,11 +91,11 @@
             }
 
             &__button {
-                cursor: pointer;
                 padding: 0;
                 background: none;
                 border: none;
                 outline: none;
+                cursor: pointer;
             }
 
             &__menu {

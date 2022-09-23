@@ -69,6 +69,7 @@ export type FormationsType =
     | '5-3-2'
     | '4-5-1';
 
+
 export type TacticsType = 'attack' | 'defence' | 'balanced';
 
 /* eslint-disable no-magic-numbers */
