@@ -3,27 +3,22 @@
 
 import { JoinButton } from '@components/common/JoinButton';
 
-import cardsDesktop from '@static/img/gameLanding/main/cards-desktop.svg';
-import cardsTablet from '@static/img/gameLanding/main/cards-tablet.svg';
-import fieldDesktop from '@static/img/gameLanding/main/field-desktop.svg';
-import fieldTablet from '@static/img/gameLanding/main/field-tablet.svg';
+import field from '@static/img/gameLanding/main/field.png';
+import fieldAnimation from '@static/img/gameLanding/main/field-animation.gif';
 
 import './index.scss';
 
 export const FootballGame: React.FC = () =>
     <section className="football-game">
-        <picture>
-            <source media="(min-width: 1024px)" srcSet={cardsDesktop} />
-            <source media="(max-width: 1023px)" srcSet={cardsTablet} />
-            <img className="football-game__cards" src={cardsDesktop} alt="Player cards" />
+        <div className="football-game__info">
+            <h1 className="football-game__title">ULTIMATE <span className="football-game__title__second-part">DIVISION</span></h1>
+            <h2 className="football-game__subtitle">Football P2E Game</h2>
+            <div className="football-game__button-desktop"><JoinButton /></div>
+        </div>
+        <picture className="football-game__field">
+            <img className="football-game__field__bg" src={field} alt="Football field" />
+            <img className="football-game__field__animation" src={fieldAnimation} alt="Football field" />
         </picture>
-        <span className="football-game__title">ULTIMATE DIVISION</span>
-        <span className="football-game__subtitle">Football P2E Game</span>
-        <JoinButton />
-        <picture>
-            <source media="(min-width: 1024px)" srcSet={fieldDesktop} />
-            <source media="(max-width: 1023px)" srcSet={fieldTablet} />
-            <img className="football-game__field" src={fieldDesktop} alt="Football field" />
-        </picture>
+        <div className="football-game__button-mobile"><JoinButton /></div>
     </section>;
 

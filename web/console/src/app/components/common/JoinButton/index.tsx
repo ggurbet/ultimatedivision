@@ -26,7 +26,7 @@ export const JoinButton: React.FC = () => {
 
     const joinButton = () => {
         if (isLoggined) {
-            history.push(RouteConfig.MarketPlace.path);
+            history.push(RouteConfig.Store.path);
         } else {
             setIsRegistrationRequired(true);
         }
