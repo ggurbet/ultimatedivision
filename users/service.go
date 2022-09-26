@@ -98,6 +98,7 @@ func (service *Service) GetProfile(ctx context.Context, userID uuid.UUID) (*Prof
 	}
 
 	return &Profile{
+		ID:        user.ID,
 		Email:     user.Email,
 		NickName:  user.NickName,
 		CreatedAt: user.CreatedAt,
