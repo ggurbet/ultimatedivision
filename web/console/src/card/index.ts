@@ -1,27 +1,10 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import diamond from '@static/img/MarketPlacePage/marketPlaceCardsGroup/diamond2.svg';
-import gold from '@static/img/MarketPlacePage/marketPlaceCardsGroup/gold2.svg';
-import silver from '@static/img/MarketPlacePage/marketPlaceCardsGroup/silver2.svg';
-import wood from '@static/img/MarketPlacePage/marketPlaceCardsGroup/wood2.svg';
-
 import diamondShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/diamondShadow.svg';
 import goldShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/goldShadow.svg';
 import silverShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/silverShadow.svg';
 import woodShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/woodShadow.svg';
-
-import currentBid from '@static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/bid.svg';
-import minimumPrice from '@static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/minimum.svg';
-import purchased from '@static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/purchased.svg';
-
-import confirmIcon from '@static/img/MarketPlacePage/MyCard/ok.svg';
-import priceGoldIcon from '@static/img/MarketPlacePage/MyCard/goldPrice.svg';
-import playerFace from '@static/img/MarketPlacePage/marketPlaceCardsGroup/player.svg';
-import priceIcon from '@static/img/MarketPlacePage/marketPlaceCardsGroup/marketPlaceFootballerCard/price.svg';
-
-import checked from '@static/img/FootballerCardPage/checked.svg';
-import star from '@static/img/FootballerCardPage/star.svg';
 
 const DEFAULT_VALUE = 0;
 /** class for our getters to get label and value while mapping */

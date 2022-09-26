@@ -7,5 +7,6 @@ export const PlayerCard: React.FC<{ className: string; id: string; index?: numbe
             className={className}
             src={`${window.location.origin}/avatars/${id}.png`}
             id={index?.toString()}
+            alt="player card"
         />;
 

@@ -13,7 +13,7 @@ export class MarketplaceClient extends APIClient {
     public queryParameters: CardsQueryParameters = new CardsQueryParameters();
 
     /** Changes queryParameters object. */
-    public changeLotsQueryParameters(queryParameters: CardsQueryParametersField[]) {
+    public changeLotsQueryParameters(queryParameters: CardsQueryParametersField[]): void {
         queryParameters.forEach(queryParameter => {
             for (const queryProperty in queryParameter) {
                 if (queryParameter) {

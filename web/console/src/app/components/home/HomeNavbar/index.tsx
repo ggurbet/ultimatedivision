@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 import { RouteConfig } from '@/app/routes';
 
@@ -13,11 +13,15 @@ import { CloseDropdownIcon, DropdownIcon } from '@/app/static/img/Navbar';
 import './index.scss';
 
 const HomeNavbar: React.FC = () => {
+    const location = useLocation();
+
     const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false);
 
     /** Сlass visibility for navbar items. */
-    const navbarClassName = isDropdownActive ? '-active' : '';
+    const navbarListClassName = isDropdownActive ? 'ultimatedivision-home-navbar__list-active' : '';
     const navbarWrapperClassName = isDropdownActive ? 'wrapper--active' : '';
+
+    const checkIsHomePage = (path: string) => path ==='/home' && location.pathname === '/' ? 'active' : '';
 
     const changeNavbarDropdownActivity = () => {
         setIsDropdownActive(!isDropdownActive);
@@ -46,17 +50,17 @@ const HomeNavbar: React.FC = () => {
                 </div>
 
                 <ul
-                    className={`ultimatedivision-home-navbar__list${navbarClassName}`}
+                    className={`ultimatedivision-home-navbar__list ${navbarListClassName}`}
                 >
                     {navbarItems.map((item, index) =>
                         <li
                             key={index}
-                            className={`ultimatedivision-home-navbar__list${navbarClassName}__item`}
+                            className="ultimatedivision-home-navbar__list__item"
                         >
                             <NavLink
                                 key={index}
                                 to={item.path}
-                                className={`ultimatedivision-home-navbar__list${navbarClassName}__item__active`}
+                                className={`ultimatedivision-home-navbar__list__item__active ${checkIsHomePage(item.path)}`}
                                 onClick={() => changeNavbarDropdownActivity()}
                             >
                                 {item.pageName}

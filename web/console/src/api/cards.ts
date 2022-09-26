@@ -11,7 +11,7 @@ export class CardsClient extends APIClient {
     public queryParameters: CardsQueryParameters = new CardsQueryParameters();
 
     /** Changes queryParameters object. */
-    public changeCardsQueryParameters(queryParameters: CardsQueryParametersField[]) {
+    public changeCardsQueryParameters(queryParameters: CardsQueryParametersField[]): void {
         queryParameters.forEach(queryParameter => {
             for (const queryProperty in queryParameter) {
                 if (queryParameter) {
@@ -29,7 +29,7 @@ export class CardsClient extends APIClient {
         let queryParametersPath = '';
 
         /** Adds qualities query parameters to query path. */
-        const addQualitiesQueryParameters = (queryParameter: string, quality: string) => {
+        const addQualitiesQueryParameters = (queryParameter: string, quality: string): void => {
             queryParametersPath += `&${queryParameter}=${quality}`;
         };
 

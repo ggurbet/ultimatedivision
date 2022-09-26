@@ -2,9 +2,9 @@
 // See LICENSE for copying information.
 
 import { FootballerCardIllustrationsRadar } from '@/app/components/common/Card/CardIllustrationsRadar';
+import { PlayerCard } from '@components/common/PlayerCard';
 
 import { Card } from '@/card';
-import { PlayerCard } from '@components/common/PlayerCard';
 
 import './index.scss';
 

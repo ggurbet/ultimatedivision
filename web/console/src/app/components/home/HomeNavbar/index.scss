@@ -81,7 +81,6 @@
         cursor: pointer;
 
         &__text {
-            font-family: "Hanson", sans-serif;
             font-style: normal;
             font-weight: bold;
             font-size: 17.8209px;
@@ -155,7 +154,7 @@
                 height: 100vh;
                 list-style: none;
 
-                &__item {
+                .ultimatedivision-home-navbar__list__item {
                     margin: auto;
                     padding: 22px 0;
                     text-align: left;

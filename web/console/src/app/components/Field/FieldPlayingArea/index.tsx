@@ -136,7 +136,7 @@ export const FieldPlayingArea: React.FC = () => {
                 <div className={`playing-area__${formation}-shadows`}>
                     <FieldCardsShadows club={club} isCardDefined={isCardDefined} />
                 </div>
-                <img src={footballField} className="playing-area__field" />
+                <img src={footballField} className="playing-area__field" alt="football field" />
             </div>
             <input
                 type="button"

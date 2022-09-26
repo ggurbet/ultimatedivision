@@ -21,8 +21,11 @@ import { ServicePlugin } from '@/app/plugins/service';
 import { EthersClient } from '@/api/ethers';
 import { NotFoundError } from '@/api';
 import { SignedMessage } from '@/app/ethers';
-import { UsersClient } from '@/api/users';
-import { UsersService } from '@/users/service';
+
+import { VelasClient } from '@/api/velas';
+import { VelasService } from '@/velas/service';
+import { CasperClient } from '@/api/casper';
+import { CasperService } from '@/casper/service';
 
 import representLogo from '@static/img/login/represent-logo.gif';
 import metamask from '@static/img/login/metamask-icon.svg';
@@ -37,8 +40,12 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
     const ethersService = useMemo(() => ServicePlugin.create(), []);
     const client = useMemo(() => new EthersClient(), []);
 
-    const usersClient = new UsersClient();
-    const usersService = new UsersService(usersClient);
+    const velasClient = new VelasClient();
+    const velasService = new VelasService(velasClient);
+
+    const casperClient = new CasperClient();
+    const casperService = new CasperService(casperClient);
+
     const history = useHistory();
 
     const [setLocalStorageItem, getLocalStorageItem] = useLocalStorage();
@@ -46,7 +53,7 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
     /** generates vaclient with the help of creds  */
     const vaclientService = async() => {
         try {
-            const creds = await usersService.velasVaclientCreds();
+            const creds = await velasService.vaclientCreds();
 
             const vaclient = new VAClient({
                 mode: 'redirect',
@@ -84,7 +91,7 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
 
     const contentVelas = async() => {
         try {
-            const csrfToken = await usersService.velasCsrfToken();
+            const csrfToken = await velasService.csrfToken();
 
             const vaclient = await vaclientService();
             vaclient.authorize(
@@ -114,13 +121,13 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
 
     const loginCasper = async(publicKey: string) => {
         const encrypt = new JSEncrypt();
-        const message = await usersService.casperNonce(publicKey);
+        const message = await casperService.nonce(publicKey);
 
         encrypt.setPublicKey(message);
         const encrypted = encrypt.encrypt(publicKey);
 
         if (encrypted) {
-            await usersService.casperLogin(message, encrypted);
+            await casperService.login(message, encrypted);
             history.push(RouteConfig.Cards.path);
             window.location.reload();
         }
@@ -144,7 +151,7 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
             try {
                 const publicKey = await Signer.getActivePublicKey();
 
-                await usersService.casperRegister(publicKey);
+                await casperService.register(publicKey);
 
                 await loginCasper(publicKey);
             } catch (e) {

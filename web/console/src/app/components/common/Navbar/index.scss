@@ -88,6 +88,8 @@
 
             &__logo {
                 width: 130px;
+                text-decoration: none;
+                text-align: left;
                 font-weight: 800;
                 font-size: 22px;
                 line-height: 114%;
@@ -136,7 +138,7 @@
                 list-style: none;
                 background: $pageBackground;
 
-                &__item {
+                .ultimatedivision-navbar__list__item {
                     margin: 0 32px;
                     padding: 22px 0;
                     text-align: left;

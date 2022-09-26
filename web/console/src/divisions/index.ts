@@ -3,6 +3,7 @@
 
 /** Domain entity Division implementation */
 export class Division {
+    /** default division implementation */
     constructor(
         public id: string,
         public name: number,
@@ -13,6 +14,7 @@ export class Division {
 
 /** Divisions of current season entity. */
 export class CurrentDivisionSeasons {
+    /** default currentDivisionSeasons implementation */
     constructor(
         public id: string = '',
         public divisionId: string = '',
@@ -30,6 +32,7 @@ const INITIAL_DIVISION_PERCENT: number = 0;
 // TODO: statistics need rewrite (waiting for backend).
 /** Division matches statistics entity. */
 export class DivisionSeasonsStatistics {
+    /** default divisionSeasonsStatistics implementation */
     constructor(
         public division: Division = new Division(
             '',
@@ -44,6 +47,7 @@ export class DivisionSeasonsStatistics {
 // TODO: Can be changed (waiting for backend).
 /** divisions reducer initial state. */
 export class DivisionsState {
+    /** default divisionState implementation */
     constructor(
         public currentDivisionsSeasons: CurrentDivisionSeasons[] = [],
         public seasonsStatistics: DivisionSeasonsStatistics = new DivisionSeasonsStatistics(),

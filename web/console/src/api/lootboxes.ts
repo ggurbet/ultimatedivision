@@ -8,6 +8,7 @@ import { Card } from '@/card';
 /** LootboxClient is a lootbox api client */
 export class LootboxClient extends APIClient {
     private readonly ROOT_PATH: string = '/api/v0/lootboxes';
+
     /** buys and opens lootbox */
     public async buy(lootbox: Lootbox): Promise<Card[]> {
         const lootboxResponse = await this.http.post(this.ROOT_PATH, JSON.stringify({ type: lootbox.type }));

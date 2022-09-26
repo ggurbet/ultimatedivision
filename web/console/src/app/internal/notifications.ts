@@ -14,6 +14,7 @@ const notificationConfig: ToastOptions<{}> = {
     theme: 'colored',
 };
 
+/** Metamask notifications */
 export function metamaskNotifications(error: any) {
     switch (error.code) {
     case RPC_ERROR_CODE:

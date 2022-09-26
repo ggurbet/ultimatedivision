@@ -11,8 +11,8 @@ import { VAClient } from '@velas/account-client';
 
 import { RouteConfig } from '@/app/routes';
 import { InternalError, NotFoundError } from '@/api';
-import { UsersClient } from '@/api/users';
-import { UsersService } from '@/users/service';
+import { VelasClient } from '@/api/velas';
+import { VelasService } from '@/velas/service';
 import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 
 import ulimatedivisionLogo from '@static/img/registerPage/ultimate.svg';
@@ -22,14 +22,14 @@ import './index.scss';
 const AuthWrapper = () => {
     const history = useHistory();
 
-    const usersClient = new UsersClient();
-    const usersService = new UsersService(usersClient);
+    const velasClient = new VelasClient();
+    const velasService = new VelasService(velasClient);
     const [setLocalStorageItem, getLocalStorageItem] = useLocalStorage();
 
     /** generates vaclient with the help of creds  */
     const vaclientService = async() => {
         try {
-            const vaclientCreds = await usersService.velasVaclientCreds();
+            const vaclientCreds = await velasService.vaclientCreds();
 
             const vaclient = new VAClient({
                 mode: 'redirect',
@@ -56,9 +56,9 @@ const AuthWrapper = () => {
 
     /** logins via velas  */
     const velasLogin = async(accountKeyEvm: string, accessToken: string, expiresAt: number) => {
-        const nonce = await usersService.velasNonce(accountKeyEvm);
+        const nonce = await velasService.nonce(accountKeyEvm);
 
-        await usersService.velasLogin(nonce, accountKeyEvm, accessToken, expiresAt);
+        await velasService.login(nonce, accountKeyEvm, accessToken, expiresAt);
 
         setLocalStorageItem('IS_LOGGINED', true);
         history.push(RouteConfig.Cards.path);
@@ -79,7 +79,7 @@ const AuthWrapper = () => {
                 return;
             }
             try {
-                await usersService.velasRegister(
+                await velasService.register(
                     result.userinfo.account_key_evm,
                     authResult.access_token,
                     authResult.expires_at

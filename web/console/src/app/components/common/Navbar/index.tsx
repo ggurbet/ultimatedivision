@@ -21,7 +21,8 @@ const Navbar: React.FC = () => {
     const location = useLocation();
 
     /** Сlass visibility for navbar items. */
-    const visibleClassName = isDropdownActive ? '-active' : '';
+    const navbarListClassName = isDropdownActive ? 'ultimatedivision-navbar__list-active' : '';
+    const navbarWrapperClassName = isDropdownActive ? 'ultimatedivision-navbar--active' : '';
 
     /** TODO: DIVISIONS will be replaced with id parameter */
     const navbarItems: Array<{ name: string; path: string }> = [
@@ -45,31 +46,28 @@ const Navbar: React.FC = () => {
             {isHomePath ?
                 <HomeNavbar />
                 :
-                <div className={`ultimatedivision-navbar 
-                        ${isDropdownActive ? 'ultimatedivision-navbar--active' : ''} `}>
-                    <div
-                        className={'ultimatedivision-navbar__dropdown '}
-                    >
+                <div className={`ultimatedivision-navbar ${navbarWrapperClassName}`}>
+                    <div className="ultimatedivision-navbar__dropdown">
                         {isDropdownActive ?
                             <p className="ultimatedivision-navbar__dropdown__menu">Menu</p>
                             :
-                            <p className="ultimatedivision-navbar__dropdown__logo">
+                            <a className="ultimatedivision-navbar__dropdown__logo" href="/">
                                 <span className="ultimatedivision-navbar__dropdown__logo__first-part">Ultimate </span>
                                 division
-                            </p>
+                            </a>
                         }
                         <button onClick={() => setDropdownNavbarActivity() }
                             className="ultimatedivision-navbar__dropdown__button">
                             {isDropdownActive ? <CloseDropdownIcon /> : <DropdownIcon />}
                         </button>
                     </div>
-                    <ul className={`ultimatedivision-navbar__list${visibleClassName}`}>
+                    <ul className={`ultimatedivision-navbar__list ${navbarListClassName}`}>
                         {navbarItems.map((item, index) =>
-                            <li key={index} className={`ultimatedivision-navbar__list${visibleClassName}__item`}>
+                            <li key={index} className="ultimatedivision-navbar__list__item">
                                 <NavLink
                                     key={index}
                                     to={item.path}
-                                    className={`ultimatedivision-navbar__list${visibleClassName}__item__active`}
+                                    className="ultimatedivision-navbar__list__item__active"
                                     onClick={() => setDropdownNavbarActivity()}
                                 >
                                     {item.name}

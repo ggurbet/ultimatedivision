@@ -55,17 +55,3 @@ export const loginUser = (email: string, password: string) =>
         await usersService.login(email, password);
         dispatch(login(email, password));
     };
-
-/** thunk that implements changes user password */
-export const changeUserPassword = (password: string, newPassword: string) =>
-    async function(dispatch: Dispatch) {
-        await usersService.changePassword(password, newPassword);
-        dispatch(changePassword(password, newPassword));
-    };
-
-/** thunk that implements resets user password */
-export const recoverUserPassword = (password: string) =>
-    async function(dispatch: Dispatch) {
-        await usersService.recoverPassword(password);
-        dispatch(recoverPassword(password));
-    };

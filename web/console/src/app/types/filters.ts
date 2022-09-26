@@ -6,6 +6,7 @@ const DEFAULT_FILTER_ITEM_INDEX = -1;
 
 /** Class exposes default parameter in useContext */
 export class Context {
+    /** default division implementation */
     constructor(
         public activeFilterIndex: number = DEFAULT_FILTER_ITEM_INDEX,
         public setActiveFilterIndex: any = () => { }

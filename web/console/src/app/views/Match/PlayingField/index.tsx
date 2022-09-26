@@ -7,7 +7,7 @@ import './index.scss';
 
 export const PlayingField: React.FC = () =>
     <div className="match__playing-field">
-        <img src={FootballField} alt="Playing football field"></img>
+        <img src={FootballField} alt="Playing football field"/>
         <div className="match__playing-field__gradient"></div>
     </div>;
 

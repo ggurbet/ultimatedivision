@@ -14,7 +14,6 @@
         &__main {
             color: $divisionTextColor;
             font-size: 48px;
-            font-family: "BebasNeue", sans-serif;
         }
 
         &__count {
@@ -22,7 +21,6 @@
             align-items: flex-end;
             color: $highlightColor;
             font-size: 24px;
-            font-family: "BebasNeue", sans-serif;
 
             &__text {
                 color: $divisionTextColor;
@@ -39,7 +37,6 @@
 
     &__item {
         border: 1px solid $divisionMainBackgroundColor;
-        font-family: "BebasNeue", sans-serif;
         cursor: pointer;
 
         &-active {
@@ -95,7 +92,6 @@
             margin-right: 15px;
 
             &__text {
-                font-family: "Montserrat", sans-serif;
                 font-size: 14px;
                 color: $divisionTextColor;
             }
@@ -150,7 +146,6 @@
         &__no-results {
             padding: 50px;
             text-align: center;
-            font-family: "BebasNeue", sans-serif;
             color: #ffff;
         }
 
