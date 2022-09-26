@@ -1,0 +1,233 @@
+@import "@/index.scss";
+
+.game-info {
+    width: 100%;
+    margin-bottom: 60px;
+    overflow: hidden;
+
+    &__title {
+        margin-bottom: 40px;
+        text-transform: uppercase;
+        font-style: normal;
+        text-shadow: 0 4px 10px rgba(8, 36, 80, 0.36);
+        font-family: "Wix Madefor Display", sans-serif;
+        font-weight: 800;
+        font-size: 60px;
+        line-height: 76px;
+        letter-spacing: 0.12em;
+        color: #f5ff63;
+
+        &__second-part {
+            color: white;
+        }
+    }
+
+    &__text {
+        margin-bottom: 18px;
+        font-style: normal;
+        text-shadow: 0 2px 3px rgba(8, 36, 80, 0.36);
+        font-family: "Urbanist", sans-serif;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 129.5%;
+        letter-spacing: 0.12em;
+        color: #fff;
+    }
+
+    &__field-player {
+        width: 100%;
+        height: 100%;
+    }
+
+    &__content {
+        margin-bottom: 50px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+
+        &__text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            &__left {
+                padding-left: 150px;
+            }
+
+            &__right {
+                padding-right: 150px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1440px) {
+
+    .game-info {
+
+        &__content {
+
+            &__text {
+
+                &__left {
+                    padding-left: 110px;
+                }
+
+                &__right {
+                    padding-right: 110px;
+                }
+            }
+        }
+
+        &__title {
+            margin-bottom: 30px;
+            font-size: 65px;
+        }
+
+        &__text {
+            font-size: 18px;
+        }
+    }
+}
+
+@media screen and (max-width: 1200px) {
+
+    .game-info {
+
+        &__content {
+
+            &__text {
+
+                &__left {
+                    padding-left: 70px;
+                }
+
+                &__right {
+                    padding-right: 70px;
+                }
+            }
+        }
+
+        &__title {
+            margin-bottom: 20px;
+            font-size: 52px;
+        }
+
+        &__text {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+    }
+}
+
+@media screen and (max-width: $desktopBreakPoint) {
+
+    .game-info {
+
+        &__content {
+
+            &__text {
+
+                &__left {
+                    padding-left: 50px;
+                }
+
+                &__right {
+                    padding-right: 50px;
+                }
+            }
+        }
+
+        &__title {
+            margin-bottom: 15px;
+            font-size: 45px;
+        }
+
+        &__text {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+    }
+}
+
+@media screen and (max-width: 940px) {
+
+    .game-info {
+
+        &__title {
+            margin-bottom: 15px;
+            font-size: 36px;
+        }
+
+        &__text {
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+    }
+}
+
+@media (max-width: $tabletBreakPoint) {
+
+    .game-info {
+        margin-bottom: 0;
+        padding: 40px 0 20px;
+
+        &__content {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0;
+
+            &__text {
+                padding: 0 32px;
+            }
+
+            &__second-part {
+                flex-direction: column-reverse;
+            }
+        }
+
+        &__title {
+            margin-bottom: 30px;
+            font-size: 45px;
+            text-align: center;
+        }
+
+        &__text {
+            margin-bottom: 14px;
+            font-size: 18px;
+        }
+
+        &__field-player {
+            margin: 8px 0 22px;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .game-info {
+        padding: 40px 0 20px;
+
+        &__content {
+
+            &__text {
+                padding: 0 16px;
+            }
+        }
+
+        &__title {
+            margin-bottom: 25px;
+            font-size: 40px;
+            text-align: center;
+        }
+
+        &__text {
+            margin-bottom: 14px;
+            font-size: 16px;
+        }
+
+        &__field-player {
+            margin: 8px 0 22px;
+        }
+    }
+}
