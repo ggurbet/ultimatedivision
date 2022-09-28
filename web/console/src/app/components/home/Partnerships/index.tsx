@@ -11,19 +11,33 @@ import velas from '@static/img/gameLanding/partnerships/velas.svg';
 
 import './index.scss';
 
+/** Domain entity Partner implementation */
+class Partner {
+    /** default partner implementation */
+    constructor(public name: string = '', public logo: string = '') {}
+}
+
 export const Partnerships: React.FC = () => {
-    /** Defines logos of partner companies */
-    const logos: string[] = [devdao, casper, storj, polygon, chickenfish, velas, boosty];
+    /** Defines partners companies */
+    const partners: Partner[] = [
+        new Partner('polygon', polygon),
+        new Partner('velas', velas),
+        new Partner('casper', casper),
+        new Partner('devdao', devdao),
+        new Partner('storj', storj),
+        new Partner('boosty', boosty),
+        new Partner('chickenfish', chickenfish),
+    ];
 
     return (
         <section className="partnerships">
             <div className="partnerships__wrapper">
-                <h2 className="partnerships__title">Our Partnerships</h2>
+                <h2 className="partnerships__title">Our <span className="partnerships__title__second-part">Partners</span></h2>
                 <div className="partnerships__area">
-                    {logos.map((logo: string, index: number) =>
-                        <div key={index} className="partnerships__area__item">
+                    {partners.map((partner: Partner, _) =>
+                        <div key={partner.logo} className="partnerships__area__item">
                             <div className="partnerships__area__item__wrapper">
-                                <img className="partnerships__area__item__logo" key={index} src={logo} alt="logo" />
+                                <img className={`partnerships__area__item__logo partnerships__area__item__logo__${partner.name}`} src={partner.logo} alt="logo" />
                             </div>
                         </div>
                     )}

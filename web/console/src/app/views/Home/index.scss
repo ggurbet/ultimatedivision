@@ -1,1 +1,11 @@
 @import "@/index.scss";
+
+.home {
+
+    &__banner {
+
+        &__image {
+            width: 100%;
+        }
+    }
+}
