@@ -6,8 +6,8 @@ import fieldPlayerLeft from '@static/img/gameLanding/gameInfo/player-left.svg';
 
 import './index.scss';
 
-const GameInfo: React.FC = () =>
-    <div className="game-info">
+export const GameInfo: React.FC = () =>
+    <section className="game-info">
         <div className="game-info__content" >
             <div className="game-info__content__text game-info__content__text__left" >
                 <h2 className="game-info__title">Game <span className="game-info__title__second-part">info</span></h2>
@@ -43,6 +43,5 @@ const GameInfo: React.FC = () =>
             </div>
         </div>
 
-    </div>;
+    </section>;
 
-export default GameInfo;

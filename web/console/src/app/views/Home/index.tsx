@@ -8,10 +8,11 @@ import { FootballGame } from '@components/home/FootballGame';
 import { Footer } from '@components/home/Footer';
 import { Projects } from '@components/home/Projects';
 import { Roadmap } from '@components/home/Roadmap';
+import { VideoGame } from '@components/home/VideoGame';
+import { GameInfo } from '@components/home/GameInfo';
 import Navbar from '@components/home/HomeNavbar';
 
 import './index.scss';
-import GameInfo from '@/app/components/home/GameInfo';
 
 const Home: React.FC = () => {
     /** Current path from hook */
@@ -22,7 +23,8 @@ const Home: React.FC = () => {
         <>
             {currentPath === '/' && <Navbar />}
             <FootballGame />
-            <GameInfo/>
+            <GameInfo />
+            <VideoGame/>
             <Roadmap />
             <Projects />
             <Authors />
