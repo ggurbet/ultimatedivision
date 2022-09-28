@@ -1,53 +1,45 @@
-@import "/src/index.scss";
+@import "@/index.scss";
 
 .roadmap {
     position: relative;
     overflow: hidden;
-    background: #2c3c8f;
     color: white;
-    min-height: 1000px;
+    margin: 60px 0;
 
-    &__wrapper {
-        position: relative;
-        padding: 100px 90px;
-        max-width: 1440px;
-        margin: 0 auto;
-        transition: all 0.3s;
+    &__image {
+        width: 100%;
     }
 
     &__title {
-        margin-bottom: 100px;
-        color: #00ffa3;
-        text-align: center;
+        margin: 0 0 50px 90px;
+        font-family: "Wix Madefor Display", sans-serif;
         font-style: normal;
-        font-weight: normal;
-        font-size: 64px;
-        line-height: 77px;
-    }
+        font-weight: 800;
+        font-size: 60px;
+        line-height: 76px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #fff;
+        text-shadow: 0 4px 10px rgba(8, 36, 80, 0.36);
 
-    &__road {
-        display: flex;
-        justify-content: left;
-        align-items: center;
-        gap: 30px;
+        &__second-part {
+            color: #f5ff63;
+        }
     }
+}
 
-    &__flag {
-        height: 273px;
-        position: absolute;
-        right: 90px;
-        bottom: -120px;
-        transition: all 0.3s linear;
-    }
+@media (max-width: 1200px) {
 
-    &__bottom {
-        width: 2560px;
-        position: absolute;
-        height: 90px;
-        left: -20px;
-        bottom: -40px;
-        object-fit: cover;
-        object-position: top;
+    .roadmap {
+
+        &__wrapper {
+            padding: 10px 50px 60px;
+        }
+
+        &__title {
+            margin: 0 0 40px 70px;
+            font-size: 52px;
+        }
     }
 }
 
@@ -55,28 +47,20 @@
 
     .roadmap {
 
-        &__wrapper {
-            padding: 70px;
+        &__title {
+            margin: 0 0 20px 50px;
+            font-size: 45px;
         }
+    }
+}
 
-        &__road {
-            margin-left: 40px;
-            flex-direction: column;
-            align-items: flex-start;
+@media (max-width: 900px) {
 
-            &:before {
-                content: "";
-                height: 100%;
-                position: absolute;
-                left: -25px;
-                width: 5px;
-                background: linear-gradient(90deg, #00ffa3 0%, #00ffa3 135.85%);
-            }
-        }
+    .roadmap {
 
-        &__flag {
-            height: 237px;
-            bottom: 0;
+        &__title {
+            margin: 0 0 30px 50px;
+            font-size: 45px;
         }
     }
 }
@@ -127,11 +111,11 @@
         }
 
         &__title {
-            font-size: 36px;
-            line-height: 43px;
             margin-bottom: 80px;
             margin-left: 15px;
             text-align: left;
+            font-size: 36px;
+            line-height: 43px;
         }
     }
 }

@@ -3,62 +3,46 @@
 
 import { RoadmapPoint } from './RoadmapPoint';
 
-import footer from '@static/img/gameLanding/roadmap/bottom.svg';
-import flag from '@static/img/gameLanding/roadmap/flag.svg';
+import roadmap from '@static/img/gameLanding/roadmap/roadmap.png';
 
 import './index.scss';
 
+/** Domain entity RoadmapStep implementation */
+export class RoadmapStep {
+    /** default RoadmapStep implementation */
+    constructor(
+        public id: string = '',
+        public step: string = '',
+        public points: string[] = []) { }
+}
+
 export const Roadmap: React.FC = () => {
-    const dataList = [
-        {
-            id: 1,
-            date: '2022 Q1',
-            points: [
-                'Ultimate Division Metaverse MVP launch',
-                'Play to Earn mechanics available to players',
-                'UDT (Ultimate Division Token) introduced',
-            ],
-            done: true,
-        },
-        {
-            id: 2,
-            date: '2022 Q2-Q4',
-            points: [
-                'Game in full swing',
-                'Management roles available',
-                'Club owners can tokenize their clubs and sell shares to other players',
-                'UD partnership with Top-5 Leagues',
-            ],
-            done: false,
-        },
-        {
-            id: 3,
-            date: '2022',
-            points: [
-                'Advanced gameplay introduced',
-                'Local competitions launched',
-                'DAO governance adopted',
-            ],
-            done: false,
-        },
+    const roadmapSteps = [
+        new RoadmapStep('1', 'start', [
+            'Ultimate Division Metaverse MVP launch',
+            'Play to Earn mechanics available to players',
+            'UDT (Ultimate Division Token) introduced',
+        ]),
+        new RoadmapStep('2', 'middle', [
+            'Game in full swing',
+            'Management roles available',
+            'Club owners can tokenize their clubs and sell shares to other players',
+            'UDT partnership with Top-5 Leagues',
+        ]),
+        new RoadmapStep('3', 'finish', [
+            'Advanced gameplay introduced',
+            'Local competitions launched',
+            'DAO governance adopted',
+        ]),
     ];
 
     return (
         <section className="roadmap">
-            <div className="roadmap__wrapper">
-                <h2 className="roadmap__title">Development Roadmap</h2>
-                <div className="roadmap__road">
-                    {dataList.map((item) =>
-                        <RoadmapPoint key={item.id} item={item} />
-                    )}
-                </div>
-                <img className="roadmap__flag" src={flag} alt="Flag" />
-            </div>
-            <img
-                className="roadmap__bottom"
-                src={footer}
-                alt="bottom texture"
-            />
+            <h2 className="roadmap__title">Our <span className="roadmap__title__second-part">Roadmap</span></h2>
+            {roadmapSteps.map((item: RoadmapStep) =>
+                <RoadmapPoint key={item.id} item={item} />
+            )}
+            <img className="roadmap__image" src={roadmap} alt="roadmap" />
         </section>
     );
 };

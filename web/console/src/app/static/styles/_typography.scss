@@ -74,3 +74,17 @@
     font-style: normal;
     font-weight: 600;
 }
+
+@font-face {
+    font-family: "Urbanist";
+    src: url("@static/fonts/Urbanist-SemiBold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: "Wix Madefor Display";
+    src: url("@static/fonts/WixMadeforTextBold.otf") format("truetype");
+    font-style: normal;
+    font-weight: 800;
+}
