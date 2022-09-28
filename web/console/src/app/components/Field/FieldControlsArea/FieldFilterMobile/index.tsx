@@ -44,8 +44,6 @@ export const FieldFilterMobile: React.FC<FieldFilterMobileProps> = ({
     setActiveComposition,
     activeComposition,
 }) => {
-    const NEGATIVE_INDEX = -1;
-
     const dispatch = useDispatch();
 
     const formation = useSelector((state: RootState) => state.clubsReducer.activeClub.squad.formation);

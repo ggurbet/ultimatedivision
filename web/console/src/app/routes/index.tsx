@@ -114,7 +114,7 @@ export class RouteConfig {
 /** Route config that implements auth actions */
 export class AuthRouteConfig {
     public static AuthWrapper: ComponentRoutes = new ComponentRoutes('/auth-velas', AuthWrapper, true);
-    public static Default: ComponentRoutes = new ComponentRoutes('/', RouteConfig.Home.component, true);
+    public static Default: ComponentRoutes = new ComponentRoutes('/', Home, true, 'page__home');
 
     public static routes: ComponentRoutes[] = [AuthRouteConfig.Default, AuthRouteConfig.AuthWrapper];
 }
@@ -126,6 +126,8 @@ export const Routes = () => {
     const currentLocation = location.pathname;
 
     const pageClassName = RouteConfig.routes.filter((route, _) =>
+        route.className && route.path === currentLocation ? route.className : ''
+    )[FILTERED_IS_PAGE_CLASSNAME]?.className || AuthRouteConfig.routes.filter((route, _) =>
         route.className && route.path === currentLocation ? route.className : ''
     )[FILTERED_IS_PAGE_CLASSNAME]?.className;
 

@@ -22,8 +22,18 @@
     }
 
     &.scroll-unset {
-        overflow-y: hidden;
-        max-height: 100vh;
+        overflow-y: auto;
+    }
+}
+
+@media screen and (max-width: $tabletBreakPoint) {
+
+    .page {
+
+        &.scroll-unset {
+            overflow-y: hidden;
+            max-height: 100vh;
+        }
     }
 }
 

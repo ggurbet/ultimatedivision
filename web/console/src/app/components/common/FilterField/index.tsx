@@ -23,12 +23,12 @@ export const FilterField: React.FC = ({ children }) => {
 
     const openCardsFilter = () => {
         setIsActiveMobileCardsFilter(true);
-        setScrollAble();
+        setScrollAble(false);
     };
 
     const closeCardsFilter = () => {
         setIsActiveMobileCardsFilter(false);
-        setScrollAble();
+        setScrollAble(true);
     };
 
     return (

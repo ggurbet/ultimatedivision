@@ -16,8 +16,8 @@ export const FilterByParameterWrapper: React.FC<{
 }> = ({ showComponent, children, isVisible, title }) =>
     <li className="filter-field__list__item">
         <div className="filter-item">
-            <div className="filter-item__content">
-                <span className={'filter-item__title'} onClick={showComponent}>
+            <div className="filter-item__content" onClick={showComponent}>
+                <span className={'filter-item__title'}>
                     {title}
                 </span>
                 <img

@@ -87,7 +87,7 @@ export const FieldControlsArea: React.FC = () => {
     };
 
     const openMobileFilter = () => {
-        setScrollAble();
+        setScrollAble(false);
         setIsMobileFilterActive(true);
     };
     const isDropdownActive = useMemo(
@@ -98,7 +98,7 @@ export const FieldControlsArea: React.FC = () => {
     const returnToFilter = () => {
         setIsMobileFilterActive(false);
         changeVisibility(false);
-        setScrollAble();
+        setScrollAble(true);
     };
 
     useEffect(() => {
