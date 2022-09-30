@@ -91,19 +91,21 @@ func (service *Service) Update(ctx context.Context, status Status, id uuid.UUID)
 }
 
 // GetProfile returns user profile.
-func (service *Service) GetProfile(ctx context.Context, userID uuid.UUID) (*Profile, error) {
+func (service *Service) GetProfile(ctx context.Context, userID uuid.UUID) (*ProfileWithWallet, error) {
 	user, err := service.users.Get(ctx, userID)
 	if err != nil {
 		return nil, ErrUsers.Wrap(err)
 	}
 
-	return &Profile{
-		ID:        user.ID,
-		Email:     user.Email,
-		NickName:  user.NickName,
-		CreatedAt: user.CreatedAt,
-		LastLogin: user.LastLogin,
-		Wallet:    user.Wallet,
+	return &ProfileWithWallet{
+		ID:           user.ID,
+		Email:        user.Email,
+		NickName:     user.NickName,
+		CreatedAt:    user.CreatedAt,
+		LastLogin:    user.LastLogin,
+		Wallet:       user.Wallet,
+		CasperWallet: user.CasperWallet,
+		WalletType:   user.WalletType,
 	}, nil
 }
 

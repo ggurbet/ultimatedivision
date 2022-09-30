@@ -253,6 +253,8 @@ func compareUsers(t *testing.T, user1, user2 users.User) {
 	assert.Equal(t, user1.FirstName, user2.FirstName)
 	assert.Equal(t, user1.LastName, user2.LastName)
 	assert.Equal(t, user1.Status, user2.Status)
+	assert.Equal(t, user1.CasperWallet, user2.CasperWallet)
+	assert.Equal(t, user1.WalletType, user2.WalletType)
 	assert.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, 1*time.Second)
 	assert.WithinDuration(t, user1.LastLogin, user2.LastLogin, 1*time.Second)
 }
