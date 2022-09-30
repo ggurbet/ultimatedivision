@@ -1,0 +1,185 @@
+@import "@/index.scss";
+
+.box-animation {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    height: calc(100vh - 94px);
+
+    &__box-container {
+        z-index: 1;
+        position: relative;
+        width: auto;
+        margin: 0 auto;
+
+        &--opened {
+            position: relative;
+            width: 410px;
+        }
+    }
+
+    &__box {
+        position: absolute;
+        width: 700px;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+
+        &--opening {
+            position: absolute;
+            width: 740px;
+            bottom: 0;
+            left: calc(50% + 3px);
+            transform: translateX(-50%);
+        }
+
+        &--falling {
+            position: absolute;
+            width: 620px;
+            bottom: 0;
+            left: calc(50% + 5px);
+            transform: translateX(-50%);
+        }
+
+        &--start-opening {
+            position: absolute;
+            width: 540px;
+            bottom: 0;
+            left: calc(50% + 5px);
+            transform: translateX(-50%);
+        }
+
+        &--middle-opening {
+            position: absolute;
+            width: 540px;
+            bottom: 0;
+            left: calc(50% + 9px);
+            transform: translateX(-50%);
+        }
+
+        &--opened {
+            position: absolute;
+            width: 410px;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+
+    &__card {
+        width: 70%;
+        margin: 0 auto;
+
+        &__container {
+            z-index: 5;
+            max-width: 300px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            opacity: 0;
+            transform: scale(0);
+            animation: cardShowing 2s 1s 1 normal forwards ease-in-out;
+
+            @keyframes cardShowing {
+
+                0% {
+                    opacity: 0;
+                }
+
+                30% {
+                    transform: translateY(250px);
+                }
+
+                100% {
+                    transform: scale(1.2) translateY(150px);
+                    opacity: 1;
+                }
+            }
+
+            &__backlight {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+}
+
+@media (max-width: 1450px) {
+
+    .box-animation {
+
+        &__box {
+            bottom: -180px;
+
+            &--opened {
+                bottom: -150px;
+            }
+
+            &--opening {
+                bottom: -200px;
+            }
+
+            &--falling {
+                bottom: -150px;
+            }
+
+            &--start-opening {
+                bottom: -155px;
+            }
+
+            &--middle-opening {
+                bottom: -155px;
+            }
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint + 100px) {
+
+    .box-animation {
+        width: 100%;
+
+        &__box-container {
+            width: 80%;
+            margin: 0 20px;
+
+            @keyframes boxHiding {
+
+                to {
+                    transform: translateY(200px);
+                }
+            }
+        }
+
+        &__card-container {
+            width: 60%;
+        }
+
+        &__ribbons {
+            width: 70%;
+            top: -50px;
+        }
+
+        &__light {
+            left: -10%;
+            width: 120%;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint - 200px) {
+
+    .box-animation {
+
+        &__box-container {
+            @keyframes boxHiding {
+
+                to {
+                    transform: translateY(120px);
+                }
+            }
+        }
+    }
+}

@@ -25,9 +25,9 @@ export const CardMintingProgress: React.FC<{
     }, [activeCardsCount]);
 
     return (
-        <div className="card">
+        <div className="card-minting">
             {cards.map((card, index) =>
-                <div key={index} className={`card__item ${card.active ? 'card__active-item' : ''}`}></div>
+                <div key={index} className={`card-minting__item ${card.active ? 'card-minting__active-item' : ''}`}></div>
             )}
         </div>
     );

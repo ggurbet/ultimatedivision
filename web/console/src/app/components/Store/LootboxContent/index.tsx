@@ -4,27 +4,26 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { LootboxKeeping } from './LootboxKeeping';
-import { LootboxOpening } from './LootboxOpening';
+import { LootboxAnimation } from './LootboxAnimation';
 
 import './index.scss';
 
 export const LootboxContent: React.FC<{
-    handleOpening: Dispatch<SetStateAction<boolean>>;
-}> = ({ handleOpening }) => {
-    const [isAnimated, handleAnimation] = useState(true);
+    handleOpenedLootbox: Dispatch<SetStateAction<boolean>>;
+    isOpenedLootbox: boolean;
+    handleLootboxSelection: Dispatch<SetStateAction<boolean>>;
+    isLootboxKeeping: boolean;
+    handleLootboxKeeping: Dispatch<SetStateAction<boolean>>;
+}> = ({ handleOpenedLootbox, handleLootboxKeeping, isOpenedLootbox, isLootboxKeeping, handleLootboxSelection }) =>
+    <div className="box-content">
+        {isLootboxKeeping ?
+            <LootboxKeeping handleLootboxSelection={handleLootboxSelection} />
+            :
+            <LootboxAnimation
+                isOpenedLootbox={isOpenedLootbox}
+                handleOpenedLootbox={handleOpenedLootbox}
+                handleLootboxKeeping={handleLootboxKeeping}
+            />
+        }
+    </div>;
 
-    useEffect(() => {
-        const TIMEOUT = 8000;
-        setTimeout(() => handleAnimation(false), TIMEOUT);
-    });
-
-    return (
-        <div className="box-content">
-            {isAnimated ?
-                <LootboxOpening />
-                :
-                <LootboxKeeping handleOpening={handleOpening} />
-            }
-        </div>
-    );
-};

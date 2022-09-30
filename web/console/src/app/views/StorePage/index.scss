@@ -1,13 +1,31 @@
 @import "@/index.scss";
 
 .store {
-    min-height: 90vh;
     min-width: 100%;
-    overflow: hidden;
-    background: $mainBackground;
-    background-image: url("@static/img/StorePage/background.png");
-    background-position: center;
-    background-repeat: no-repeat;
     padding: 0;
-    color: white;
+
+    &__content {
+        height: calc(100vh - 100px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    &__title {
+        max-width: 1440px;
+        margin: 0 auto 80px;
+        padding: 0 50px;
+        font-weight: lighter;
+        font-size: 48px;
+    }
+}
+
+@media (max-width: $tabletBreakPoint) {
+
+    .store {
+
+        &__title {
+            padding: 0 30px;
+        }
+    }
 }

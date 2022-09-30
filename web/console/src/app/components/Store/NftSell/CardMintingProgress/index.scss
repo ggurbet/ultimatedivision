@@ -1,8 +1,9 @@
-.card {
+.card-minting {
     display: grid;
     margin-bottom: 26px;
     padding-right: 25px;
     column-gap: 7px;
+    grid-template-columns: repeat(10, 1fr);
 
     &__item {
         display: flex;

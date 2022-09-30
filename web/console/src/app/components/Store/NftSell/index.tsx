@@ -11,7 +11,7 @@ import './index.scss';
 export const NftSell = () => {
     // TODO: change on real data
     const MOCK_NFT_AMOUNT = 0;
-    const MOCK_TIME = '22:12:03';
+    const MOCK_TIME = '92:12:03';
     const MOCK_TITLE = 'DIAMOND CARD';
 
     const MAX_NFT_AMOUNT = 10;
