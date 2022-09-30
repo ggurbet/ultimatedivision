@@ -71,6 +71,19 @@
     }
 }
 
+@media (max-width: $desktopBreakPoint) {
+    .filter-field {
+        &__list {
+
+            &__item {
+                &__search {
+                    width: 125px;
+                }
+            }
+        }
+    }
+}
+
 @media (max-width: $tabletBreakPoint) {
 
     .filter-field {

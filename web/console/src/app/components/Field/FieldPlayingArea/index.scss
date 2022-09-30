@@ -527,6 +527,29 @@
 
     .playing-area {
 
+        &__play {
+            display: block;
+            height: 44px;
+            margin: 50px auto 0;
+            width: 550px;
+            border-radius: 10px;
+            border: none;
+            font-family: "Orbitron", sans-serif;
+            font-style: normal;
+            font-weight: 900;
+            font-size: 18px;
+            letter-spacing: 0.12em;
+            box-shadow: 0 12px 14px rgba(9, 51, 82, 0.22);
+            text-transform: uppercase;
+            background: #f5ff63;
+            cursor: pointer;
+
+            &:disabled {
+                opacity: 0.3;
+                cursor: auto;
+            }
+        }
+
         &__0,
         &__1,
         &__2,
@@ -906,26 +929,8 @@
         width: 100%;
 
         &__play {
-            display: block;
-            height: 44px;
             margin: 50px 32px 64px;
             width: calc(100% - 64px);
-            border-radius: 10px;
-            border: none;
-            font-family: "Orbitron", sans-serif;
-            font-style: normal;
-            font-weight: 900;
-            font-size: 18px;
-            letter-spacing: 0.12em;
-            box-shadow: 0 12px 14px rgba(9, 51, 82, 0.22);
-            text-transform: uppercase;
-            background: #f5ff63;
-            cursor: pointer;
-
-            &:disabled {
-                opacity: 0.3;
-                cursor: auto;
-            }
         }
 
         &__0,

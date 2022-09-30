@@ -7,6 +7,43 @@
     padding: 40px 100px 80px;
     color: #26373f;
 
+    &__wrapper {
+        width: 100%;
+        height: fit-content;
+        max-width: 1440px;
+    }
+
+    &__back {
+        display: flex;
+        justify-content: left;
+        margin-bottom: 40px;
+
+        &__button {
+            display: flex;
+            align-items: center;
+            outline: none;
+            border: none;
+            text-align: center;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-family: "Orbitron", sans-serif;
+            font-style: normal;
+            font-weight: 900;
+            font-size: 18px;
+            line-height: 23px;
+            letter-spacing: 0.12em;
+            color: #26373f;
+            background: none;
+            cursor: pointer;
+
+            &__image {
+                width: 34px;
+                height: 34px;
+                margin-right: 14px;
+            }
+        }
+    }
+
     &__player {
         width: 268px;
         height: 404.95px;
@@ -33,6 +70,7 @@
             margin-bottom: 22px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             text-transform: uppercase;
             font-style: normal;
             font-family: "Orbitron", sans-serif;
@@ -41,8 +79,13 @@
             line-height: 28px;
             letter-spacing: 0.12em;
 
+            &__content {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
             &-title {
-                width: 100px;
                 color: #26373f;
             }
 
@@ -60,8 +103,10 @@
         }
 
         &__club {
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             text-transform: uppercase;
             font-style: normal;
             font-family: "Orbitron", sans-serif;
@@ -111,12 +156,6 @@
         color: #f5ff63;
         background: none;
         cursor: pointer;
-    }
-
-    &__wrapper {
-        max-width: 1440px;
-        width: 100%;
-        height: fit-content;
     }
 
     &__illustrator-radar {
@@ -171,12 +210,19 @@
 
     .card {
         width: 100%;
+        padding: 40px 50px 80px;
+
+        &__illustrator-radar {
+            width: 400px;
+        }
 
         &__name {
             font-size: 30px;
         }
 
         &__player {
+            width: 200px;
+            height: 310px;
 
             &__info {
                 margin-left: 30px;
@@ -215,12 +261,18 @@
     .card {
         width: 100%;
 
+        &__back {
+            margin-bottom: 30px;
+        }
+
         &__name {
             font-size: 30px;
             line-height: 34px;
         }
 
         &__player {
+            width: 268px;
+            height: 404.95px;
             max-width: 50%;
 
             &__info {
@@ -255,6 +307,8 @@
             width: 100%;
 
             &__club {
+                font-size: 20px;
+                margin-bottom: 15px;
 
                 &-name {
                     margin-left: 12px;
@@ -263,7 +317,7 @@
             }
 
             &__nft {
-                margin-bottom: 14px;
+                margin-bottom: 15px;
                 font-size: 20px;
 
                 &-value {
@@ -280,6 +334,10 @@
     .card {
         width: 100%;
         padding: 21px 48px 0;
+
+        &__back {
+            margin-bottom: 20px;
+        }
 
         &__border {
             width: 100%;
@@ -364,6 +422,10 @@
 
     .card {
         padding: 21px 16px 0;
+
+        &__back {
+            margin-bottom: 13px;
+        }
 
         &__player {
             max-width: 100%;

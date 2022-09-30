@@ -17,8 +17,10 @@ import { ServicePlugin } from '@/app/plugins/service';
 import { metamaskNotifications } from '../../internal/notifications';
 
 import CardPageBg from '@static/img/FootballerCardPage/background.png';
+import backButton from '@static/img/FootballerCardPage/back-button.png';
 
 import './index.scss';
+import { Link } from 'react-router-dom';
 
 const Card: React.FC = () => {
     const dispatch = useDispatch();
@@ -63,46 +65,50 @@ const Card: React.FC = () => {
 
     return (
         card &&
-            <div className="card">
-                <div className="card__border">
-                    <div className="card__wrapper">
-                        <div className="card__info">
-                            <PlayerCard className="card__player" id={card.id} />
-                            <div className="card__player__info">
-                                <h2 className="card__name">{card.playerName}</h2>
-                                <div className="card__mint-info">
-                                    <div className="card__mint-info__nft">
-                                        <span className="card__mint-info__nft-title">NFT:</span>
-                                        <span className="card__mint-info__nft-value">
-                                            {isMinted ? 'minted to Polygon' : 'not minted'}
-                                        </span>
-                                        {!isMinted &&
-                                            <button className="card__mint" onClick={mint}>
-                                                Mint now
-                                            </button>
-                                        }
-                                    </div>
-                                    <div className="card__mint-info__club">
-                                        <span className="card__mint-info__club-title">Club:</span>
-                                        <span className="card__mint-info__club-name">FC228</span>
-                                    </div>
+        <div className="card">
+            <div className="card__wrapper">
+                <div className="card__back">
+                    <Link className="card__back__button" to="/cards">
+                        <img src={backButton} alt="back-button"className="card__back__button__image" />
+                        Back
+                    </Link>
+                </div>
+                <div className="card__info">
+                    <PlayerCard className="card__player" id={card.id} />
+                    <div className="card__player__info">
+                        <h2 className="card__name">{card.playerName}</h2>
+                        <div className="card__mint-info">
+                            <div className="card__mint-info__nft">
+                                <span className="card__mint-info__nft-title">NFT:</span>
+                                <div className="card__mint-info__nft__content">
+                                    <span className="card__mint-info__nft-value">
+                                        {isMinted ? 'minted to Polygon' : 'not minted'}
+                                    </span>
+                                    {!isMinted &&
+                                        <button className="card__mint" onClick={mint}>
+                                            Mint now
+                                        </button>
+                                    }
                                 </div>
                             </div>
-                            <div className="card__illustrator-radar">
-                                <h2 className="card__illustrator-radar__title">Skills</h2>
-                                <FootballerCardIllustrationsRadar card={card} />
+                            <div className="card__mint-info__club">
+                                <span className="card__mint-info__club-title">Club:</span>
+                                <span className="card__mint-info__club-name">FC228</span>
                             </div>
-                        </div>
-
-                        <div className="card__stats-area">
                             <FootballerCardPrice card={card} isMinted={isMinted} />
-                            <FootballerCardStatsArea card={card} />
                         </div>
                     </div>
+                    <div className="card__illustrator-radar">
+                        <h2 className="card__illustrator-radar__title">Skills</h2>
+                        <FootballerCardIllustrationsRadar card={card} />
+                    </div>
                 </div>
-                <img src={CardPageBg} alt="background" className="card__bg" />
+                <div className="card__stats-area">
+                    <FootballerCardStatsArea card={card} />
+                </div>
             </div>
-
+            <img src={CardPageBg} alt="background" className="card__bg" />
+        </div>
     );
 };
 

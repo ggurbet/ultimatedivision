@@ -4,77 +4,78 @@
 @import "@/index.scss";
 
 .footballer-card-price {
-    width: 542px;
-    margin: 5% 5% 0 5%;
+    width: 100%;
 
     &__wrapper {
         display: flex;
         flex-direction: column;
     }
 
-    &__info-area {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        width: 542px;
-    }
-
     &__bid {
+        margin-bottom: 20px;
         display: flex;
         align-items: center;
 
         .bid {
+            width: 100%;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
 
             &__title {
+                text-transform: uppercase;
                 font-style: normal;
-                font-weight: bold;
-                font-size: 18.3913px;
-                line-height: 18px;
-                color: #fff;
+                font-family: "Orbitron", sans-serif;
+                font-weight: 900;
+                font-size: 22px;
+                line-height: 28px;
+                letter-spacing: 0.12em;
+                color: #26373f;
             }
 
             &__value {
+                text-align: center;
+                text-transform: uppercase;
                 font-style: normal;
-                font-weight: normal;
-                font-size: 82.7609px;
-                line-height: 99px;
-                color: #fff;
-            }
-        }
-
-        &__coin {
-            padding: 18px;
-            margin-top: 13px;
-
-            img {
-                width: 45px;
+                font-family: "Urbanist", sans-serif;
+                font-weight: 800;
+                font-size: 22px;
+                line-height: 26px;
+                letter-spacing: 0.12em;
+                color: #f5ff63;
             }
         }
     }
 
     &__auction {
+        margin-bottom: 20px;
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
 
         .auction-title {
-            margin-bottom: 8px;
+            text-transform: uppercase;
             font-style: normal;
-            font-weight: bold;
-            font-size: 18.3913px;
-            line-height: 18px;
-            color: #fff;
+            font-family: "Orbitron", sans-serif;
+            font-weight: 800;
+            font-size: 22px;
+            line-height: 133.9%;
+            letter-spacing: 0.12em;
+            color: #26373f;
         }
 
         .auction-expire-time {
-            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
             font-style: normal;
-            font-weight: normal;
-            font-size: 32px;
-            line-height: 38px;
-            color: #fff;
+            font-family: "Urbanist", sans-serif;
+            font-weight: 600;
+            font-size: 22px;
+            line-height: 26px;
+            letter-spacing: 0.12em;
+            color: #344a54;
         }
     }
 
@@ -82,94 +83,82 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: 28px 0 18px;
-
-        button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
 
         .place-bid {
-            width: 275.97px;
-            height: 42.53px;
+            width: 230px;
+            height: 48px;
+            margin-right: 10px;
+            padding: 14px 22px;
+            gap: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            outline: none;
             border: none;
-            background: radial-gradient(
-                254.55% 254.55% at 50% 50%,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.8) 100%
-            ),
-                linear-gradient(180deg, #5cff79 0%, #3ccf56 100%);
+            border-radius: 10px;
+            box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
+            background: #f5ff63;
+            cursor: pointer;
 
             &__text {
-                font-style: normal;
-                font-weight: bold;
-                font-size: 18.3913px;
-                line-height: 18px;
                 text-align: center;
-                color: #181829;
+                font-style: normal;
                 text-transform: uppercase;
+                font-family: "Orbitron", sans-serif;
+                font-weight: 900;
+                font-size: 14px;
+                line-height: 18px;
+                letter-spacing: 0.12em;
+                color: #26373f;
             }
         }
 
         .buy-now {
+            width: 230px;
+            height: 48px;
+            padding: 14px 22px;
+            gap: 10px;
             display: flex;
+            flex-direction: row;
+            justify-content: space-between;
             align-items: center;
-            background: #4f4f8b;
-            width: 258.97px;
-            height: 42.53px;
+            outline: none;
             border: none;
+            border-radius: 10px;
+            box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
+            background: #1f2d34;
+            cursor: pointer;
 
-            span {
+            &__text {
+                text-align: center;
                 font-style: normal;
-                font-weight: normal;
-                font-size: 18.3913px;
-                line-height: 22px;
-                color: #fff;
                 text-transform: uppercase;
+                font-family: "Orbitron", sans-serif;
+                font-weight: 900;
+                font-size: 14px;
+                line-height: 18px;
+                letter-spacing: 0.12em;
+                color: #fff;
             }
 
-            img {
-                padding: 0 5px 0 17px;
+            &__value {
+                text-transform: uppercase;
+                font-style: normal;
+                font-family: "Urbanist", sans-serif;
+                font-weight: 900;
+                font-size: 14px;
+                line-height: 17px;
+                letter-spacing: 0.12em;
+                color: #f5ff63;
             }
-        }
-    }
-
-    &__last {
-        display: flex;
-        align-items: center;
-
-        .title {
-            font-style: normal;
-            font-weight: normal;
-            font-size: 18.3913px;
-            line-height: 22px;
-            color: #9999ac;
-        }
-
-        .value {
-            padding: 0 5px;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 18.3913px;
-            line-height: 22px;
-            color: #fff;
-        }
-
-        img {
-            margin-bottom: 3px;
-            width: 13px;
-            height: 13px;
         }
     }
 }
 
 .card__sell-btn {
-    display: none;
     width: 248px;
     height: 33px;
-    margin: 26px 5%;
+    display: none;
     border: none;
     background: radial-gradient(254.55% 254.55% at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%), linear-gradient(180deg, #5cff79 0%, #3ccf56 100%);
     cursor: not-allowed;
@@ -177,123 +166,116 @@
     &__text {
         font-style: normal;
         font-weight: bold;
+        text-align: center;
         font-size: 16px;
         line-height: 16px;
-        text-align: center;
         color: #181829;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+
+    .footballer-card-price {
+
+        &__bid {
+
+            .bid {
+
+                &__value {
+                    font-size: 18px;
+                }
+            }
+        }
+
+        &__auction {
+
+            .auction-expire-time {
+                font-size: 18px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $desktopBreakPoint) {
+
+    .footballer-card-price {
+
+        &__bid {
+            margin-bottom: 15px;
+
+            .bid {
+
+                &__title {
+                    font-size: 20px;
+                }
+
+                &__value {
+                    font-size: 16px;
+                }
+            }
+        }
+
+        &__auction {
+            margin-bottom: 15px;
+
+            .auction-title {
+                font-size: 20px;
+            }
+
+            .auction-expire-time {
+                font-size: 16px;
+            }
+        }
+
+        &__buttons {
+            flex-direction: column;
+
+            .place-bid {
+                width: 100%;
+                margin: 0 0 20px 0;
+                justify-content: center;
+            }
+
+            .buy-now {
+                width: 100%;
+            }
+        }
     }
 }
 
 @media screen and (max-width: $tabletBreakPoint) {
 
     .footballer-card-price {
-        width: 362px;
-
-        &__info-area {
-            width: 362px;
-        }
 
         &__bid {
 
             .bid {
 
+                &__title {
+                    font-size: 18px;
+                }
+
                 &__value {
-                    font-size: 65px;
-                    line-height: 70px;
+                    font-size: 16px;
                 }
             }
+        }
 
-            &__coin {
+        &__auction {
 
-                img {
-                    width: 40px;
-                }
+            .auction-title {
+                font-size: 18px;
+            }
+
+            .auction-expire-time {
+                font-size: 16px;
             }
         }
 
         &__buttons {
 
             .place-bid {
-                width: 175px;
-
-                &__text {
-                    margin-top: 3px;
-                }
-            }
-
-            .buy-now {
-                width: 175px;
-
-                span {
-                    margin-top: 3px;
-                }
-
-                img {
-                    padding: 0 5px 0 8px;
-                }
-            }
-        }
-
-        &__last {
-            margin-bottom: 30px;
-        }
-    }
-}
-
-@media screen and (max-width: $phoneBreakPoint) {
-
-    .footballer-card-price {
-        position: absolute;
-        margin: -760px 5% 0 5%;
-        width: 90%;
-        border: none;
-        background: none;
-
-        &__info-area {
-            width: 100%;
-        }
-
-        &__bid {
-
-            .bid {
-
-                &__value {
-                    font-size: 50px;
-                    line-height: 70px;
-                }
-            }
-
-            &__coin {
-
-                img {
-                    width: 35px;
-                }
-            }
-        }
-
-        &__buttons {
-
-            .place-bid {
-                width: 45%;
-
-                &__text {
-                    margin-top: 3px;
-                    font-size: 12px;
-                }
-            }
-
-            .buy-now {
-                width: 45%;
-
-                span {
-                    margin-top: 3px;
-                    font-size: 12px;
-                }
-
-                img {
-                    width: 30px;
-                    padding: 0 5px 0 8px;
-                }
+                margin-bottom: 12px;
             }
         }
 

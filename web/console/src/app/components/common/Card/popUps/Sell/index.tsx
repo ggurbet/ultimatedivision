@@ -1,7 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import currency from '@static/img/FootballerCardPage/currency.svg';
 import closePopup from '@static/img/FootballerCardPage/close-popup.svg';
 
 import './index.scss';
@@ -22,11 +21,6 @@ export const Sell: React.FC<SellTypes> = ({ setIsOpenSellPopup }) =>
             <span className="pop-up__sell__title">SELL</span>
             <span className="pop-up__sell__price-title">Minimum Price</span>
             <div className="pop-up__sell__price-block">
-                <img
-                    className="pop-up__sell__coin"
-                    src={currency}
-                    alt="currency img"
-                />
                 <input
                     className="pop-up__sell__input"
                     type="number"
@@ -38,11 +32,6 @@ export const Sell: React.FC<SellTypes> = ({ setIsOpenSellPopup }) =>
             </div>
             <span className="pop-up__sell__price-title">Buy Now Price</span>
             <div className="pop-up__sell__price-block">
-                <img
-                    className="pop-up__sell__coin"
-                    src={currency}
-                    alt="currency img"
-                />
                 <input
                     className="pop-up__sell__input"
                     type="number"

@@ -92,10 +92,16 @@
 
 @media screen and (max-width: $desktopBreakPoint) {
 
-    .field-controls-area {
+    .field-controls {
+        &__play {
+            display: none;
+        }
 
-        &__title {
-            font-size: 28px;
+        &-area {
+
+            &__title {
+                font-size: 28px;
+            }
         }
     }
 }
@@ -107,9 +113,6 @@
         max-width: none;
         height: 100px;
 
-        &__play {
-            display: none;
-        }
     }
 }
 

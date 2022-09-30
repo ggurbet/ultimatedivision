@@ -1,7 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import currency from '@static/img/FootballerCardPage/currency.svg';
 import closePopup from '@static/img/FootballerCardPage/close-popup.svg';
 
 import './index.scss';
@@ -31,11 +30,6 @@ export const PlaceBid: React.FC<PlaceBidTypes> = ({ setIsOpenPlaceBidPopup, setC
                 />
                 <span className="pop-up__place-bid__title">Plase a bid</span>
                 <div className="pop-up__place-bid__block">
-                    <img
-                        className="pop-up__place-bid__coin"
-                        src={currency}
-                        alt="currency img"
-                    />
                     <input
                         className="pop-up__place-bid__input"
                         min={0}

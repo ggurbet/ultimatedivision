@@ -28,7 +28,6 @@
         align-items: center;
 
         &__item {
-            margin-right: 40px;
             list-style: none;
             font-family: "Orbitron", sans-serif;
             font-style: normal;
@@ -38,6 +37,10 @@
             letter-spacing: 0.12em;
             text-transform: uppercase;
             cursor: pointer;
+
+            &:not(:last-child) {
+                margin-right: 40px;
+            }
 
             &__active {
                 text-decoration: none;
