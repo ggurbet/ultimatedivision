@@ -125,11 +125,13 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 	}
 
 	item := Item{
-		CardID:     createNFT.CardID,
-		Wallet:     createNFT.WalletAddress,
-		WalletType: user.WalletType,
-		Value:      createNFT.Value,
+		CardID:       createNFT.CardID,
+		Wallet:       createNFT.WalletAddress,
+		WalletType:   user.WalletType,
+		CasperWallet: createNFT.CasperWallet,
+		Value:        createNFT.Value,
 	}
+
 	if err = service.waitList.Create(ctx, item); err != nil {
 		return transaction, ErrWaitlist.Wrap(err)
 	}

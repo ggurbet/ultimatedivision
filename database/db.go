@@ -246,12 +246,13 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             minute   INTEGER                                          NOT NULL
         );
         CREATE TABLE IF NOT EXISTS waitlist(
-            token_id       SERIAL                                                     NOT NULL,
-            card_id        BYTEA   PRIMARY KEY REFERENCES cards(id) ON DELETE CASCADE NOT NULL,
-            wallet_address BYTEA                                                      NOT NULL,
-            value          BYTEA                                                      NOT NULL,
-            password       VARCHAR                                                    NOT NULL,
-            wallet_type    VARCHAR                                                    NOT NULL
+            token_id              SERIAL                                                     NOT NULL,
+            card_id               BYTEA   PRIMARY KEY REFERENCES cards(id) ON DELETE CASCADE NOT NULL,
+            wallet_address        BYTEA                                                      NOT NULL,
+            casper_wallet_address VARCHAR,
+            value                 BYTEA                                                      NOT NULL,
+            password              VARCHAR                                                    NOT NULL,
+            wallet_type           VARCHAR                                                    NOT NULL
         );
         CREATE TABLE IF NOT EXISTS nfts(
             card_id        BYTEA   PRIMARY KEY REFERENCES cards(id) NOT NULL,
