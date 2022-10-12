@@ -210,7 +210,7 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
         <div className="registration-pop-up">
             <div className="registration-pop-up__wrapper">
                 <div className="registration-pop-up__wrapper__close" onClick={closeRegistrationPopup}>
-                    <img src={closeButton} alt="close button" />
+                    <img src={closeButton} alt="close button" className="registration-pop-up__wrapper__close__icon" />
                 </div>
                 <div className="registration-pop-up__block">
                     <div className="registration-pop-up__represent">

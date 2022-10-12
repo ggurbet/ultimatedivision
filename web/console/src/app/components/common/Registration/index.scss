@@ -113,3 +113,107 @@
         }
     }
 }
+
+@media screen and (max-width: $tabletBreakPoint) {
+
+    .registration-pop-up {
+
+        &__wrapper {
+            max-height: 319px;
+            width: 459px;
+
+            &__close {
+                top: 16px;
+                right: 16px;
+
+                &__icon {
+                    width: 15px;
+                    height: 15px;
+                }
+            }
+        }
+
+        &__block {
+            height: 319px;
+            width: 459px;
+        }
+
+        &__content {
+
+            &__block {
+
+                &__item {
+                    width: 170px;
+                    margin-bottom: 10px;
+                    padding: 9px 0;
+
+                    &__text {
+                        font-size: 9px;
+                    }
+
+                    &__logo {
+                        width: 15px;
+                        height: 15px;
+                    }
+                }
+            }
+
+            &__title {
+                margin-bottom: 20px;
+                font-size: 28px;
+                line-height: 32px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 530px) {
+
+    .registration-pop-up {
+
+        &__wrapper {
+            width: 342.95px;
+            max-height: 230.38px;
+
+            &__close {
+
+                &__icon {
+                    width: 12px;
+                    height: 12px;
+                }
+            }
+        }
+
+        &__block {
+            width: 342.95px;
+            height: 230.38px;
+        }
+
+        &__content {
+
+            &__block {
+
+                &__item {
+                    width: 128px;
+                    margin-bottom: 7px;
+                    padding: 7px 0;
+
+                    &__text {
+                        font-size: 6px;
+                    }
+
+                    &__logo {
+                        width: 13px;
+                        height: 13px;
+                    }
+                }
+            }
+
+            &__title {
+                margin-bottom: 12px;
+                font-size: 22px;
+                line-height: 28px;
+            }
+        }
+    }
+}

@@ -93,6 +93,7 @@
 @media screen and (max-width: $desktopBreakPoint) {
 
     .field-controls {
+
         &__play {
             display: none;
         }
@@ -112,7 +113,6 @@
         margin: 0 auto;
         max-width: none;
         height: 100px;
-
     }
 }
 
