@@ -11,7 +11,7 @@ import { RootState } from '@/app/store';
 
 import { Card } from '@/card';
 
-import box from '@static/img/StorePage/BoxContent/box.png';
+import box from '@static/img/StorePage/BoxContent/box.webp';
 
 import './index.scss';
 

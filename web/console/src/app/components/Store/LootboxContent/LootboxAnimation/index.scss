@@ -27,9 +27,9 @@
 
         &--opening {
             position: absolute;
-            width: 740px;
+            width: 720px;
             bottom: 0;
-            left: calc(50% + 3px);
+            left: calc(50%);
             transform: translateX(-50%);
         }
 
@@ -37,31 +37,23 @@
             position: absolute;
             width: 620px;
             bottom: 0;
-            left: calc(50% + 5px);
-            transform: translateX(-50%);
-        }
-
-        &--start-opening {
-            position: absolute;
-            width: 540px;
-            bottom: 0;
-            left: calc(50% + 5px);
+            left: calc(50%);
             transform: translateX(-50%);
         }
 
         &--middle-opening {
             position: absolute;
-            width: 540px;
+            width: 520px;
             bottom: 0;
-            left: calc(50% + 9px);
+            left: calc(50%);
             transform: translateX(-50%);
         }
 
         &--opened {
             position: absolute;
-            width: 410px;
-            bottom: 2px;
-            left: 50%;
+            width: 400px;
+            bottom: 0;
+            left: calc(50% - 2.5px);
             transform: translateX(-50%);
         }
     }
@@ -114,70 +106,140 @@
             bottom: -180px;
 
             &--opened {
-                bottom: -150px;
+                bottom: -170px;
             }
 
             &--opening {
-                bottom: -200px;
+                bottom: -170px;
             }
 
             &--falling {
-                bottom: -150px;
-            }
-
-            &--start-opening {
-                bottom: -155px;
+                bottom: -135px;
             }
 
             &--middle-opening {
-                bottom: -155px;
+                bottom: -135px;
             }
         }
     }
 }
 
-@media (max-width: $phoneBreakPoint + 100px) {
+@media (max-width: $tabletBreakPoint) {
 
     .box-animation {
+        height: calc(100vh - 132px);
         width: 100%;
 
         &__box-container {
             width: 80%;
             margin: 0 20px;
-
-            @keyframes boxHiding {
-
-                to {
-                    transform: translateY(200px);
-                }
-            }
-        }
-
-        &__card-container {
-            width: 60%;
-        }
-
-        &__ribbons {
-            width: 70%;
-            top: -50px;
-        }
-
-        &__light {
-            left: -10%;
-            width: 120%;
         }
     }
 }
 
-@media (max-width: $phoneBreakPoint - 200px) {
+@media (max-width: $phoneBreakPoint) {
 
     .box-animation {
 
-        &__box-container {
-            @keyframes boxHiding {
+        &__box {
+            bottom: -156px;
 
-                to {
-                    transform: translateY(120px);
+            &--opening {
+                width: 576px;
+                bottom: -136px;
+            }
+
+            &--falling {
+                width: 496px;
+                bottom: -108px;
+            }
+
+            &--middle-opening {
+                width: 416px;
+                bottom: -108px;
+            }
+
+            &--opened {
+                width: 320px;
+                bottom: -136px;
+            }
+        }
+
+        &__card {
+            width: 60%;
+
+            &__container {
+                animation: cardShowing 2s 1s 1 normal forwards ease-in-out;
+
+                @keyframes cardShowing {
+
+                    0% {
+                        opacity: 0;
+                    }
+
+                    30% {
+                        transform: translateY(200px);
+                    }
+
+                    100% {
+                        transform: scale(1.2) translateY(90px);
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 440px) {
+
+    .box-animation {
+
+        &__box {
+            bottom: -124px;
+
+            &--opening {
+                width: 501px;
+                bottom: -118px;
+            }
+
+            &--falling {
+                width: 431px;
+                bottom: -93px;
+            }
+
+            &--middle-opening {
+                width: 361px;
+                bottom: -93px;
+            }
+
+            &--opened {
+                width: 278px;
+                bottom: -118px;
+                left: calc(50% - 1.5px);
+            }
+        }
+
+        &__card {
+            width: 55%;
+
+            &__container {
+                animation: cardShowing 2s 1s 1 normal forwards ease-in-out;
+
+                @keyframes cardShowing {
+
+                    0% {
+                        opacity: 0;
+                    }
+
+                    30% {
+                        transform: translateY(240px);
+                    }
+
+                    100% {
+                        transform: scale(1.2) translateY(150px);
+                        opacity: 1;
+                    }
                 }
             }
         }

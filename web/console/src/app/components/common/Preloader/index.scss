@@ -50,15 +50,16 @@
 
         &-text {
             position: relative;
+            margin-left: 11px;
+            overflow: hidden;
             display: flex;
             align-items: center;
-            margin-left: 11px;
             font-style: normal;
             font-weight: normal;
-            font-size: 38.3464px;
+            font-size: 28px;
             line-height: 46px;
+            font-family: "Urbanist", sans-serif;
             color: #ffff;
-            overflow: hidden;
             animation: loading 2s 1s linear infinite;
         }
 
@@ -88,10 +89,6 @@
         &__logo {
             width: 250.26px;
             height: 75.43px;
-        }
-
-        &__load {
-            margin-left: 50px;
         }
     }
 }

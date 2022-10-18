@@ -10,7 +10,7 @@ export const RoadmapPoint: React.FC<{ item: RoadmapStep }> = ({ item }) =>
             <p className="roadmap-point__step">{item.step}</p>
             <ul className="roadmap-point__list">
                 {item.points.map((point, _) =>
-                    <li className="roadmap-point__item" key={item.id}>
+                    <li className="roadmap-point__item" key={point}>
                         <div className="roadmap-point__item__bullet"></div>
                         <span className="roadmap-point__item__description">
                             {point}
@@ -20,5 +20,3 @@ export const RoadmapPoint: React.FC<{ item: RoadmapStep }> = ({ item }) =>
             </ul>
         </div>
     </div>;
-
-

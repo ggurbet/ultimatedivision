@@ -34,3 +34,60 @@
         color: $cardHighlightColor;
     }
 }
+
+@media (max-width: $desktopBreakPoint) {
+
+    .box-card-quality {
+
+        &__text,
+        &__value {
+            font-size: 13px;
+        }
+
+        &:not(:last-child) {
+            margin-bottom: 8px;
+        }
+
+        &:last-child {
+            margin-bottom: 11px;
+        }
+    }
+}
+
+@media (max-width: $tabletBreakPoint) {
+
+    .box-card-quality {
+
+        &__text,
+        &__value {
+            font-size: 18px;
+        }
+
+        &:not(:last-child) {
+            margin-bottom: 12px;
+        }
+
+        &:last-child {
+            margin-bottom: 16px;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .box-card-quality {
+
+        &__text,
+        &__value {
+            font-size: 12px;
+        }
+
+        &:not(:last-child) {
+            margin-bottom: 8px;
+        }
+
+        &:last-child {
+            margin-bottom: 11px;
+        }
+    }
+}

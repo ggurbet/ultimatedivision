@@ -1,3 +1,5 @@
+@import "@/index.scss";
+
 .minting-area {
 
     &__button {
@@ -75,6 +77,40 @@
             letter-spacing: 0.12em;
             text-transform: uppercase;
             color: #704dff;
+        }
+    }
+}
+
+@media (max-width: 1440px) {
+
+    .minting-area {
+
+        &__button {
+            padding: 10.5px 22px;
+            height: 48px;
+            border-radius: 9px;
+        }
+    }
+}
+
+@media (max-width: $tabletBreakPoint) {
+
+    .minting-area {
+
+        &__button {
+            height: auto;
+            padding: 10.5px 22px;
+        }
+
+        &__timer {
+
+            &__text {
+                font-size: 14px;
+            }
+
+            &__time {
+                font-size: 14px;
+            }
         }
     }
 }

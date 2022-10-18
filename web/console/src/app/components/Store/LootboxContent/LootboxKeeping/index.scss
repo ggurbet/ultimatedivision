@@ -3,20 +3,10 @@
 @import "slick-carousel/slick/slick-theme.css";
 
 .box-keeping {
-    animation: darken 1s 0 1 normal forwards;
+    position: relative;
     overflow: hidden;
-    height: calc(100vh - 100px);
-
-    @keyframes darken {
-
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
+    max-height: calc(100vh - 98px);
+    height: calc(100vh - 98px);
 
     &__wrapper {
         max-width: 1440px;
@@ -50,22 +40,22 @@
 
     &__button {
         z-index: 2;
-        cursor: pointer;
-        border: none;
-        transition: box-shadow 0.3s;
         padding: 15px 87px;
-        background: #f5ff63;
-        box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
+        border: none;
         border-radius: 10px;
-        font-family: "Orbitron", sans-serif;
+        transition: box-shadow 0.3s;
+        box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
+        text-transform: uppercase;
         font-style: normal;
+        text-align: center;
+        font-family: "Orbitron", sans-serif;
         font-weight: 900;
         font-size: 14px;
         line-height: 18px;
-        text-align: center;
         letter-spacing: 0.12em;
-        text-transform: uppercase;
+        background: #f5ff63;
         color: #26373f;
+        cursor: pointer;
 
         &__wrapper {
             margin: 30px 0 35px;
@@ -75,51 +65,56 @@
     }
 
     &__box {
-        width: 410px;
+        width: 400px;
 
         &__wrapper {
-            position: relative;
+            position: absolute;
             width: 100%;
-            max-width: 410px;
+            max-width: 400px;
+            margin: 0 auto;
+            bottom: -3px;
+            left: calc(50% - 2.5px);
+            transform: translate(-50%);
             display: flex;
             justify-content: center;
-            margin: 0 auto;
         }
     }
 
     .slick-prev {
-        margin-left: 5%;
+        z-index: 10;
         width: 60px;
         height: 60px;
+        margin-left: 5%;
 
         &:before {
-            content: "";
             position: absolute;
+            content: "";
+            width: 60px;
+            height: 60px;
             left: 0;
             top: 0;
             background: url("@static/img/StorePage/BoxContent/arrow-prev.svg");
             background-size: 100%;
             background-repeat: no-repeat;
-            width: 60px;
-            height: 60px;
         }
     }
 
     .slick-next {
-        margin-right: 5%;
         width: 60px;
         height: 60px;
+        z-index: 10;
+        margin-right: 5%;
 
         &:before {
-            content: "";
             position: absolute;
+            content: "";
+            width: 60px;
+            height: 60px;
             right: 0;
             top: 0;
             background: url("@static/img/StorePage/BoxContent/arrow-next.svg");
             background-size: 100%;
             background-repeat: no-repeat;
-            width: 60px;
-            height: 60px;
         }
     }
 
@@ -129,16 +124,70 @@
     }
 }
 
-@media (max-width: $tabletBreakPoint) {
+@media (max-width: 1450px) {
 
     .box-keeping {
 
+        &__card {
+            width: 150px;
+        }
+
+        &__box {
+
+            &__wrapper {
+                bottom: -174px;
+            }
+        }
+    }
+}
+
+@media (max-width: $desktopBreakPoint) {
+
+    .box-keeping {
+
+        &__wrapper {
+            width: 70%;
+        }
+
+        &__card {
+            width: 120px;
+        }
+    }
+}
+
+@media (max-width: 900px) {
+
+    .box-keeping {
+
+        &__wrapper {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        &__box {
+            position: absolute;
+            width: 400px;
+            height: auto;
+            bottom: -143px;
+
+            &__wrapper {
+                position: relative;
+                width: 400px;
+                height: 300px;
+                margin: 0;
+                bottom: -30px;
+            }
+        }
+
         &__card-wrapper {
-            row-gap: 20px;
             width: 100%;
             min-height: 700px;
             grid-template-columns: repeat(2, 1fr);
             justify-content: space-between;
+            row-gap: 20px;
 
             &__card {
                 margin: 5% 0;
@@ -152,56 +201,131 @@
     }
 }
 
-@media (max-width: $phoneBreakPoint) {
+@media (max-height: 800px) {
 
     .box-keeping {
 
-        &__title {
-            font-size: 32px;
-            font-weight: normal;
-        }
+        &__button {
 
-        &__button-wrapper {
-            margin: 60px 0 30px;
-        }
-
-        &__card-wrapper {
-            min-height: 520px;
-            row-gap: 0;
-        }
-
-        &__card:nth-child(2n + 1) {
-            margin-right: -12px;
-        }
-
-        &__card {
-            margin: 0;
-            transform: scale(0.7);
-
-            &:hover {
-                transform: scale(0.9);
+            &__wrapper {
+                margin: 0;
             }
-        }
-
-        &__box-body {
-            width: 90%;
-            left: 0;
-            right: 0;
-            margin: 0 auto;
         }
     }
 }
 
-@media (max-width: 330px) {
+@media (max-width: $phoneBreakPoint) {
 
     .box-keeping {
+        height: calc(100vh - 132px);
 
-        &__title {
-            margin-left: 30px;
+        &__button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+
+            &__wrapper {
+                margin: 0;
+            }
+        }
+
+        .slick-prev {
+            margin-left: calc(50% - 30px);
+        }
+
+        .slick-next {
+            margin-right: calc(50% - 30px);
+        }
+
+        .slick-prev,
+        .slick-next {
+            top: auto;
+            bottom: -40px;
         }
 
         &__wrapper {
-            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        &__card {
+            width: 100px;
+            height: auto;
+            padding: 5px;
+            margin: auto;
+
+            &__wrapper {
+                height: calc(100vh - 132px - 340px);
+                width: 60%;
+                margin-bottom: 50px;
+                grid-template-rows: repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        &__box {
+            position: absolute;
+            width: 320px;
+            height: auto;
+            bottom: -100px;
+
+            &__wrapper {
+                width: 350px;
+                height: 260px;
+                margin: 0;
+            }
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) and (max-height: 750px) {
+
+    .box-keeping {
+
+        .slick-next,
+        .slick-prev {
+            width: 50px;
+            height: 50px;
+
+            &:before {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        &__card {
+            width: 70px;
+
+            &__wrapper {
+                width: 50%;
+            }
+        }
+    }
+}
+
+@media (max-width: 440px) {
+
+    .box-keeping {
+
+        &__box {
+            width: 278px;
+            bottom: -88px;
+
+            &__wrapper {
+                width: 278px;
+                height: 250px;
+                left: calc(50% - 1.5px);
+            }
+        }
+
+        &__card {
+
+            &__wrapper {
+                height: calc(100vh - 132px - 320px);
+                width: 65%;
+            }
         }
     }
 }

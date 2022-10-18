@@ -144,54 +144,260 @@
     }
 }
 
-@media (max-width: $phoneBreakPoint) {
+@media (max-width: $desktopBreakPoint) {
 
     .box-card {
 
-        &:hover {
-            transform: scale(1);
-            box-shadow: none;
+        &__wrapper {
+            padding: 20px 20px 18px;
         }
 
-        position: relative;
-        width: 100%;
-        height: 620px;
-        margin-top: 20%;
-
-        &__wrapper {
-            flex-direction: column;
-            gap: 7%;
-            padding: 5%;
+        &__title {
+            font-size: 20px;
         }
 
         &__icon {
-            top: -100px;
-            left: 50%;
-            transform: translateX(-50%);
+            width: 80px;
+            height: 73px;
         }
 
-        &:first-child {
+        &__description {
+            width: 120px;
+        }
 
-            .box-card__icon {
-                top: -70px;
-                left: 50%;
-                transform: translateX(-50%);
+        &__quantity {
+
+            &-value,
+            &-label {
+                font-size: 16px;
+            }
+        }
+
+        &__qualities {
+
+            &__title {
+                margin-bottom: 8px;
+                font-size: 13px;
+            }
+        }
+
+        &__button {
+            padding: 6px 10px;
+
+            &-text {
+                font-size: 10px;
+            }
+
+            &-value {
+                font-size: 10px;
+            }
+        }
+    }
+}
+
+@media (max-width: $tabletBreakPoint) {
+
+    .box-card {
+
+        &__wrapper {
+            justify-content: center;
+            padding: 40px 40px 38px;
+        }
+
+        &__title {
+            font-size: 30px;
+        }
+
+        &__icon {
+            width: 130px;
+            height: 110px;
+        }
+
+        &__description {
+            width: 200px;
+        }
+
+        &--regular {
+
+            &:hover {
+                transform: none;
+            }
+        }
+
+        &--cool {
+
+            &:hover {
+                transform: none;
             }
         }
 
         &__quantity {
-            display: flex;
 
-            .box-card__quantity-label {
-                width: 50%;
-                padding-left: 2%;
-                align-self: flex-end;
-                justify-self: flex-end;
+            &-value,
+            &-label {
+                font-size: 24px;
+            }
+        }
+
+        &__qualities {
+
+            &__title {
+                margin-bottom: 17px;
+                font-size: 24px;
+            }
+        }
+
+        &__button {
+            padding: 6px 10px;
+
+            &-text {
+                font-size: 16px;
             }
 
-            .box-card__quantity-value {
-                width: 50%;
-                text-align: right;
+            &-value {
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+@media (max-width: 700px) {
+
+    .box-card {
+
+        &__wrapper {
+            justify-content: center;
+            padding: 40px 40px 38px;
+        }
+
+        &__title {
+            font-size: 26px;
+        }
+
+        &__icon {
+            width: 130px;
+            height: 110px;
+        }
+
+        &__description {
+            width: 170px;
+        }
+
+        &--regular {
+
+            &:hover {
+                transform: none;
+            }
+        }
+
+        &--cool {
+
+            &:hover {
+                transform: none;
+            }
+        }
+
+        &__quantity {
+
+            &-value,
+            &-label {
+                font-size: 20px;
+            }
+        }
+
+        &__qualities {
+
+            &__title {
+                margin-bottom: 17px;
+                font-size: 20px;
+            }
+        }
+
+        &__button {
+            padding: 6px 10px;
+
+            &-text {
+                font-size: 14px;
+            }
+
+            &-value {
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .box-card {
+        width: auto;
+
+        &__wrapper {
+            padding: 22px;
+        }
+
+        &__title {
+            font-size: 20px;
+        }
+
+        &__icon {
+            width: 80px;
+            height: 73px;
+        }
+
+        &__description {
+            width: 130px;
+        }
+
+        &__quantity {
+
+            &-value,
+            &-label {
+                font-size: 16px;
+            }
+        }
+
+        &__qualities {
+
+            &__title {
+                margin-bottom: 8px;
+                font-size: 13px;
+            }
+        }
+
+        &__button {
+            padding: 6px 10px;
+
+            &-text {
+                font-size: 10px;
+            }
+
+            &-value {
+                font-size: 10px;
+            }
+        }
+    }
+}
+
+@media (min-width: $tabletBreakPoint) and (max-height: 800px) {
+
+    .box-card {
+
+        &__wrapper {
+            padding: 20px 20px 18px;
+        }
+
+        &--regular {
+
+            &:hover {
+                transform: translate(-25px) scale(1.05);
+            }
+        }
+
+        &--cool {
+
+            &:hover {
+                transform: translate(25px) scale(1.05);
             }
         }
     }

@@ -30,6 +30,10 @@
 
     .page {
 
+        &__store {
+            height: auto;
+        }
+
         &.scroll-unset {
             overflow-y: hidden;
             max-height: 100vh;
