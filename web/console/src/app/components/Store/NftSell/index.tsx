@@ -4,7 +4,7 @@
 import { MintingArea } from './MintingArea';
 import { CardMintingProgress } from './CardMintingProgress';
 
-import diamondCard from '@static/img/StorePage/SellNft/diamondCard.gif';
+import diamondCard from '@static/img/StorePage/SellNft/diamondCard.webp';
 
 import './index.scss';
 

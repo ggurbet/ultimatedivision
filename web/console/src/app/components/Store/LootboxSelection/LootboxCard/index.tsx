@@ -20,6 +20,7 @@ import { UnauthorizedError } from '@/api';
 import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { openLootbox } from '@/app/store/actions/lootboxes';
 import { LootboxStats } from '@/app/types/lootbox';
+import { setCurrentUser } from '@/app/store/actions/users';
 
 import './index.scss';
 
@@ -62,8 +63,9 @@ export const LootboxCard: React.FC<{
     const boxType = lootBoxStats.type === 'Regular Box' ? 'Regular Box' : 'Cool box';
 
     const handleAnimation = async() => {
-        // TODO: need add id lootbox from BD after be create endpoint fetch lootboxex.
         try {
+            await dispatch(setCurrentUser());
+
             handleLootboxSelection(false);
             handleLootboxKeeping(false);
 
@@ -78,7 +80,6 @@ export const LootboxCard: React.FC<{
 
                 return;
             }
-
             toast.error('Failed to open lootbox', {
                 position: toast.POSITION.TOP_RIGHT,
                 theme: 'colored',

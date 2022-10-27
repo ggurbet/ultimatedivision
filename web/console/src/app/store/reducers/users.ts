@@ -2,12 +2,12 @@
 // See LICENSE for copying information.
 
 import { UsersClient } from '@/api/users';
+import { User } from '@/users';
 import { UsersService } from '@/users/service';
 
 import {
-    CHANGE_PASSWORD,
     LOGIN,
-    RECOVER_PASSWORD,
+    SET_USER,
 } from '../actions/users';
 
 /**
@@ -15,10 +15,7 @@ import {
  */
 export class UsersState {
     public readonly userService: UsersService;
-    public user = {
-        email: '',
-        password: '',
-    };
+    public user: User = new User();
     /** UsersState contains service implementation of users  */
     public constructor(userService: UsersService) {
         this.userService = userService;
@@ -32,18 +29,12 @@ export const usersReducer = (
     state = new UsersState(usersService),
     action: any = {}
 ) => {
-    const user = state.user;
-
     switch (action.type) {
     case LOGIN:
-        user.email = action.user.email;
-        user.password = action.user.password;
+        state.user.email = action.user.email;
         break;
-    case CHANGE_PASSWORD:
-        user.password = action.passwords.newPassword;
-        break;
-    case RECOVER_PASSWORD:
-        user.password = action.password;
+    case SET_USER:
+        state.user = action.user;
         break;
     default:
         break;

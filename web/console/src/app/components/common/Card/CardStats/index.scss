@@ -19,6 +19,10 @@
         line-height: 28px;
         letter-spacing: 0.12em;
 
+        &__mobile-value {
+            display: none;
+        }
+
         &-value {
             color: #f5ff63;
         }
@@ -106,10 +110,6 @@
             font-weight: 900;
             font-size: 16px;
             line-height: 18px;
-
-            &__mobile-value {
-                display: none;
-            }
         }
 
         &__row-name {

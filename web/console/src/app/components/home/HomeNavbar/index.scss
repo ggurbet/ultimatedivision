@@ -35,7 +35,6 @@
 
         &__item {
             list-style: none;
-            margin-right: 40px;
             font-family: "Orbitron", sans-serif;
             font-style: normal;
             font-weight: 900;
@@ -47,6 +46,10 @@
             text-shadow: 0 2px 3px rgba(8, 36, 80, 0.36);
             white-space: nowrap;
             cursor: pointer;
+
+            &:not(:last-child) {
+                margin-right: 40px;
+            }
 
             &__active {
                 color: white;

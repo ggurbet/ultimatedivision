@@ -3,8 +3,8 @@
 
 import { JoinButton } from '@components/common/JoinButton';
 
-import field from '@static/img/gameLanding/main/field.png';
-import fieldAnimation from '@static/img/gameLanding/main/field-animation.gif';
+import field from '@static/img/gameLanding/main/field.webp';
+import fieldAnimation from '@static/img/gameLanding/main/field-animation.webp';
 
 import './index.scss';
 

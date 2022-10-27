@@ -3,7 +3,7 @@
 
 import { RoadmapPoint } from './RoadmapPoint';
 
-import roadmap from '@static/img/gameLanding/roadmap/roadmap.png';
+import roadmap from '@static/img/gameLanding/roadmap/roadmap.webp';
 
 import './index.scss';
 

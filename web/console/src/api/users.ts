@@ -34,4 +34,23 @@ export class UsersClient extends APIClient {
             await this.handleError(response);
         }
     }
+    /** Gets user */
+    public async getUser(): Promise<User> {
+        const path = '/api/v0/profile';
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        }
+        const user = await response.json();
+
+        return new User(user.casperWallet,
+            user.email,
+            user.id,
+            user.lastLogin,
+            user.nickName,
+            user.registerDate,
+            user.wallet,
+            user.walletType);
+    }
 }

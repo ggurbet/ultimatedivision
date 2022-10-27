@@ -13,17 +13,15 @@ import { deleteCard, setDragStart, startSearchingMatch } from '@/app/store/actio
 import { FieldCardsFromation } from './FieldCardsFormation';
 import { FieldCardsShadows } from './FieldCardsShadows';
 
-import footballField from '@static/img/FieldPage/football_field.png';
+import footballField from '@static/img/FieldPage/football_field.webp';
 
 import './index.scss';
-import { Card } from '@/card';
 
 export const FieldPlayingArea: React.FC = () => {
     const EMPTY_CARD_ID = '00000000-0000-0000-0000-000000000000';
 
     const dispatch = useDispatch();
 
-    const cards: Card[] = useSelector((state: RootState) => state.cardsReducer.cardsPage.cards);
     const formation: FormationsType = useSelector((state: RootState) => state.clubsReducer.activeClub.squad.formation);
     const dragStartIndex: number | null = useSelector((state: RootState) => state.clubsReducer.options.dragStart);
     const club: Club = useSelector((state: RootState) => state.clubsReducer.activeClub);

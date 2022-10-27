@@ -10,7 +10,7 @@ import { VideoGame } from '@components/home/VideoGame';
 import { GameInfo } from '@components/home/GameInfo';
 import Navbar from '@components/home/HomeNavbar';
 
-import banner from '@static/img/gameLanding/banner.png';
+import banner from '@static/img/gameLanding/banner.webp';
 
 import './index.scss';
 

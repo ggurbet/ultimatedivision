@@ -3,7 +3,7 @@
 
 import { JoinButton } from '@components/common/JoinButton';
 
-import videoPreview from '@static/img/gameLanding/video/video-preview.png';
+import videoPreview from '@static/img/gameLanding/video/video-preview.webp';
 import playButton from '@static/img/gameLanding/video/play-button.svg';
 import videoBg from '@static/img/gameLanding/video/video-bg.png';
 

@@ -1,3 +1,6 @@
+// Copyright (C) 2022 Creditor Corp. Group.
+// See LICENSE for copying information.
+
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -61,7 +64,7 @@ const AuthWrapper = () => {
         await velasService.login(nonce, accountKeyEvm, accessToken, expiresAt);
 
         setLocalStorageItem('IS_LOGGINED', true);
-        history.push(RouteConfig.Cards.path);
+        history.push(RouteConfig.Store.path);
         window.location.reload();
     };
 
