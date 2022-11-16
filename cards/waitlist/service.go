@@ -74,13 +74,34 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 	}
 
 	if item, err := service.GetByCardID(ctx, createNFT.CardID); item.Password != "" && err == nil {
-		transaction = Transaction{
-			Password:          item.Password,
-			NFTCreateContract: service.config.NFTCreateContract,
-			TokenID:           item.TokenID,
-			Value:             item.Value,
-			WalletType:        item.WalletType,
+		switch item.WalletType {
+		case "velas_wallet_address":
+			transaction = Transaction{
+				Password:          item.Password,
+				NFTCreateContract: NFTCreateContract(service.config.NFTCreateVelasContract),
+				TokenID:           item.TokenID,
+				Value:             item.Value,
+				WalletType:        item.WalletType,
+			}
+		case "casper_wallet_address":
+			transaction = Transaction{
+				Password:          item.Password,
+				NFTCreateContract: NFTCreateContract(service.config.NFTCreateCasperContract),
+				TokenID:           item.TokenID,
+				Value:             item.Value,
+				WalletType:        item.WalletType,
+				RPCNodeAddress:    "http://136.243.187.84:7777/rpc",
+			}
+		default:
+			transaction = Transaction{
+				Password:          item.Password,
+				NFTCreateContract: service.config.NFTCreateContract,
+				TokenID:           item.TokenID,
+				Value:             item.Value,
+				WalletType:        item.WalletType,
+			}
 		}
+
 		return transaction, nil
 	}
 
@@ -138,12 +159,31 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 
 	for range time.NewTicker(time.Millisecond * service.config.WaitListCheckSignature).C {
 		if item, err := service.GetByCardID(ctx, createNFT.CardID); item.Password != "" && err == nil {
-			transaction = Transaction{
-				Password:          item.Password,
-				NFTCreateContract: service.config.NFTCreateContract,
-				TokenID:           item.TokenID,
-				Value:             item.Value,
-				WalletType:        item.WalletType,
+			switch item.WalletType {
+			case "velas_wallet_address":
+				transaction = Transaction{
+					Password:          item.Password,
+					NFTCreateContract: NFTCreateContract(service.config.NFTCreateVelasContract),
+					TokenID:           item.TokenID,
+					Value:             item.Value,
+					WalletType:        item.WalletType,
+				}
+			case "casper_wallet_address":
+				transaction = Transaction{
+					Password:          item.Password,
+					NFTCreateContract: NFTCreateContract(service.config.NFTCreateCasperContract),
+					TokenID:           item.TokenID,
+					Value:             item.Value,
+					WalletType:        item.WalletType,
+				}
+			default:
+				transaction = Transaction{
+					Password:          item.Password,
+					NFTCreateContract: service.config.NFTCreateContract,
+					TokenID:           item.TokenID,
+					Value:             item.Value,
+					WalletType:        item.WalletType,
+				}
 			}
 			break
 		}
