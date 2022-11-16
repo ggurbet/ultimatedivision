@@ -7,6 +7,7 @@ require (
 	github.com/BoostyLabs/thelooper v0.0.0-20220114103907-5df44f497033
 	github.com/BoostyLabs/venly v0.0.0-20220525101407-1290ddd74c27 // indirect
 	github.com/StackExchange/wmi v1.2.1 // indirect
+	github.com/casper-ecosystem/casper-golang-sdk v0.0.0-20220131100450-718690b51142 // indirect
 	github.com/ethereum/go-ethereum v1.10.19
 	github.com/fogleman/gg v1.3.0
 	github.com/go-stack/stack v1.8.1 // indirect

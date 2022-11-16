@@ -93,6 +93,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	seasonsController := controllers.NewSeasons(log, seasons)
 	waitListController := controllers.NewWaitList(log, waitList)
 	storeController := controllers.NewStore(log, store)
+	contractCasperController := controllers.NewContractCasper(log)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/register", authController.RegisterTemplateHandler).Methods(http.MethodGet)
@@ -118,6 +119,8 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	casperRouter.HandleFunc("/register", authController.CasperRegister).Methods(http.MethodPost)
 	casperRouter.HandleFunc("/nonce", authController.PublicKey).Methods(http.MethodGet)
 	casperRouter.HandleFunc("/login", authController.CasperLogin).Methods(http.MethodPost)
+
+	apiRouter.HandleFunc("/casper/claim", contractCasperController.Claim).Methods(http.MethodPost)
 
 	authRouter.HandleFunc("/logout", authController.Logout).Methods(http.MethodPost)
 	authRouter.HandleFunc("/register", authController.Register).Methods(http.MethodPost)
