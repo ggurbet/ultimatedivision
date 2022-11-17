@@ -64,12 +64,13 @@ type CreateNFT struct {
 
 // Transaction entity describes values required to sent transaction.
 type Transaction struct {
-	Password          evmsignature.Signature `json:"password"`
-	NFTCreateContract NFTCreateContract      `json:"nftCreateContract"`
-	TokenID           int64                  `json:"tokenId"`
-	Value             big.Int                `json:"value"`
-	WalletType        users.WalletType       `json:"walletType"`
-	RPCNodeAddress    string                 `json:"rpcNodeAddress"`
+	Password                evmsignature.Signature  `json:"password"`
+	NFTCreateContract       NFTCreateContract       `json:"nftCreateContract"`
+	NFTCreateCasperContract NFTCreateCasperContract `json:"nftCreateCasperContract"`
+	TokenID                 int64                   `json:"tokenId"`
+	Value                   big.Int                 `json:"value"`
+	WalletType              users.WalletType        `json:"walletType"`
+	RPCNodeAddress          string                  `json:"rpcNodeAddress"`
 }
 
 // Config defines values needed by check mint nft in blockchain.
@@ -87,6 +88,7 @@ type Config struct {
 	FileStorage             storj.Config            `json:"fileStorage"`
 	Bucket                  string                  `json:"bucket"`
 	URLToAvatar             string                  `json:"urlToAvatar"`
+	RPCNodeAddress          string                  `json:"rpcNodeAddress"`
 }
 
 // NFTCreateContract describes the meaning of the contract.
@@ -107,7 +109,7 @@ type NFTCreateVelasContract struct {
 
 // NFTCreateCasperContract describes the meaning of the contract.
 type NFTCreateCasperContract struct {
-	Address                           common.Address   `json:"address"`
+	Address                           string           `json:"address"`
 	MintWithSignatureSelector         evmsignature.Hex `json:"mintWithSignatureSelector"`
 	MintWithSignatureAndValueSelector evmsignature.Hex `json:"mintWithSignatureAndValueSelector"`
 	ChainID                           int              `json:"chainId"`

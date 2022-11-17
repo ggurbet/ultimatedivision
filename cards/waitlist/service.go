@@ -85,12 +85,12 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 			}
 		case "casper_wallet_address":
 			transaction = Transaction{
-				Password:          item.Password,
-				NFTCreateContract: NFTCreateContract(service.config.NFTCreateCasperContract),
-				TokenID:           item.TokenID,
-				Value:             item.Value,
-				WalletType:        item.WalletType,
-				RPCNodeAddress:    "http://136.243.187.84:7777/rpc",
+				Password:                item.Password,
+				NFTCreateCasperContract: service.config.NFTCreateCasperContract,
+				TokenID:                 item.TokenID,
+				Value:                   item.Value,
+				WalletType:              item.WalletType,
+				RPCNodeAddress:          service.config.RPCNodeAddress,
 			}
 		default:
 			transaction = Transaction{
@@ -170,11 +170,12 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 				}
 			case "casper_wallet_address":
 				transaction = Transaction{
-					Password:          item.Password,
-					NFTCreateContract: NFTCreateContract(service.config.NFTCreateCasperContract),
-					TokenID:           item.TokenID,
-					Value:             item.Value,
-					WalletType:        item.WalletType,
+					Password:                item.Password,
+					NFTCreateCasperContract: service.config.NFTCreateCasperContract,
+					TokenID:                 item.TokenID,
+					Value:                   item.Value,
+					WalletType:              item.WalletType,
+					RPCNodeAddress:          service.config.RPCNodeAddress,
 				}
 			default:
 				transaction = Transaction{
