@@ -34,12 +34,12 @@ const Navbar: React.FC = () => {
 
     const setNavbarDropdownActivity = () => {
         setScrollAble(false);
-        setIsDropdownActive(!isDropdownActive);
+        setIsDropdownActive(true);
     };
 
     const unsetNavbarDropdownActivity = () => {
         setScrollAble(true);
-        setIsDropdownActive(!isDropdownActive);
+        setIsDropdownActive(false);
     };
 
     const changeNavbarDropdownActivity = () => {
