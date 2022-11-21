@@ -18,7 +18,9 @@ export class Transaction {
     constructor(
         public password: string = '',
         public tokenId: number = DEFAULT_VALUE,
-        public nftCreateContract: Contract = new Contract()
+        public nftCreateContract: Contract = new Contract(),
+        public nftCreateCasperContract: Contract = new Contract(),
+        public rpcNodeAddress: string = '',
     ) { }
 }
 

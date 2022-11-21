@@ -21,7 +21,7 @@ export class UsersService {
     public async login(email: string, password: string): Promise<void> {
         await this.users.login(email, password);
     }
-    /** gets creds to fill velas vaclient */
+    /** gets user info */
     public async getUser(): Promise<User> {
         return await this.users.getUser();
     }

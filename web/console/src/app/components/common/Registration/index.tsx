@@ -24,8 +24,8 @@ import { SignedMessage } from '@/app/ethers';
 
 import { VelasClient } from '@/api/velas';
 import { VelasService } from '@/velas/service';
-import { CasperClient } from '@/api/casper';
-import { CasperService } from '@/casper/service';
+import { CasperNetworkClient } from '@/api/casper';
+import { CasperNetworkService } from '@/casper/service';
 
 import representLogo from '@static/img/login/represent-logo.gif';
 import metamask from '@static/img/login/metamask-icon.svg';
@@ -43,8 +43,8 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
     const velasClient = new VelasClient();
     const velasService = new VelasService(velasClient);
 
-    const casperClient = new CasperClient();
-    const casperService = new CasperService(casperClient);
+    const casperClient = new CasperNetworkClient();
+    const casperService = new CasperNetworkService(casperClient);
 
     const history = useHistory();
 
