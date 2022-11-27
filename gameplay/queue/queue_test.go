@@ -94,3 +94,60 @@ func TestQueue(t *testing.T) {
 func compareQueues(t *testing.T, queue1, queue2 queue.Client) {
 	assert.Equal(t, queue1.UserID, queue2.UserID)
 }
+
+func TestDivideClients(t *testing.T) {
+	type testDividing struct {
+		incomeData []queue.Client
+		result     [][]queue.Client
+	}
+
+	client1 := queue.Client{
+		UserID:     uuid.New(),
+		Connection: nil,
+		SquadID:    uuid.New(),
+		IsPlaying:  true,
+		CreatedAt:  time.Now().UTC(),
+	}
+
+	client2 := queue.Client{
+		UserID:     uuid.New(),
+		Connection: nil,
+		SquadID:    uuid.New(),
+		IsPlaying:  false,
+		CreatedAt:  time.Now().UTC(),
+	}
+
+	testCases := []testDividing{
+		{
+			incomeData: nil,
+			result:     nil,
+		},
+		{
+			incomeData: []queue.Client{client1, client2},
+			result:     [][]queue.Client{{client1, client2}},
+		},
+	}
+
+	for _, testCase := range testCases {
+		result := queue.DivideClients(testCase.incomeData)
+
+		if testCase.result == nil && result == nil {
+			continue
+		}
+
+		compareClients(t, result, testCase.result)
+	}
+}
+
+func compareClients(t *testing.T, result, expectedResult [][]queue.Client) {
+	assert.Equal(t, len(result), len(expectedResult))
+
+	for i := 0; i < len(result); i++ {
+		for j := 0; j < len(result[i]); j++ {
+			assert.Equal(t, result[i][j].Connection, expectedResult[i][j].Connection)
+			assert.Equal(t, result[i][j].UserID, expectedResult[i][j].UserID)
+			assert.Equal(t, result[i][j].SquadID, expectedResult[i][j].SquadID)
+			assert.Equal(t, result[i][j].IsPlaying, expectedResult[i][j].IsPlaying)
+		}
+	}
+}

@@ -8,7 +8,6 @@ import (
 	"image"
 	"image/draw"
 	"image/png"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -29,7 +28,7 @@ const (
 
 // LayerComponentsCount searches count files in the specified path and by name of file.
 func LayerComponentsCount(pathToLayerComponents, nameFile string) (int, error) {
-	files, err := ioutil.ReadDir(pathToLayerComponents)
+	files, err := os.ReadDir(pathToLayerComponents)
 	if err != nil {
 		return 0, fmt.Errorf(pathToLayerComponents + " - folder does not exist")
 	}

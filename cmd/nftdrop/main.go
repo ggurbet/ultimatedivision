@@ -6,7 +6,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -156,7 +155,7 @@ func cmdDestroy(cmd *cobra.Command, args []string) (err error) {
 
 // readConfig reads config from default config dir.
 func readConfig() (config Config, err error) {
-	configBytes, err := ioutil.ReadFile(path.Join(defaultConfigDir, "config.json"))
+	configBytes, err := os.ReadFile(path.Join(defaultConfigDir, "config.json"))
 	if err != nil {
 		return Config{}, err
 	}

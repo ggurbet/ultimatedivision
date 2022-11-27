@@ -8,7 +8,6 @@ import (
 	"context"
 	"errors"
 	"io"
-	"io/ioutil"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -74,7 +73,7 @@ func (client *Client) Download(ctx context.Context, bucket, objectName string) (
 
 	n, err := reader.Read(buffer[:cap(buffer)])
 	if !errors.Is(err, io.EOF) {
-		rest, err := ioutil.ReadAll(reader)
+		rest, err := io.ReadAll(reader)
 		if errors.Is(err, io.EOF) {
 			err = nil
 		}

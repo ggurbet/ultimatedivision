@@ -364,6 +364,9 @@ func (service *Service) CalculateEffectivenessOfSquad(ctx context.Context, squad
 	}
 
 	for index, squadCard := range squadCards {
+		if len(cardsFromSquad)-1 < index {
+			break
+		}
 		switch squadCard.Position {
 		case GK:
 			effectiveness += service.cards.EffectivenessGK(cardsFromSquad[index])

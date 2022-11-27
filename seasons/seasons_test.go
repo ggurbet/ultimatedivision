@@ -45,6 +45,19 @@ func TestSeasons(t *testing.T) {
 		EndedAt:    time.Time{},
 	}
 
+	season3 := seasons.Season{
+		ID:         3,
+		DivisionID: division1.ID,
+		StartedAt:  time.Now().UTC(),
+		EndedAt:    time.Time{},
+	}
+	season4 := seasons.Season{
+		ID:         4,
+		DivisionID: division2.ID,
+		StartedAt:  time.Now().UTC(),
+		EndedAt:    time.Time{},
+	}
+
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repository := db.Seasons()
 		repositoryDivision := db.Divisions()
@@ -79,13 +92,28 @@ func TestSeasons(t *testing.T) {
 			compareSeasons(t, season2, allSeasons[1])
 		})
 
-		t.Run("endSeason", func(t *testing.T) {
+		t.Run("get current season by division id", func(t *testing.T) {
 			err := repository.EndSeason(ctx, season1.ID)
+			require.NoError(t, err)
+			err = repository.EndSeason(ctx, season2.ID)
+			require.NoError(t, err)
+			err = repository.Create(ctx, season3)
+			require.NoError(t, err)
+			err = repository.Create(ctx, season4)
+			require.NoError(t, err)
+
+			seasonFromDB, err := repository.GetSeasonByDivisionID(ctx, division1.ID)
+			require.NoError(t, err)
+			compareSeasons(t, season3, seasonFromDB)
+		})
+
+		t.Run("endSeason", func(t *testing.T) {
+			err := repository.EndSeason(ctx, season4.ID)
 			require.NoError(t, err)
 		})
 
 		t.Run("delete sql no rows", func(t *testing.T) {
-			err := repository.Delete(ctx, id)
+			err := repository.Delete(ctx, 5)
 			require.Error(t, err)
 			require.Equal(t, seasons.ErrNoSeason.Has(err), true)
 		})

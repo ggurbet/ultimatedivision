@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 	"image"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strconv"
 
@@ -395,6 +395,6 @@ func (service *Service) Get(ctx context.Context, cardID uuid.UUID) (Avatar, erro
 
 // GetImage returns avatar image.
 func (service *Service) GetImage(ctx context.Context, cardID uuid.UUID) ([]byte, error) {
-	image, err := ioutil.ReadFile(filepath.Join(service.config.PathToOutputAvatarsLocal, cardID.String()+"."+string(imageprocessing.TypeFilePNG)))
+	image, err := os.ReadFile(filepath.Join(service.config.PathToOutputAvatarsLocal, cardID.String()+"."+string(imageprocessing.TypeFilePNG)))
 	return image, ErrAvatar.Wrap(err)
 }

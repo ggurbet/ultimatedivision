@@ -6,7 +6,7 @@ package servertesting
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"path"
 	"path/filepath"
 	"testing"
@@ -52,7 +52,7 @@ func Run(t *testing.T, test func(ctx context.Context, t *testing.T, peer *ultima
 
 // readConfig reads config from default config dir.
 func readConfig(defaultConfigDir string) (config ultimatedivision.Config, err error) {
-	configBytes, err := ioutil.ReadFile(path.Join(defaultConfigDir, "config.json"))
+	configBytes, err := os.ReadFile(path.Join(defaultConfigDir, "config.json"))
 	if err != nil {
 		return ultimatedivision.Config{}, err
 	}

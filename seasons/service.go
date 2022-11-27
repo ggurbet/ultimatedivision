@@ -48,17 +48,6 @@ func (service *Service) Create(ctx context.Context) error {
 		return ErrSeasons.Wrap(err)
 	}
 
-	// TODO: remove after fix bug with matches.
-	seasons, err := service.seasons.List(ctx)
-	if err != nil {
-		return ErrSeasons.Wrap(err)
-	}
-
-	// TODO: remove after fix bug with matches.
-	if len(seasons) > 0 {
-		return nil
-	}
-
 	for _, division := range divisions {
 		season := Season{
 			DivisionID: division.ID,

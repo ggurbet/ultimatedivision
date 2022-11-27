@@ -54,15 +54,15 @@ const MatchFinder: React.FC = () => {
     /** Variable describes that webscoket connection responsed with error. */
     const ERROR_MESSAGE: string = 'could not write to websocket';
     /** Variable describes that user still searching game. */
-    const STILL_SEARCHING_MESSAGE: string = 'you are still in search!';
+    const STILL_SEARCHING_MESSAGE: string = 'you are still in search';
     /** Variable describes that was send wrong action from user. */
     const WRONG_ACTION_MESSAGE: string = 'wrong action';
     /** Variable describes that user added to gueue. */
-    const YOU_ADDED_MESSAGE: string = 'you added!';
+    const YOU_ADDED_MESSAGE: string = 'you added';
     /** Variable describes that it needs confirm game from user. */
     const YOU_CONFIRM_PLAY_MESSAGE: string = 'do you confirm play?';
     /** Variable describes that user have leaved from searching game. */
-    const YOU_LEAVED_MESSAGE: string = 'you left!';
+    const YOU_LEAVED_MESSAGE: string = 'you left';
 
     /** Sends confirm action. */
     const confirmMatch = () => {
@@ -117,14 +117,6 @@ const MatchFinder: React.FC = () => {
                     position: toast.POSITION.TOP_RIGHT,
                     theme: 'colored',
                 });
-
-                return;
-            case WRONG_ACTION_MESSAGE:
-                toast.error('Something wrong, please, try later.', {
-                    position: toast.POSITION.TOP_RIGHT,
-                    theme: 'colored',
-                });
-
                 return;
             case YOU_ADDED_MESSAGE:
                 setIsMatchFound(false);
@@ -140,7 +132,7 @@ const MatchFinder: React.FC = () => {
 
                 return;
             default:
-
+                setIsMatchFound(false);
                 toast.success(
                     'Successfully! You will be redirected to match page',
                     {
