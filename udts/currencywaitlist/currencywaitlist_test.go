@@ -7,6 +7,7 @@ import (
 	"context"
 	"math/big"
 	"testing"
+	"ultimatedivision/users"
 
 	"github.com/BoostyLabs/evmsignature"
 	"github.com/ethereum/go-ethereum/common"
@@ -30,6 +31,7 @@ func TestCurrencycurrencywaitlist(t *testing.T) {
 
 	item2 := currencywaitlist.Item{
 		WalletAddress: common.HexToAddress("0x96216849c49358b10257cb55b28ea603c874b05e"),
+		WalletType:    users.WalletTypeCasper,
 		Value:         *value,
 		Nonce:         2,
 		Signature:     "",

@@ -27,7 +27,7 @@ type DB interface {
 	// Create creates nft for wait list in the database.
 	Create(ctx context.Context, item Item) error
 	// Get returns nft for wait list by token id.
-	GetByTokenID(ctx context.Context, tokenID int64) (Item, error)
+	GetByTokenID(ctx context.Context, TokenSequence int64) (Item, error)
 	// GetByCardID returns nft for wait list by card id.
 	GetByCardID(ctx context.Context, cardID uuid.UUID) (Item, error)
 	// GetLastTokenID returns id of last inserted token.
@@ -39,12 +39,13 @@ type DB interface {
 	// Delete deletes nft from wait list by id of token.
 	Delete(ctx context.Context, tokenIDs []int64) error
 	// Update updates signature to nft token.
-	Update(ctx context.Context, tokenID int64, password evmsignature.Signature) error
+	Update(ctx context.Context, tokenID uuid.UUID, password evmsignature.Signature) error
 }
 
 // Item entity describes item fot wait list nfts.
 type Item struct {
-	TokenID      int64                  `json:"tokenId"`
+	TokenID      uuid.UUID              `json:"tokenId"`
+	TokenNumber  int64                  `json:"tokenNumber"`
 	CardID       uuid.UUID              `json:"cardId"`
 	Wallet       common.Address         `json:"wallet"`
 	CasperWallet string                 `json:"casperWallet"`
@@ -67,7 +68,7 @@ type Transaction struct {
 	Password                evmsignature.Signature  `json:"password"`
 	NFTCreateContract       NFTCreateContract       `json:"nftCreateContract"`
 	NFTCreateCasperContract NFTCreateCasperContract `json:"nftCreateCasperContract"`
-	TokenID                 int64                   `json:"tokenId"`
+	TokenID                 uuid.UUID               `json:"tokenId"`
 	Value                   big.Int                 `json:"value"`
 	WalletType              users.WalletType        `json:"walletType"`
 	RPCNodeAddress          string                  `json:"rpcNodeAddress"`

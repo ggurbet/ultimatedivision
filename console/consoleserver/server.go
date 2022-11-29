@@ -226,6 +226,7 @@ func (server *Server) Run(ctx context.Context) (err error) {
 		if isCancelled || errors.Is(err, http.ErrServerClosed) {
 			err = nil
 		}
+
 		return Error.Wrap(err)
 	})
 

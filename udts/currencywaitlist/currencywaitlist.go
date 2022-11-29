@@ -7,6 +7,7 @@ import (
 	"context"
 	"math/big"
 	"time"
+	"ultimatedivision/users"
 
 	"github.com/BoostyLabs/evmsignature"
 	"github.com/ethereum/go-ethereum/common"
@@ -39,6 +40,7 @@ type DB interface {
 // Item entity describes item of currency wait list.
 type Item struct {
 	WalletAddress common.Address         `json:"walletAddress"`
+	WalletType    users.WalletType       `json:"walleType"`
 	Value         big.Int                `json:"value"`
 	Nonce         int64                  `json:"nonce"`
 	Signature     evmsignature.Signature `json:"signature"`

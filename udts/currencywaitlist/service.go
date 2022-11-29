@@ -51,6 +51,7 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, value big.
 
 	item := Item{
 		WalletAddress: user.Wallet,
+		WalletType:    user.WalletType,
 		Value:         value,
 		Nonce:         nonce,
 		Signature:     "",

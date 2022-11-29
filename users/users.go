@@ -39,6 +39,8 @@ type DB interface {
 	UpdatePassword(ctx context.Context, passwordHash []byte, id uuid.UUID) error
 	// UpdateWalletAddress updates user's address of wallet in the database.
 	UpdateWalletAddress(ctx context.Context, wallet common.Address, walletType WalletType, id uuid.UUID) error
+	// UpdateCasperWalletAddress updates user's address of Casper wallet in the database.
+	UpdateCasperWalletAddress(ctx context.Context, wallet string, walletType WalletType, id uuid.UUID) error
 	// UpdateNonce updates nonce by user.
 	UpdateNonce(ctx context.Context, id uuid.UUID, nonce []byte) error
 	// Delete deletes a user in the database.

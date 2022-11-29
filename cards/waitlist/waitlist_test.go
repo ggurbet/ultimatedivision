@@ -157,8 +157,12 @@ func TestWaitList(t *testing.T) {
 		Throwing:         49,
 	}
 
+	tokenID1 := uuid.New()
+	tokenID2 := uuid.New()
+
 	item1 := waitlist.Item{
-		TokenID:      1,
+		TokenID:      tokenID1,
+		TokenNumber:  1,
 		CardID:       card1.ID,
 		CasperWallet: "9060c0820b5156b1620c8e3344d17f9fad5108f5dc2672f2308439e84363c88e",
 		Value:        *big.NewInt(100),
@@ -166,11 +170,12 @@ func TestWaitList(t *testing.T) {
 	}
 
 	item2 := waitlist.Item{
-		TokenID:    2,
-		CardID:     card2.ID,
-		Wallet:     common.HexToAddress("0x96216849c49358B10254cb55b28eA603c874b05E"),
-		Value:      *big.NewInt(200),
-		WalletType: users.WalletTypeETH,
+		TokenID:     tokenID2,
+		TokenNumber: 2,
+		CardID:      card2.ID,
+		Wallet:      common.HexToAddress("0x96216849c49358B10254cb55b28eA603c874b05E"),
+		Value:       *big.NewInt(200),
+		WalletType:  users.WalletTypeETH,
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
@@ -230,24 +235,24 @@ func TestWaitList(t *testing.T) {
 		})
 
 		t.Run("Update sql no rows", func(t *testing.T) {
-			err := repositoryWaitList.Update(ctx, int64(0), "password")
+			err := repositoryWaitList.Update(ctx, uuid.New(), "password")
 			require.Error(t, err)
 			assert.Equal(t, true, waitlist.ErrNoItem.Has(err))
 		})
 
 		t.Run("Update", func(t *testing.T) {
-			err := repositoryWaitList.Update(ctx, 1, "password")
+			err := repositoryWaitList.Update(ctx, tokenID1, "password")
 			require.NoError(t, err)
 		})
 
 		t.Run("Delete sql no rows", func(t *testing.T) {
-			err := repositoryWaitList.Delete(ctx, []int64{0})
+			err := repositoryWaitList.Delete(ctx, []int64{})
 			require.Error(t, err)
 			assert.Equal(t, true, waitlist.ErrNoItem.Has(err))
 		})
 
 		t.Run("Delete", func(t *testing.T) {
-			err := repositoryWaitList.Delete(ctx, []int64{1, 2})
+			err := repositoryWaitList.Delete(ctx, []int64{item1.TokenNumber, item2.TokenNumber})
 			require.NoError(t, err)
 		})
 	})

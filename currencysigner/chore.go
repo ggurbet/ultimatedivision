@@ -6,6 +6,7 @@ package currencysigner
 import (
 	"context"
 	"time"
+	"ultimatedivision/pkg/signer"
 
 	"github.com/BoostyLabs/evmsignature"
 	"github.com/BoostyLabs/thelooper"
@@ -15,6 +16,7 @@ import (
 
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/udts/currencywaitlist"
+	"ultimatedivision/users"
 )
 
 // ChoreError represents nft signer chore error type.
@@ -22,9 +24,12 @@ var ChoreError = errs.Class("nft signer chore error")
 
 // ChoreConfig is the global configuration for currencysigner.
 type ChoreConfig struct {
-	RenewalInterval    time.Duration           `json:"renewalInterval"`
-	PrivateKey         evmsignature.PrivateKey `json:"privateKey"`
-	UDTContractAddress common.Address          `json:"udtContractAddress"`
+	RenewalInterval            time.Duration           `json:"renewalInterval"`
+	PrivateKey                 evmsignature.PrivateKey `json:"privateKey"`
+	UDTContractAddress         common.Address          `json:"udtContractAddress"`
+	VelasSmartContractAddress  common.Address          `json:"velasSmartContractAddress"`
+	CasperSmartContractAddress string                  `json:"casperSmartContractAddress"`
+	CasperTokenContract        string                  `json:"casperTokenContract"`
 }
 
 // Chore requests for unsigned nft tokens and sign all of them .
@@ -61,8 +66,39 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 		}
 
 		for _, item := range unsignedItems {
-			signature, err := evmsignature.GenerateSignatureWithValueAndNonce(evmsignature.Address(item.WalletAddress.String()),
-				evmsignature.Address(chore.config.UDTContractAddress.String()), &item.Value, item.Nonce, privateKeyECDSA)
+
+			var (
+				signature           evmsignature.Signature
+				smartContract       common.Address
+				casperTokenContract string
+				casperContract      string
+				casperWallet        string
+			)
+
+			switch item.WalletType {
+			case users.WalletTypeETH:
+				smartContract = chore.config.UDTContractAddress
+			case users.WalletTypeVelas:
+				smartContract = chore.config.VelasSmartContractAddress
+			case users.WalletTypeCasper:
+				casperContract = chore.config.CasperSmartContractAddress
+				casperTokenContract = chore.config.CasperTokenContract
+				casperWallet = item.WalletAddress.String()
+			}
+
+			if casperContract != "" {
+				signature, err = signer.GenerateCasperSignatureWithValueAndNonce(signer.Address(casperWallet),
+					signer.Address(casperTokenContract), &item.Value, item.Nonce, privateKeyECDSA)
+				if err != nil {
+					return ChoreError.Wrap(err)
+				}
+			} else {
+				signature, err = signer.GenerateSignatureWithValueAndNonce(signer.Address(item.WalletAddress.String()),
+					signer.Address(smartContract.String()), &item.Value, item.Nonce, privateKeyECDSA)
+				if err != nil {
+					return ChoreError.Wrap(err)
+				}
+			}
 
 			if err != nil {
 				return ChoreError.Wrap(err)

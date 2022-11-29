@@ -431,7 +431,7 @@ func (chore *Chore) FinishWithWinResult(ctx context.Context, winResult WinResult
 			}
 		}
 
-		if err = chore.users.UpdateWalletAddress(ctx, common.HexToAddress(string(request.WalletAddress)), winResult.Client.UserID, users.WalletTypeETH); err != nil {
+		if err = chore.users.UpdateWalletAddress(ctx, common.HexToAddress(string(request.WalletAddress)), winResult.Client.UserID, request.WalletType); err != nil {
 			if !users.ErrWalletAddressAlreadyInUse.Has(err) {
 				chore.log.Error("could not update user's wallet address", ChoreError.Wrap(err))
 				return

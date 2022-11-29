@@ -255,6 +255,21 @@ func (usersDB *usersDB) UpdateWalletAddress(ctx context.Context, wallet common.A
 	return ErrUsers.Wrap(err)
 }
 
+// UpdateCasperWalletAddress updates Casper wallet address in the database.
+func (usersDB *usersDB) UpdateCasperWalletAddress(ctx context.Context, wallet string, walletType users.WalletType, id uuid.UUID) error {
+	result, err := usersDB.conn.ExecContext(ctx, "UPDATE users SET casper_wallet_address=$1, wallet_type=$2 WHERE id=$3", wallet, walletType, id)
+	if err != nil {
+		return ErrUsers.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return users.ErrNoUser.New("user does not exist")
+	}
+
+	return ErrUsers.Wrap(err)
+}
+
 // UpdateNonce updates nonce by user.
 func (usersDB *usersDB) UpdateNonce(ctx context.Context, id uuid.UUID, nonce []byte) error {
 	result, err := usersDB.conn.ExecContext(ctx, "UPDATE users SET nonce=$1 WHERE id=$2", nonce, id)

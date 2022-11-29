@@ -53,6 +53,12 @@ func (service *Service) GetByWalletAddress(ctx context.Context, walletAddress co
 	return user, ErrUsers.Wrap(err)
 }
 
+// GetByCasperWalletAddress returns user by Casper wallet address from the data base.
+func (service *Service) GetByCasperWalletAddress(ctx context.Context, walletAddress string, walletType WalletType) (User, error) {
+	user, err := service.users.GetByWalletAddress(ctx, walletAddress, walletType)
+	return user, ErrUsers.Wrap(err)
+}
+
 // List returns all users from DB.
 func (service *Service) List(ctx context.Context) ([]User, error) {
 	users, err := service.users.List(ctx)
@@ -124,6 +130,16 @@ func (service *Service) UpdateWalletAddress(ctx context.Context, wallet common.A
 	}
 
 	return ErrUsers.Wrap(service.users.UpdateWalletAddress(ctx, wallet, walletType, id))
+}
+
+// UpdateCasperWalletAddress updates Casper wallet address.
+func (service *Service) UpdateCasperWalletAddress(ctx context.Context, wallet string, id uuid.UUID, walletType WalletType) error {
+	_, err := service.GetByCasperWalletAddress(ctx, wallet, walletType)
+	if err == nil {
+		return ErrWalletAddressAlreadyInUse.New("wallet address already in use")
+	}
+
+	return ErrUsers.Wrap(service.users.UpdateCasperWalletAddress(ctx, wallet, walletType, id))
 }
 
 // ChangeWalletAddress changes wallet address.

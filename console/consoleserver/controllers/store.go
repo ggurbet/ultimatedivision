@@ -46,7 +46,7 @@ func NewStore(log logger.Logger, store *store.Service) *Store {
 type TransactionResponse struct {
 	Password          evmsignature.Signature     `json:"password"`
 	NFTCreateContract waitlist.NFTCreateContract `json:"nftCreateContract"`
-	TokenID           int64                      `json:"tokenId"`
+	TokenID           uuid.UUID                  `json:"tokenId"`
 	Value             string                     `json:"value"`
 }
 

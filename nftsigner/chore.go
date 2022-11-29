@@ -5,11 +5,9 @@ package nftsigner
 
 import (
 	"context"
-	"crypto/ecdsa"
-	"encoding/hex"
-	"fmt"
 	"math/big"
 	"time"
+	"ultimatedivision/pkg/signer"
 
 	"github.com/BoostyLabs/evmsignature"
 	"github.com/BoostyLabs/thelooper"
@@ -87,28 +85,28 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 
 			if token.Value.Cmp(big.NewInt(0)) <= 0 {
 				if casperContract != "" {
-					signature, err = GenerateCasperSignature(token.CasperWallet,
-						casperContract, token.TokenID, privateKeyECDSA)
+					signature, err = signer.GenerateCasperSignatureWithValue(signer.Address(token.CasperWallet),
+						signer.Address(casperContract), token.TokenID, privateKeyECDSA)
 					if err != nil {
 						return ChoreError.Wrap(err)
 					}
 				} else {
-					signature, err = evmsignature.GenerateSignatureWithValue(evmsignature.Address(token.Wallet.String()),
-						evmsignature.Address(smartContract.String()), token.TokenID, privateKeyECDSA)
+					signature, err = signer.GenerateSignatureWithValue(signer.Address(token.Wallet.String()),
+						signer.Address(smartContract.String()), token.TokenID, privateKeyECDSA)
 					if err != nil {
 						return ChoreError.Wrap(err)
 					}
 				}
 			} else {
 				if casperContract != "" {
-					signature, err = GenerateCasperWithValueAndNonce(token.CasperWallet,
-						casperTokenContract, &token.Value, token.TokenID, privateKeyECDSA)
+					signature, err = signer.GenerateCasperSignatureWithValueAndNonce(signer.Address(token.CasperWallet),
+						signer.Address(casperTokenContract), &token.Value, token.TokenNumber, privateKeyECDSA)
 					if err != nil {
 						return ChoreError.Wrap(err)
 					}
 				} else {
-					signature, err = evmsignature.GenerateSignatureWithValueAndNonce(evmsignature.Address(token.Wallet.String()),
-						evmsignature.Address(smartContract.String()), &token.Value, token.TokenID, privateKeyECDSA)
+					signature, err = signer.GenerateSignatureWithValueAndNonce(signer.Address(token.Wallet.String()),
+						signer.Address(smartContract.String()), &token.Value, token.TokenNumber, privateKeyECDSA)
 					if err != nil {
 						return ChoreError.Wrap(err)
 					}
@@ -122,82 +120,4 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 
 		return ChoreError.Wrap(err)
 	})
-}
-
-// GenerateCasperSignature generates casper signature for user's wallet with value.
-func GenerateCasperSignature(addressWallet string, addressContract string, value int64, privateKey *ecdsa.PrivateKey) (evmsignature.Signature, error) {
-	var values [][]byte
-
-	addressWalletByte, err := hex.DecodeString(addressWallet)
-	if err != nil {
-		return "", ChoreError.Wrap(err)
-	}
-
-	addressContractByte, err := hex.DecodeString(addressContract)
-	if err != nil {
-		return "", ChoreError.Wrap(err)
-	}
-
-	valueStringWithZeros := evmsignature.CreateHexStringFixedLength(fmt.Sprintf("%x", value))
-	valueByte, err := hex.DecodeString(string(valueStringWithZeros))
-	if err != nil {
-		return "", ChoreError.Wrap(err)
-	}
-
-	values = append(values, addressWalletByte, addressContractByte, valueByte)
-	createSignature := evmsignature.CreateSignature{
-		Values:     values,
-		PrivateKey: privateKey,
-	}
-
-	signatureByte, err := evmsignature.MakeSignature(createSignature)
-	if err != nil {
-		return "", ChoreError.Wrap(err)
-	}
-
-	signature, err := evmsignature.ReformSignature(signatureByte)
-
-	return signature, ChoreError.Wrap(err)
-}
-
-// GenerateCasperWithValueAndNonce generates signature for user's wallet with value and nonce.
-func GenerateCasperWithValueAndNonce(addressWallet string, addressContract string, value *big.Int, nonce int64, privateKey *ecdsa.PrivateKey) (evmsignature.Signature, error) {
-	var values [][]byte
-
-	addressWalletByte, err := hex.DecodeString(addressWallet)
-	if err != nil {
-		return "", ChoreError.Wrap(err)
-	}
-
-	addressContractByte, err := hex.DecodeString(addressContract)
-	if err != nil {
-		return "", ChoreError.Wrap(err)
-	}
-
-	valueStringWithZeros := evmsignature.CreateHexStringFixedLength(fmt.Sprintf("%x", value))
-	valueByte, err := hex.DecodeString(string(valueStringWithZeros))
-	if err != nil {
-		return "", ChoreError.Wrap(err)
-	}
-
-	nonceStringWithZeros := evmsignature.CreateHexStringFixedLength(fmt.Sprintf("%x", nonce))
-	nonceByte, err := hex.DecodeString(string(nonceStringWithZeros))
-	if err != nil {
-		return "", ChoreError.Wrap(err)
-	}
-
-	values = append(values, addressWalletByte, addressContractByte, valueByte, nonceByte)
-	createSignature := evmsignature.CreateSignature{
-		Values:     values,
-		PrivateKey: privateKey,
-	}
-
-	signatureByte, err := evmsignature.MakeSignature(createSignature)
-	if err != nil {
-		return "", ChoreError.Wrap(err)
-	}
-
-	signature, err := evmsignature.ReformSignature(signatureByte)
-
-	return signature, ChoreError.Wrap(err)
 }

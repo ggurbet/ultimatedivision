@@ -14,6 +14,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/gameplay/matches"
+	"ultimatedivision/users"
 )
 
 // ErrNoClient indicated that client does not exist.
@@ -57,6 +58,8 @@ type Request struct {
 	Action        Action               `json:"action"`
 	SquadID       uuid.UUID            `json:"squadId"`
 	WalletAddress evmsignature.Address `json:"walletAddress"`
+	CasperWallet  string               `json:"casperWallet"`
+	WalletType    users.WalletType     `json:"walletType"`
 	Nonce         int64                `json:"nonce"`
 }
 

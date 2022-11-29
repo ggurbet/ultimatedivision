@@ -75,7 +75,7 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 
 	if item, err := service.GetByCardID(ctx, createNFT.CardID); item.Password != "" && err == nil {
 		switch item.WalletType {
-		case "velas_wallet_address":
+		case users.WalletTypeVelas:
 			transaction = Transaction{
 				Password:          item.Password,
 				NFTCreateContract: NFTCreateContract(service.config.NFTCreateVelasContract),
@@ -83,7 +83,7 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 				Value:             item.Value,
 				WalletType:        item.WalletType,
 			}
-		case "casper_wallet_address":
+		case users.WalletTypeCasper:
 			transaction = Transaction{
 				Password:                item.Password,
 				NFTCreateCasperContract: service.config.NFTCreateCasperContract,
@@ -139,13 +139,22 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 		return transaction, ErrWaitlist.Wrap(err)
 	}
 
-	if err = service.users.UpdateWalletAddress(ctx, createNFT.WalletAddress, createNFT.UserID, user.WalletType); err != nil {
-		if !users.ErrWalletAddressAlreadyInUse.Has(err) {
-			return transaction, ErrWaitlist.Wrap(err)
+	if user.WalletType == users.WalletTypeCasper {
+		if err = service.users.UpdateCasperWalletAddress(ctx, createNFT.CasperWallet, createNFT.UserID, user.WalletType); err != nil {
+			if !users.ErrWalletAddressAlreadyInUse.Has(err) {
+				return transaction, ErrWaitlist.Wrap(err)
+			}
+		}
+	} else {
+		if err = service.users.UpdateWalletAddress(ctx, createNFT.WalletAddress, createNFT.UserID, user.WalletType); err != nil {
+			if !users.ErrWalletAddressAlreadyInUse.Has(err) {
+				return transaction, ErrWaitlist.Wrap(err)
+			}
 		}
 	}
 
 	item := Item{
+		TokenID:      uuid.New(),
 		CardID:       createNFT.CardID,
 		Wallet:       createNFT.WalletAddress,
 		WalletType:   user.WalletType,
@@ -160,7 +169,7 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 	for range time.NewTicker(time.Millisecond * service.config.WaitListCheckSignature).C {
 		if item, err := service.GetByCardID(ctx, createNFT.CardID); item.Password != "" && err == nil {
 			switch item.WalletType {
-			case "velas_wallet_address":
+			case users.WalletTypeVelas:
 				transaction = Transaction{
 					Password:          item.Password,
 					NFTCreateContract: NFTCreateContract(service.config.NFTCreateVelasContract),
@@ -168,7 +177,7 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 					Value:             item.Value,
 					WalletType:        item.WalletType,
 				}
-			case "casper_wallet_address":
+			case users.WalletTypeCasper:
 				transaction = Transaction{
 					Password:                item.Password,
 					NFTCreateCasperContract: service.config.NFTCreateCasperContract,
@@ -194,8 +203,8 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 }
 
 // GetByTokenID returns nft for wait list by token id.
-func (service *Service) GetByTokenID(ctx context.Context, tokenID int64) (Item, error) {
-	nft, err := service.waitList.GetByTokenID(ctx, tokenID)
+func (service *Service) GetByTokenID(ctx context.Context, tokenNumber int64) (Item, error) {
+	nft, err := service.waitList.GetByTokenID(ctx, tokenNumber)
 	return nft, ErrWaitlist.Wrap(err)
 }
 
@@ -224,7 +233,7 @@ func (service *Service) ListWithoutPassword(ctx context.Context) ([]Item, error)
 }
 
 // Update updates signature to nft token.
-func (service *Service) Update(ctx context.Context, tokenID int64, password evmsignature.Signature) error {
+func (service *Service) Update(ctx context.Context, tokenID uuid.UUID, password evmsignature.Signature) error {
 	return ErrWaitlist.Wrap(service.waitList.Update(ctx, tokenID, password))
 }
 
