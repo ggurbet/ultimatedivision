@@ -32,7 +32,7 @@ jobs:
         with:
           ref: ${{ env.CURRENT_BRANCH }}
       # Login into our docker registry.
-      - uses: docker/login-action@v1
+      - uses: docker/login-action@v2
         with:
           registry: dcloud.hicrystal.com
           username: ${{ secrets.DOCKER_USERNAME }}
