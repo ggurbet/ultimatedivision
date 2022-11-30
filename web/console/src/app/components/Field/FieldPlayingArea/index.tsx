@@ -141,7 +141,7 @@ export const FieldPlayingArea: React.FC = () => {
                 value="Play"
                 className="playing-area__play"
                 onClick={showMatchFinder}
-                disabled={isPossibleToStartMatch}
+                disabled={!isPossibleToStartMatch}
             />
         </div>
     );

@@ -163,7 +163,7 @@ export const FieldControlsArea: React.FC = () => {
                 value="Play"
                 className="field-controls__play"
                 onClick={showMatchFinder}
-                disabled={isPossibleToStartMatch}
+                disabled={!isPossibleToStartMatch}
             />
         </div>
     );
