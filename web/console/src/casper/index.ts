@@ -4,9 +4,14 @@
 import { Buffer } from 'buffer';
 import { toast } from 'react-toastify';
 import { JsonTypes } from 'typedjson';
-import { CLValueBuilder, RuntimeArgs, CLPublicKey, DeployUtil } from 'casper-js-sdk';
+import { CLValueBuilder, RuntimeArgs, CLPublicKey, DeployUtil, Signer } from 'casper-js-sdk';
 
 import { CasperNetworkClient } from '@/api/casper';
+
+enum CasperRuntimeArgs {
+    SIGNATURE = 'signature',
+    TOKEN_ID = 'token_id'
+}
 
 /** Desctibes parameters for transaction */
 export class CasperTransactionIdentificators {
@@ -20,7 +25,7 @@ export class CasperTransactionIdentificators {
 const ACCOUNT_HASH_PREFIX = 'account-hash-';
 
 const TTL = 1800000;
-const PAYMENT_AMOUNT = 4500000000;
+const PAYMENT_AMOUNT = 50000000000;
 const GAS_PRICE = 1;
 
 /** CasperTransactionService describes casper transaction entity. */
@@ -94,17 +99,16 @@ class CasperTransactionService {
 
             const nftWaitlist = await this.getTransaction(new CasperTransactionIdentificators(accountHashConverted, cardId));
 
+            const runtimeArgs = RuntimeArgs.fromMap({
+                [CasperRuntimeArgs.SIGNATURE]: CLValueBuilder.string(nftWaitlist.password),
+                [CasperRuntimeArgs.TOKEN_ID]: CLValueBuilder.string(nftWaitlist.tokenId),
+            });
+
             const isConnected = window.casperlabsHelper.isConnected();
 
             if (!isConnected) {
                 await window.casperlabsHelper.requestConnection();
             }
-
-            const runtimeArgs = RuntimeArgs.fromMap({
-                signature: CLValueBuilder.string(nftWaitlist.password),
-                /* eslint-disable */
-                token_id: CLValueBuilder.u64(nftWaitlist.tokenId),
-            });
 
             const signature = await this.contractSign('claim', runtimeArgs, this.paymentAmount, nftWaitlist.nftCreateCasperContract.address);
 
