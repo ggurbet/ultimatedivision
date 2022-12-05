@@ -50,11 +50,12 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, value big.
 	}
 
 	item := Item{
-		WalletAddress: user.Wallet,
-		WalletType:    user.WalletType,
-		Value:         value,
-		Nonce:         nonce,
-		Signature:     "",
+		WalletAddress:       user.Wallet,
+		CasperWalletAddress: user.CasperWallet,
+		WalletType:          user.WalletType,
+		Value:               value,
+		Nonce:               nonce,
+		Signature:           "",
 	}
 
 	// TODO: catch dublicale error from db.
@@ -84,10 +85,74 @@ func (service *Service) Create(ctx context.Context, userID uuid.UUID, value big.
 	return transaction, err
 }
 
+// CasperCreate creates casper item of currency wait list.
+func (service *Service) CasperCreate(ctx context.Context, userID uuid.UUID, value big.Int, nonce int64) (CasperTransaction, error) {
+	var transaction CasperTransaction
+
+	user, err := service.users.Get(ctx, userID)
+	if err != nil {
+		return transaction, ErrCurrencyWaitlist.Wrap(err)
+	}
+
+	item := Item{
+		WalletAddress:       user.Wallet,
+		CasperWalletAddress: user.CasperWallet,
+		WalletType:          user.WalletType,
+		Value:               value,
+		Nonce:               nonce,
+		Signature:           "",
+	}
+
+	// TODO: catch dublicale error from db.
+	if _, err = service.currencyWaitList.GetByCasperWalletAddressAndNonce(ctx, item.CasperWalletAddress, item.Nonce); err != nil {
+		if ErrNoItem.Has(err) {
+			if err = service.currencyWaitList.Create(ctx, item); err != nil {
+				return transaction, ErrCurrencyWaitlist.Wrap(err)
+			}
+		}
+	}
+
+	if err = service.Update(ctx, item); err != nil {
+		return transaction, ErrCurrencyWaitlist.Wrap(err)
+	}
+
+	for range time.NewTicker(time.Millisecond * service.config.IntervalSignatureCheck).C {
+		if item, err := service.GetByCasperWalletAddressAndNonce(ctx, item.CasperWalletAddress, item.Nonce); item.Signature != "" && err == nil {
+			transaction = CasperTransaction{
+				Signature:           item.Signature,
+				CasperTokenContract: service.config.CasperTokenContract,
+				Value:               item.Value.String(),
+				Nonce:               item.Nonce,
+			}
+			break
+		}
+	}
+
+	return transaction, err
+}
+
 // GetByWalletAddressAndNonce returns item of currency wait list by wallet address and nonce.
 func (service *Service) GetByWalletAddressAndNonce(ctx context.Context, walletAddress common.Address, nonce int64) (Item, error) {
 	item, err := service.currencyWaitList.GetByWalletAddressAndNonce(ctx, walletAddress, nonce)
 	return item, ErrCurrencyWaitlist.Wrap(err)
+}
+
+// GetByCasperWalletAddressAndNonce returns item of currency wait list by casper wallet address and nonce.
+func (service *Service) GetByCasperWalletAddressAndNonce(ctx context.Context, casperWallet string, nonce int64) (Item, error) {
+	item, err := service.currencyWaitList.GetByCasperWalletAddressAndNonce(ctx, casperWallet, nonce)
+	return item, ErrCurrencyWaitlist.Wrap(err)
+}
+
+// GetNonce returns number of nonce.
+func (service *Service) GetNonce(ctx context.Context) (int64, error) {
+	nonce, err := service.currencyWaitList.GetNonce(ctx)
+	return nonce, ErrCurrencyWaitlist.Wrap(err)
+}
+
+// UpdateNonceByWallet updates number of nonce.
+func (service *Service) UpdateNonceByWallet(ctx context.Context, nonce int64, casperWallet string) error {
+	err := service.currencyWaitList.UpdateNonceByWallet(ctx, nonce, casperWallet)
+	return ErrCurrencyWaitlist.Wrap(err)
 }
 
 // List returns items of currency wait list.
@@ -105,6 +170,11 @@ func (service *Service) ListWithoutSignature(ctx context.Context) ([]Item, error
 // UpdateSignature updates signature of item by wallet address and nonce.
 func (service *Service) UpdateSignature(ctx context.Context, signature evmsignature.Signature, walletAddress common.Address, nonce int64) error {
 	return ErrCurrencyWaitlist.Wrap(service.currencyWaitList.UpdateSignature(ctx, signature, walletAddress, nonce))
+}
+
+// UpdateCasperSignature updates casper signature of item by wallet address and nonce.
+func (service *Service) UpdateCasperSignature(ctx context.Context, signature evmsignature.Signature, casperWallet string, nonce int64) error {
+	return ErrCurrencyWaitlist.Wrap(service.currencyWaitList.UpdateCasperSignature(ctx, signature, casperWallet, nonce))
 }
 
 // Update updates item by wallet address and nonce.

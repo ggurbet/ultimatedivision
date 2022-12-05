@@ -83,12 +83,17 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 			case users.WalletTypeCasper:
 				casperContract = chore.config.CasperSmartContractAddress
 				casperTokenContract = chore.config.CasperTokenContract
-				casperWallet = item.WalletAddress.String()
+				casperWallet = item.CasperWalletAddress
 			}
 
 			if casperContract != "" {
 				signature, err = signer.GenerateCasperSignatureWithValueAndNonce(signer.Address(casperWallet),
 					signer.Address(casperTokenContract), &item.Value, item.Nonce, privateKeyECDSA)
+				if err != nil {
+					return ChoreError.Wrap(err)
+				}
+
+				err = chore.currencywaitlist.UpdateCasperSignature(ctx, signature, casperWallet, item.Nonce)
 				if err != nil {
 					return ChoreError.Wrap(err)
 				}
@@ -98,16 +103,17 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 				if err != nil {
 					return ChoreError.Wrap(err)
 				}
+
+				err = chore.currencywaitlist.UpdateSignature(ctx, signature, item.WalletAddress, item.Nonce)
+				if err != nil {
+					return ChoreError.Wrap(err)
+				}
 			}
 
 			if err != nil {
 				return ChoreError.Wrap(err)
 			}
 
-			err = chore.currencywaitlist.UpdateSignature(ctx, signature, item.WalletAddress, item.Nonce)
-			if err != nil {
-				return ChoreError.Wrap(err)
-			}
 		}
 
 		return ChoreError.Wrap(err)

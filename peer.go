@@ -565,6 +565,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.WaitList.Service,
 			peer.Store.Service,
 			peer.Metric.Service,
+			peer.CurrencyWaitList.Service,
 		)
 	}
 

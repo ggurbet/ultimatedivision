@@ -98,6 +98,8 @@ type Config struct {
 	WinValue             string                `json:"winValue"`
 	DrawValue            string                `json:"drawValue"`
 	UDTContract          evmsignature.Contract `json:"udtContract"`
+	CasperTokenContract  evmsignature.Contract `json:"casperTokenContract"`
+	RPCNodeAddress       string                `json:"rpcNodeAddress"`
 }
 
 // ReadJSON reads request sent by client.
