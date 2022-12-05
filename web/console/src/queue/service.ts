@@ -17,6 +17,10 @@ export class QueueService {
         this.queueClient.actionAllowAddress(wallet, nonce);
     };
 
+    /** Sends action that indicates that the client allows to add address of wallet. */
+    public casperActionAllowAddress(wallet: string, walletType: string, squadId:string): void {
+        this.queueClient.casperActionAllowAddress(wallet, walletType, squadId);
+    };
 
     /** Sends action that indicates that the client is forbidden to add wallet address. */
     public actionForbidAddress(): void {
@@ -51,6 +55,11 @@ export const onOpenConnectionSendAction = (action: string, squadId: string) => {
 /** Sends action that indicates that the client allows to add address of wallet. */
 export const queueActionAllowAddress = (wallet: string, nonce: number) => {
     queueService.actionAllowAddress(wallet, nonce);
+};
+
+/** Sends action that indicates that the client allows to add address of wallet. */
+export const queueCasperActionAllowAddress = (wallet: string, walletType: string, squadId:string) => {
+    queueService.casperActionAllowAddress(wallet, walletType, squadId);
 };
 
 /** Sends action that indicates that the client allows to add address of wallet. */

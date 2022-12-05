@@ -7,6 +7,7 @@ import { JsonTypes } from 'typedjson';
 import { CLValueBuilder, RuntimeArgs, CLPublicKey, DeployUtil, Signer } from 'casper-js-sdk';
 
 import { CasperNetworkClient } from '@/api/casper';
+import { CasperMatchTransaction } from '@/matches';
 
 enum CasperRuntimeArgs {
     SIGNATURE = 'signature',
@@ -76,7 +77,6 @@ class CasperTransactionService {
 
             const deployJson = DeployUtil.deployToJson(deploy);
 
-
             const signature = await window.casperlabsHelper.sign(deployJson, this.walletAddress, contractAddress);
 
             return signature;
@@ -116,6 +116,33 @@ class CasperTransactionService {
         }
         catch (e) {
             toast.error('Something went wrong', {
+                position: toast.POSITION.TOP_RIGHT,
+                theme: 'colored',
+            });
+        }
+    }
+
+    /** Mints a token */
+    async mintUDT(transaction: CasperMatchTransaction, rpcNodeAddress: string): Promise<void> {
+        try {
+            const runtimeArgs = RuntimeArgs.fromMap({
+                'signature': CLValueBuilder.string(transaction.signature),
+                'value': CLValueBuilder.u256(transaction.value),
+                'nonce': CLValueBuilder.u64(transaction.nonce),
+            });
+
+            const isConnected = window.casperlabsHelper.isConnected();
+
+            if (!isConnected) {
+                await window.casperlabsHelper.requestConnection();
+            }
+
+            const signature = await this.contractSign('claim', runtimeArgs, this.paymentAmount, transaction.casperTokenContract.address);
+
+            await this.client.claim(rpcNodeAddress, JSON.stringify(signature), this.walletAddress);
+        }
+        catch (e) {
+            toast.error('Invalid transaction', {
                 position: toast.POSITION.TOP_RIGHT,
                 theme: 'colored',
             });

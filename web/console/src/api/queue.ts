@@ -24,6 +24,14 @@ export class QueueClient {
         this.ws.send(JSON.stringify({ action, WalletAddress, nonce }));
     };
 
+    /** Sends action that indicates that the client allows to add address of wallet. */
+    public casperActionAllowAddress(casperWallet: string, walletType: string, squadId:string) {
+        const action: string = 'allowAddress';
+
+        this.ws.send(JSON.stringify({ action, casperWallet, walletType, squadId }));
+    };
+
+
     /** Sends action that indicates that the client is forbidden to add wallet address. */
     public actionForbidAddress() {
         const action: string = 'forbidAddress';

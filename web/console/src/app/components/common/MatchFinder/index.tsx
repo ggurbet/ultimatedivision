@@ -89,6 +89,7 @@ const MatchFinder: React.FC = () => {
     /** Exposes start searching match logic. */
     const startSearchMatch = () => {
         onOpenConnectionSendAction('startSearch', squad.id);
+
         /** Updates current queue client. */
         const newclient = getCurrentQueueClient();
         setQueueClient(newclient);
@@ -117,6 +118,7 @@ const MatchFinder: React.FC = () => {
                     position: toast.POSITION.TOP_RIGHT,
                     theme: 'colored',
                 });
+
                 return;
             case YOU_ADDED_MESSAGE:
                 setIsMatchFound(false);
@@ -127,6 +129,7 @@ const MatchFinder: React.FC = () => {
                 setIsMatchConfirmed(false);
 
                 return;
+
             case YOU_LEAVED_MESSAGE:
                 dispatch(startSearchingMatch(false));
 
@@ -142,6 +145,7 @@ const MatchFinder: React.FC = () => {
 
                 dispatch(getMatchScore(messageEvent.message));
                 dispatch(startSearchingMatch(false));
+
 
                 /** implements redirect to match page after DELAY time.  */
                 setTimeout(() => {

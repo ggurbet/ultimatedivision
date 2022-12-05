@@ -59,8 +59,14 @@ export class CasperNetworkClient extends APIClient {
         );
     }
     /** Sends deploy data to api */
-    public async claim(RPCNodeAddress: string, deploy: string): Promise<void> {
-        const response = await this.http.post(`${this.ROOT_PATH}/casper/claim`, JSON.stringify({ RPCNodeAddress, deploy }));
+    public async claim(RPCNodeAddress: string, deploy: string, casperWallet?: string): Promise<void> {
+        let response;
+
+        if (casperWallet) {
+            response = await this.http.post(`${this.ROOT_PATH}/casper/claim`, JSON.stringify({ RPCNodeAddress, deploy, casperWallet }));
+        } else {
+            response = await this.http.post(`${this.ROOT_PATH}/casper/claim`, JSON.stringify({ RPCNodeAddress, deploy }));
+        }
 
         if (!response.ok) {
             await this.handleError(response);

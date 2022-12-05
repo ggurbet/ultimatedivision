@@ -33,6 +33,21 @@ export class MatchTransaction {
     ) { }
 };
 
+/** Transaction describes transaction entity of match response. */
+export class CasperMatchTransaction {
+    /** Transaction contains of nonce, signature hash udtContract and value. */
+    constructor(
+        public nonce: number,
+        public signature: string,
+        public value: string,
+        public casperTokenContract: {
+            address: string;
+            addressMethod: string;
+        },
+        public rpcNodeAddress: string,
+    ) { }
+};
+
 /** Match exposes match domain entity. */
 export class Match {
     /** Contains of matchResults, transaction and question. */

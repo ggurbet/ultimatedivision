@@ -56,7 +56,7 @@ const Card: React.FC = () => {
         }
     }
 
-    /** implements opening new card */
+    /** sets user info */
     async function setUser() {
         try {
             await dispatch(setCurrentUser());
