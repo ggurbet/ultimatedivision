@@ -1,0 +1,15 @@
+{
+    "database": "postgres://postgres:123456@localhost/ultimatedivisiondb_test?sslmode=disable",
+    "config": {
+        "chore": {
+            "renewalInterval": 5000,
+            "privateKey": "5aefce0a2d473f59578fa7dee6a122d6509af1e0f79fcbee700dfcfeddabe4cc",
+            "smartContractAddress": "0x126dA9E2eCB3E86573aBb2B5225cee6a7209F612",
+            "privateKeyVelas": "5aefce0a2d473f59578fa7dee6a122d6509af1e0f79fcbee700dfcfeddabe4cc",
+            "smartContractAddressVelas": "0x3686F4923BA4AB7F5512D5549052d979add6f60a",
+            "privateKeyCasper": "MHQCAQEEIIXS36wQbm9SOTJvTXPI6rS4m/MOByUpeMyhgjSDk9lMoAcGBSuBBAAKoUQDQgAEiN75UO+hHPX7fsd3WmJTnbPn+cvn//xKNBqk6KlHEepL0Kzi+KWtKUBpw6o9iOUB28Gvi0yZYGZkrrMTgtWI8A==",
+            "casperSmartContractAddress": "7238b9f78d4c88232c56a8e7609a437d3c865fff5dbb9d1f8aeab0508f1a5bc1",
+            "casperTokenContract": "5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0"
+        }
+    }
+}

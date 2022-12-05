@@ -1,0 +1,470 @@
+{
+    "database": "postgres://postgres:123456@localhost/ultimatedivisiondb_test?sslmode=disable",
+    "config": {
+        "admins": {
+            "server": {
+                "address": "127.0.0.1:8087",
+                "staticDir": "./ultimatedivision/web/admin",
+                "auth": {
+                    "cookieName": "ultimatedivision_admin",
+                    "path": "/"
+                }
+            },
+            "auth": {
+                "tokenAuthSecret": "my-suppa-secret-admin"
+            }
+        },
+        "users": {
+            "auth": {
+                "tokenAuthSecret": "my-suppa-secret-admin"
+            }
+    },
+    "divisions": {
+                "passingPercent": 10
+    },
+        "console": {
+            "server": {
+                "address": "127.0.0.1:8088",
+                "staticDir": "./ultimatedivision/web/console",
+                "avatarsDir": "./assets/output",
+                "auth": {
+                    "cookieName": "ultimatedivision_console",
+                    "path": "/"
+                }
+            },
+             "emails": {
+                "provider": "real",
+                "smtpServerAddress": "smtp-mail.outlook.com:587",
+                "templatePath": "",
+                "from": "hicrystal_cfps@outlook.com",
+                "authType": "login",
+                "plainLogin": "hicrystal_cfps@outlook.com",
+                "plainPassword": "1hicrystal1_cfps1",
+                "refreshToken": "",
+                "clientId": "",
+                "clientSecret": "",
+                "tokenURI": "",
+                "transactionsFileName": "",
+                "domain": ""
+            }
+        },
+        "cards": {
+            "height": {
+                "min": 150,
+                "max": 210
+            },
+            "weight": {
+                "min": 50,
+                "max": 100
+            },
+            "dominantFoots": {
+                "left": 50,
+                "right": 50
+            },
+            "skills": {
+                "wood": {
+                    "elementary": 30,
+                    "basic": 30,
+                    "medium": 30,
+                    "upperMedium": 9,
+                    "advanced": 1
+                },
+                "silver": {
+                    "elementary": 15,
+                    "basic": 20,
+                    "medium": 45,
+                    "upperMedium": 15,
+                    "advanced": 5
+                },
+                "gold": {
+                    "elementary": 5,
+                    "basic": 15,
+                    "medium": 25,
+                    "upperMedium": 45,
+                    "advanced": 8,
+                    "upperAdvanced": 2
+                },
+                "diamond": {
+                    "basic": 5,
+                    "medium": 30,
+                    "upperMedium": 50,
+                    "advanced": 10,
+                    "upperAdvanced": 5
+                }
+            },
+            "rangeValueForSkills": {
+                "minElementary": 1,
+                "maxElementary": 20,
+                "minBasic": 21,
+                "maxBasic": 40,
+                "minMedium": 41,
+                "maxMedium": 60,
+                "minUpperMedium": 61,
+                "maxUpperMedium": 80,
+                "minAdvanced": 81,
+                "maxAdvanced": 90,
+                "minUpperAdvanced": 91,
+                "maxUpperAdvanced": 100
+            },
+            "tattoos": {
+                "gold": 1,
+                "diamond": 2
+            },
+            "cursor": {
+                "limit": 10,
+                "page": 1
+            },
+            "percentageQualities": {
+                "wood": 60,
+                "silver": 20,
+                "gold": 15,
+                "diamond": 5
+            },
+            "cardEfficiencyParameters": {       
+                "gk": {     
+                    "goalkeeping": 0.9,     
+                    "physique": 0.05,       
+                    "tactics": 0.05     
+                },      
+            "cd": {     
+            "defence": 0.65,        
+            "physique": 0.2,        
+            "tactics": 0.15     
+            },      
+            "lbOrRb": {     
+            "defence": 0.55,        
+            "physique": 0.1,        
+            "tactics": 0.2,     
+            "technique": 0.15       
+            },      
+            "cdm": {        
+            "defence": 0.3,     
+            "physique": 0.15,       
+            "tactics": 0.3,     
+            "technique": 0.15,      
+            "offence": 0.1      
+            },      
+            "cm": {
+            "defence": 0.2,     
+            "physique": 0.1,        
+            "tactics": 0.4,     
+            "technique": 0.2,       
+            "offence": 0.1      
+            },      
+            "cam": {
+            "defence": 0.05,        
+            "physique": 0.1,        
+            "tactics": 0.3,     
+            "technique": 0.35,      
+            "offence": 0.2      
+            },      
+            "rmOrLm": {
+            "defence": 0.05,        
+            "physique": 0.1,        
+            "tactics": 0.2,     
+            "technique": 0.45,      
+            "offence": 0.2      
+            },      
+            "rwOrLw": {
+            "physique": 0.05,       
+            "tactics": 0.15,        
+            "technique": 0.5,       
+            "offence": 0.3      
+            },      
+            "st": {
+            "physique": 0.2,        
+            "tactics": 0.1,     
+            "technique": 0.2,       
+            "offence": 0.5      
+            }
+            },
+            "pathToNamesDataset": "./ultimatedivision/assets/names/names.txt"
+        },
+        "avatars": {
+            "pathToAvararsComponents": "./assets/avatars",
+            "pathToOutputAvatarsLocal": "./assets/output",
+            "pathToOutputAvatarsRemote": "xxx",
+            "backgroundFolder": "Background",
+            "faceColorFolder": "Man_%v",
+            "tattooFolder": "Tattoos",
+            "tattooTypeFolder": "Tattoos_type_%v",
+            "tattooFile": "Tattoo_%v.png",
+            "faceTypeFolder": "Face_type_%v",
+            "faceTypeFile": "Face_type_%v.png",
+            "eyeBrowsFolder": "EyeBrows",
+            "eyeBrowsTypeFolder": "EyeBrows_type_%v",
+            "eyeBrowsColorFile": "EyeBrows_color_%v.png",
+            "eyeLaserFolder": "EyesLasers",
+            "eyeLaserTypeFolder": "EyesLasers_%v",
+            "eyeLaserTypeFile": "EyeLaser_%v.png",
+            "hairstyleFolder": "Hairstyles",
+            "hairstyleColorFolder": "Hairstyles_color_%v",
+            "hairstyleTypeFile": "Hairstyle_%v.png",
+            "noseFolder": "Noses",
+            "noseTypeFolder": "Nose_%v",
+            "noseFile": "Nose_%v.png",
+            "beardFolder": "Beards",
+            "beardFile": "Beard_%v.png",
+            "lipsFolder": "Lips",
+            "lipsFile": "Lips_%v.png",
+            "tshirtFolder": "T-shirts",
+            "tshirtFile": "T-shirt_%v.png",
+            "percentageFacialFeatures": {
+                 "eyeLaser": 1,
+                "hairstyle": 85,
+                "beard": 40
+            },
+            "sizes": {
+            "background": {
+                "width": 1574,
+            "height": 2566
+            
+            },
+            "originalAvatar": {
+                "width": 825,
+            "height": 1025
+            },
+            "previewImage": {
+                "width": 200,
+            "height": 250
+            }
+        },
+        "indentOriginalAvatar": {
+            "left": 380,
+            "above": 237
+        },
+        "inscriptions": {
+            "pathToFonts": "./assets/fonts/font-avatars.ttf",
+            "fontColors": {
+                "wood": "6B4538",
+                "silver": "555D76",
+                "gold": "6D4618",
+                "diamond": "555D76"
+            },
+            "playerName": {
+                "fontSize": 157,
+                "textAlign": 0.5,
+                "x": 789,
+                "y": 270
+            },
+            "gameCharacteristics": {
+                "fontSize": 118,
+                "textAlign": 1,
+                "tac": {
+                    "x": 460,
+                    "y": 1424
+                },
+                "phy": {
+                    "x": 460,
+                    "y": 1574
+                },
+                "tec": {
+                    "x": 460,
+                    "y": 1725
+                },
+                "off": {
+                    "x": 960,
+                    "y": 1424
+                },
+                "def": {
+                    "x": 960,
+                    "y": 1574
+                },
+                "gk": {
+                    "x": 960,
+                    "y": 1725
+                }
+            }
+        }
+        },
+        "waitlist": {
+            "waitListRenewalInterval": 2000000000,
+            "waitListCheckSignature": 500,
+            "nftContract" : {
+                "address": "0x1b03b691601fF334f5fC473e251be0bDA7a05b27",
+                "addressEvent": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+            },
+            "nftCreateContract": {
+                "address": "0x126dA9E2eCB3E86573aBb2B5225cee6a7209F612",
+                "mintWithSignatureSelector": "0xb6b49a9a",
+                "mintWithSignatureAndValueSelector": "0xb4d4b0f1",
+                "chainId": 4
+            },
+            "nftCreateVelasContract": {
+                "address": "0x3686F4923BA4AB7F5512D5549052d979add6f60a",
+                "mintWithSignatureSelector": "0xb6b49a9a",
+                "mintWithSignatureAndValueSelector": "0xb4d4b0f1",
+                "chainId": 4
+            },
+            "nftCreateCasperContract": {
+                "address": "1d2f5eed581e3750fa3d2fd15ef782aa66a55a679346c0a339c485c78fc9fe68",
+                "mintWithSignatureSelector": "0xb6b49a9a",
+                "mintWithSignatureAndValueSelector": "0xb4d4b0f1",
+                "chainId": 4
+            },
+            "addressNodeServer": "http://91.225.167.148:8545",
+            "fileStorage": {
+                "s3Gateway": "gateway.eu1.storjshare.io",
+                "accessKey": "jujhrmxznnohynbwlizgxk2vlc7q",
+                "secretKey": "j2menh2karrjyvityt7ixgyenzfrsnqozp2chawitnrasfqtqo4xs",
+                "region": "us-east-1"
+            },
+            "bucket": "nft",
+            "urlToAvatar": "https://link.us1.storjshare.io/raw/jxpirica7qglasqsgnadsiipveua/nft/%d.png",
+            "rpcNodeAddress": "http://136.243.187.84:7777/rpc"
+        },
+        "nfts": {
+            "description": "Ultimate Division Founder Cards are powerful in-game items that can be used as footballers to play football games. Founder card holders are a part of an elite club, they get in-game perks and more play-to-earn rewards. Find out more at https://ultimatedivision.com/",
+            "externalUrl": "https://ultimatedivision.com/avatars/%s.png",
+            "nftRenewalInterval": 5000000000,
+            "nftContract": {
+                "address": "0x1b03b691601fF334f5fC473e251be0bDA7a05b27",
+                "ownerOfSelector": "0x6352211e"
+            },
+            "addressNodeServer": "http://91.225.167.148:8545"
+        },
+        "lootBoxes": {
+            "lootBoxes": {
+                "regular": {
+                    "cost": 0,
+                    "cardsNum": 5,
+                    "wood": 80,
+                    "silver": 15,
+                    "gold": 4,
+                    "diamond": 1
+                },
+                "UDReleaseCelebration": {
+                    "cost": 0,
+                    "cardsNum": 10,
+                    "wood": 70,
+                    "silver": 20,
+                    "gold": 8,
+                    "diamond": 2
+                }
+            }
+        },
+        "marketplace": {
+            "lotRenewalInterval": 5000000000,
+            "cursor": {
+                "limit": 10,
+                "page": 1
+            }
+        },
+        "queue": {
+            "placeRenewalInterval": 5000000000,
+            "winValue": "10000000000000000000",
+            "drawValue": "5000000000000000000",
+            "udtContract": {
+                "address": "0x7b7E8E64e5E9EA9Cb3E314A49f5585b5dd7aaF83"
+            },
+            "casperTokenContract": {
+                "address": "5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0"
+            },
+            "rpcNodeAddress": "http://136.243.187.84:7777/rpc"
+        },
+        "divisions": {
+            "passingPercent": 10
+        },
+        "seasons": {      
+            "seasonTime": 1008000000000000
+        },
+        "matches": {
+            "periods": {
+                "first": {
+                    "begin": 1,
+                    "end": 10
+                },
+                "second": {
+                    "begin": 11,
+                    "end": 20
+                },
+                "third": {
+                    "begin": 21,
+                    "end": 30
+                },
+                "fourth": {
+                    "begin": 31,
+                    "end": 40
+                },
+                "fifth": {
+                    "begin": 41,
+                    "end": 45
+                },
+                "sixth": {
+                    "begin": 46,
+                    "end": 55
+                },
+                "seventh": {
+                    "begin": 55,
+                    "end": 65
+                },
+                "eighth": {
+                    "begin": 66,
+                    "end": 75
+                },
+                "ninth": {
+                    "begin": 76,
+                    "end": 85
+                },
+                "tenth": {
+                    "begin": 86,
+                    "end": 90
+                }
+            },
+            "goalProbability": 20,
+            "squadPowerAccuracy": 40,
+            "goalProbabilityByPosition": {
+                "st": 50,
+                "rw": 25,
+                "lw": 25,
+                "cam": 25,
+                "cm": 25,
+                "rm": 15,
+                "lm": 15,
+                "cdm": 15,
+                "cd": 10,
+                "lb": 10,
+                "rb": 10
+            },
+            "pagination": {
+                "limit": 10,
+                "page": 1
+            },
+        "numberOfPointsForWin" : 3,
+        "numberOfPointsForDraw" : 1,
+        "numberOfPointsForLosing" : 0
+        },
+        "managers": {
+            "renewalTime": 5000000000
+        },
+        "currencyWaitList": {
+            "intervalSignatureCheck": 500,
+            "udtContract": {
+                "address": "0x7b7E8E64e5E9EA9Cb3E314A49f5585b5dd7aaF83",
+                "addressMethod": "0x38926b6d"
+            },
+            "casperTokenContract": {
+                  "casperTokenContract": "5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0",
+                  "addressMethod": "0x38926b6d"
+            }
+
+        },
+        "store": {
+            "storeRenewalInterval": 5000000000,
+            "percentageQualities": {
+                "wood": 0,
+                "silver": 0,
+                "gold": 0,
+                "diamond": 100
+            }
+        },
+        "velas": {
+            "clientId": "48yTQiBWjiyifDp6fesNj72gosALuTvxLQ8Rqzy6sRwh",
+            "redirectUri": "http://localhost:8088/auth-velas",
+            "accountProviderHost": "account.testnet.velas.com",
+            "networkApiHost": "https://api.testnet.velas.com",
+            "transactionsSponsorApiHost": "http://localhost:8088",
+"transactionsSponsorPubKey": "3WZuAbAnD8eNpmPaUjeS7ZP6aBFmNeeHA3xv9XcLszvq1o4dQU8evRCMfmD6ei1gz6y6ZCayfmiYZXL7sezTsbLN"
+        }
+    }
+}

@@ -21,6 +21,16 @@ docker run --name=db -e POSTGRES_PASSWORD=‘$YOUR_PASSWORD’ -p $YOUR_PORTS -d
 docker exec -it db createdb -U postgres ultimatedivision_test
 ```
 
+## Config
+
+The application depends on config values that are located in the config file. (examples of configs are in the folder - configsexamples)
+
+```
+go run cmd/ultimatedivision/main.go setup
+go run cmd/currencysigrer/main.go setup
+go run cmd/nftsigrer/main.go setup
+```
+
 **Run the main server.**
 
 From the web/console directory at the root of the project use this commands to build front end part of project:
@@ -30,7 +40,7 @@ npm i --force && npm run build
 
 You can run it with the command in root of the project:
 ```
-go run cmd/ultimatedivision/main.go run --config=your_path
+go run cmd/ultimatedivision/main.go run
 ```
 After this you can open console on localhost:8088 and admin panel on localhost:8087
 
@@ -55,14 +65,14 @@ Deployment instructions on the remote server according to the docker files in th
 
 The currency signer runs a infinite cycle with an interval of operation that monitors the records of currency waitlist in which there is no signature and if it finds them then generates a signature and sends a transaction to transfer money.
 ```
-go run cmd/currencysigrer/main.go run --config=your_path
+go run cmd/currencysigrer/main.go run
 ```
 
 **NFT signer**
 
 The nft signer runs an infinite cycle with an interval of operation that monitors the records of waitlist in which there is no signature and if it finds them then generates a signature and sends a transaction to mint nft.
 ```
-go run cmd/nftsigrer/main.go run --config=your_path
+go run cmd/nftsigrer/main.go run
 ```
 
 **Recommendation **
@@ -184,15 +194,6 @@ func (auth *Auth) Register(w http.ResponseWriter, r *http.Request) {
 	
 	auth.metric.LoginsInc()
 }
-```
-## Config
-
-The application depends on config values that are located in the config file.
-
-```
-go run cmd/ultimatedivision/main.go setup
-go run cmd/currencysigrer/main.go setup
-go run cmd/nftsigrer/main.go setup
 ```
 
 # web/console
