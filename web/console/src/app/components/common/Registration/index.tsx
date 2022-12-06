@@ -135,7 +135,7 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
 
     const casperRegistration = async() => {
         try {
-            const publicKey = await window.casperlabsHelper.getActivePublicKey();
+            const publicKey = await Signer.getActivePublicKey();
 
             await loginCasper(publicKey);
         } catch (error) {

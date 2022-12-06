@@ -29,6 +29,8 @@ const TTL = 1800000;
 const PAYMENT_AMOUNT = 50000000000;
 const GAS_PRICE = 1;
 
+const TOKEN_PAYMENT_AMOUNT = 6000000000;
+
 /** CasperTransactionService describes casper transaction entity. */
 class CasperTransactionService {
     private readonly paymentAmount: number = PAYMENT_AMOUNT;
@@ -126,9 +128,9 @@ class CasperTransactionService {
     async mintUDT(transaction: CasperMatchTransaction, rpcNodeAddress: string): Promise<void> {
         try {
             const runtimeArgs = RuntimeArgs.fromMap({
-                'signature': CLValueBuilder.string(transaction.signature),
                 'value': CLValueBuilder.u256(transaction.value),
                 'nonce': CLValueBuilder.u64(transaction.nonce),
+                'signature': CLValueBuilder.string(transaction.signature),
             });
 
             const isConnected = window.casperlabsHelper.isConnected();
@@ -137,7 +139,7 @@ class CasperTransactionService {
                 await window.casperlabsHelper.requestConnection();
             }
 
-            const signature = await this.contractSign('claim', runtimeArgs, this.paymentAmount, transaction.casperTokenContract.address);
+            const signature = await this.contractSign('claim', runtimeArgs, TOKEN_PAYMENT_AMOUNT, transaction.casperTokenContract.address);
 
             await this.client.claim(rpcNodeAddress, JSON.stringify(signature), this.walletAddress);
         }

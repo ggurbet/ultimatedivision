@@ -17,6 +17,7 @@ import CasperTransactionService from '@/casper';
 import coin from '@static/img/match/money.svg';
 
 import './index.scss';
+import { CLPublicKey } from 'casper-js-sdk';
 
 const VELAS_WALLET_TYPE = 'velas_wallet_address';
 const CASPER_WALLET_TYPE = 'casper_wallet_address';
@@ -98,11 +99,16 @@ export const MatchScore: React.FC = () => {
     /** Adds casper wallet address for earning reward. */
     const addCasperWallet = () => {
         try {
+            const ACCOUNT_HASH_PREFIX = 'account-hash-';
+
             const currentQueueClient = getCurrentQueueClient();
 
             setQueueClient(currentQueueClient);
 
-            queueCasperActionAllowAddress(user.casperWallet, user.walletType, squad.id);
+            const accountHash = CLPublicKey.fromHex(user.casperWallet).toAccountHashStr();
+            const accountHashConverted = accountHash.replace(ACCOUNT_HASH_PREFIX, '');
+
+            queueCasperActionAllowAddress(accountHashConverted, user.walletType, squad.id);
         }
         catch (error: any) {
             toast.error('Something went wrong', {
