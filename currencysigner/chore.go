@@ -24,12 +24,11 @@ var ChoreError = errs.Class("nft signer chore error")
 
 // ChoreConfig is the global configuration for currencysigner.
 type ChoreConfig struct {
-	RenewalInterval            time.Duration           `json:"renewalInterval"`
-	PrivateKey                 evmsignature.PrivateKey `json:"privateKey"`
-	UDTContractAddress         common.Address          `json:"udtContractAddress"`
-	VelasSmartContractAddress  common.Address          `json:"velasSmartContractAddress"`
-	CasperSmartContractAddress string                  `json:"casperSmartContractAddress"`
-	CasperTokenContract        string                  `json:"casperTokenContract"`
+	RenewalInterval           time.Duration           `json:"renewalInterval"`
+	PrivateKey                evmsignature.PrivateKey `json:"privateKey"`
+	UDTContractAddress        common.Address          `json:"udtContractAddress"`
+	VelasSmartContractAddress common.Address          `json:"velasSmartContractAddress"`
+	CasperTokenContract       string                  `json:"casperTokenContract"`
 }
 
 // Chore requests for unsigned nft tokens and sign all of them .
@@ -71,7 +70,6 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 				signature           evmsignature.Signature
 				smartContract       common.Address
 				casperTokenContract string
-				casperContract      string
 				casperWallet        string
 			)
 
@@ -81,12 +79,11 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 			case users.WalletTypeVelas:
 				smartContract = chore.config.VelasSmartContractAddress
 			case users.WalletTypeCasper:
-				casperContract = chore.config.CasperSmartContractAddress
 				casperTokenContract = chore.config.CasperTokenContract
 				casperWallet = item.CasperWalletAddress
 			}
 
-			if casperContract != "" {
+			if casperTokenContract != "" {
 				signature, err = signer.GenerateCasperSignatureWithValueAndNonce(signer.Address(casperWallet),
 					signer.Address(casperTokenContract), &item.Value, item.Nonce, privateKeyECDSA)
 				if err != nil {

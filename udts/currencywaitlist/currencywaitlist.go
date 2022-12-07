@@ -30,8 +30,10 @@ type DB interface {
 	GetByCasperWalletAddressAndNonce(ctx context.Context, casperWallet string, nonce int64) (Item, error)
 	// List returns items of currency waitlist from database.
 	List(ctx context.Context) ([]Item, error)
-	// GetNonce returns number of nonce. from database.
+	// GetNonce returns number of nonce from database.
 	GetNonce(ctx context.Context) (int64, error)
+	// GetNonceByWallet returns number of nonce by wallet from database.
+	GetNonceByWallet(ctx context.Context, wallet string) (int64, error)
 	// ListWithoutSignature returns items of currency waitlist without signature from database.
 	ListWithoutSignature(ctx context.Context) ([]Item, error)
 	// Update updates item by wallet address and nonce in the database.
