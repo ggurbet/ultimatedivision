@@ -297,7 +297,7 @@
                 "chainId": 4
             },
             "nftCreateCasperContract": {
-                "address": "1d2f5eed581e3750fa3d2fd15ef782aa66a55a679346c0a339c485c78fc9fe68",
+                "address": "4ff1e5e37b8720e8049bfff88676d8e27c1037c02e1172a1006c6d2a535607da",
                 "mintWithSignatureSelector": "0xb6b49a9a",
                 "mintWithSignatureAndValueSelector": "0xb4d4b0f1",
                 "chainId": 4

@@ -241,7 +241,7 @@ func (auth *Auth) Register(w http.ResponseWriter, r *http.Request) {
 ## Casper
 App uses casper blockchain:
 * __contracts__: 
-* https://testnet.cspr.live/contract/1d2f5eed581e3750fa3d2fd15ef782aa66a55a679346c0a339c485c78fc9fe68
+* https://testnet.cspr.live/contract/4ff1e5e37b8720e8049bfff88676d8e27c1037c02e1172a1006c6d2a535607da
 * https://testnet.cspr.live/contract/5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0
 
 * __register__: To register a new user, you need to install Casper Signer on the browser (right now it's only possible on localhost).
