@@ -47,7 +47,7 @@ func (usersDB usersDB) GetVelasData(ctx context.Context, userID uuid.UUID) (user
 
 // List returns all users from the data base.
 func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
-	rows, err := usersDB.conn.QueryContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users")
+	rows, err := usersDB.conn.QueryContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, casper_wallet_id, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users")
 	if err != nil {
 		return nil, ErrUsers.Wrap(err)
 	}
@@ -58,7 +58,7 @@ func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
 	var data []users.User
 	for rows.Next() {
 		var user users.User
-		err := rows.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.CasperWallet, &user.WalletType, &user.Nonce, &user.PublicKey, &user.PrivateKey, &user.LastLogin, &user.Status, &user.CreatedAt)
+		err := rows.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.CasperWallet, &user.CasperWalletID, &user.WalletType, &user.Nonce, &user.PublicKey, &user.PrivateKey, &user.LastLogin, &user.Status, &user.CreatedAt)
 		if err != nil {
 			return nil, ErrUsers.Wrap(err)
 		}
@@ -76,9 +76,9 @@ func (usersDB *usersDB) List(ctx context.Context) ([]users.User, error) {
 func (usersDB *usersDB) Get(ctx context.Context, id uuid.UUID) (users.User, error) {
 	var user users.User
 
-	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users WHERE id=$1", id)
+	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, casper_wallet_id, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users WHERE id=$1", id)
 
-	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.CasperWallet, &user.WalletType, &user.Nonce, &user.PublicKey, &user.PrivateKey, &user.LastLogin, &user.Status, &user.CreatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.CasperWallet, &user.CasperWalletID, &user.WalletType, &user.Nonce, &user.PublicKey, &user.PrivateKey, &user.LastLogin, &user.Status, &user.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return user, users.ErrNoUser.Wrap(err)
@@ -95,9 +95,9 @@ func (usersDB *usersDB) GetByEmail(ctx context.Context, email string) (users.Use
 	var user users.User
 	emailNormalized := mail.Normalize(email)
 
-	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users WHERE email_normalized=$1", emailNormalized)
+	row := usersDB.conn.QueryRowContext(ctx, "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, casper_wallet_id, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users WHERE email_normalized=$1", emailNormalized)
 
-	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.CasperWallet, &user.WalletType, &user.Nonce, &user.PublicKey, &user.PrivateKey, &user.LastLogin, &user.Status, &user.CreatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.CasperWallet, &user.CasperWalletID, &user.WalletType, &user.Nonce, &user.PublicKey, &user.PrivateKey, &user.LastLogin, &user.Status, &user.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return user, users.ErrNoUser.Wrap(err)
@@ -113,7 +113,7 @@ func (usersDB *usersDB) GetByWalletAddress(ctx context.Context, walletAddress st
 	var user users.User
 	var row *sql.Row
 
-	query := "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users WHERE "
+	query := "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, casper_wallet_id, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users WHERE "
 
 	switch walletType {
 	case users.WalletTypeCasper:
@@ -122,7 +122,7 @@ func (usersDB *usersDB) GetByWalletAddress(ctx context.Context, walletAddress st
 		row = usersDB.conn.QueryRowContext(ctx, query+"wallet_address=$1", common.HexToAddress(walletAddress))
 	}
 
-	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.CasperWallet, &user.WalletType, &user.Nonce, &user.PublicKey, &user.PrivateKey, &user.LastLogin, &user.Status, &user.CreatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.CasperWallet, &user.CasperWalletID, &user.WalletType, &user.Nonce, &user.PublicKey, &user.PrivateKey, &user.LastLogin, &user.Status, &user.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return user, users.ErrNoUser.Wrap(err)
@@ -146,6 +146,7 @@ func (usersDB *usersDB) Create(ctx context.Context, user users.User) error {
                   last_name,
                   wallet_address,
                   casper_wallet_address,
+                  casper_wallet_id,
                   wallet_type,
                   nonce,
                   public_key,
@@ -153,10 +154,10 @@ func (usersDB *usersDB) Create(ctx context.Context, user users.User) error {
                   last_login, 
                   status, 
                   created_at) 
-                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`
 
 	_, err := usersDB.conn.ExecContext(ctx, query, user.ID, user.Email, emailNormalized, user.PasswordHash,
-		user.NickName, user.FirstName, user.LastName, user.Wallet, user.CasperWallet, user.WalletType, user.Nonce, user.PublicKey, user.PrivateKey, user.LastLogin, user.Status, user.CreatedAt)
+		user.NickName, user.FirstName, user.LastName, user.Wallet, user.CasperWallet, user.CasperWalletID, user.WalletType, user.Nonce, user.PublicKey, user.PrivateKey, user.LastLogin, user.Status, user.CreatedAt)
 
 	return ErrUsers.Wrap(err)
 }
@@ -334,11 +335,11 @@ func (usersDB *usersDB) GetByPublicKey(ctx context.Context, publicKey string) (u
 	var user users.User
 	var row *sql.Row
 
-	query := "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users WHERE public_key=$1"
+	query := "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, casper_wallet_id, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users WHERE public_key=$1"
 
 	row = usersDB.conn.QueryRowContext(ctx, query, publicKey)
 
-	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.CasperWallet, &user.WalletType, &user.Nonce, &user.PublicKey, &user.PrivateKey, &user.LastLogin, &user.Status, &user.CreatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.CasperWallet, &user.CasperWalletID, &user.WalletType, &user.Nonce, &user.PublicKey, &user.PrivateKey, &user.LastLogin, &user.Status, &user.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return user, users.ErrNoUser.Wrap(err)

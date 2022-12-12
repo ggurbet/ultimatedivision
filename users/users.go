@@ -76,21 +76,22 @@ const DefaultMessageForRegistration = "Register with metamask"
 
 // User describes user entity.
 type User struct {
-	ID           uuid.UUID      `json:"id"`
-	Email        string         `json:"email"`
-	PasswordHash []byte         `json:"passwordHash"`
-	NickName     string         `json:"nickName"`
-	FirstName    string         `json:"firstName"`
-	LastName     string         `json:"lastName"`
-	Wallet       common.Address `json:"wallet"`
-	CasperWallet string         `json:"casperWallet"`
-	WalletType   WalletType     `json:"walletType"`
-	Nonce        []byte         `json:"nonce"`
-	PublicKey    string         `json:"publicKey"`
-	PrivateKey   string         `json:"privateKey"`
-	LastLogin    time.Time      `json:"lastLogin"`
-	Status       Status         `json:"status"`
-	CreatedAt    time.Time      `json:"createdAt"`
+	ID             uuid.UUID      `json:"id"`
+	Email          string         `json:"email"`
+	PasswordHash   []byte         `json:"passwordHash"`
+	NickName       string         `json:"nickName"`
+	FirstName      string         `json:"firstName"`
+	LastName       string         `json:"lastName"`
+	Wallet         common.Address `json:"wallet"`
+	CasperWallet   string         `json:"casperWallet"`
+	CasperWalletID string         `json:"casperWalletID"`
+	WalletType     WalletType     `json:"walletType"`
+	Nonce          []byte         `json:"nonce"`
+	PublicKey      string         `json:"publicKey"`
+	PrivateKey     string         `json:"privateKey"`
+	LastLogin      time.Time      `json:"lastLogin"`
+	Status         Status         `json:"status"`
+	CreatedAt      time.Time      `json:"createdAt"`
 }
 
 // VelasData describes user's velas data entity.
@@ -131,14 +132,15 @@ type Profile struct {
 
 // ProfileWithWallet for user profile with wallet info.
 type ProfileWithWallet struct {
-	ID           uuid.UUID      `json:"id"`
-	Email        string         `json:"email"`
-	NickName     string         `json:"nickName"`
-	CreatedAt    time.Time      `json:"registerDate"`
-	LastLogin    time.Time      `json:"lastLogin"`
-	Wallet       common.Address `json:"wallet"`
-	CasperWallet string         `json:"casperWallet"`
-	WalletType   WalletType     `json:"walletType"`
+	ID             uuid.UUID      `json:"id"`
+	Email          string         `json:"email"`
+	NickName       string         `json:"nickName"`
+	CreatedAt      time.Time      `json:"registerDate"`
+	LastLogin      time.Time      `json:"lastLogin"`
+	Wallet         common.Address `json:"wallet"`
+	CasperWallet   string         `json:"casperWallet"`
+	CasperWalletID string         `json:"casperWalletID"`
+	WalletType     WalletType     `json:"walletType"`
 }
 
 // Password for old/new passwords.

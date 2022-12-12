@@ -80,6 +80,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             last_name             VARCHAR                  NOT NULL,
             wallet_address        BYTEA,
             casper_wallet_address VARCHAR,
+            casper_wallet_id      VARCHAR,
             wallet_type           VARCHAR,
             nonce                 BYTEA,
             public_key            VARCHAR,

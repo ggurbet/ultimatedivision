@@ -711,14 +711,15 @@ func (service *Service) RegisterWithCasper(ctx context.Context, walletAddress st
 	}
 
 	user := users.User{
-		ID:           uuid.New(),
-		PublicKey:    string(publicKey),
-		PrivateKey:   string(privateKey),
-		LastLogin:    time.Time{},
-		Status:       users.StatusActive,
-		CreatedAt:    time.Now().UTC(),
-		CasperWallet: walletAddress,
-		WalletType:   users.WalletTypeCasper,
+		ID:             uuid.New(),
+		PublicKey:      string(publicKey),
+		PrivateKey:     string(privateKey),
+		LastLogin:      time.Time{},
+		Status:         users.StatusActive,
+		CreatedAt:      time.Now().UTC(),
+		CasperWallet:   walletAddress,
+		CasperWalletID: walletAddress,
+		WalletType:     users.WalletTypeCasper,
 	}
 	err = service.users.Create(ctx, user)
 	if err != nil {
