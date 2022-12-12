@@ -91,7 +91,7 @@ const Card: React.FC = () => {
     /** Mints chosed card with casper */
     const casperMint = async() => {
         try {
-            const casperTransactionService = new CasperTransactionService(user.casperWallet);
+            const casperTransactionService = new CasperTransactionService(user.casperWalletId);
 
             await casperTransactionService.mint(id);
         } catch (error: any) {
