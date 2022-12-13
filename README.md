@@ -65,14 +65,14 @@ Deployment instructions on the remote server according to the docker files in th
 
 The currency signer runs a infinite cycle with an interval of operation that monitors the records of currency waitlist in which there is no signature and if it finds them then generates a signature and sends a transaction to transfer money.
 ```
-go run cmd/currencysigrer/main.go run
+go run cmd/currencysigner/main.go run
 ```
 
 **NFT signer**
 
 The nft signer runs an infinite cycle with an interval of operation that monitors the records of waitlist in which there is no signature and if it finds them then generates a signature and sends a transaction to mint nft.
 ```
-go run cmd/nftsigrer/main.go run
+go run cmd/nftsigner/main.go run
 ```
 
 **Recommendation **
@@ -215,7 +215,6 @@ func (auth *Auth) Register(w http.ResponseWriter, r *http.Request) {
    Faster that build but much larger size.
    Also contains 'watch' development mode. Automaticaly rebuilds app when code is changed.
    Runs on [localhost](http://localhost:8088).
-5. `npm run test` - runs coverage code tests with [jestSetup.ts](./web/console/jestSetup.ts) config.
 
 ## Structure
 1. __cards, clubs, divisions, gameplay, marketplace, seasons, users__ - domain entities.\
