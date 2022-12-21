@@ -3,7 +3,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { CLPublicKey } from 'casper-js-sdk';
 import MetaMaskOnboarding from '@metamask/onboarding';
 
 import { QueueClient } from '@/api/queue';
@@ -13,11 +13,11 @@ import { ServicePlugin } from '@/app/plugins/service';
 import { getCurrentQueueClient, queueActionAllowAddress, queueCasperActionAllowAddress } from '@/queue/service';
 import { setCurrentUser } from '@/app/store/actions/users';
 import CasperTransactionService from '@/casper';
+import { ToastNotifications } from '@/notifications/service';
 
 import coin from '@static/img/match/money.svg';
 
 import './index.scss';
-import { CLPublicKey } from 'casper-js-sdk';
 
 const VELAS_WALLET_TYPE = 'velas_wallet_address';
 const CASPER_WALLET_TYPE = 'casper_wallet_address';
@@ -53,10 +53,7 @@ export const MatchScore: React.FC = () => {
         try {
             await dispatch(setCurrentUser());
         } catch (error: any) {
-            toast.error('Something went wrong', {
-                position: toast.POSITION.TOP_RIGHT,
-                theme: 'colored',
-            });
+            ToastNotifications.couldNotGetUser();
         }
     }
 
@@ -81,15 +78,7 @@ export const MatchScore: React.FC = () => {
 
                 queueActionAllowAddress(wallet, nonce);
             } catch (error: any) {
-                error.code === METAMASK_RPC_ERROR_CODE
-                    ? toast.error('Please open metamask manually!', {
-                        position: toast.POSITION.TOP_RIGHT,
-                        theme: 'colored',
-                    })
-                    : toast.error('Something went wrong', {
-                        position: toast.POSITION.TOP_RIGHT,
-                        theme: 'colored',
-                    });
+                ToastNotifications.metamaskError(error);
             }
         } else {
             onboarding.startOnboarding();
@@ -111,10 +100,7 @@ export const MatchScore: React.FC = () => {
             queueCasperActionAllowAddress(accountHashConverted, user.walletType, squad.id);
         }
         catch (error: any) {
-            toast.error('Something went wrong', {
-                position: toast.POSITION.TOP_RIGHT,
-                theme: 'colored',
-            });
+            ToastNotifications.couldNotAddCasperWallet();
         }
     };
 
@@ -145,11 +131,8 @@ export const MatchScore: React.FC = () => {
                 addingWallets.set(addingWalletsType.walletType, addingWalletsType.mint));
 
             await addingWallets.get(user.walletType)();
-        } catch (e) {
-            toast.error('Invalid transaction', {
-                position: toast.POSITION.TOP_RIGHT,
-                theme: 'colored',
-            });
+        } catch (error: any) {
+            ToastNotifications.notify(error.message);
         }
     };
 

@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { DivisionsState, CurrentDivisionSeasons } from '@/divisions';
+import { CurrentDivisionSeasons, DivisionsState } from '@/divisions';
 import {
     GET_CURRENT_DIVISION_SEASONS,
     GET_DIVISION_SEASONS_STATISTICS,

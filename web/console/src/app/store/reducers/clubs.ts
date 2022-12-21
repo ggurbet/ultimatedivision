@@ -5,9 +5,9 @@ import { Club, ClubState } from '@/club';
 
 import {
     CARD_POSITION,
-    SET_CLUBS,
     DRAG_START,
     SELECTION_VISIBILITY,
+    SET_CLUBS,
     START_SEARCHING_MATCH,
 } from '@/app/store/actions/clubs';
 

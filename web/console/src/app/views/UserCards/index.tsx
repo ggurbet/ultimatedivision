@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { CardsArea } from '@components/UserCards/CardsArea';
@@ -16,7 +16,7 @@ import { RegistrationPopup } from '@/app/components/common/Registration';
 import { UnauthorizedError } from '@/api';
 import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { RootState } from '@/app/store';
-import { listOfCards, createCardsQueryParameters, getCurrentCardsQueryParameters } from '@/app/store/actions/cards';
+import { createCardsQueryParameters, getCurrentCardsQueryParameters, listOfCards } from '@/app/store/actions/cards';
 import { CardsQueryParametersField } from '@/card';
 
 import './index.scss';

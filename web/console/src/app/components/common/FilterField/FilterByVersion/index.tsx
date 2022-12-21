@@ -1,11 +1,11 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { FilterByParameterWrapper } from '@/app/components/common/FilterField/FilterByParameterWrapper';
 
-import { CardsQueryParametersField, CardsQueryParameters } from '@/card';
+import { CardsQueryParameters, CardsQueryParametersField } from '@/card';
 import { FilterContext } from '../index';
 
 // TODO: rework functionality.

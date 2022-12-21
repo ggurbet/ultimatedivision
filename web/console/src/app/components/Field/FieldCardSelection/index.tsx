@@ -13,9 +13,9 @@ import { FilterByVersion } from '@components/common/FilterField/FilterByVersion'
 
 import { RootState } from '@/app/store';
 import {
+    createFieldCardsQueryParameters,
     fieldCards,
     getCurrentFieldCardsQueryParameters,
-    createFieldCardsQueryParameters,
 } from '@/app/store/actions/cards';
 import { addCard, cardSelectionVisibility } from '@/app/store/actions/clubs';
 import { CardEditIdentificators } from '@/api/club';

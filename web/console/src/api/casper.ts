@@ -69,7 +69,7 @@ export class CasperNetworkClient extends APIClient {
         }
 
         if (!response.ok) {
-            await this.handleError(response);
+            throw await response.json();
         }
     }
 }

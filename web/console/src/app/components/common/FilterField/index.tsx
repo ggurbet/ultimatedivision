@@ -1,7 +1,7 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import { useState, createContext } from 'react';
+import { createContext, useState } from 'react';
 
 import { Context } from '@/app/types/filters';
 

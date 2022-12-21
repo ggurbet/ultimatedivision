@@ -3,7 +3,6 @@
 
 import { DragEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { FieldCardSelection } from '@/app/components/Field/FieldCardSelection';
 import { FieldPlayingArea } from '@/app/components/Field/FieldPlayingArea';
@@ -14,6 +13,7 @@ import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { RootState } from '@/app/store';
 import { createClubs, deleteCard, getClubs } from '@/app/store/actions/clubs';
 import { CardEditIdentificators } from '@/api/club';
+import { ToastNotifications } from '@/notifications/service';
 
 import './index.scss';
 
@@ -43,20 +43,14 @@ const FootballField: React.FC = () => {
                 }
 
                 if (!(error instanceof NotFoundError)) {
-                    toast.error('Something went wrong', {
-                        position: toast.POSITION.TOP_RIGHT,
-                        theme: 'colored',
-                    });
+                    ToastNotifications.notFound();
 
                     return;
                 }
                 try {
                     await dispatch(createClubs());
                 } catch (error: any) {
-                    toast.error('Something went wrong', {
-                        position: toast.POSITION.TOP_RIGHT,
-                        theme: 'colored',
-                    });
+                    ToastNotifications.couldNotCreateClub();
                 }
             }
         })();

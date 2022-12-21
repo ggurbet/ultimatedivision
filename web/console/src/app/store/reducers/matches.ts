@@ -4,7 +4,7 @@
 import { GET_MATCH_SCORE } from '../actions/mathes';
 
 
-import { Goal, Match, Team, MatchTransaction } from '@/matches';
+import { Goal, Match, MatchTransaction, Team } from '@/matches';
 
 /** Describes default summary goals scored by first team. */
 const DEFAULT_FIRST_TEAM_GOALS: number = 0;

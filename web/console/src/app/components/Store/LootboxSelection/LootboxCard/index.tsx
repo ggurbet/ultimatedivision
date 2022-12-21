@@ -3,24 +3,23 @@
 
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { LootboxCardQuality } from './LootboxCardQuality';
 
 import { RegistrationPopup } from '@/app/components/common/Registration';
-
-import diamond from '@static/img/StorePage/BoxCard/diamond.svg';
-import gold from '@static/img/StorePage/BoxCard/gold.svg';
-import silver from '@static/img/StorePage/BoxCard/silver.svg';
-import wood from '@static/img/StorePage/BoxCard/wood.svg';
-
-import lootBox from '@static/img/StorePage/BoxContent/lootBox.svg';
 
 import { UnauthorizedError } from '@/api';
 import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { openLootbox } from '@/app/store/actions/lootboxes';
 import { LootboxStats } from '@/app/types/lootbox';
 import { setCurrentUser } from '@/app/store/actions/users';
+import { ToastNotifications } from '@/notifications/service';
+
+import diamond from '@static/img/StorePage/BoxCard/diamond.svg';
+import gold from '@static/img/StorePage/BoxCard/gold.svg';
+import silver from '@static/img/StorePage/BoxCard/silver.svg';
+import wood from '@static/img/StorePage/BoxCard/wood.svg';
+import lootBox from '@static/img/StorePage/BoxContent/lootBox.svg';
 
 import './index.scss';
 
@@ -80,10 +79,7 @@ export const LootboxCard: React.FC<{
 
                 return;
             }
-            toast.error('Failed to open lootbox', {
-                position: toast.POSITION.TOP_RIGHT,
-                theme: 'colored',
-            });
+            ToastNotifications.failedToOpenLootbox();
         }
     };
 

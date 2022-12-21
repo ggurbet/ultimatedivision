@@ -17,11 +17,11 @@ import { RootState } from '@/app/store';
 import { openUserCard } from '@/app/store/actions/cards';
 import { ServicePlugin } from '@/app/plugins/service';
 import { setCurrentUser } from '@/app/store/actions/users';
-import { metamaskNotifications } from '@/app/internal/notifications';
 
 import { UsersClient } from '@/api/users';
 import { UsersService } from '@/users/service';
 import CasperTransactionService from '@/casper';
+import { ToastNotifications } from '@/notifications/service';
 
 import CardPageBackground from '@static/img/FootballerCardPage/background.png';
 import backButton from '@static/img/FootballerCardPage/back-button.png';
@@ -61,10 +61,7 @@ const Card: React.FC = () => {
         try {
             await dispatch(setCurrentUser());
         } catch (error: any) {
-            toast.error('Something went wrong', {
-                position: toast.POSITION.TOP_RIGHT,
-                theme: 'colored',
-            });
+            ToastNotifications.couldNotGetUser();
         }
     }
 
@@ -81,7 +78,7 @@ const Card: React.FC = () => {
                 });
                 await service.sendTransaction(id);
             } catch (error: any) {
-                metamaskNotifications(error);
+                ToastNotifications.metamaskError(error);
             }
         } else {
             onboarding.startOnboarding();
@@ -95,10 +92,7 @@ const Card: React.FC = () => {
 
             await casperTransactionService.mint(id);
         } catch (error: any) {
-            toast.error(`${error}`, {
-                position: toast.POSITION.TOP_RIGHT,
-                theme: 'colored',
-            });
+            ToastNotifications.notify(error.message);
         }
     };
 
@@ -127,11 +121,8 @@ const Card: React.FC = () => {
                 mintingNfts.set(walletMintingType.walletType, walletMintingType.mint));
 
             mintingNfts.get(user.walletType)();
-        } catch (e) {
-            toast.error('Something went wrong', {
-                position: toast.POSITION.TOP_RIGHT,
-                theme: 'colored',
-            });
+        } catch (error: any) {
+            ToastNotifications.notify(error.message);
         }
     };
 

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { changeActiveClub, setFormation, startSearchingMatch } from '@/app/store/actions/clubs';
 import { RootState } from '@/app/store';
-import { amountColumnsElements, Control, MobileControl } from '@/app/types/club';
+import { Control, MobileControl, amountColumnsElements } from '@/app/types/club';
 import { Formations, SquadCard } from '@/club';
 import { FieldDropdown } from './FieldDropdown';
 import { FieldFilterMobile } from './FieldFilterMobile';

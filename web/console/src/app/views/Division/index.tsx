@@ -3,10 +3,6 @@
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-
-import realMadrid from '@static/img/divisions/realmadrid.png';
-import rectangle from '@static/img/FilterField/rectangle.svg';
 
 import { RootState } from '@/app/store';
 import {
@@ -14,7 +10,11 @@ import {
     setActiveDivision,
 } from '@/app/store/actions/divisions';
 import { DivisionClub } from '@/app/types/division';
+import { ToastNotifications } from '@/notifications/service';
 import { CurrentDivisionSeasons } from '@/divisions';
+
+import realMadrid from '@static/img/divisions/realmadrid.png';
+import rectangle from '@static/img/FilterField/rectangle.svg';
 
 import './index.scss';
 
@@ -31,10 +31,7 @@ const Division: React.FC = () => {
         try {
             await dispatch(divisionSeasonsStatistics(activeDivisions));
         } catch (error: any) {
-            toast.error('Failed to get seasons statistics', {
-                position: toast.POSITION.TOP_RIGHT,
-                theme: 'colored',
-            });
+            ToastNotifications.failedGettingSeasonStatistics();
         }
     }
 

@@ -13,9 +13,9 @@ import { MarketPlaceCardsGroup } from '@components/MarketPlace/MarketPlaceCardsG
 
 import { RootState } from '@/app/store';
 import {
-    listOfLots,
     createLotsQueryParameters,
     getCurrentLotsQueryParameters,
+    listOfLots,
 } from '@/app/store/actions/marketplace';
 import { CardsQueryParametersField } from '@/card';
 
