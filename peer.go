@@ -447,6 +447,21 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 	}
 
+	{ // udts setup.
+		peer.UDTs.Service = udts.NewService(
+			peer.Database.UDTs(),
+		)
+	}
+
+	{ // currencywaitlist setup.
+		peer.CurrencyWaitList.Service = currencywaitlist.NewService(
+			config.CurrencyWaitList.Config,
+			peer.Database.CurrencyWaitList(),
+			peer.Users.Service,
+			peer.UDTs.Service,
+		)
+	}
+
 	{ // seasons setup.
 		peer.Seasons.Service = seasons.NewService(
 			peer.Database.Seasons(),
@@ -461,21 +476,6 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		peer.Seasons.ExpirationSeasons = seasons.NewChore(
 			config.Seasons.Config,
 			peer.Seasons.Service,
-		)
-	}
-
-	{ // udts setup.
-		peer.UDTs.Service = udts.NewService(
-			peer.Database.UDTs(),
-		)
-	}
-
-	{ // currencywaitlist setup.
-		peer.CurrencyWaitList.Service = currencywaitlist.NewService(
-			config.CurrencyWaitList.Config,
-			peer.Database.CurrencyWaitList(),
-			peer.Users.Service,
-			peer.UDTs.Service,
 		)
 	}
 
