@@ -91,7 +91,7 @@ func (currencywaitlistDB *currencywaitlistDB) GetNonce(ctx context.Context) (int
 // GetNonceByWallet returns number of nonce by wallet from database.
 func (currencywaitlistDB *currencywaitlistDB) GetNonceByWallet(ctx context.Context, wallet string) (int64, error) {
 	var nonce int64
-	query := `SELECT coalesce(MAX(DISTINCT nonce),0) FROM currency_waitlist = $1`
+	query := `SELECT coalesce(MAX(DISTINCT nonce),0) FROM currency_waitlist WHERE casper_wallet_address = $1`
 
 	err := currencywaitlistDB.conn.QueryRowContext(ctx, query, wallet).Scan(&nonce)
 	if errors.Is(err, sql.ErrNoRows) {

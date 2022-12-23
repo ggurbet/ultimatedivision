@@ -5,15 +5,19 @@ package seasons
 
 import (
 	"context"
+	"math/big"
 	"sort"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/clubs"
 	"ultimatedivision/divisions"
 	"ultimatedivision/gameplay/matches"
+	"ultimatedivision/udts/currencywaitlist"
+	"ultimatedivision/users"
 )
 
 // ErrSeasons indicates that there was an error in the service.
@@ -23,21 +27,25 @@ var ErrSeasons = errs.Class("seasons service error")
 //
 // architecture: Service
 type Service struct {
-	seasons   DB
-	divisions *divisions.Service
-	matches   *matches.Service
-	config    Config
-	clubs     *clubs.Service
+	seasons          DB
+	divisions        *divisions.Service
+	matches          *matches.Service
+	config           Config
+	clubs            *clubs.Service
+	users            *users.Service
+	currencywaitlist *currencywaitlist.Service
 }
 
 // NewService is a constructor for seasons service.
-func NewService(seasons DB, config Config, divisions *divisions.Service, matches *matches.Service, clubs *clubs.Service) *Service {
+func NewService(seasons DB, config Config, divisions *divisions.Service, matches *matches.Service, clubs *clubs.Service, users *users.Service, currencywaitlist *currencywaitlist.Service) *Service {
 	return &Service{
-		seasons:   seasons,
-		divisions: divisions,
-		config:    config,
-		matches:   matches,
-		clubs:     clubs,
+		seasons:          seasons,
+		divisions:        divisions,
+		config:           config,
+		matches:          matches,
+		clubs:            clubs,
+		users:            users,
+		currencywaitlist: currencywaitlist,
 	}
 }
 
@@ -63,6 +71,15 @@ func (service *Service) Create(ctx context.Context) error {
 	return nil
 }
 
+// CreateReward creates a rewards in the end of a season.
+func (service *Service) CreateReward(ctx context.Context, reward Reward) error {
+	_, err := service.currencywaitlist.Create(ctx, reward.UserID, reward.Value, reward.Nonce)
+	if err != nil {
+		return ErrSeasons.Wrap(err)
+	}
+	return ErrSeasons.Wrap(service.seasons.CreateReward(ctx, reward))
+}
+
 // EndSeason changes status when season end.
 func (service *Service) EndSeason(ctx context.Context, id int) error {
 	return ErrSeasons.Wrap(service.seasons.EndSeason(ctx, id))
@@ -83,6 +100,12 @@ func (service *Service) GetCurrentSeasons(ctx context.Context) ([]Season, error)
 // Get returns season from DB.
 func (service *Service) Get(ctx context.Context, seasonID int) (Season, error) {
 	season, err := service.seasons.Get(ctx, seasonID)
+	return season, ErrSeasons.Wrap(err)
+}
+
+// GetRewardByUserID returns user reward by id from DB.
+func (service *Service) GetRewardByUserID(ctx context.Context, userID uuid.UUID) (Reward, error) {
+	season, err := service.seasons.GetRewardByUserID(ctx, userID)
 	return season, ErrSeasons.Wrap(err)
 }
 
@@ -148,6 +171,50 @@ func (service *Service) UpdateClubsToNewDivision(ctx context.Context) error {
 		if err != nil {
 			return ErrSeasons.Wrap(err)
 		}
+
+		for _, statistic := range clubsStatisticsByDivision {
+			userProfile, err := service.users.GetProfile(ctx, statistic.Club.OwnerID)
+			if err != nil {
+				return ChoreError.Wrap(err)
+			}
+
+			var reward Reward
+
+			switch userProfile.WalletType {
+			case users.WalletTypeCasper:
+				var nonce int64
+				nonce, err = service.currencywaitlist.GetNonceByWallet(ctx, userProfile.CasperWalletID)
+				if err != nil {
+					return ChoreError.Wrap(err)
+				}
+
+				reward = Reward{
+					UserID:              userProfile.ID,
+					WalletAddress:       common.Address{},
+					CasperWalletAddress: userProfile.CasperWalletID,
+					WalletType:          userProfile.WalletType,
+					Value:               *big.NewInt(10),
+					Nonce:               nonce,
+					Signature:           "",
+				}
+			default:
+				reward = Reward{
+					UserID:              userProfile.ID,
+					WalletAddress:       userProfile.Wallet,
+					CasperWalletAddress: "",
+					WalletType:          userProfile.WalletType,
+					Value:               *big.NewInt(10),
+					Nonce:               0,
+					Signature:           "",
+				}
+			}
+
+			err = service.CreateReward(ctx, reward)
+			if err != nil {
+				return ChoreError.Wrap(err)
+			}
+		}
+
 		var percent float64
 		percent = 100 / float64(len(clubsStatisticsByDivision))
 		if percent < float64(division.PassingPercent) {

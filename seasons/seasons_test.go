@@ -5,9 +5,11 @@ package seasons_test
 
 import (
 	"context"
+	"math/big"
 	"testing"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -16,6 +18,7 @@ import (
 	"ultimatedivision/database/dbtesting"
 	"ultimatedivision/divisions"
 	"ultimatedivision/seasons"
+	"ultimatedivision/users"
 )
 
 func TestSeasons(t *testing.T) {
@@ -58,9 +61,40 @@ func TestSeasons(t *testing.T) {
 		EndedAt:    time.Time{},
 	}
 
+	user := users.User{
+		ID:             uuid.New(),
+		Email:          "oleksii@gmail.com",
+		PasswordHash:   []byte{0},
+		NickName:       "Free",
+		FirstName:      "Oleksii",
+		LastName:       "Prysiazhniuk",
+		Wallet:         common.HexToAddress("0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b7"),
+		CasperWallet:   "01a4db357602c3d45a2b7b68110e66440ac2a2e792cebffbce83eaefb73e65aef1",
+		CasperWalletID: "4bfcd0ebd44c3de9d1e6556336cbb73259649b7d6b344bc1499d40652fd5781a",
+		WalletType:     users.WalletTypeETH,
+		LastLogin:      time.Now().UTC(),
+		Status:         0,
+		CreatedAt:      time.Now().UTC(),
+	}
+
+	value := *big.NewInt(100)
+
+	reward := seasons.Reward{
+		UserID:              user.ID,
+		SeasonID:            season1.ID,
+		WalletAddress:       common.Address{},
+		CasperWalletAddress: user.CasperWallet,
+		WalletType:          user.WalletType,
+		Value:               value,
+		Nonce:               0,
+		Status:              1,
+		Signature:           "",
+	}
+
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {
 		repository := db.Seasons()
 		repositoryDivision := db.Divisions()
+
 		id := 3
 		t.Run("get sql no rows", func(t *testing.T) {
 			_, err := repository.Get(ctx, id)
@@ -77,6 +111,11 @@ func TestSeasons(t *testing.T) {
 			seasonFromDB, err := repository.Get(ctx, season1.ID)
 			require.NoError(t, err)
 			compareSeasons(t, season1, seasonFromDB)
+		})
+
+		t.Run("Create Reward", func(t *testing.T) {
+			err := repository.CreateReward(ctx, reward)
+			require.NoError(t, err)
 		})
 
 		t.Run("list", func(t *testing.T) {
