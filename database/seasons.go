@@ -141,7 +141,7 @@ func (seasonsDB *seasonsDB) GetRewardByUserID(ctx context.Context, userID uuid.U
 
 	row := seasonsDB.conn.QueryRowContext(ctx, query, userID)
 
-	err := row.Scan(&reward.UserID, &reward.Value, &reward.Nonce, &reward.WalletAddress, &reward.CasperWalletAddress, &reward.WalletType, &reward.Signature)
+	err := row.Scan(&reward.UserID, &reward.SeasonID, &reward.Status, &reward.Value, &reward.Nonce, &reward.WalletAddress, &reward.CasperWalletAddress, &reward.WalletType, &reward.Signature)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return reward, seasons.ErrNoSeason.Wrap(err)
