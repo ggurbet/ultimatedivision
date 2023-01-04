@@ -4,11 +4,10 @@
 import { ethers } from 'ethers';
 
 import { EthersClient } from '@/api/ethers';
-import { buildHash } from '../internal/ethers';
-import { Transaction } from '.';
-import { TransactionIdentificators } from '@/app/ethers';
+import { buildHash } from '@/app/internal/ethers';
+import { Transaction, TransactionIdentificators } from '.';
 import { web3Provider } from '@/app/plugins/service';
-import { MatchTransaction } from '../../matches';
+import { MatchTransaction } from '@/matches';
 
 const CHAIN_ID = 4;
 

@@ -3,7 +3,7 @@
 
 import { Buffer } from 'buffer';
 import { JsonTypes } from 'typedjson';
-import { CLPublicKey, CLValueBuilder, DeployUtil, RuntimeArgs, Signer } from 'casper-js-sdk';
+import { CLPublicKey, CLValueBuilder, DeployUtil, RuntimeArgs } from 'casper-js-sdk';
 
 import { CasperNetworkClient } from '@/api/casper';
 import { CasperMatchTransaction } from '@/matches';
@@ -14,8 +14,6 @@ enum CasperRuntimeArgs {
     TOKEN_ID = 'token_id'
 }
 
-const chainName = 'casper-test';
-
 /** Desctibes parameters for transaction */
 export class CasperTransactionIdentificators {
     /** Includes wallet address, and card id */
@@ -25,6 +23,7 @@ export class CasperTransactionIdentificators {
     ) { }
 }
 
+const CHAIN_NAME = 'casper-test';
 const ACCOUNT_HASH_PREFIX = 'account-hash-';
 
 const TTL = 1800000;
@@ -38,10 +37,10 @@ class CasperTransactionService {
     private readonly paymentAmount: number = PAYMENT_AMOUNT;
     private readonly gasPrice: number = GAS_PRICE;
     private readonly ttl: number = TTL;
-    private readonly client: any = new CasperNetworkClient();
+    private readonly client: CasperNetworkClient = new CasperNetworkClient();
     public walletAddress: string = '';
 
-    /** default VelasTransactionService implementation */
+    /** default CasperTransactionService implementation */
     constructor(walletAddress: string) {
         this.walletAddress = walletAddress;
     }
@@ -67,7 +66,7 @@ class CasperTransactionService {
 
         const walletAddressConverted = CLPublicKey.fromHex(this.walletAddress);
 
-        const deployParams = new DeployUtil.DeployParams(walletAddressConverted, chainName, this.gasPrice, this.ttl);
+        const deployParams = new DeployUtil.DeployParams(walletAddressConverted, CHAIN_NAME, this.gasPrice, this.ttl);
 
         const deploy = DeployUtil.makeDeploy(
             deployParams,
@@ -109,7 +108,7 @@ class CasperTransactionService {
             await this.client.claim(nftWaitlist.rpcNodeAddress, JSON.stringify(signature));
         }
         catch (error: any) {
-            ToastNotifications.casperError(error.error);
+            ToastNotifications.casperError(`${error.error}`);
         }
     }
 
@@ -133,7 +132,7 @@ class CasperTransactionService {
             await this.client.claim(rpcNodeAddress, JSON.stringify(signature), this.walletAddress);
         }
         catch (error: any) {
-            ToastNotifications.notify(error.message);
+            ToastNotifications.casperError(`${error.error}`);
         }
     }
 }

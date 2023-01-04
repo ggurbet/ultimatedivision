@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import { APIClient } from '.';
-import { SignedMessage, Transaction, TransactionIdentificators } from '@/app/ethers';
+import { SignedMessage, Transaction, TransactionIdentificators } from '@/ethers';
 
 /** Ethers api client */
 export class EthersClient extends APIClient {

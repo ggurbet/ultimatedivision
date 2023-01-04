@@ -11,7 +11,7 @@
     "failedToOpenLootbox": "Failed to open lootbox",
     "failedGettingSeasonStatistics": "Failed to get seasons statistics",
     "gameCanceled": "Your game was canceled. You are still in search.",
-    "gameFinished": "Successfully! You will be redirected to match page.",
+    "gameFinished": "You will be redirected to match page.",
     "insufficientBalance": "Insufficient balance in account. Fill up an account!",
     "networkChanged": "Network was changed, please refresh page",
     "notEnoughBalance": "Not enough balance",

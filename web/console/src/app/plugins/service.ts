@@ -3,7 +3,7 @@
 
 import { ethers } from 'ethers';
 
-import { Service } from '@/app/ethers/service';
+import { Service } from '@/ethers/service';
 /** Web3 provider */
 export const web3Provider = window.ethereum && new ethers.providers.Web3Provider(window.ethereum);
 

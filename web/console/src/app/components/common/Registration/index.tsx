@@ -3,13 +3,12 @@
 
 import { useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 import MetaMaskOnboarding from '@metamask/onboarding';
 // @ts-ignore
-import KeyStorageHandler from '@/app/velas/keyStorageHandler';
+import KeyStorageHandler from '@/velas/keyStorageHandler';
 // @ts-ignore
-import StorageHandler from '@/app/velas/storageHandler';
+import StorageHandler from '@/velas/storageHandler';
 // @ts-ignore
 import { VAClient } from '@velas/account-client';
 import { JSEncrypt } from 'jsencrypt';
@@ -20,7 +19,7 @@ import { RouteConfig } from '@/app/routes';
 import { ServicePlugin } from '@/app/plugins/service';
 import { EthersClient } from '@/api/ethers';
 import { NotFoundError } from '@/api';
-import { SignedMessage } from '@/app/ethers';
+import { SignedMessage } from '@/ethers';
 import { ToastNotifications } from '@/notifications/service';
 
 import { VelasClient } from '@/api/velas';

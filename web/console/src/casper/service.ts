@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import { CasperTransactionIdentificators } from '.';
-import { CasperNetworkClient } from '../api/casper';
+import { CasperNetworkClient } from '@/api/casper';
 
 /**
  * Exposes all casper wallet related logic.
