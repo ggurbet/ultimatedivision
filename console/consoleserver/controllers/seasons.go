@@ -7,13 +7,13 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"ultimatedivision/pkg/auth"
 
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/divisions"
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/pkg/auth"
 	"ultimatedivision/seasons"
 )
 

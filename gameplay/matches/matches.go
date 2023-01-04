@@ -178,4 +178,5 @@ type Statistic struct {
 	Draws          int        `json:"draws"`
 	GoalDifference int        `json:"goalDifference"`
 	Points         int        `json:"points"`
+	SeasonID       int        `json:"season_id"`
 }

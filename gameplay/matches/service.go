@@ -448,6 +448,7 @@ func (service *Service) GetStatistic(ctx context.Context, club clubs.Club, seaso
 
 	statistic.GoalDifference = goalScored - goalsConceded
 	statistic.Club = club
+	statistic.SeasonID = seasonID
 
 	return statistic, nil
 }

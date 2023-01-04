@@ -103,7 +103,7 @@ func (service *Service) CasperCreate(ctx context.Context, userID uuid.UUID, valu
 		Signature:           "",
 	}
 
-	// TODO: catch dublicale error from db.
+	// TODO: catch duplicable error from db.
 	if _, err = service.currencyWaitList.GetByCasperWalletAddressAndNonce(ctx, item.CasperWalletAddress, item.Nonce); err != nil {
 		if ErrNoItem.Has(err) {
 			if err = service.currencyWaitList.Create(ctx, item); err != nil {

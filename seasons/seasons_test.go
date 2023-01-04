@@ -86,9 +86,7 @@ func TestSeasons(t *testing.T) {
 		CasperWalletAddress: user.CasperWallet,
 		WalletType:          user.WalletType,
 		Value:               value,
-		Nonce:               0,
 		Status:              1,
-		Signature:           "",
 	}
 
 	dbtesting.Run(t, func(ctx context.Context, t *testing.T, db ultimatedivision.DB) {

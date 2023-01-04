@@ -31,24 +31,31 @@ type DB interface {
 	CreateReward(ctx context.Context, reward Reward) error
 	// EndSeason updates a status in the database when season ended.
 	EndSeason(ctx context.Context, id int) error
-	// List returns all seasons from the data base.
+	// List returns all seasons from the database.
 	List(ctx context.Context) ([]Season, error)
-	// Get returns season by id from the data base.
+	// Get returns season by id from the database.
 	Get(ctx context.Context, id int) (Season, error)
-	// GetCurrentSeasons returns all current seasons from the data base.
+	// GetCurrentSeasons returns all current seasons from the database.
 	GetCurrentSeasons(ctx context.Context) ([]Season, error)
-	// GetSeasonByDivisionID returns season by division id from the data base.
+	// GetSeasonByDivisionID returns season by division id from the database.
 	GetSeasonByDivisionID(ctx context.Context, divisionID uuid.UUID) (Season, error)
-	// GetRewardByUserID returns user reward by id from the data base.
+	// GetRewardByUserID returns user reward by id from the database.
 	GetRewardByUserID(ctx context.Context, userID uuid.UUID) (Reward, error)
-	// ListRewards returns all seasons rewards from the data base.
-	ListRewards(ctx context.Context) ([]Reward, error)
+	// ListOfUnpaidRewardsByUserID returns all unpaid season rewards from the database by user id.
+	ListOfUnpaidRewardsByUserID(ctx context.Context, userID uuid.UUID) ([]Reward, error)
 	// Delete deletes a season in the database.
 	Delete(ctx context.Context, id int) error
 }
 
-// Status defines the list of possible season statuses.
-type Status int
+// StatusReward defines the list of possible reward statuses.
+type StatusReward int
+
+const (
+	// StatusUnPaid indicates that reward is unpaid.
+	StatusUnPaid StatusReward = 0
+	// StatusPaid indicates that reward is paid.
+	StatusPaid StatusReward = 1
+)
 
 // Season describes seasons entity.
 type Season struct {
@@ -60,7 +67,9 @@ type Season struct {
 
 // Config defines configuration for seasons.
 type Config struct {
-	SeasonTime time.Duration `json:"seasonTime"`
+	SeasonTime          time.Duration         `json:"seasonTime"`
+	CasperTokenContract evmsignature.Contract `json:"casperTokenContract"`
+	RPCNodeAddress      string                `json:"rpcNodeAddress"`
 }
 
 // SeasonStatistics returns statistics of clubs in season.
@@ -71,14 +80,22 @@ type SeasonStatistics struct {
 
 // Reward entity describes values which send to user after season ends.
 type Reward struct {
-	ID                  uuid.UUID              `json:"ID"`
-	UserID              uuid.UUID              `json:"userId"`
-	SeasonID            int                    `json:"seasonID"`
-	WalletAddress       common.Address         `json:"walletAddress"`
-	CasperWalletAddress string                 `json:"casperWalletAddress"`
-	Status              int                    `json:"status"`
-	Value               big.Int                `json:"value"`
+	ID                  uuid.UUID        `json:"ID"`
+	UserID              uuid.UUID        `json:"userId"`
+	SeasonID            int              `json:"seasonID"`
+	WalletAddress       common.Address   `json:"walletAddress"`
+	CasperWalletAddress string           `json:"casperWalletAddress"`
+	WalletType          users.WalletType `json:"walleType"`
+	Status              StatusReward     `json:"status"`
+	Value               big.Int          `json:"value"`
+}
+
+// RewardWithTransaction entity describes values reward with transaction.
+type RewardWithTransaction struct {
+	Reward
 	Nonce               int64                  `json:"nonce"`
-	WalletType          users.WalletType       `json:"walleType"`
 	Signature           evmsignature.Signature `json:"signature"`
+	Value               string                 `json:"value"`
+	CasperTokenContract evmsignature.Contract  `json:"casperTokenContract"`
+	RPCNodeAddress      string                 `json:"rpcNodeAddress"`
 }

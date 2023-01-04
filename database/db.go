@@ -230,15 +230,14 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             FOREIGN KEY (division_id) REFERENCES divisions (id) ON DELETE CASCADE
         );
         CREATE TABLE IF NOT EXISTS season_rewards(
-            id                      SERIAL PRIMARY KEY    NOT NULL,
-            season_id               BYTEA                 NOT NULL,
-            user_id                 BYTEA                 NOT NULL, 
-            wallet_address          BYTEA                 NOT NULL,
-            casper_wallet_address   VARCHAR               NOT NULL,
-            value                   BYTEA                 NOT NULL,
-            nonce                   INTEGER               NOT NULL,
-            status                  INTEGER               NOT NULL,
-            signature               VARCHAR               NOT NULL
+            id                      BYTEA     PRIMARY KEY      NOT NULL,
+            season_id               INTEGER                    NOT NULL,
+            user_id                 BYTEA                      NOT NULL, 
+            wallet_address          BYTEA                      NOT NULL,
+            casper_wallet_address   VARCHAR                    NOT NULL,
+            wallet_type             VARCHAR                    NOT NULL,
+            value                   BYTEA                      NOT NULL,
+            status                  INTEGER                    NOT NULL
         );
         CREATE TABLE IF NOT EXISTS matches (
             id           BYTEA   PRIMARY KEY                              NOT NULL,
