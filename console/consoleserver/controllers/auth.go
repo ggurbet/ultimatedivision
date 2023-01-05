@@ -673,19 +673,22 @@ func (auth *Auth) ChangeEmail(w http.ResponseWriter, r *http.Request) {
 func (auth *Auth) CasperRegister(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
+	var request struct {
+		CasperWallet   string `json:"casperWallet"`
+		CasperWalletID string `json:"casperWalletID"`
+	}
 
-	var walletAddress string
-	if err := json.NewDecoder(r.Body).Decode(&walletAddress); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		auth.serveError(w, http.StatusBadRequest, AuthError.Wrap(err))
 		return
 	}
 
-	if walletAddress == "" {
+	if request.CasperWallet == "" || request.CasperWalletID == "" {
 		auth.serveError(w, http.StatusBadRequest, AuthError.New("wallet address is empty"))
 		return
 	}
 
-	err := auth.userAuth.RegisterWithCasper(ctx, walletAddress)
+	err := auth.userAuth.RegisterWithCasper(ctx, request.CasperWallet, request.CasperWalletID)
 	if err != nil {
 		switch {
 		case users.ErrNoUser.Has(err):

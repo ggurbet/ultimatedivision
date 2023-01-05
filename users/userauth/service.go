@@ -699,8 +699,8 @@ func (service *Service) VelasVAClientFields() velas.VAClientFields {
 }
 
 // RegisterWithCasper creates user by credentials.
-func (service *Service) RegisterWithCasper(ctx context.Context, walletAddress string) error {
-	_, err := service.users.GetByWalletAddress(ctx, walletAddress, users.WalletTypeCasper)
+func (service *Service) RegisterWithCasper(ctx context.Context, casperWallet, casperWalletID string) error {
+	_, err := service.users.GetByWalletAddress(ctx, casperWallet, users.WalletTypeCasper)
 	if !users.ErrNoUser.Has(err) {
 		return Error.New("this user already exist")
 	}
@@ -717,8 +717,8 @@ func (service *Service) RegisterWithCasper(ctx context.Context, walletAddress st
 		LastLogin:      time.Time{},
 		Status:         users.StatusActive,
 		CreatedAt:      time.Now().UTC(),
-		CasperWallet:   walletAddress,
-		CasperWalletID: walletAddress,
+		CasperWallet:   casperWallet,
+		CasperWalletID: casperWalletID,
 		WalletType:     users.WalletTypeCasper,
 	}
 	err = service.users.Create(ctx, user)
