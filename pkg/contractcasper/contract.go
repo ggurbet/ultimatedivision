@@ -21,6 +21,7 @@ type ClaimRequest struct {
 	Deploy              string
 	RPCNodeAddress      string
 	CasperWalletAddress string
+	CasperWalletHash    string
 }
 
 // StringNetworkAddress describes an address for some network.

@@ -85,6 +85,7 @@ type Reward struct {
 	SeasonID            int              `json:"seasonID"`
 	WalletAddress       common.Address   `json:"walletAddress"`
 	CasperWalletAddress string           `json:"casperWalletAddress"`
+	CasperWalletHash    string           `json:"CasperWalletHash"`
 	WalletType          users.WalletType `json:"walleType"`
 	Status              StatusReward     `json:"status"`
 	Value               big.Int          `json:"value"`

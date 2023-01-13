@@ -62,19 +62,19 @@ func TestSeasons(t *testing.T) {
 	}
 
 	user := users.User{
-		ID:             uuid.New(),
-		Email:          "oleksii@gmail.com",
-		PasswordHash:   []byte{0},
-		NickName:       "Free",
-		FirstName:      "Oleksii",
-		LastName:       "Prysiazhniuk",
-		Wallet:         common.HexToAddress("0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b7"),
-		CasperWallet:   "01a4db357602c3d45a2b7b68110e66440ac2a2e792cebffbce83eaefb73e65aef1",
-		CasperWalletID: "4bfcd0ebd44c3de9d1e6556336cbb73259649b7d6b344bc1499d40652fd5781a",
-		WalletType:     users.WalletTypeETH,
-		LastLogin:      time.Now().UTC(),
-		Status:         0,
-		CreatedAt:      time.Now().UTC(),
+		ID:               uuid.New(),
+		Email:            "oleksii@gmail.com",
+		PasswordHash:     []byte{0},
+		NickName:         "Free",
+		FirstName:        "Oleksii",
+		LastName:         "Prysiazhniuk",
+		Wallet:           common.HexToAddress("0xb2cdC7EB2F9d2E629ee97BB91700622A42e688b7"),
+		CasperWallet:     "01a4db357602c3d45a2b7b68110e66440ac2a2e792cebffbce83eaefb73e65aef1",
+		CasperWalletHash: "4bfcd0ebd44c3de9d1e6556336cbb73259649b7d6b344bc1499d40652fd5781a",
+		WalletType:       users.WalletTypeETH,
+		LastLogin:        time.Now().UTC(),
+		Status:           0,
+		CreatedAt:        time.Now().UTC(),
 	}
 
 	value := *big.NewInt(100)

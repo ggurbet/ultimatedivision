@@ -62,6 +62,10 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 		createNFT.WalletAddress = user.Wallet
 	}
 
+	if len(createNFT.CasperWallet) == 0 {
+		createNFT.CasperWallet = user.CasperWallet
+	}
+
 	card, err := service.cards.Get(ctx, createNFT.CardID)
 	if err != nil {
 		return transaction, ErrWaitlist.Wrap(err)
@@ -139,13 +143,7 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 		return transaction, ErrWaitlist.Wrap(err)
 	}
 
-	if user.WalletType == users.WalletTypeCasper {
-		if err = service.users.UpdateCasperWalletAddress(ctx, createNFT.CasperWallet, createNFT.UserID, user.WalletType); err != nil {
-			if !users.ErrWalletAddressAlreadyInUse.Has(err) {
-				return transaction, ErrWaitlist.Wrap(err)
-			}
-		}
-	} else {
+	if user.WalletType != users.WalletTypeCasper {
 		if err = service.users.UpdateWalletAddress(ctx, createNFT.WalletAddress, createNFT.UserID, user.WalletType); err != nil {
 			if !users.ErrWalletAddressAlreadyInUse.Has(err) {
 				return transaction, ErrWaitlist.Wrap(err)
@@ -154,12 +152,13 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 	}
 
 	item := Item{
-		TokenID:      uuid.New(),
-		CardID:       createNFT.CardID,
-		Wallet:       createNFT.WalletAddress,
-		WalletType:   user.WalletType,
-		CasperWallet: createNFT.CasperWallet,
-		Value:        createNFT.Value,
+		TokenID:          uuid.New(),
+		CardID:           createNFT.CardID,
+		Wallet:           createNFT.WalletAddress,
+		WalletType:       user.WalletType,
+		CasperWallet:     createNFT.CasperWallet,
+		CasperWalletHash: user.CasperWalletHash,
+		Value:            createNFT.Value,
 	}
 
 	if err = service.waitList.Create(ctx, item); err != nil {

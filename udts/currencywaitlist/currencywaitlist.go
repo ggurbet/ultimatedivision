@@ -52,6 +52,7 @@ type DB interface {
 type Item struct {
 	WalletAddress       common.Address         `json:"walletAddress"`
 	CasperWalletAddress string                 `json:"casperWalletAddress"`
+	CasperWalletHash    string                 `json:"CasperWalletHash"`
 	WalletType          users.WalletType       `json:"walleType"`
 	Value               big.Int                `json:"value"`
 	Nonce               int64                  `json:"nonce"`

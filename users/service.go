@@ -111,7 +111,7 @@ func (service *Service) GetProfile(ctx context.Context, userID uuid.UUID) (*Prof
 		LastLogin:      user.LastLogin,
 		Wallet:         user.Wallet,
 		CasperWallet:   user.CasperWallet,
-		CasperWalletID: user.CasperWalletID,
+		CasperWalletID: user.CasperWalletHash,
 		WalletType:     user.WalletType,
 	}, nil
 }

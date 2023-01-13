@@ -674,8 +674,8 @@ func (auth *Auth) CasperRegister(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
 	var request struct {
-		CasperWallet   string `json:"casperWallet"`
-		CasperWalletID string `json:"casperWalletID"`
+		CasperWallet     string `json:"casperWallet"`
+		CasperWalletHash string `json:"casperWalletHash"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -683,12 +683,12 @@ func (auth *Auth) CasperRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if request.CasperWallet == "" || request.CasperWalletID == "" {
-		auth.serveError(w, http.StatusBadRequest, AuthError.New("wallet address is empty"))
+	if request.CasperWallet == "" || request.CasperWalletHash == "" {
+		auth.serveError(w, http.StatusBadRequest, AuthError.New("wallet address or hash is empty"))
 		return
 	}
 
-	err := auth.userAuth.RegisterWithCasper(ctx, request.CasperWallet, request.CasperWalletID)
+	err := auth.userAuth.RegisterWithCasper(ctx, request.CasperWallet, request.CasperWalletHash)
 	if err != nil {
 		switch {
 		case users.ErrNoUser.Has(err):

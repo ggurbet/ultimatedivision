@@ -70,7 +70,6 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 				signature           evmsignature.Signature
 				smartContract       common.Address
 				casperTokenContract string
-				casperWallet        string
 			)
 
 			switch item.WalletType {
@@ -80,17 +79,16 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 				smartContract = chore.config.VelasSmartContractAddress
 			case users.WalletTypeCasper:
 				casperTokenContract = chore.config.CasperTokenContract
-				casperWallet = item.CasperWalletAddress
 			}
 
 			if casperTokenContract != "" {
-				signature, err = signer.GenerateCasperSignatureWithValueAndNonce(signer.Address(casperWallet),
+				signature, err = signer.GenerateCasperSignatureWithValueAndNonce(signer.Address(item.CasperWalletHash),
 					signer.Address(casperTokenContract), &item.Value, item.Nonce, privateKeyECDSA)
 				if err != nil {
 					return ChoreError.Wrap(err)
 				}
 
-				err = chore.currencywaitlist.UpdateCasperSignature(ctx, signature, casperWallet, item.Nonce)
+				err = chore.currencywaitlist.UpdateCasperSignature(ctx, signature, item.CasperWalletAddress, item.Nonce)
 				if err != nil {
 					return ChoreError.Wrap(err)
 				}

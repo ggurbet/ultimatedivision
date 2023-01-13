@@ -97,6 +97,7 @@ func (service *Service) CasperCreate(ctx context.Context, userID uuid.UUID, valu
 	item := Item{
 		WalletAddress:       user.Wallet,
 		CasperWalletAddress: user.CasperWallet,
+		CasperWalletHash:    user.CasperWalletHash,
 		WalletType:          user.WalletType,
 		Value:               value,
 		Nonce:               nonce,

@@ -44,14 +44,15 @@ type DB interface {
 
 // Item entity describes item fot wait list nfts.
 type Item struct {
-	TokenID      uuid.UUID              `json:"tokenId"`
-	TokenNumber  int64                  `json:"tokenNumber"`
-	CardID       uuid.UUID              `json:"cardId"`
-	Wallet       common.Address         `json:"wallet"`
-	CasperWallet string                 `json:"casperWallet"`
-	WalletType   users.WalletType       `json:"walletType"`
-	Value        big.Int                `json:"value"`
-	Password     evmsignature.Signature `json:"password"`
+	TokenID          uuid.UUID              `json:"tokenId"`
+	TokenNumber      int64                  `json:"tokenNumber"`
+	CardID           uuid.UUID              `json:"cardId"`
+	Wallet           common.Address         `json:"wallet"`
+	CasperWallet     string                 `json:"casperWallet"`
+	CasperWalletHash string                 `json:"CasperWalletHash"`
+	WalletType       users.WalletType       `json:"walletType"`
+	Value            big.Int                `json:"value"`
+	Password         evmsignature.Signature `json:"password"`
 }
 
 // CreateNFT describes body of request for creating nft token.

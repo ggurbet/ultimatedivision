@@ -30,10 +30,10 @@ type currencywaitlistDB struct {
 
 // Create creates item of currency waitlist in the database.
 func (currencywaitlistDB *currencywaitlistDB) Create(ctx context.Context, item currencywaitlist.Item) error {
-	query := `INSERT INTO currency_waitlist(wallet_address, casper_wallet_address, wallet_type, value, nonce, signature)
-	          VALUES($1,$2,$3,$4,$5,$6)`
+	query := `INSERT INTO currency_waitlist(wallet_address, casper_wallet_address, casper_wallet_hash, wallet_type, value, nonce, signature)
+	          VALUES($1,$2,$3,$4,$5,$6,$7)`
 
-	_, err := currencywaitlistDB.conn.ExecContext(ctx, query, item.WalletAddress, item.CasperWalletAddress, item.WalletType, item.Value.Bytes(), item.Nonce, item.Signature)
+	_, err := currencywaitlistDB.conn.ExecContext(ctx, query, item.WalletAddress, item.CasperWalletAddress, item.CasperWalletHash, item.WalletType, item.Value.Bytes(), item.Nonce, item.Signature)
 	return ErrCurrencyWaitlist.Wrap(err)
 }
 
@@ -47,7 +47,7 @@ func (currencywaitlistDB *currencywaitlistDB) GetByWalletAddressAndNonce(ctx con
 	          FROM currency_waitlist
 	          WHERE wallet_address = $1 and nonce = $2`
 
-	err := currencywaitlistDB.conn.QueryRowContext(ctx, query, walletAddress, nonce).Scan(&item.WalletAddress, &item.CasperWalletAddress, &item.WalletType, &value, &item.Nonce, &item.Signature)
+	err := currencywaitlistDB.conn.QueryRowContext(ctx, query, walletAddress, nonce).Scan(&item.WalletAddress, &item.CasperWalletAddress, &item.CasperWalletHash, &item.WalletType, &value, &item.Nonce, &item.Signature)
 	if errors.Is(err, sql.ErrNoRows) {
 		return item, currencywaitlist.ErrNoItem.Wrap(err)
 	}
@@ -66,7 +66,7 @@ func (currencywaitlistDB *currencywaitlistDB) GetByCasperWalletAddressAndNonce(c
 	          FROM currency_waitlist
 	          WHERE casper_wallet_address = $1 and nonce = $2`
 
-	err := currencywaitlistDB.conn.QueryRowContext(ctx, query, casperWallet, nonce).Scan(&item.WalletAddress, &item.CasperWalletAddress, &item.WalletType, &value, &item.Nonce, &item.Signature)
+	err := currencywaitlistDB.conn.QueryRowContext(ctx, query, casperWallet, nonce).Scan(&item.WalletAddress, &item.CasperWalletAddress, &item.CasperWalletHash, &item.WalletType, &value, &item.Nonce, &item.Signature)
 	if errors.Is(err, sql.ErrNoRows) {
 		return item, currencywaitlist.ErrNoItem.Wrap(err)
 	}
@@ -120,7 +120,7 @@ func (currencywaitlistDB *currencywaitlistDB) List(ctx context.Context) ([]curre
 	for rows.Next() {
 		var item currencywaitlist.Item
 
-		if err = rows.Scan(&item.WalletAddress, &item.CasperWalletAddress, &item.WalletType, &value, &item.Nonce, &item.Signature); err != nil {
+		if err = rows.Scan(&item.WalletAddress, &item.CasperWalletAddress, &item.CasperWalletHash, &item.WalletType, &value, &item.Nonce, &item.Signature); err != nil {
 			return itemList, ErrCurrencyWaitlist.Wrap(err)
 		}
 		item.Value.SetBytes(value)
@@ -149,7 +149,7 @@ func (currencywaitlistDB *currencywaitlistDB) ListWithoutSignature(ctx context.C
 	for rows.Next() {
 		var item currencywaitlist.Item
 
-		if err = rows.Scan(&item.WalletAddress, &item.CasperWalletAddress, &item.WalletType, &value, &item.Nonce, &item.Signature); err != nil {
+		if err = rows.Scan(&item.WalletAddress, &item.CasperWalletAddress, &item.CasperWalletHash, &item.WalletType, &value, &item.Nonce, &item.Signature); err != nil {
 			return itemList, ErrCurrencyWaitlist.Wrap(err)
 		}
 		item.Value.SetBytes(value)

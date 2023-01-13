@@ -80,7 +80,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             last_name             VARCHAR                  NOT NULL,
             wallet_address        BYTEA,
             casper_wallet_address VARCHAR,
-            casper_wallet_id      VARCHAR,
+            casper_wallet_hash    VARCHAR,
             wallet_type           VARCHAR,
             nonce                 BYTEA,
             public_key            VARCHAR,
@@ -262,6 +262,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             card_id               BYTEA   PRIMARY KEY REFERENCES cards(id) ON DELETE CASCADE NOT NULL,
             wallet_address        BYTEA                                                      NOT NULL,
             casper_wallet_address VARCHAR,
+            casper_wallet_hash    VARCHAR,
             value                 BYTEA                                                      NOT NULL,
             password              VARCHAR                                                    NOT NULL,
             wallet_type           VARCHAR                                                    NOT NULL
@@ -275,6 +276,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
         CREATE TABLE IF NOT EXISTS currency_waitlist(
             wallet_address        BYTEA   NOT NULL,
             casper_wallet_address VARCHAR NOT NULL,
+            casper_wallet_hash    VARCHAR NOT NULL,
             wallet_type           VARCHAR NOT NULL,
             value                 BYTEA   NOT NULL,
             nonce                 INTEGER NOT NULL,

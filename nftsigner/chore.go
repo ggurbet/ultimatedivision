@@ -67,10 +67,9 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 
 		for _, token := range unsignedNFTs {
 			var (
-				signature           evmsignature.Signature
-				smartContract       common.Address
-				casperTokenContract string
-				casperContract      string
+				signature      evmsignature.Signature
+				smartContract  common.Address
+				casperContract string
 			)
 
 			switch token.WalletType {
@@ -80,12 +79,11 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 				smartContract = chore.config.VelasSmartContractAddress
 			case users.WalletTypeCasper:
 				casperContract = chore.config.CasperSmartContractAddress
-				casperTokenContract = chore.config.CasperTokenContract
 			}
 
 			if token.Value.Cmp(big.NewInt(0)) <= 0 {
 				if casperContract != "" {
-					signature, err = signer.GenerateCasperSignatureWithValue(signer.Address(token.CasperWallet),
+					signature, err = signer.GenerateCasperSignatureWithValue(signer.Address(token.CasperWalletHash),
 						signer.Address(casperContract), token.TokenID, privateKeyECDSA)
 					if err != nil {
 						return ChoreError.Wrap(err)
@@ -99,8 +97,8 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 				}
 			} else {
 				if casperContract != "" {
-					signature, err = signer.GenerateCasperSignatureWithValueAndNonce(signer.Address(token.CasperWallet),
-						signer.Address(casperTokenContract), &token.Value, token.TokenNumber, privateKeyECDSA)
+					signature, err = signer.GenerateCasperSignatureWithValueAndNonce(signer.Address(token.CasperWalletHash),
+						signer.Address(casperContract), &token.Value, token.TokenNumber, privateKeyECDSA)
 					if err != nil {
 						return ChoreError.Wrap(err)
 					}
