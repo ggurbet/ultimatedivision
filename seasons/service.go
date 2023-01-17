@@ -5,6 +5,8 @@ package seasons
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"math/big"
 	"sort"
 	"time"
@@ -99,21 +101,19 @@ func (service *Service) Get(ctx context.Context, seasonID int) (Season, error) {
 	return season, ErrSeasons.Wrap(err)
 }
 
-// GetRewardByUserID returns user reward by id from DB.
+// GetRewardByUserID returns user reward by id.
 func (service *Service) GetRewardByUserID(ctx context.Context, userID uuid.UUID) (RewardWithTransaction, error) {
-	rewards, err := service.seasons.ListOfUnpaidRewardsByUserID(ctx, userID)
+	value, err := service.GetValueOfTokensReward(ctx, userID)
 	if err != nil {
 		return RewardWithTransaction{}, ErrSeasons.Wrap(err)
 	}
 
-	var casperWalletAddress string
-	value := new(big.Int)
-	for _, reward := range rewards {
-		value = reward.Value.Add(&reward.Value, value)
-		casperWalletAddress = reward.CasperWalletAddress
+	user, err := service.users.Get(ctx, userID)
+	if err != nil {
+		return RewardWithTransaction{}, ErrSeasons.Wrap(err)
 	}
 
-	nonce, err := service.currencywaitlist.GetNonceByWallet(ctx, casperWalletAddress)
+	nonce, err := service.currencywaitlist.GetNonceByWallet(ctx, user.CasperWallet)
 	if err != nil {
 		return RewardWithTransaction{}, ErrSeasons.Wrap(err)
 	}
@@ -126,7 +126,8 @@ func (service *Service) GetRewardByUserID(ctx context.Context, userID uuid.UUID)
 	rewardWithTransaction := RewardWithTransaction{
 		Reward: Reward{
 			UserID:              userID,
-			CasperWalletAddress: casperWalletAddress,
+			CasperWalletAddress: user.CasperWallet,
+			CasperWalletHash:    user.CasperWalletHash,
 			WalletType:          users.WalletTypeCasper,
 			Status:              StatusUnPaid,
 			Value:               *value,
@@ -139,6 +140,25 @@ func (service *Service) GetRewardByUserID(ctx context.Context, userID uuid.UUID)
 	}
 
 	return rewardWithTransaction, nil
+}
+
+// GetValueOfTokensReward returns value of tokens.
+func (service *Service) GetValueOfTokensReward(ctx context.Context, userID uuid.UUID) (*big.Int, error) {
+	value := new(big.Int)
+
+	rewards, err := service.seasons.ListOfUnpaidRewardsByUserID(ctx, userID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return value, nil
+		}
+		return nil, ErrSeasons.Wrap(err)
+	}
+
+	for _, reward := range rewards {
+		value = reward.Value.Add(&reward.Value, value)
+	}
+
+	return value, nil
 }
 
 // Delete deletes a season.

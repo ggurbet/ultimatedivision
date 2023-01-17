@@ -21,13 +21,13 @@ var ErrNoUser = errs.Class("user does not exist")
 //
 // architecture: DB.
 type DB interface {
-	// List returns all users from the data base.
+	// List returns all users from the database.
 	List(ctx context.Context) ([]User, error)
-	// Get returns user by id from the data base.
+	// Get returns user by id from the database.
 	Get(ctx context.Context, id uuid.UUID) (User, error)
-	// GetByEmail returns user by email from the data base.
+	// GetByEmail returns user by email from the database.
 	GetByEmail(ctx context.Context, email string) (User, error)
-	// GetByWalletAddress returns user by wallet address from the data base.
+	// GetByWalletAddress returns user by wallet address from the database.
 	GetByWalletAddress(ctx context.Context, walletAddress string, walletType WalletType) (User, error)
 	// Create creates a user and writes to the database.
 	Create(ctx context.Context, user User) error
@@ -53,7 +53,7 @@ type DB interface {
 	UpdateLastLogin(ctx context.Context, id uuid.UUID) error
 	// UpdateEmail updates an email address in the database.
 	UpdateEmail(ctx context.Context, id uuid.UUID, newEmail string) error
-	// GetByPublicKey returns user by public key from the data base.
+	// GetByPublicKey returns user by public key from the database.
 	GetByPublicKey(ctx context.Context, publicKey string) (User, error)
 	// UpdatePublicPrivateKey updates public and private key by user.
 	UpdatePublicPrivateKey(ctx context.Context, id uuid.UUID, publicKey, privateKey string) error

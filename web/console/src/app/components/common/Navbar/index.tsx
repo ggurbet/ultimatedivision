@@ -30,6 +30,7 @@ const Navbar: React.FC = () => {
         { name: 'STORE', path: RouteConfig.Store.path },
         { name: 'CARDS', path: RouteConfig.Cards.path },
         { name: 'FIELD', path: RouteConfig.Field.path },
+        { name: 'DIVISIONS', path: RouteConfig.Division.path },
     ];
 
     const setNavbarDropdownActivity = () => {

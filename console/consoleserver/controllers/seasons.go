@@ -79,6 +79,29 @@ func (controller *Seasons) GetRewardByUserID(w http.ResponseWriter, r *http.Requ
 	}
 }
 
+// GetValueOfTokensRewardByUserID returns returns value of tokens.
+func (controller *Seasons) GetValueOfTokensRewardByUserID(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusUnauthorized, ErrMarketplace.Wrap(err))
+		return
+	}
+
+	valueOfTokens, err := controller.seasons.GetValueOfTokensReward(ctx, claims.UserID)
+	if err != nil {
+		controller.serveError(w, http.StatusInternalServerError, ErrSeasons.Wrap(err))
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(valueOfTokens); err != nil {
+		controller.log.Error("failed to write json response", ErrSeasons.Wrap(err))
+		return
+	}
+}
+
 // GetAllClubsStatistics returns all clubs statistics by division.
 func (controller *Seasons) GetAllClubsStatistics(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

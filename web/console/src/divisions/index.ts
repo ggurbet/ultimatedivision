@@ -51,6 +51,6 @@ export class DivisionsState {
     constructor(
         public currentDivisionsSeasons: CurrentDivisionSeasons[] = [],
         public seasonsStatistics: DivisionSeasonsStatistics = new DivisionSeasonsStatistics(),
-        public activeDivision: CurrentDivisionSeasons = new CurrentDivisionSeasons()
+        public activeDivision: CurrentDivisionSeasons = new CurrentDivisionSeasons(),
     ) {}
 }

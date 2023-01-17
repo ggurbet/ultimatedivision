@@ -183,6 +183,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	seasonsRouter.Use(server.withAuth)
 	seasonsRouter.HandleFunc("/current", seasonsController.GetCurrentSeasons).Methods(http.MethodGet)
 	seasonsRouter.HandleFunc("/reward", seasonsController.GetRewardByUserID).Methods(http.MethodGet)
+	seasonsRouter.HandleFunc("/reward/tokens", seasonsController.GetValueOfTokensRewardByUserID).Methods(http.MethodGet)
 	seasonsRouter.HandleFunc("/statistics/division/{divisionName}", seasonsController.GetAllClubsStatistics).Methods(http.MethodGet)
 	seasonsRouter.HandleFunc("/club", seasonsController.UpdatesClubsToNewDivision).Methods(http.MethodPut)
 
