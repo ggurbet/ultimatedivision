@@ -3,12 +3,13 @@
 
 import { Dispatch } from 'redux';
 import { DivisionsClient } from '@/api/divisions';
-import { CurrentDivisionSeasons, DivisionSeasonsStatistics } from '@/divisions';
+import { CurrentDivisionSeasons, DivisionSeasonsStatistics, SeasonRewardTransaction } from '@/divisions';
 import { DivisionsService } from '@/divisions/service';
 
 export const GET_CURRENT_DIVISION_SEASONS = 'GET_CURRENT_DIVISION_SEASONS';
 export const GET_DIVISION_SEASONS_STATISTICS =
     'GET_DIVISION_SEASONS_STATISTICS';
+
 export const SET_ACTIVE_DIVISION = 'SET_ACTIVE_DIVISION';
 
 /** handles gets current seasons divisions */

@@ -27,7 +27,16 @@ export class DivisionsService {
 
         return divisionsSeasonsStatistics;
     }
-    /** handles request divisions seasons rewards ststus */
+
+    /** handles gets seasons reward */
+    public async getDivisionSeasonsReward(): Promise<any> {
+        const divisionsSeasonsReward =
+            await this.divisions.getDivisionSeasonsReward();
+
+        return divisionsSeasonsReward;
+    }
+
+    /** handles request divisions seasons rewards status */
     public async seasonsRewardStatus(): Promise<number> {
         const seasonRewardStatus = await this.divisions.seasonsRewardStatus();
 

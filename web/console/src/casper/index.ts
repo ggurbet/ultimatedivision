@@ -14,7 +14,7 @@ enum CasperRuntimeArgs {
     TOKEN_ID = 'token_id'
 }
 
-/** Desctibes parameters for transaction */
+/** Describes parameters for transaction */
 export class CasperTransactionIdentificators {
     /** Includes wallet address, and card id */
     constructor(
@@ -23,8 +23,39 @@ export class CasperTransactionIdentificators {
     ) { }
 }
 
+/** Describes parameters for casper token transaction */
+export class CasperTokenContract {
+    /** default CasperTokenContract implementation */
+    constructor(
+        public address: string = '0',
+        public addressMethod: string = ''
+    ) { }
+}
+
+/** Transaction describes transaction entity of match response. */
+export class CasperSeasonRewardTransaction {
+    /** Transaction contains of nonce, signature hash udtContract and value. */
+    constructor(
+        public ID: string,
+        public userId: string,
+        public seasonID: string,
+        public walletAddress: string,
+        public casperWalletAddress: string,
+        public walleType: string,
+        public status: number,
+        public nonce: number,
+        public signature: string,
+        public value: string,
+        public casperTokenContract: {
+            address: string;
+            addressMethod: string;
+        },
+        public rpcNodeAddress: string,
+    ) { }
+};
+
+export const ACCOUNT_HASH_PREFIX = 'account-hash-';
 const CHAIN_NAME = 'casper-test';
-const ACCOUNT_HASH_PREFIX = 'account-hash-';
 
 const TTL = 1800000;
 const PAYMENT_AMOUNT = 50000000000;
@@ -113,7 +144,7 @@ class CasperTransactionService {
     }
 
     /** Mints a token */
-    async mintUDT(transaction: CasperMatchTransaction, rpcNodeAddress: string): Promise<void> {
+    async mintUDT(transaction: CasperMatchTransaction | CasperSeasonRewardTransaction, rpcNodeAddress: string): Promise<void> {
         try {
             const runtimeArgs = RuntimeArgs.fromMap({
                 'value': CLValueBuilder.u256(transaction.value),

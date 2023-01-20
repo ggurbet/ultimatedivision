@@ -13,8 +13,8 @@ export class CasperNetworkClient extends APIClient {
     private readonly ROOT_PATH: string = '/api/v0';
 
     /** Sends signed message and registers user */
-    public async register(walletAddress: string): Promise<void> {
-        const response = await this.http.post(`${this.ROOT_PATH}/auth/casper/register`, JSON.stringify(walletAddress));
+    public async register(walletAddress: string, accountHash:string): Promise<void> {
+        const response = await this.http.post(`${this.ROOT_PATH}/auth/casper/register`, JSON.stringify({ casperWallet: walletAddress, casperWalletHash: accountHash }));
 
         if (!response.ok) {
             await this.handleError(response);

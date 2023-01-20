@@ -12,7 +12,7 @@ import StorageHandler from '@/velas/storageHandler';
 // @ts-ignore
 import { VAClient } from '@velas/account-client';
 import { JSEncrypt } from 'jsencrypt';
-import { Signer } from 'casper-js-sdk';
+import { CLPublicKey, Signer } from 'casper-js-sdk';
 
 import { useLocalStorage } from '@/app/hooks/useLocalStorage';
 import { RouteConfig } from '@/app/routes';
@@ -26,6 +26,7 @@ import { VelasClient } from '@/api/velas';
 import { VelasService } from '@/velas/service';
 import { CasperNetworkClient } from '@/api/casper';
 import { CasperNetworkService } from '@/casper/service';
+import { ACCOUNT_HASH_PREFIX } from '@/casper';
 
 import representLogo from '@static/img/login/represent-logo.gif';
 import metamask from '@static/img/login/metamask-icon.svg';
@@ -138,8 +139,10 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
 
             try {
                 const publicKey = await Signer.getActivePublicKey();
+                const accountHash = CLPublicKey.fromHex(publicKey).toAccountHashStr();
+                const convertedAccountHash = accountHash.replace(ACCOUNT_HASH_PREFIX, '');
 
-                await casperService.register(publicKey);
+                await casperService.register(publicKey, convertedAccountHash);
 
                 await loginCasper(publicKey);
             } catch (error: any) {
