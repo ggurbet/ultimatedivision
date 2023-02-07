@@ -46,7 +46,7 @@ class WalletService {
 
     /** Mints chosed card with casper */
     private async casperMint(id: string) {
-        const casperTransactionService = new CasperTransactionService(this.user.casperWalletHash);
+        const casperTransactionService = new CasperTransactionService(this.user.casperWallet);
 
         await casperTransactionService.mint(id);
     };
@@ -57,17 +57,17 @@ class WalletService {
     /** Mints chosed card. */
     public async mintNft(id: string) {
         switch (this.user.walletType) {
-        case walletTypes.VELAS_WALLET_TYPE:
-            await WalletService.velasMint();
-            break;
-        case walletTypes.CASPER_WALLET_TYPE:
-            await this.casperMint(id);
-            break;
-        case walletTypes.METAMASK_WALLET_TYPE:
-            await this.metamaskMint(id);
-            break;
-        default:
-            break;
+            case walletTypes.VELAS_WALLET_TYPE:
+                await WalletService.velasMint();
+                break;
+            case walletTypes.CASPER_WALLET_TYPE:
+                await this.casperMint(id);
+                break;
+            case walletTypes.METAMASK_WALLET_TYPE:
+                await this.metamaskMint(id);
+                break;
+            default:
+                break;
         }
     }
 
@@ -89,17 +89,17 @@ class WalletService {
     /** Mints season token. */
     public mintToken(messageEvent: any) {
         switch (this.user.walletType) {
-        case walletTypes.VELAS_WALLET_TYPE:
-            WalletService.velasMintToken();
-            break;
-        case walletTypes.CASPER_WALLET_TYPE:
-            this.casperMintToken(messageEvent);
-            break;
-        case walletTypes.METAMASK_WALLET_TYPE:
-            this.metamaskMintToken(messageEvent);
-            break;
-        default:
-            break;
+            case walletTypes.VELAS_WALLET_TYPE:
+                WalletService.velasMintToken();
+                break;
+            case walletTypes.CASPER_WALLET_TYPE:
+                this.casperMintToken(messageEvent);
+                break;
+            case walletTypes.METAMASK_WALLET_TYPE:
+                this.metamaskMintToken(messageEvent);
+                break;
+            default:
+                break;
         }
     };
 
@@ -119,17 +119,17 @@ class WalletService {
     /** Mints season token. */
     public mintSeasonToken(seasonRewardTransaction: SeasonRewardTransaction) {
         switch (this.user.walletType) {
-        case walletTypes.VELAS_WALLET_TYPE:
-            WalletService.velasMintSeasonToken();
-            break;
-        case walletTypes.CASPER_WALLET_TYPE:
-            this.casperMintSeasonToken(seasonRewardTransaction);
-            break;
-        case walletTypes.METAMASK_WALLET_TYPE:
-            WalletService.metamaskMintSeasonToken();
-            break;
-        default:
-            break;
+            case walletTypes.VELAS_WALLET_TYPE:
+                WalletService.velasMintSeasonToken();
+                break;
+            case walletTypes.CASPER_WALLET_TYPE:
+                this.casperMintSeasonToken(seasonRewardTransaction);
+                break;
+            case walletTypes.METAMASK_WALLET_TYPE:
+                WalletService.metamaskMintSeasonToken();
+                break;
+            default:
+                break;
         }
     };
 }
