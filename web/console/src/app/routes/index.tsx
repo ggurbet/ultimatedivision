@@ -17,6 +17,7 @@ const Match = lazy(() => import('@/app/views/Match'));
 const MatchFinder = lazy(() => import('@components/common/MatchFinder'));
 const Home = lazy(() => import('@/app/views/Home'));
 const Navbar = lazy(() => import('@/app/components/common/Navbar'));
+const FootballGame = lazy(() => import('@/app/views/FootballGame'));
 const PlayerProfile = lazy(() => import('@/app/views/PlayerProfile'));
 const AuthWrapper = lazy(() => import('@/app/components/common/Registration/AuthWrapper'));
 
@@ -55,6 +56,7 @@ export class ComponentRoutes {
 
 /** Route config implementation */
 export class RouteConfig {
+    public static FootballGame: ComponentRoutes = new ComponentRoutes('/game', FootballGame, true);
     public static MarketPlace: ComponentRoutes = new ComponentRoutes('/marketplace', MarketPlace, true);
     public static Lot: ComponentRoutes = new ComponentRoutes('/lot/:id', Lot, true);
     public static Card: ComponentRoutes = new ComponentRoutes('/card/:id', Card, false);
@@ -95,6 +97,7 @@ export class RouteConfig {
         RouteConfig.Lot,
         RouteConfig.Store,
         RouteConfig.Match,
+        RouteConfig.FootballGame,
         RouteConfig.PlayerProfile,
         RouteConfig.Whitepaper.addChildren([
             RouteConfig.Summary,

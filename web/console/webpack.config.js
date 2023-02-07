@@ -7,6 +7,7 @@ const StylelintPlugin = require("stylelint-webpack-plugin");
 const zlib = require("zlib");
 const CompressionPlugin = require("compression-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const PRODUCTION_PLUGINS = [
     new HtmlWebpackPlugin({
@@ -30,6 +31,14 @@ const PRODUCTION_PLUGINS = [
         minRatio: 0.8,
         deleteOriginalAssets: false,
     }),
+    new CopyWebpackPlugin({
+        patterns: [
+            {
+                from: "src/app/static/webGl",
+                to: "webGl",
+            },
+        ],
+    }),
 ];
 
 const DEVELOPMENT_PLUGINS = [
@@ -37,6 +46,14 @@ const DEVELOPMENT_PLUGINS = [
         title: "Ultimate Division",
         template: "./public/index.html",
         favicon: "./src/app/static/img/favicon.ico",
+    }),
+    new CopyWebpackPlugin({
+        patterns: [
+            {
+                from: "src/app/static/webGl",
+                to: "webGl",
+            },
+        ],
     }),
 ];
 
@@ -91,7 +108,7 @@ module.exports = (env, argv) => {
             filename: "[name].[hash].js",
             publicPath: "/static/dist/",
         },
-        plugins: isProduction ? PRODUCTION_PLUGINS : DEVELOPMENT_PLUGINS,
+        plugins: isProduction ? [...PRODUCTION_PLUGINS] : DEVELOPMENT_PLUGINS,
         devServer: {
             port: 3000,
             open: true,
