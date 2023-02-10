@@ -127,6 +127,8 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 		}
 	}
 
+	fmt.Println("las token - ", lastTokenID)
+
 	nextTokenID := lastTokenID + 1
 
 	if err = client.Upload(ctx, service.config.Bucket, fmt.Sprintf("%d.%s", nextTokenID, imageprocessing.TypeFilePNG), image); err != nil {
@@ -156,7 +158,7 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 		CardID:           createNFT.CardID,
 		Wallet:           createNFT.WalletAddress,
 		WalletType:       user.WalletType,
-		CasperWallet:     createNFT.CasperWallet,
+		CasperWallet:     user.CasperWallet,
 		CasperWalletHash: user.CasperWalletHash,
 		Value:            createNFT.Value,
 	}

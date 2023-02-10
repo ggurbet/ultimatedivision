@@ -222,6 +222,13 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             end_time      TIMESTAMP WITH TIME ZONE                                        NOT NULL,
             period        INTEGER                                                         NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS bids (
+            id         BYTEA                    PRIMARY KEY                                NOT NULL,
+            lot_id     BYTEA                                                               NOT NULL,
+            user_id    BYTEA                    REFERENCES users(id) ON DELETE CASCADE     NOT NULL,
+            amount     DECIMAL                                                             NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE                                            NOT NULL
+        );
         CREATE TABLE IF NOT EXISTS seasons(
             id          SERIAL PRIMARY KEY       NOT NULL,
             division_id BYTEA                    NOT NULL,
