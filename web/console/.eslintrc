@@ -1,8 +1,15 @@
+// Copyright (C) 2022 Creditor Corp. Group.
+// See LICENSE for copying information.
 {
     "env": {
         "browser": true,
         "es6": true
     },
+    "ignorePatterns": [
+        "src/**/*.spec.ts",
+        "custom.d.ts",
+        "jestSetup.ts"
+    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "project": "tsconfig.json",

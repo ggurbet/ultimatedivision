@@ -20,9 +20,9 @@ class CardsState {
         public currentCardsPage: number,
         public currentFieldCardsPage: number,
     ) { };
-};
+}
 
-const page = {
+export const page = {
     offset: DEFAULT_OFFSET_VALUE,
     limit: DEFAULT_LIMIT_VALUE,
     currentPage: FIRST_PAGE,

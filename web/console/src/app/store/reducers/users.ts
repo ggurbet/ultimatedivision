@@ -30,9 +30,6 @@ export const usersReducer = (
     action: any = {}
 ) => {
     switch (action.type) {
-    case LOGIN:
-        state.user.email = action.user.email;
-        break;
     case SET_USER:
         state.user = action.user;
         break;

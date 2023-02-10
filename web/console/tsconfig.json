@@ -1,6 +1,9 @@
+// Copyright (C) 2022 Creditor Corp. Group.
+// See LICENSE for copying information.
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "target": "es6",
     "paths": {
       "@/*": [
         "./src/*"
@@ -21,7 +24,6 @@
         "./src/app/utils/*"
       ],
     },
-    "target": "es6",
     "lib": [
       "dom",
       "dom.iterable",
@@ -42,6 +44,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
-    "jsx": "react-jsx",
+    "jsx": "react-jsx"
   },
+  "include": [
+    "src",
+    "jest.config.js"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts",
+  ]
 }

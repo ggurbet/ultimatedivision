@@ -81,7 +81,7 @@ export class SeasonRewardTransaction {
         public nonce: number = INITIAL_SEASON_REWARD_NONCE,
         public signature: string = '',
         public value: string = '0',
-        public casperTokenContract: CasperTokenContract = new CasperTokenContract(),
+        public casperTokenContract: string = '',
         public rpcNodeAddress: string = ''
     ) { }
 }

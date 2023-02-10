@@ -48,7 +48,7 @@ const Card: React.FC = () => {
         }
     }
 
-    const mint = async () => {
+    const mint = async() => {
         const walletService = new WalletService(user);
         await walletService.mintNft(id);
     };

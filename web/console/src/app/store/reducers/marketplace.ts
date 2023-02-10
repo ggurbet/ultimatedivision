@@ -20,7 +20,7 @@ const FIRST_PAGE: number = 1;
 const PAGES_COUNT: number = 1;
 const LOTS_TOTAL_COUNT: number = 1;
 
-const page = {
+export const page = {
     offset: DEFAULT_OFFSET_VALUE,
     limit: DEFAULT_LIMIT_VALUE,
     currentPage: FIRST_PAGE,

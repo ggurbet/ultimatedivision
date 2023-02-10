@@ -16,14 +16,6 @@ export const register = (user: User) => ({
     type: REGISTER,
     user,
 });
-/** login action contains type and data for user login */
-export const login = (email: string, password: string) => ({
-    type: LOGIN,
-    user: {
-        email,
-        password,
-    },
-});
 
 /** register action contains type and data for user registration */
 export const setUser = (user:User) => ({
@@ -40,14 +32,6 @@ export const registerUser = (user: User) =>
         await usersService.register(user);
         dispatch(register(user));
     };
-
-/** thunk that implements user login */
-export const loginUser = (email: string, password: string) =>
-    async function(dispatch: Dispatch) {
-        await usersService.login(email, password);
-        dispatch(login(email, password));
-    };
-
 
 export const setCurrentUser = () =>
     async function(dispatch: Dispatch) {
