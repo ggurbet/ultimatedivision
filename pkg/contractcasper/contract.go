@@ -16,6 +16,44 @@ import (
 // ErrContract indicates that there was an error in the contract package.
 var ErrContract = errs.Class("contract package")
 
+type (
+	// Event describes event structure in casper network.
+	Event struct {
+		DeployProcessed DeployProcessed `json:"DeployProcessed"`
+	}
+	// DeployProcessed describes all about deploy.
+	DeployProcessed struct {
+		DeployHash      string          `json:"deploy_hash"`
+		Account         string          `json:"account"`
+		BlockHash       string          `json:"block_hash"`
+		ExecutionResult ExecutionResult `json:"execution_result"`
+	}
+	// ExecutionResult describes result.
+	ExecutionResult struct {
+		Success Success `json:"Success"`
+	}
+	// Success describes success result.
+	Success struct {
+		Effect Effect `json:"effect"`
+	}
+
+	// Effect describes.
+	Effect struct {
+		Transforms []Transform `json:"transforms"`
+	}
+	// Transform describes.
+	Transform struct {
+		Key       string      `json:"key"`
+		Transform interface{} `json:"transform"`
+	}
+)
+
+// Casper exposes access to the casper sdk methods.
+type Casper interface {
+	// GetBlockNumberByHash returns block number by deploy hash.
+	GetBlockNumberByHash(hash string) (int, error)
+}
+
 // ClaimRequest describes values to initiate inbound claim transaction.
 type ClaimRequest struct {
 	Deploy              string

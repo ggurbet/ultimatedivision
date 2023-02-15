@@ -29,6 +29,8 @@ type DB interface {
 	GetByEmail(ctx context.Context, email string) (User, error)
 	// GetByWalletAddress returns user by wallet address from the database.
 	GetByWalletAddress(ctx context.Context, walletAddress string, walletType WalletType) (User, error)
+	// GetByCasperHash returns user by casper hash from the database.
+	GetByCasperHash(ctx context.Context, hash string) (User, error)
 	// Create creates a user and writes to the database.
 	Create(ctx context.Context, user User) error
 	// SetVelasData save json to db while register velas user.

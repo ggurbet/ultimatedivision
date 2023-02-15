@@ -59,6 +59,12 @@ func (service *Service) GetByCasperWalletAddress(ctx context.Context, walletAddr
 	return user, ErrUsers.Wrap(err)
 }
 
+// GetByCasperHash  returns user by Casper hash from the database.
+func (service *Service) GetByCasperHash(ctx context.Context, hash string) (User, error) {
+	user, err := service.users.GetByCasperHash(ctx, hash)
+	return user, ErrUsers.Wrap(err)
+}
+
 // List returns all users from DB.
 func (service *Service) List(ctx context.Context) ([]User, error) {
 	users, err := service.users.List(ctx)

@@ -133,6 +133,26 @@ func (usersDB *usersDB) GetByWalletAddress(ctx context.Context, walletAddress st
 	return user, nil
 }
 
+// GetByCasperHash returns user by casper hash from the database.
+func (usersDB *usersDB) GetByCasperHash(ctx context.Context, hash string) (users.User, error) {
+	var user users.User
+	var row *sql.Row
+
+	query := "SELECT id, email, password_hash, nick_name, first_name, last_name, wallet_address, casper_wallet_address, casper_wallet_hash, wallet_type, nonce, public_key, private_key, last_login, status, created_at FROM users WHERE casper_wallet_hash=$1"
+
+	row = usersDB.conn.QueryRowContext(ctx, query, hash)
+
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash, &user.NickName, &user.FirstName, &user.LastName, &user.Wallet, &user.CasperWallet, &user.CasperWalletHash, &user.WalletType, &user.Nonce, &user.PublicKey, &user.PrivateKey, &user.LastLogin, &user.Status, &user.CreatedAt)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return user, users.ErrNoUser.Wrap(err)
+		}
+		return user, ErrUsers.Wrap(err)
+	}
+
+	return user, nil
+}
+
 // Create creates a user and writes to the database.
 func (usersDB *usersDB) Create(ctx context.Context, user users.User) error {
 	emailNormalized := mail.Normalize(user.Email)

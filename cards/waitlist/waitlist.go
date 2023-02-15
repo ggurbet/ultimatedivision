@@ -91,7 +91,16 @@ type Config struct {
 	Bucket                  string                  `json:"bucket"`
 	URLToAvatar             string                  `json:"urlToAvatar"`
 	RPCNodeAddress          string                  `json:"rpcNodeAddress"`
+	EventNodeAddress        string                  `json:"eventNodeAddress"`
+	BridgeInEventHash       string                  `json:"bridgeInEventHash"`
 }
+
+const (
+	// WriteCLValueKey defines that transform key is WriteCLValue. This key stores the type and data of the transforming event.
+	WriteCLValueKey string = "WriteCLValue"
+	// BytesKey defines that WriteCLValue key is bytes. This key stores data of the transforming event.
+	BytesKey string = "bytes"
+)
 
 // NFTCreateContract describes the meaning of the contract.
 type NFTCreateContract struct {
@@ -115,4 +124,57 @@ type NFTCreateCasperContract struct {
 	MintWithSignatureSelector         evmsignature.Hex `json:"mintWithSignatureSelector"`
 	MintWithSignatureAndValueSelector evmsignature.Hex `json:"mintWithSignatureAndValueSelector"`
 	ChainID                           int              `json:"chainId"`
+}
+
+const (
+	// EventTypeIn defines that event type is 0. That is, this event arrived after calling the bridge in method in our contract.
+	EventTypeIn EventType = 0
+	// EventTypeOut defines that event type is 1. That is, this event arrived after calling the bridge out method in our contract.
+	EventTypeOut EventType = 1
+)
+
+// EventType Type defines list of possible event type for our connector.
+type EventType int
+
+// EventVariant describes one out of two event variants.
+type EventVariant struct {
+	Type          EventType
+	EventFundsIn  EventFundsIn
+	EventFundsOut EventFundsOut
+}
+
+// EventFundsIn describes event of bringe in method in format required by bridge.
+type EventFundsIn struct {
+	From   []byte
+	To     Address
+	Amount string
+	Token  []byte
+	Tx     TransactionInfo
+}
+
+// EventFundsOut describes event of bringe out method in format required by bridge.
+type EventFundsOut struct {
+	From   Address
+	To     []byte
+	Amount string
+	Token  []byte
+	Tx     TransactionInfo
+}
+
+// TransactionInfo describes transaction details.
+type TransactionInfo struct {
+	Hash        []byte
+	BlockNumber uint64
+	Sender      []byte
+}
+
+// Address stores network name with its address.
+type Address struct {
+	NetworkName string `json:"networkName,omitempty"`
+	Address     string `json:"address,omitempty"`
+}
+
+// Int returns int value from EventType type.
+func (eventType EventType) Int() int {
+	return int(eventType)
 }
