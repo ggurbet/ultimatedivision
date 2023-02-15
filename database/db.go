@@ -7,6 +7,8 @@ import (
 	"context"
 	"database/sql"
 
+	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	_ "github.com/lib/pq" // using postgres driver.
 	"github.com/zeebo/errs"
 
@@ -65,6 +67,11 @@ func NewHub() *Hub {
 	return &Hub{
 		Queue: []queue.Client{},
 	}
+}
+
+// DB entity describes hub of websocket connections.
+type DB struct {
+	connections map[uuid.UUID]*websocket.Conn
 }
 
 // CreateSchema create schema for all tables and databases.
