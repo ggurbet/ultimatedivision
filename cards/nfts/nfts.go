@@ -24,6 +24,8 @@ type DB interface {
 	Create(ctx context.Context, nft NFT) error
 	// Get returns nft by token id and chain from database.
 	Get(ctx context.Context, tokenID int64, chain evmsignature.Chain) (NFT, error)
+	// GetNFTByCardID returns nft by card id from database.
+	GetNFTByCardID(ctx context.Context, cardID uuid.UUID) (NFT, error)
 	// List returns all nft token from database.
 	List(ctx context.Context) ([]NFT, error)
 	// Update updates users wallet address for nft token in the database.

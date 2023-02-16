@@ -200,6 +200,13 @@ func TestNFTs(t *testing.T) {
 			compareNFTsSlice(t, []nfts.NFT{nftGet}, []nfts.NFT{nft1})
 		})
 
+		t.Run("Get NFT by id", func(t *testing.T) {
+			nftGet, err := repositoryNFTs.GetNFTByCardID(ctx, nft1.CardID)
+			require.NoError(t, err)
+
+			compareNFTsSlice(t, []nfts.NFT{nftGet}, []nfts.NFT{nft1})
+		})
+
 		t.Run("List", func(t *testing.T) {
 			nftList, err := repositoryNFTs.List(ctx)
 			require.NoError(t, err)

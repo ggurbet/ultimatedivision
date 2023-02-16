@@ -216,8 +216,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             PRIMARY KEY(user_id, lootbox_id)
         );
         CREATE TABLE IF NOT EXISTS lots (
-            id            BYTEA                    PRIMARY KEY                            NOT NULL,
-            item_id       BYTEA                                                           NOT NULL,
+            card_id       BYTEA                    REFERENCES cards(id) PRIMARY KEY       NOT NULL,
             type          VARCHAR                                                         NOT NULL,
             user_id       BYTEA                    REFERENCES users(id) ON DELETE CASCADE NOT NULL,
             shopper_id    BYTEA,

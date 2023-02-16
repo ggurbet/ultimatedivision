@@ -26,7 +26,7 @@ var ErrNoItem = errs.Class("item for wait list does not exist")
 type DB interface {
 	// Create creates nft for wait list in the database.
 	Create(ctx context.Context, item Item) error
-	// Get returns nft for wait list by token id.
+	// GetByTokenID returns nft for wait list by token id.
 	GetByTokenID(ctx context.Context, TokenSequence int64) (Item, error)
 	// GetByCardID returns nft for wait list by card id.
 	GetByCardID(ctx context.Context, cardID uuid.UUID) (Item, error)

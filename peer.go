@@ -424,6 +424,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Database.Marketplace(),
 			peer.Users.Service,
 			peer.Cards.Service,
+			peer.NFTs.Service,
 		)
 
 		peer.Marketplace.ExpirationLotChore = marketplace.NewChore(

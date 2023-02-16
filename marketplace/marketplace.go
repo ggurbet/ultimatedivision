@@ -29,8 +29,8 @@ type DB interface {
 	GetLotByID(ctx context.Context, id uuid.UUID) (Lot, error)
 	// ListActiveLots returns active lots from the data base.
 	ListActiveLots(ctx context.Context, cursor pagination.Cursor) (Page, error)
-	// ListActiveLotsByItemID returns active lots from the data base by item id.
-	ListActiveLotsByItemID(ctx context.Context, itemIds []uuid.UUID, cursor pagination.Cursor) (Page, error)
+	// ListActiveLotsByCardID returns active lots from the data base by card id.
+	ListActiveLotsByCardID(ctx context.Context, cardIds []uuid.UUID, cursor pagination.Cursor) (Page, error)
 	// ListExpiredLot returns lots where end time lower than or equal to time now UTC from the data base.
 	ListExpiredLot(ctx context.Context) ([]Lot, error)
 	// UpdateShopperIDLot updates shopper id of lot in the database.
@@ -45,8 +45,7 @@ type DB interface {
 
 // Lot describes lot entity.
 type Lot struct {
-	ID           uuid.UUID  `json:"id"`
-	ItemID       uuid.UUID  `json:"itemId"`
+	CardID       uuid.UUID  `json:"cardId"`
 	Type         Type       `json:"type"`
 	UserID       uuid.UUID  `json:"userId"`
 	ShopperID    uuid.UUID  `json:"shopperId"`
@@ -100,7 +99,7 @@ type Config struct {
 
 // CreateLot entity that contains the values required to create the lot.
 type CreateLot struct {
-	ItemID     uuid.UUID `json:"itemId"`
+	CardID     uuid.UUID `json:"cardId"`
 	Type       Type      `json:"type"`
 	UserID     uuid.UUID `json:"userId"`
 	StartPrice big.Int   `json:"startPrice"`
@@ -110,15 +109,14 @@ type CreateLot struct {
 
 // BetLot entity that contains the values required to place bet the lot.
 type BetLot struct {
-	ID        uuid.UUID `json:"id"`
+	CardID    uuid.UUID `json:"cardId"`
 	UserID    uuid.UUID `json:"userId"`
 	BetAmount big.Int   `json:"betAmount"`
 }
 
 // WinLot entity that contains the values required to win the lot.
 type WinLot struct {
-	ID        uuid.UUID `json:"id"`
-	ItemID    uuid.UUID `json:"itemId"`
+	CardID    uuid.UUID `json:"cardId"`
 	Type      Type      `json:"type"`
 	UserID    uuid.UUID `json:"userId"`
 	ShopperID uuid.UUID `json:"shopperID"`
@@ -128,7 +126,7 @@ type WinLot struct {
 
 // ValidateCreateLot check is empty fields of create lot entity.
 func (createLot CreateLot) ValidateCreateLot() error {
-	if createLot.ItemID.String() == "" {
+	if createLot.CardID.String() == "" {
 		return ErrMarketplace.New("item id is empty")
 	}
 
@@ -145,7 +143,7 @@ func (createLot CreateLot) ValidateCreateLot() error {
 
 // ValidateBetLot check is empty fields of bet lot entity.
 func (betLot BetLot) ValidateBetLot() error {
-	if betLot.ID.String() == "" {
+	if betLot.CardID.String() == "" {
 		return ErrMarketplace.New("lot id is empty")
 	}
 

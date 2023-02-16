@@ -22,58 +22,6 @@ import (
 )
 
 func TestMarketplace(t *testing.T) {
-	lot1 := marketplace.Lot{
-		ID:           uuid.New(),
-		ItemID:       uuid.New(),
-		Type:         marketplace.TypeCard,
-		UserID:       uuid.New(),
-		ShopperID:    uuid.New(),
-		Status:       marketplace.StatusSoldBuynow,
-		StartPrice:   *big.NewInt(500000000000000),
-		MaxPrice:     *big.NewInt(3000000000000000),
-		CurrentPrice: *big.NewInt(3000000000000000),
-		StartTime:    time.Now().UTC(),
-		EndTime:      time.Now().AddDate(0, 0, 2).UTC(),
-		Period:       2,
-	}
-
-	lot2 := marketplace.Lot{
-		ID:           uuid.New(),
-		ItemID:       uuid.New(),
-		Type:         marketplace.TypeCard,
-		UserID:       uuid.New(),
-		Status:       marketplace.StatusActive,
-		StartPrice:   *big.NewInt(500000000000000),
-		CurrentPrice: *big.NewInt(2500000000000000),
-		StartTime:    time.Now().UTC(),
-		EndTime:      time.Now().AddDate(0, 0, 1).UTC(),
-		Period:       marketplace.MinPeriod,
-	}
-
-	user1 := users.User{
-		ID:           uuid.New(),
-		Email:        "tarkovskynik@gmail.com",
-		PasswordHash: []byte{0},
-		NickName:     "Nik",
-		FirstName:    "Nikita",
-		LastName:     "Tarkovskyi",
-		LastLogin:    time.Now(),
-		Status:       0,
-		CreatedAt:    time.Now(),
-	}
-
-	user2 := users.User{
-		ID:           uuid.New(),
-		Email:        "3560876@gmail.com",
-		PasswordHash: []byte{1},
-		NickName:     "qwerty",
-		FirstName:    "Stas",
-		LastName:     "Isakov",
-		LastLogin:    time.Now(),
-		Status:       1,
-		CreatedAt:    time.Now(),
-	}
-
 	card1 := cards.Card{
 		ID:               uuid.New(),
 		PlayerName:       "Dmytro yak muk",
@@ -197,6 +145,56 @@ func TestMarketplace(t *testing.T) {
 		Throwing:         49,
 	}
 
+	lot1 := marketplace.Lot{
+		CardID:       card1.ID,
+		Type:         marketplace.TypeCard,
+		UserID:       uuid.New(),
+		ShopperID:    uuid.New(),
+		Status:       marketplace.StatusSoldBuynow,
+		StartPrice:   *big.NewInt(500000000000000),
+		MaxPrice:     *big.NewInt(3000000000000000),
+		CurrentPrice: *big.NewInt(3000000000000000),
+		StartTime:    time.Now().UTC(),
+		EndTime:      time.Now().AddDate(0, 0, 2).UTC(),
+		Period:       2,
+	}
+
+	lot2 := marketplace.Lot{
+		CardID:       uuid.New(),
+		Type:         marketplace.TypeCard,
+		UserID:       uuid.New(),
+		Status:       marketplace.StatusActive,
+		StartPrice:   *big.NewInt(500000000000000),
+		CurrentPrice: *big.NewInt(2500000000000000),
+		StartTime:    time.Now().UTC(),
+		EndTime:      time.Now().AddDate(0, 0, 1).UTC(),
+		Period:       marketplace.MinPeriod,
+	}
+
+	user1 := users.User{
+		ID:           uuid.New(),
+		Email:        "tarkovskynik@gmail.com",
+		PasswordHash: []byte{0},
+		NickName:     "Nik",
+		FirstName:    "Nikita",
+		LastName:     "Tarkovskyi",
+		LastLogin:    time.Now(),
+		Status:       0,
+		CreatedAt:    time.Now(),
+	}
+
+	user2 := users.User{
+		ID:           uuid.New(),
+		Email:        "3560876@gmail.com",
+		PasswordHash: []byte{1},
+		NickName:     "qwerty",
+		FirstName:    "Stas",
+		LastName:     "Isakov",
+		LastLogin:    time.Now(),
+		Status:       1,
+		CreatedAt:    time.Now(),
+	}
+
 	cursor1 := pagination.Cursor{
 		Limit: 2,
 		Page:  1,
@@ -221,12 +219,12 @@ func TestMarketplace(t *testing.T) {
 			err = repositoryCards.Create(ctx, card1)
 			require.NoError(t, err)
 
-			lot1.ItemID = card1.ID
+			lot1.CardID = card1.ID
 			lot1.UserID = user1.ID
 			err = repositoryMarketplace.CreateLot(ctx, lot1)
 			require.NoError(t, err)
 
-			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.ID)
+			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.CardID)
 			require.NoError(t, err)
 			compareLot(t, lot1, lotFromDB)
 		})
@@ -239,7 +237,7 @@ func TestMarketplace(t *testing.T) {
 			err = repositoryCards.Create(ctx, card2)
 			require.NoError(t, err)
 
-			lot2.ItemID = card2.ID
+			lot2.CardID = card2.ID
 			lot2.UserID = user2.ID
 			err = repositoryMarketplace.CreateLot(ctx, lot2)
 			require.NoError(t, err)
@@ -250,12 +248,12 @@ func TestMarketplace(t *testing.T) {
 			compareLot(t, lot2, activeLots.Lots[0])
 		})
 
-		t.Run("list active by item id", func(t *testing.T) {
+		t.Run("list active by card id", func(t *testing.T) {
 			var cardsIds []uuid.UUID
 			cardsIds = append(cardsIds, card1.ID)
 			cardsIds = append(cardsIds, card2.ID)
 
-			activeLots, err := repositoryMarketplace.ListActiveLotsByItemID(ctx, cardsIds, cursor1)
+			activeLots, err := repositoryMarketplace.ListActiveLotsByCardID(ctx, cardsIds, cursor1)
 			assert.NoError(t, err)
 			assert.Equal(t, len(activeLots.Lots), 1)
 			compareLot(t, lot2, activeLots.Lots[0])
@@ -263,11 +261,11 @@ func TestMarketplace(t *testing.T) {
 
 		t.Run("list expired lot", func(t *testing.T) {
 			lot1.EndTime = time.Now().UTC()
-			err := repositoryMarketplace.UpdateEndTimeLot(ctx, lot1.ID, lot1.EndTime)
+			err := repositoryMarketplace.UpdateEndTimeLot(ctx, lot1.CardID, lot1.EndTime)
 			require.NoError(t, err)
 
 			lot1.Status = marketplace.StatusActive
-			err = repositoryMarketplace.UpdateStatusLot(ctx, lot1.ID, marketplace.StatusActive)
+			err = repositoryMarketplace.UpdateStatusLot(ctx, lot1.CardID, marketplace.StatusActive)
 			require.NoError(t, err)
 
 			activeLots, err := repositoryMarketplace.ListExpiredLot(ctx)
@@ -284,10 +282,10 @@ func TestMarketplace(t *testing.T) {
 
 		t.Run("update shopperID of lot", func(t *testing.T) {
 			lot1.ShopperID = uuid.New()
-			err := repositoryMarketplace.UpdateShopperIDLot(ctx, lot1.ID, lot1.ShopperID)
+			err := repositoryMarketplace.UpdateShopperIDLot(ctx, lot1.CardID, lot1.ShopperID)
 			require.NoError(t, err)
 
-			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.ID)
+			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.CardID)
 			require.NoError(t, err)
 			compareLot(t, lot1, lotFromDB)
 		})
@@ -300,10 +298,10 @@ func TestMarketplace(t *testing.T) {
 
 		t.Run("update status of lot", func(t *testing.T) {
 			lot1.Status = marketplace.StatusExpired
-			err := repositoryMarketplace.UpdateStatusLot(ctx, lot1.ID, marketplace.StatusExpired)
+			err := repositoryMarketplace.UpdateStatusLot(ctx, lot1.CardID, marketplace.StatusExpired)
 			require.NoError(t, err)
 
-			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.ID)
+			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.CardID)
 			require.NoError(t, err)
 			compareLot(t, lot1, lotFromDB)
 		})
@@ -316,10 +314,10 @@ func TestMarketplace(t *testing.T) {
 
 		t.Run("update current price of lot", func(t *testing.T) {
 			lot1.CurrentPrice = *big.NewInt(2500000000000000)
-			err := repositoryMarketplace.UpdateCurrentPriceLot(ctx, lot1.ID, *big.NewInt(2500000000000000))
+			err := repositoryMarketplace.UpdateCurrentPriceLot(ctx, lot1.CardID, *big.NewInt(2500000000000000))
 			require.NoError(t, err)
 
-			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.ID)
+			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.CardID)
 			require.NoError(t, err)
 			compareLot(t, lot1, lotFromDB)
 		})
@@ -332,10 +330,10 @@ func TestMarketplace(t *testing.T) {
 
 		t.Run("update end time of lot", func(t *testing.T) {
 			lot1.EndTime = time.Now().UTC().Add(time.Hour)
-			err := repositoryMarketplace.UpdateEndTimeLot(ctx, lot1.ID, lot1.EndTime)
+			err := repositoryMarketplace.UpdateEndTimeLot(ctx, lot1.CardID, lot1.EndTime)
 			require.NoError(t, err)
 
-			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.ID)
+			lotFromDB, err := repositoryMarketplace.GetLotByID(ctx, lot1.CardID)
 			require.NoError(t, err)
 			compareLot(t, lot1, lotFromDB)
 		})
@@ -344,8 +342,7 @@ func TestMarketplace(t *testing.T) {
 }
 
 func compareLot(t *testing.T, lot1, lot2 marketplace.Lot) {
-	assert.Equal(t, lot1.ID, lot2.ID)
-	assert.Equal(t, lot1.ItemID, lot2.ItemID)
+	assert.Equal(t, lot1.CardID, lot2.CardID)
 	assert.Equal(t, lot1.Type, lot2.Type)
 	assert.Equal(t, lot1.UserID, lot2.UserID)
 	assert.Equal(t, lot1.ShopperID, lot2.ShopperID)

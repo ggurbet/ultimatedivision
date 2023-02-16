@@ -14,6 +14,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
+	"ultimatedivision/cards/nfts"
 	"ultimatedivision/pkg/pagination"
 	"ultimatedivision/users"
 )
@@ -29,22 +30,24 @@ type Service struct {
 	marketplace DB
 	users       *users.Service
 	cards       *cards.Service
+	nfts        *nfts.Service
 }
 
 // NewService is a constructor for marketplace service.
-func NewService(config Config, marketplace DB, users *users.Service, cards *cards.Service) *Service {
+func NewService(config Config, marketplace DB, users *users.Service, cards *cards.Service, nfts *nfts.Service) *Service {
 	return &Service{
 		config:      config,
 		marketplace: marketplace,
 		users:       users,
 		cards:       cards,
+		nfts:        nfts,
 	}
 }
 
 // CreateLot add lot in DB.
 func (service *Service) CreateLot(ctx context.Context, createLot CreateLot) error {
 	// TODO: add transaction.
-	card, err := service.cards.Get(ctx, createLot.ItemID)
+	card, err := service.cards.Get(ctx, createLot.CardID)
 	if err == nil {
 		if card.UserID != createLot.UserID {
 			return ErrMarketplace.New("it is not the user's card")
@@ -54,7 +57,7 @@ func (service *Service) CreateLot(ctx context.Context, createLot CreateLot) erro
 			return ErrMarketplace.New("the card is already on sale")
 		}
 
-		if err := service.cards.UpdateStatus(ctx, createLot.ItemID, cards.StatusSale); err != nil {
+		if err := service.cards.UpdateStatus(ctx, createLot.CardID, cards.StatusSale); err != nil {
 			return ErrMarketplace.Wrap(err)
 		}
 
@@ -79,8 +82,7 @@ func (service *Service) CreateLot(ctx context.Context, createLot CreateLot) erro
 	}
 
 	lot := Lot{
-		ID:         uuid.New(),
-		ItemID:     createLot.ItemID,
+		CardID:     card.ID,
 		Type:       createLot.Type,
 		UserID:     createLot.UserID,
 		Status:     StatusActive,
@@ -98,6 +100,12 @@ func (service *Service) CreateLot(ctx context.Context, createLot CreateLot) erro
 func (service *Service) GetLotByID(ctx context.Context, id uuid.UUID) (Lot, error) {
 	lot, err := service.marketplace.GetLotByID(ctx, id)
 	return lot, ErrMarketplace.Wrap(err)
+}
+
+// GetNFTByCardID returns nft by card id from DB.
+func (service *Service) GetNFTByCardID(ctx context.Context, id uuid.UUID) (nfts.NFT, error) {
+	nft, err := service.nfts.GetNFTByCardID(ctx, id)
+	return nft, ErrMarketplace.Wrap(err)
 }
 
 // ListActiveLots returns active lots from DB.
@@ -133,7 +141,7 @@ func (service *Service) ListActiveLotsWithFilters(ctx context.Context, filters [
 	if cursor.Page <= 0 {
 		cursor.Page = service.config.Cursor.Page
 	}
-	lotsPage, err = service.marketplace.ListActiveLotsByItemID(ctx, cardIDs, cursor)
+	lotsPage, err = service.marketplace.ListActiveLotsByCardID(ctx, cardIDs, cursor)
 	return lotsPage, ErrMarketplace.Wrap(err)
 }
 
@@ -159,7 +167,7 @@ func (service *Service) ListActiveLotsByPlayerName(ctx context.Context, filter c
 	if cursor.Page <= 0 {
 		cursor.Page = service.config.Cursor.Page
 	}
-	lotsPage, err = service.marketplace.ListActiveLotsByItemID(ctx, cardIDs, cursor)
+	lotsPage, err = service.marketplace.ListActiveLotsByCardID(ctx, cardIDs, cursor)
 	return lotsPage, ErrMarketplace.Wrap(err)
 }
 
@@ -176,7 +184,7 @@ func (service *Service) PlaceBetLot(ctx context.Context, betLot BetLot) error {
 	}
 	// TODO: check if the user has the required amount of money.
 
-	lot, err := service.GetLotByID(ctx, betLot.ID)
+	lot, err := service.GetLotByID(ctx, betLot.CardID)
 	if err != nil {
 		return ErrMarketplace.Wrap(err)
 	}
@@ -197,18 +205,17 @@ func (service *Service) PlaceBetLot(ctx context.Context, betLot BetLot) error {
 	// TODO: update status to `hold` for new user's money.
 	// TODO: unhold old user's money if exist.
 
-	if err := service.UpdateShopperIDLot(ctx, betLot.ID, betLot.UserID); err != nil {
+	if err := service.UpdateShopperIDLot(ctx, betLot.CardID, betLot.UserID); err != nil {
 		return ErrMarketplace.Wrap(err)
 	}
 
 	if (betLot.BetAmount.Cmp(&lot.MaxPrice) == 1 || betLot.BetAmount.Cmp(&lot.MaxPrice) == 0) && lot.MaxPrice.BitLen() != 0 {
-		if err = service.UpdateCurrentPriceLot(ctx, betLot.ID, lot.MaxPrice); err != nil {
+		if err = service.UpdateCurrentPriceLot(ctx, betLot.CardID, lot.MaxPrice); err != nil {
 			return ErrMarketplace.Wrap(err)
 		}
 
 		winLot := WinLot{
-			ID:        betLot.ID,
-			ItemID:    lot.ItemID,
+			CardID:    betLot.CardID,
 			Type:      TypeCard,
 			UserID:    lot.UserID,
 			ShopperID: betLot.UserID,
@@ -221,11 +228,11 @@ func (service *Service) PlaceBetLot(ctx context.Context, betLot BetLot) error {
 		}
 
 	} else {
-		if err = service.UpdateCurrentPriceLot(ctx, betLot.ID, betLot.BetAmount); err != nil {
+		if err = service.UpdateCurrentPriceLot(ctx, betLot.CardID, betLot.BetAmount); err != nil {
 			return ErrMarketplace.Wrap(err)
 		}
 		if lot.EndTime.Sub(time.Now().UTC()) < time.Minute {
-			if err = service.UpdateEndTimeLot(ctx, betLot.ID, time.Now().UTC().Add(time.Minute)); err != nil {
+			if err = service.UpdateEndTimeLot(ctx, betLot.CardID, time.Now().UTC().Add(time.Minute)); err != nil {
 				return ErrMarketplace.Wrap(err)
 			}
 		}
@@ -236,19 +243,19 @@ func (service *Service) PlaceBetLot(ctx context.Context, betLot BetLot) error {
 
 // WinLot changes owner of the item and transfers money.
 func (service *Service) WinLot(ctx context.Context, winLot WinLot) error {
-	if err := service.UpdateStatusLot(ctx, winLot.ID, winLot.Status); err != nil {
+	if err := service.UpdateStatusLot(ctx, winLot.CardID, winLot.Status); err != nil {
 		return ErrMarketplace.Wrap(err)
 	}
 
 	// TODO: transfer money to the old cardholder from new user. If userID == shopperID not transfer mb.
 
 	if winLot.Type == TypeCard {
-		if err := service.cards.UpdateStatus(ctx, winLot.ItemID, cards.StatusActive); err != nil {
+		if err := service.cards.UpdateStatus(ctx, winLot.CardID, cards.StatusActive); err != nil {
 			return ErrMarketplace.Wrap(err)
 		}
 
 		if winLot.UserID != winLot.ShopperID {
-			if err := service.cards.UpdateUserID(ctx, winLot.ItemID, winLot.ShopperID); err != nil {
+			if err := service.cards.UpdateUserID(ctx, winLot.CardID, winLot.ShopperID); err != nil {
 				return ErrMarketplace.Wrap(err)
 			}
 		}

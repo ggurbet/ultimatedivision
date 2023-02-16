@@ -47,8 +47,7 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 				// TODO: unhold old user's money.
 
 				winLot := WinLot{
-					ID:        lot.ID,
-					ItemID:    lot.ItemID,
+					CardID:    lot.CardID,
 					Type:      lot.Type,
 					UserID:    lot.UserID,
 					ShopperID: lot.ShopperID,
@@ -63,13 +62,13 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 				continue
 			}
 
-			err := chore.marketplace.UpdateStatusLot(ctx, lot.ID, StatusExpired)
+			err := chore.marketplace.UpdateStatusLot(ctx, lot.CardID, StatusExpired)
 			if err != nil {
 				return ChoreError.Wrap(err)
 			}
 
 			if lot.Type == TypeCard {
-				if err := chore.marketplace.cards.UpdateStatus(ctx, lot.ItemID, cards.StatusActive); err != nil {
+				if err := chore.marketplace.cards.UpdateStatus(ctx, lot.CardID, cards.StatusActive); err != nil {
 					return ErrMarketplace.Wrap(err)
 				}
 			}
