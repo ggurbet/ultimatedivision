@@ -19,6 +19,7 @@ import (
 	"ultimatedivision/cards/nfts"
 	"ultimatedivision/cards/waitlist"
 	"ultimatedivision/clubs"
+	"ultimatedivision/console/connections"
 	"ultimatedivision/divisions"
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/gameplay/queue"
@@ -403,4 +404,8 @@ func (db *database) UDTs() udts.DB {
 // Store provides access to accounts db.
 func (db *database) Store() store.DB {
 	return &storeDB{conn: db.conn}
+}
+
+func (db *database) Connections() connections.DB {
+	return &connectionDB{db: &DB{make(map[uuid.UUID]*websocket.Conn)}}
 }

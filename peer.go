@@ -20,6 +20,7 @@ import (
 	"ultimatedivision/cards/nfts"
 	"ultimatedivision/cards/waitlist"
 	"ultimatedivision/clubs"
+	"ultimatedivision/console/connections"
 	"ultimatedivision/console/consoleserver"
 	"ultimatedivision/console/emails"
 	"ultimatedivision/divisions"
@@ -82,6 +83,9 @@ type DB interface {
 
 	// Seasons provides access to seasons db.
 	Seasons() seasons.DB
+
+	// Connections provides access to connections db.
+	Connections() connections.DB
 
 	// CurrencyWaitList provides access to currencywaitlist db.
 	CurrencyWaitList() currencywaitlist.DB
@@ -280,17 +284,18 @@ type Peer struct {
 		Service *metrics.Metric
 	}
 
-	// Admin web server server with web UI.
+	// Admin web server with web UI.
 	Admin struct {
 		Listener net.Listener
 		Endpoint *adminserver.Server
 	}
 
-	// Console web server server with web UI.
+	// Console web server with web UI.
 	Console struct {
 		Listener     net.Listener
 		Endpoint     *consoleserver.Server
 		EmailService *emails.Service
+		Connections  *connections.Service
 	}
 }
 
@@ -339,6 +344,10 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			},
 			peer.Console.EmailService,
 			logger, peer.Velas.Service)
+	}
+
+	{ // connections setup.
+		peer.Console.Connections = connections.NewService(peer.Database.Connections())
 	}
 
 	{ // admins setup.
