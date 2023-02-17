@@ -15,13 +15,6 @@ import (
 	"ultimatedivision/pkg/auth"
 )
 
-const (
-	// ReadBufferSize is buffer sizes for read.
-	ReadBufferSize int = 1024
-	// WriteBufferSize is buffer sizes for write.
-	WriteBufferSize int = 1024
-)
-
 var (
 	// ErrQueue is an internal error type for queue controller.
 	ErrQueue = errs.Class("queue controller error")
