@@ -96,6 +96,43 @@ func (bidsDB *bidsDB) ListByLotID(ctx context.Context, lotID uuid.UUID) (_ []bid
 	return bidsList, ErrBids.Wrap(err)
 }
 
+// ListByUserID returns bids by user id from the database.
+func (bidsDB *bidsDB) ListByUserID(ctx context.Context, userID uuid.UUID) (_ []bids.Bid, err error) {
+	var (
+		bidsList []bids.Bid
+		amount   string
+	)
+	query := `SELECT id, lot_id, user_id, amount, created_at
+	          FROM bids
+	          WHERE user_id = $1`
+
+	rows, err := bidsDB.conn.QueryContext(ctx, query, userID)
+	if err != nil {
+		return bidsList, ErrBids.Wrap(err)
+	}
+	defer func() {
+		err = errs.Combine(err, rows.Close())
+	}()
+
+	for rows.Next() {
+		var bid bids.Bid
+		if err = rows.Scan(
+			&bid.ID, &bid.LotID, &bid.UserID, &amount, &bid.CreatedAt); err != nil {
+			return nil, ErrBids.Wrap(err)
+		}
+		if _, ok := bid.Amount.SetString(amount, 10); !ok {
+			return nil, ErrBids.New("could not parse amount equal %v from db", amount)
+		}
+
+		bidsList = append(bidsList, bid)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, ErrBids.Wrap(err)
+	}
+
+	return bidsList, ErrBids.Wrap(err)
+}
+
 // GetUserBidsAmountByLotID returns amount of user last bet on certain lot from the database.
 func (bidsDB *bidsDB) GetUserBidsAmountByLotID(ctx context.Context, userID, lotID uuid.UUID) (_ []big.Int, err error) {
 	var bidsAmount []big.Int

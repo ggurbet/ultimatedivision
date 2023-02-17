@@ -24,6 +24,7 @@ import (
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/marketplace"
+	"ultimatedivision/marketplace/bids"
 	"ultimatedivision/seasons"
 	"ultimatedivision/store"
 	"ultimatedivision/store/lootboxes"
@@ -359,6 +360,11 @@ func (db *database) LootBoxes() lootboxes.DB {
 // Marketplace provides access to accounts db.
 func (db *database) Marketplace() marketplace.DB {
 	return &marketplaceDB{conn: db.conn}
+}
+
+// Bids provides access to accounts db.
+func (db *database) Bids() bids.DB {
+	return &bidsDB{conn: db.conn}
 }
 
 // Matches provides access to accounts db.

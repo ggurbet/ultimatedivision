@@ -25,6 +25,8 @@ type DB interface {
 	GetCurrentBidByLotID(ctx context.Context, lotID uuid.UUID) (Bid, error)
 	// ListByLotID returns bids by lot id from the database.
 	ListByLotID(ctx context.Context, lotID uuid.UUID) ([]Bid, error)
+	// ListByUserID returns bids by user id from the database.
+	ListByUserID(ctx context.Context, userID uuid.UUID) ([]Bid, error)
 	// GetUserBidsAmountByLotID returns amount of user last bet on certain lot form the database.
 	GetUserBidsAmountByLotID(ctx context.Context, userID, lotID uuid.UUID) ([]big.Int, error)
 	// DeleteByLotID deletes bids by lot id in the database.

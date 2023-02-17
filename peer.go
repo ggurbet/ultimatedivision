@@ -29,6 +29,7 @@ import (
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/metrics"
 	"ultimatedivision/marketplace"
+	"ultimatedivision/marketplace/bids"
 	"ultimatedivision/pkg/auth"
 	mail2 "ultimatedivision/pkg/mail"
 	"ultimatedivision/pkg/velas"
@@ -71,6 +72,9 @@ type DB interface {
 
 	// Marketplace provides access to marketplace db.
 	Marketplace() marketplace.DB
+
+	// Bids provides access to bids db.
+	Bids() bids.DB
 
 	// Matches provides access to matches db.
 	Matches() matches.DB
@@ -234,6 +238,11 @@ type Peer struct {
 	Marketplace struct {
 		Service            *marketplace.Service
 		ExpirationLotChore *marketplace.Chore
+	}
+
+	// exposes bids related logic.
+	Bids struct {
+		Service *bids.Service
 	}
 
 	// exposes matches related logic.
@@ -573,6 +582,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Cards.Service,
 			peer.LootBoxes.Service,
 			peer.Marketplace.Service,
+			peer.Bids.Service,
 			peer.Clubs.Service,
 			peer.Users.Auth,
 			peer.Users.Service,
