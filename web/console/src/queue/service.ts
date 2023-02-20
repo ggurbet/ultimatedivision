@@ -18,7 +18,7 @@ export class QueueService {
     };
 
     /** Sends action that indicates that the client allows to add address of wallet. */
-    public casperActionAllowAddress(wallet: string, walletType: string, squadId:string): void {
+    public casperActionAllowAddress(wallet: string, walletType: string, squadId: string): void {
         this.queueClient.casperActionAllowAddress(wallet, walletType, squadId);
     };
 
@@ -35,6 +35,14 @@ export class QueueService {
     /** Sends action, i.e 'startSearch', 'finishSearch', on open webSocket connection. */
     public onOpenConnectionSendAction(action: string, squadId: string): void {
         this.queueClient.onOpenConnectionSendAction(action, squadId);
+    };
+    /** Closes ws connection. */
+    public close() {
+        this.queueClient.close();
+    };
+    /** Opens ws connection. */
+    public openConnection() {
+        this.queueClient.openConnection();
     };
 };
 
@@ -58,7 +66,7 @@ export const queueActionAllowAddress = (wallet: string, nonce: number) => {
 };
 
 /** Sends action that indicates that the client allows to add address of wallet. */
-export const queueCasperActionAllowAddress = (wallet: string, walletType: string, squadId:string) => {
+export const queueCasperActionAllowAddress = (wallet: string, walletType: string, squadId: string) => {
     queueService.casperActionAllowAddress(wallet, walletType, squadId);
 };
 
@@ -69,3 +77,6 @@ export const actionForbidAddress = () => {
 
 /** Returns current queue client. */
 export const getCurrentQueueClient = () => queueService.queueClient;
+
+/** Opens ws connection. */
+export const onOpenConnection = () => queueService.openConnection();

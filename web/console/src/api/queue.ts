@@ -10,7 +10,7 @@ export class QueueClient {
     * a websocket connection to a server and for sending and
     * receiving data on the connection. */
     // TODO: rework functionality.
-    public ws: WebSocket = new WebSocket(`${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/api/v0/queue`);
+    public ws: WebSocket = new WebSocket(`${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/api/v0/connection`);
 
     /** Sends action to confirm and reject match, finish search */
     public sendAction(action: string, squadId: string) {
@@ -25,7 +25,7 @@ export class QueueClient {
     };
 
     /** Sends action that indicates that the client allows to add address of wallet. */
-    public casperActionAllowAddress(casperWallet: string, walletType: string, squadId:string) {
+    public casperActionAllowAddress(casperWallet: string, walletType: string, squadId: string) {
         const action: string = 'allowAddress';
 
         this.ws.send(JSON.stringify({ action, casperWallet, walletType, squadId }));
@@ -45,5 +45,17 @@ export class QueueClient {
         this.ws.onopen = () => {
             this.sendAction(action, squadId);
         };
+    };
+
+    /** opens and initialize connection */
+    public openConnection() {
+        this.ws.onopen = () => {
+            this.ws.send('hello');
+        };
+    }
+
+    /** Closes ws connection. */
+    public close() {
+        this.ws.close();
     };
 };

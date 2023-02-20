@@ -108,6 +108,7 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
         const signedMessage = await ethersService.signMessage(message);
         await client.login(new SignedMessage(message, signedMessage));
         history.push(RouteConfig.Store.path);
+
         setLocalStorageItem('IS_LOGGINED', true);
     };
 
@@ -130,6 +131,8 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
             const publicKey = await Signer.getActivePublicKey();
 
             await loginCasper(publicKey);
+
+            setLocalStorageItem('IS_LOGGINED', true);
         } catch (error: any) {
             if (!(error instanceof NotFoundError)) {
                 ToastNotifications.notFound();
@@ -145,6 +148,8 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
                 await casperService.register(publicKey, convertedAccountHash);
 
                 await loginCasper(publicKey);
+
+                setLocalStorageItem('IS_LOGGINED', true);
             } catch (error: any) {
                 ToastNotifications.couldNotLogInUserWithCasper();
             }
