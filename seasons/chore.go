@@ -46,7 +46,6 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 
 		for _, season := range seasons {
 			if season.EndedAt.IsZero() {
-
 				err = chore.seasons.EndSeason(ctx, season.ID)
 				if err != nil {
 					return ChoreError.Wrap(err)

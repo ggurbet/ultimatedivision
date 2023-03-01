@@ -22,6 +22,7 @@ import (
 	"ultimatedivision/console/connections"
 	"ultimatedivision/divisions"
 	"ultimatedivision/gameplay/matches"
+	"ultimatedivision/gameplay/matchmaking"
 	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/marketplace/bids"
@@ -71,9 +72,10 @@ func NewHub() *Hub {
 	}
 }
 
-// DB entity describes hub of websocket connections.
+// DB entity describes hub of websocket connections and players.
 type DB struct {
 	connections map[uuid.UUID]*websocket.Conn
+	players     map[uuid.UUID]matchmaking.Player
 }
 
 // CreateSchema create schema for all tables and databases.
@@ -413,5 +415,9 @@ func (db *database) Store() store.DB {
 }
 
 func (db *database) Connections() connections.DB {
-	return &connectionDB{db: &DB{make(map[uuid.UUID]*websocket.Conn)}}
+	return &connectionDB{db: &DB{connections: make(map[uuid.UUID]*websocket.Conn)}}
+}
+
+func (db *database) Players() matchmaking.DB {
+	return &matchmakingDB{db: &DB{players: make(map[uuid.UUID]matchmaking.Player)}}
 }

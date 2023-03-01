@@ -33,6 +33,13 @@ func (connectionDB *connectionDB) Create(userID uuid.UUID, connection *websocket
 	defer connectionDB.lock.Unlock()
 
 	connectionDB.db.connections[userID] = connection
+
+	player, ok := connectionDB.db.players[userID]
+	if ok {
+		player.Conn = connection
+		connectionDB.db.players[userID] = player
+	}
+
 	return nil
 }
 
