@@ -25,6 +25,7 @@ import (
 	"ultimatedivision/console/emails"
 	"ultimatedivision/divisions"
 	"ultimatedivision/gameplay/matches"
+	"ultimatedivision/gameplay/matchmaking"
 	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/metrics"
@@ -90,6 +91,9 @@ type DB interface {
 
 	// Connections provides access to connections db.
 	Connections() connections.DB
+
+	// Players provides access to players db.
+	Players() matchmaking.DB
 
 	// CurrencyWaitList provides access to currencywaitlist db.
 	CurrencyWaitList() currencywaitlist.DB
@@ -304,6 +308,11 @@ type Peer struct {
 		Service *connections.Service
 	}
 
+	// Matchmaking web server with web UI.
+	Matchmaking struct {
+		Service *matchmaking.Service
+	}
+
 	// Console web server with web UI.
 	Console struct {
 		Listener     net.Listener
@@ -361,6 +370,10 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 
 	{ // connections setup.
 		peer.Connections.Service = connections.NewService(peer.Database.Connections())
+	}
+
+	{ // matchmaking setup.
+		peer.Matchmaking.Service = matchmaking.NewService(peer.Database.Players())
 	}
 
 	{ // admins setup.

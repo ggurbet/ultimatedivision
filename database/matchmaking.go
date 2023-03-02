@@ -51,12 +51,12 @@ func (matchmakingDB *matchmakingDB) List() map[uuid.UUID]matchmaking.Player {
 
 // Get gets player by user id.
 func (matchmakingDB *matchmakingDB) Get(userID uuid.UUID) (matchmaking.Player, error) {
-	connection, ok := matchmakingDB.db.players[userID]
+	player, ok := matchmakingDB.db.players[userID]
 	if !ok {
-		return matchmaking.Player{}, matchmaking.ErrNoPlayer.New("no connection by user")
+		return matchmaking.Player{}, matchmaking.ErrNoPlayer.New("no player by user")
 	}
 
-	return connection, nil
+	return player, nil
 }
 
 // Delete deletes player by user id.
@@ -69,7 +69,7 @@ func (matchmakingDB *matchmakingDB) Delete(userID uuid.UUID) error {
 	matchmakingDB.lock.Lock()
 	defer matchmakingDB.lock.Unlock()
 
-	delete(matchmakingDB.db.connections, userID)
+	delete(matchmakingDB.db.players, userID)
 
 	return nil
 }

@@ -53,7 +53,7 @@ func (controller *Connections) Connect(w http.ResponseWriter, r *http.Request) {
 
 	claims, err := auth.GetClaims(ctx)
 	if err != nil {
-		controller.serveError(w, http.StatusUnauthorized, ErrUsers.Wrap(err))
+		controller.serveError(w, http.StatusUnauthorized, ErrConnections.Wrap(err))
 		return
 	}
 
@@ -96,6 +96,6 @@ func (controller *Connections) serveError(w http.ResponseWriter, status int, err
 	response.Error = err.Error()
 
 	if err = json.NewEncoder(w).Encode(response); err != nil {
-		controller.log.Error("failed to write json error response", ErrUsers.Wrap(err))
+		controller.log.Error("failed to write json error response", ErrConnections.Wrap(err))
 	}
 }
