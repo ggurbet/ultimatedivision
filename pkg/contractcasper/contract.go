@@ -41,10 +41,16 @@ type (
 	Effect struct {
 		Transforms []Transform `json:"transforms"`
 	}
-	// Transform describes.
+	// Transform describes transform data.
 	Transform struct {
-		Key       string      `json:"key"`
-		Transform interface{} `json:"transform"`
+		Key       string                      `json:"key"`
+		Transform map[string]map[string][]Map `json:"transform"`
+	}
+
+	// Map describes struct with keys and values.
+	Map struct {
+		Key   string `json:"key"`
+		Value string `json:"value"`
 	}
 )
 

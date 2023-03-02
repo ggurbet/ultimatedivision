@@ -24,9 +24,9 @@ func TestEventParsing(t *testing.T) {
 	expectedUserWalletAddress := "daa2b596e0a496b04933e241e0567f2bcbecc829aa57d88cab096c28fd07dee2"
 
 	t.Run("GetEventType", func(t *testing.T) {
-		actualEventTyte, err := eventData.GetEventType()
+		actualEventType, err := eventData.GetEventType()
 		require.NoError(t, err)
-		require.Equal(t, expectedEventTyte, actualEventTyte)
+		require.Equal(t, expectedEventTyte, actualEventType)
 	})
 
 	t.Run("GetTokenContractAddress", func(t *testing.T) {

@@ -100,6 +100,8 @@ const (
 	WriteCLValueKey string = "WriteCLValue"
 	// BytesKey defines that WriteCLValue key is bytes. This key stores data of the transforming event.
 	BytesKey string = "bytes"
+	// Parsed defines that parsed key is bytes. This key stores data of the token id and wallet address.
+	Parsed string = "parsed"
 )
 
 // NFTCreateContract describes the meaning of the contract.
@@ -126,12 +128,11 @@ type NFTCreateCasperContract struct {
 	ChainID                           int              `json:"chainId"`
 }
 
-const (
-	// EventTypeIn defines that event type is 0. That is, this event arrived after calling the bridge in method in our contract.
-	EventTypeIn EventType = 0
-	// EventTypeOut defines that event type is 1. That is, this event arrived after calling the bridge out method in our contract.
-	EventTypeOut EventType = 1
-)
+// MintData describes the meaning of the Mint data from node.
+type MintData struct {
+	TokenID       int64  `json:"tokenId"`
+	WalletAddress string `json:"walletAddress"`
+}
 
 // EventType Type defines list of possible event type for our connector.
 type EventType int

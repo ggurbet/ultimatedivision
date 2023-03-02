@@ -6,8 +6,6 @@ package waitlist
 import (
 	"bufio"
 	"context"
-	"encoding/binary"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -27,7 +25,6 @@ import (
 	"ultimatedivision/cards/nfts"
 	"ultimatedivision/internal/remotefilestorage/storj"
 	contract "ultimatedivision/pkg/contractcasper"
-	"ultimatedivision/pkg/eventparsing"
 	"ultimatedivision/pkg/imageprocessing"
 	"ultimatedivision/users"
 )
@@ -41,7 +38,6 @@ var ErrWaitlist = errs.Class("waitlist service error")
 type Service struct {
 	config   Config
 	waitList DB
-	casper   contract.Casper
 	cards    *cards.Service
 	avatars  *avatars.Service
 	users    *users.Service
@@ -145,8 +141,6 @@ func (service *Service) Create(ctx context.Context, createNFT CreateNFT) (Transa
 			return transaction, ErrWaitlist.Wrap(err)
 		}
 	}
-
-	fmt.Println("las token - ", lastTokenID)
 
 	nextTokenID := lastTokenID + 1
 
@@ -262,12 +256,12 @@ func (service *Service) Delete(ctx context.Context, tokenIDs []int64) error {
 	return ErrWaitlist.Wrap(service.waitList.Delete(ctx, tokenIDs))
 }
 
-// GetEvents is real time events streaming from blockchain.
-func (service *Service) GetEvents(ctx context.Context) (EventVariant, error) {
+// GetNodeEvents is real time events streaming from blockchain.
+func (service *Service) GetNodeEvents(ctx context.Context) (MintData, error) {
 	var body io.Reader
 	req, err := http.NewRequest(http.MethodGet, service.config.EventNodeAddress, body)
 	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
+		return MintData{}, ErrWaitlist.Wrap(err)
 	}
 
 	resp, err := service.events.Do(req)
@@ -275,14 +269,14 @@ func (service *Service) GetEvents(ctx context.Context) (EventVariant, error) {
 		defer func() {
 			err = errs.Combine(err, resp.Body.Close())
 		}()
-		return EventVariant{}, ErrWaitlist.Wrap(err)
+		return MintData{}, ErrWaitlist.Wrap(err)
 	}
 
 	for {
 		reader := bufio.NewReader(resp.Body)
 		rawBody, err := reader.ReadBytes('\n')
 		if err != nil {
-			return EventVariant{}, ErrWaitlist.Wrap(err)
+			return MintData{}, ErrWaitlist.Wrap(err)
 		}
 
 		rawBody = []byte(strings.Replace(string(rawBody), "data:", "", 1))
@@ -294,162 +288,43 @@ func (service *Service) GetEvents(ctx context.Context) (EventVariant, error) {
 			continue
 		}
 
+		var tokenID int64
+		var walletAddress string
 		for _, transform := range transforms {
-			if transform.Key == service.config.BridgeInEventHash {
-				eventFunds, err := service.parseEventFromTransform(event, transform)
-				if err != nil {
-					return eventFunds, ErrWaitlist.Wrap(err)
+			for _, i2 := range transform.Transform[WriteCLValueKey][Parsed] {
+				switch i2.Key {
+				case "token_id":
+					tokenID, err = strconv.ParseInt(i2.Value, 10, 0)
+					if err != nil {
+						return MintData{}, ErrWaitlist.New("could not convert token_id from string to int64")
+					}
+				case "recipient":
+					walletAddress = strings.ReplaceAll(i2.Value, "Key::Account(", "")
+					walletAddress = strings.ReplaceAll(walletAddress, ")", "")
+				default:
+					continue
 				}
 			}
 		}
-	}
-}
 
-// parseEventFromTransform parse all needed info from transform.
-func (service *Service) parseEventFromTransform(event contract.Event, transform contract.Transform) (EventVariant, error) {
-	transformMap, ok := transform.Transform.(map[string]interface{})
-	if !ok {
-		return EventVariant{}, ErrWaitlist.New("couldn't parse map to transform")
-	}
-
-	writeCLValue, ok := transformMap[WriteCLValueKey].(map[string]interface{})
-	if !ok {
-		return EventVariant{}, ErrWaitlist.New("couldn't parse map to transform map")
-	}
-
-	bytes, ok := writeCLValue[BytesKey].(string)
-	if !ok {
-		return EventVariant{}, ErrWaitlist.New("couldn't parse string to bytes key")
-	}
-
-	eventData := eventparsing.EventData{
-		Bytes: bytes,
-	}
-
-	eventType, err := eventData.GetEventType()
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	tokenContractAddress, err := hex.DecodeString(eventData.GetTokenContractAddress())
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	chainName, err := eventData.GetChainName()
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	chainAddress, err := eventData.GetChainAddress()
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	amount, err := eventData.GetAmount()
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-	amountStr := strconv.Itoa(amount)
-
-	userWalletAddress, err := hex.DecodeString(eventData.GetUserWalletAddress())
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	hash, err := hex.DecodeString(event.DeployProcessed.DeployHash)
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	sender, err := hex.DecodeString(event.DeployProcessed.Account)
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	blockNumber, err := service.casper.GetBlockNumberByHash(event.DeployProcessed.BlockHash)
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	transactionInfo := TransactionInfo{
-		Hash:        hash,
-		BlockNumber: uint64(blockNumber),
-		Sender:      sender,
-	}
-
-	var eventFunds EventVariant
-	switch eventType {
-	case EventTypeIn.Int():
-		eventFunds = EventVariant{
-			Type: EventType(eventType),
-			EventFundsIn: EventFundsIn{
-				From: userWalletAddress,
-				To: Address{
-					NetworkName: chainName,
-					Address:     chainAddress,
-				},
-				Amount: amountStr,
-				Token:  tokenContractAddress,
-				Tx:     transactionInfo,
-			},
+		if tokenID != 0 && walletAddress != "" {
+			return MintData{
+				TokenID:       tokenID,
+				WalletAddress: walletAddress,
+			}, ErrWaitlist.Wrap(err)
 		}
-	case EventTypeOut.Int():
-		eventFunds = EventVariant{
-			Type: EventType(eventType),
-			EventFundsOut: EventFundsOut{
-				From: Address{
-					NetworkName: chainName,
-					Address:     chainAddress,
-				},
-				To:     userWalletAddress,
-				Amount: amountStr,
-				Token:  tokenContractAddress,
-				Tx:     transactionInfo,
-			},
-		}
-	default:
-		return EventVariant{}, ErrWaitlist.New("invalid event type")
 	}
-
-	tokenIn := hex.EncodeToString(eventFunds.EventFundsIn.Token)
-	eventFunds.EventFundsIn.Token, err = hex.DecodeString(eventparsing.TagHash.String() + tokenIn)
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	from := hex.EncodeToString(eventFunds.EventFundsIn.From)
-	eventFunds.EventFundsIn.From, err = hex.DecodeString(eventparsing.TagAccount.String() + from)
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	tokenOut := hex.EncodeToString(eventFunds.EventFundsOut.Token)
-	eventFunds.EventFundsOut.Token, err = hex.DecodeString(eventparsing.TagHash.String() + tokenOut)
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	to := hex.EncodeToString(eventFunds.EventFundsOut.To)
-	eventFunds.EventFundsOut.To, err = hex.DecodeString(eventparsing.TagAccount.String() + to)
-	if err != nil {
-		return EventVariant{}, ErrWaitlist.Wrap(err)
-	}
-
-	return eventFunds, nil
 }
 
 // RunCasperCheckMintEvent runs a task to check and create the casper nft assignment.
 func (service *Service) RunCasperCheckMintEvent(ctx context.Context) (err error) {
-	event, err := service.GetEvents(ctx)
+	event, err := service.GetNodeEvents(ctx)
 	if err != nil {
 		return err
 	}
 
-	tokenID := binary.BigEndian.Uint64(event.EventFundsIn.Token)
-
-	if event.EventFundsOut.From.Address == "" {
-		nftWaitList, err := service.GetByTokenID(ctx, int64(tokenID))
+	if event.WalletAddress == "" {
+		nftWaitList, err := service.GetByTokenID(ctx, event.TokenID)
 		if err != nil {
 			return ChoreError.Wrap(err)
 		}
@@ -458,7 +333,7 @@ func (service *Service) RunCasperCheckMintEvent(ctx context.Context) (err error)
 		nft := nfts.NFT{
 			CardID:        nftWaitList.CardID,
 			Chain:         evmsignature.ChainEthereum,
-			TokenID:       int64(tokenID),
+			TokenID:       event.TokenID,
 			WalletAddress: toAddress,
 		}
 
