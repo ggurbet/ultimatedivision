@@ -373,7 +373,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 	}
 
 	{ // matchmaking setup.
-		peer.Matchmaking.Service = matchmaking.NewService(peer.Database.Players())
+		peer.Matchmaking.Service = matchmaking.NewService(peer.Database.Players(), peer.Connections.Service)
 	}
 
 	{ // admins setup.
@@ -606,6 +606,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Metric.Service,
 			peer.CurrencyWaitList.Service,
 			peer.Connections.Service,
+			peer.Matchmaking.Service,
 		)
 	}
 
@@ -626,9 +627,10 @@ func (peer *Peer) Run(ctx context.Context) error {
 	group.Go(func() error {
 		return ignoreCancel(peer.Marketplace.ExpirationLotChore.Run(ctx))
 	})
-	group.Go(func() error {
-		return ignoreCancel(peer.Queue.PlaceChore.Run(ctx))
-	})
+	// TODO: now use a new service - matchmaking for the game
+	// group.Go(func() error {
+	//	return ignoreCancel(peer.Queue.PlaceChore.Run(ctx))
+	// }).
 	group.Go(func() error {
 		return ignoreCancel(peer.Seasons.ExpirationSeasons.Run(ctx))
 	})

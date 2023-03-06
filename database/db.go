@@ -72,10 +72,14 @@ func NewHub() *Hub {
 	}
 }
 
-// DB entity describes hub of websocket connections and players.
-type DB struct {
+// DBConnections entity describes hub of websocket connections.
+type DBConnections struct {
 	connections map[uuid.UUID]*websocket.Conn
-	players     map[uuid.UUID]matchmaking.Player
+}
+
+// DBPlayers entity describes hub of players.
+type DBPlayers struct {
+	players map[uuid.UUID]matchmaking.Player
 }
 
 // CreateSchema create schema for all tables and databases.
@@ -415,9 +419,9 @@ func (db *database) Store() store.DB {
 }
 
 func (db *database) Connections() connections.DB {
-	return &connectionDB{db: &DB{connections: make(map[uuid.UUID]*websocket.Conn)}}
+	return &connectionDB{db: &DBConnections{connections: make(map[uuid.UUID]*websocket.Conn)}}
 }
 
 func (db *database) Players() matchmaking.DB {
-	return &matchmakingDB{db: &DB{players: make(map[uuid.UUID]matchmaking.Player)}}
+	return &matchmakingDB{db: &DBPlayers{players: make(map[uuid.UUID]matchmaking.Player)}}
 }

@@ -21,6 +21,7 @@ import (
 	"ultimatedivision/clubs"
 	"ultimatedivision/console/connections"
 	"ultimatedivision/console/consoleserver/controllers"
+	"ultimatedivision/gameplay/matchmaking"
 	"ultimatedivision/gameplay/queue"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/internal/metrics"
@@ -75,7 +76,7 @@ type Server struct {
 func NewServer(config Config, log logger.Logger, listener net.Listener, cards *cards.Service, lootBoxes *lootboxes.Service,
 	marketplace *marketplace.Service, bids *bids.Service, clubs *clubs.Service, userAuth *userauth.Service, users *users.Service,
 	queue *queue.Service, seasons *seasons.Service, waitList *waitlist.Service, store *store.Service, metric *metrics.Metric,
-	currencyWaitList *currencywaitlist.Service, connections *connections.Service) *Server {
+	currencyWaitList *currencywaitlist.Service, connections *connections.Service, matchmaking *matchmaking.Service) *Server {
 	server := &Server{
 		log:         log,
 		config:      config,
@@ -94,12 +95,14 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	lootBoxesController := controllers.NewLootBoxes(log, lootBoxes)
 	marketplaceController := controllers.NewMarketplace(log, marketplace)
 	bidsController := controllers.NewBids(log, bids)
-	queueController := controllers.NewQueue(log, queue)
+	// TODO: now use a new service - matchmaking for the game
+	// queueController := controllers.NewQueue(log, queue, connections).
 	seasonsController := controllers.NewSeasons(log, seasons)
 	waitListController := controllers.NewWaitList(log, waitList)
 	storeController := controllers.NewStore(log, store)
 	contractCasperController := controllers.NewContractCasper(log, currencyWaitList)
 	connectionController := controllers.NewConnections(log, connections)
+	matchmakingController := controllers.NewMatchmaking(log, matchmaking)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/register", authController.RegisterTemplateHandler).Methods(http.MethodGet)
@@ -189,7 +192,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 
 	queueRouter := apiRouter.PathPrefix("/queue").Subrouter()
 	queueRouter.Use(server.withAuth)
-	queueRouter.HandleFunc("", queueController.Create).Methods(http.MethodGet)
+	queueRouter.HandleFunc("", matchmakingController.Create).Methods(http.MethodGet)
 
 	seasonsRouter := apiRouter.PathPrefix("/seasons").Subrouter()
 	seasonsRouter.Use(server.withAuth)

@@ -17,7 +17,7 @@ var ErrNoPlayer = errs.Class("player does not exist")
 // architecture: DB
 type DB interface {
 	// Create creates new player by user id.
-	Create(connection Player) error
+	Create(player Player) error
 	// List returns all players.
 	List() map[uuid.UUID]Player
 	// Get gets player by user id.
@@ -32,4 +32,10 @@ type Player struct {
 	SquadID uuid.UUID       `json:"squadId"`
 	Conn    *websocket.Conn `json:"conn"`
 	Waiting bool            `json:"waiting"`
+}
+
+// Match describes match entity.
+type Match struct {
+	Player1 *Player
+	Player2 *Player
 }

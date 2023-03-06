@@ -23,7 +23,7 @@ var ErrMatchmaking = errs.Class("matchmaking db error")
 // architecture: Database
 type matchmakingDB struct {
 	lock sync.Mutex
-	db   *DB
+	db   *DBPlayers
 }
 
 // Create creates new player by user id.
@@ -31,11 +31,6 @@ func (matchmakingDB *matchmakingDB) Create(player matchmaking.Player) error {
 	matchmakingDB.lock.Lock()
 	defer matchmakingDB.lock.Unlock()
 
-	conn, ok := matchmakingDB.db.connections[player.UserID]
-	if !ok {
-		return matchmaking.ErrNoPlayer.New("no connection by user")
-	}
-	player.Conn = conn
 	matchmakingDB.db.players[player.UserID] = player
 	return nil
 }
