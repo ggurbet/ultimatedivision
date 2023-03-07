@@ -6,6 +6,7 @@ package matchmaking
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
@@ -70,7 +71,11 @@ func (service *Service) Create(userID uuid.UUID) error {
 			return ErrMatchmaking.Wrap(err)
 		}
 
-		if err = conn.WriteJSON("you added"); err != nil {
+		resp := queue.Response{
+			Status:  http.StatusOK,
+			Message: "you added",
+		}
+		if err = conn.WriteJSON(resp); err != nil {
 			return ErrMatchmaking.Wrap(err)
 		}
 
@@ -81,8 +86,6 @@ func (service *Service) Create(userID uuid.UUID) error {
 
 		fmt.Println(match)
 	}
-
-	fmt.Println(service.players.List())
 
 	return nil
 }
@@ -135,10 +138,14 @@ func (service *Service) MatchPlayer(player *Player) (*Match, error) {
 		Player2: other,
 	}
 
-	if err := match.Player1.Conn.WriteJSON("do you confirm play?"); err != nil {
+	resp := queue.Response{
+		Status:  http.StatusOK,
+		Message: "do you confirm play?",
+	}
+	if err := match.Player1.Conn.WriteJSON(resp); err != nil {
 		return nil, ErrMatchmaking.Wrap(err)
 	}
-	if err := match.Player2.Conn.WriteJSON("do you confirm play?"); err != nil {
+	if err := match.Player2.Conn.WriteJSON(resp); err != nil {
 		return nil, ErrMatchmaking.Wrap(err)
 	}
 
@@ -153,23 +160,25 @@ func (service *Service) MatchPlayer(player *Player) (*Match, error) {
 	if reqPlayer1.Action == queue.ActionConfirm && reqPlayer2.Action == queue.ActionConfirm {
 		player.Waiting = false
 		other.Waiting = false
+		resp.Message = match
 
-		if err := match.Player1.Conn.WriteJSON(match); err != nil {
+		if err := match.Player1.Conn.WriteJSON(resp); err != nil {
 			return nil, ErrMatchmaking.Wrap(err)
 		}
-		if err := match.Player2.Conn.WriteJSON(match); err != nil {
+		if err := match.Player2.Conn.WriteJSON(resp); err != nil {
 			return nil, ErrMatchmaking.Wrap(err)
 		}
 	}
 
+	resp.Message = "you are still in search"
 	if reqPlayer1.Action == queue.ActionReject {
-		if err := match.Player1.Conn.WriteJSON("you are still in search"); err != nil {
+		if err := match.Player1.Conn.WriteJSON(resp); err != nil {
 			return nil, ErrMatchmaking.Wrap(err)
 		}
 	}
 
 	if reqPlayer2.Action == queue.ActionReject {
-		if err := match.Player2.Conn.WriteJSON("you are still in search"); err != nil {
+		if err := match.Player2.Conn.WriteJSON(resp); err != nil {
 			return nil, ErrMatchmaking.Wrap(err)
 		}
 	}
