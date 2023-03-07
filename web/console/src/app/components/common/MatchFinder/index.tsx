@@ -8,12 +8,12 @@ import { useHistory } from 'react-router-dom';
 import { AutoCloseTimer } from './AutoCloseTimer';
 import { Timer } from './Timer';
 
-import { QueueClient } from '@/api/queue';
+import { WebSocketClient } from '@/api/websockets';
 import { RouteConfig } from '@/app/routes';
 import { RootState } from '@/app/store';
 import { getMatchScore } from '@/app/store/actions/mathes';
 import { startSearchingMatch } from '@/app/store/actions/clubs';
-import { getCurrentQueueClient, onOpenConnectionSendAction, queueSendAction } from '@/queue/service';
+import { getCurrentWebSocketClient, sendAction, setMatchQueue } from '@/webSockets/service';
 import { ToastNotifications } from '@/notifications/service';
 
 import './index.scss';
@@ -26,7 +26,7 @@ const MatchFinder: React.FC = () => {
         (state: RootState) => state.clubsReducer
     );
 
-    const [queueClient, setQueueClient] = useState<QueueClient | null>(null);
+    const [webSocketClient, setWebSocketClient] = useState<WebSocketClient | null>(null);
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -67,41 +67,45 @@ const MatchFinder: React.FC = () => {
     /** Sends confirm action. */
     const confirmMatch = () => {
         setIsMatchConfirmed(true);
-        queueSendAction('confirm', squad.id);
+        sendAction('confirm', squad.id);
     };
 
     /** Canceles confirmation game. */
     const cancelConfirmationGame = () => {
-        queueSendAction('reject', squad.id);
+        sendAction('reject', squad.id);
     };
 
     /** Canceles searching game and closes MatchFinder component. */
     const canselSearchingGame = () => {
-        onOpenConnectionSendAction('finishSearch', squad.id);
+        setMatchQueue();
+
+        sendAction('finishSearch', squad.id);
 
         /** Updates current queue client. */
-        const updatedClient = getCurrentQueueClient();
-        setQueueClient(updatedClient);
+        const updatedClient = getCurrentWebSocketClient();
+        setWebSocketClient(updatedClient);
 
         dispatch(startSearchingMatch(false));
     };
 
     /** Exposes start searching match logic. */
     const startSearchMatch = () => {
-        onOpenConnectionSendAction('startSearch', squad.id);
+        setMatchQueue();
 
-        /** Updates current queue client. */
-        const newclient = getCurrentQueueClient();
-        setQueueClient(newclient);
+        sendAction('startSearch', squad.id);
+
+        /** Updates current websocket client. */
+        const newclient = getCurrentWebSocketClient();
+        setWebSocketClient(newclient);
     };
 
     useEffect(() => {
         isSearchingMatch && startSearchMatch();
     }, [isSearchingMatch]);
 
-    /** Processes queue client event messages. */
-    if (queueClient) {
-        queueClient.ws.onmessage = ({ data }: MessageEvent) => {
+    /** Processes websocket client event messages. */
+    if (webSocketClient) {
+        webSocketClient.ws.onmessage = ({ data }: MessageEvent) => {
             const event = JSON.parse(data);
 
             switch (event.message) {
@@ -143,8 +147,8 @@ const MatchFinder: React.FC = () => {
         };
     }
 
-    if (queueClient) {
-        queueClient.ws.onerror = (event: Event) => {
+    if (webSocketClient) {
+        webSocketClient.ws.onerror = (event: Event) => {
             ToastNotifications.somethingWentsWrong();
         };
     }
@@ -154,7 +158,7 @@ const MatchFinder: React.FC = () => {
         let autoCancelConfirmGame: ReturnType<typeof setTimeout>;
         if (isMatchFound) {
             autoCancelConfirmGame = setTimeout(() => {
-                queueSendAction('reject', squad.id);
+                sendAction('reject', squad.id);
             }, getRandomTimeDelayForCancelGame(CANCEL_GAME_DELAY_MIN, CANCEL_GAME_DELAY_MAX));
         }
 

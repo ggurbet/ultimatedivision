@@ -3,15 +3,13 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import { CLPublicKey } from 'casper-js-sdk';
 import MetaMaskOnboarding from '@metamask/onboarding';
 
-import { QueueClient } from '@/api/queue';
+import { WebSocketClient } from '@/api/websockets';
 import { UDT_ABI } from '@/ethers';
 import { RootState } from '@/app/store';
 import { ServicePlugin } from '@/app/plugins/service';
-import { getCurrentQueueClient, queueActionAllowAddress, queueCasperActionAllowAddress } from '@/queue/service';
+import { actionAllowAddress, casperActionAllowAddress, getCurrentWebSocketClient } from '@/webSockets/service';
 import { setCurrentUser } from '@/app/store/actions/users';
 import WalletService from '@/wallet/service';
 import { walletTypes } from '@/wallet';
@@ -24,7 +22,7 @@ import './index.scss';
 export const MatchScore: React.FC = () => {
     const dispatch = useDispatch();
 
-    const [queueClient, setQueueClient] = useState<QueueClient | null>(null);
+    const [webSocketClient, setWebSocketClient] = useState<WebSocketClient | null>(null);
 
     const onboarding = useMemo(() => new MetaMaskOnboarding(), []);
 
@@ -68,13 +66,13 @@ export const MatchScore: React.FC = () => {
 
                 const wallet = await service.getWallet();
 
-                const currentQueueClient = getCurrentQueueClient();
+                const currentQueueClient = getCurrentWebSocketClient();
 
                 const nonce = await service.getNonce(transaction.udtContract.address, UDT_ABI);
 
-                setQueueClient(currentQueueClient);
+                setWebSocketClient(currentQueueClient);
 
-                queueActionAllowAddress(wallet, nonce);
+                actionAllowAddress(wallet, nonce);
             } catch (error: any) {
                 ToastNotifications.metamaskError(error);
             }
@@ -86,13 +84,11 @@ export const MatchScore: React.FC = () => {
     /** Adds casper wallet address for earning reward. */
     const addCasperWallet = () => {
         try {
-            const ACCOUNT_HASH_PREFIX = 'account-hash-';
+            const currentWebSocketClient = getCurrentWebSocketClient();
 
-            const currentQueueClient = getCurrentQueueClient();
+            setWebSocketClient(currentWebSocketClient);
 
-            setQueueClient(currentQueueClient);
-
-            queueCasperActionAllowAddress(user.casperWalletHash, user.walletType, squad.id);
+            casperActionAllowAddress(user.casperWalletHash, user.walletType, squad.id);
         }
         catch (error: any) {
             ToastNotifications.couldNotAddCasperWallet();
@@ -127,8 +123,8 @@ export const MatchScore: React.FC = () => {
         mintingTokens.get(user.walletType)();
     };
 
-    if (queueClient) {
-        queueClient.ws.onmessage = async({ data }: MessageEvent) => {
+    if (webSocketClient) {
+        webSocketClient.ws.onmessage = async({ data }: MessageEvent) => {
             const messageEvent = JSON.parse(data);
 
             const walletService = new WalletService(user);

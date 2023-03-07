@@ -10,13 +10,13 @@ import Preloader from '@components/common/Preloader';
 
 import { Routes } from '@/app/routes';
 import { useLocalStorage } from './app/hooks/useLocalStorage';
-import { QueueService, getCurrentQueueClient, onOpenConnection, onOpenConnectionSendAction } from './queue/service';
-import { QueueClient } from './api/queue';
+import { getCurrentWebSocketClient, onOpenConnection } from '@/webSockets/service';
+import { WebSocketClient } from './api/websockets';
 
 /** initial App setup */
 export function App() {
     const [setLocalStorageItem, getLocalStorageItem] = useLocalStorage();
-    const [queueClient, setQueueClient] = useState<QueueClient | null>(null);
+    const [webSocketClient, setWebSocketClient] = useState<WebSocketClient | null>(null);
 
     /** Indicates if user is logined in app. */
     // @ts-ignore .
@@ -26,12 +26,12 @@ export function App() {
     const closeWebSocketConnection = (e: any) => {
         e.preventDefault();
 
-        /** Updates current queue client. */
-        const newclient = getCurrentQueueClient();
-        setQueueClient(newclient);
+        /** Updates current websocket client. */
+        const newclient = getCurrentWebSocketClient();
+        setWebSocketClient(newclient);
 
-        if (isLoggedIn && queueClient) {
-            queueClient.close();
+        if (isLoggedIn && webSocketClient) {
+            webSocketClient.close();
         }
     };
 
