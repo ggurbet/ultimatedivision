@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
@@ -66,6 +67,8 @@ func (service *Service) Create(userID uuid.UUID) error {
 		Waiting: true,
 	}
 
+	fmt.Println("action1 ------>>>", req.Action)
+
 	if req.Action == queue.ActionStartSearch {
 		if err = service.players.Create(player); err != nil {
 			return ErrMatchmaking.Wrap(err)
@@ -85,6 +88,7 @@ func (service *Service) Create(userID uuid.UUID) error {
 		}
 
 		fmt.Println(match)
+		fmt.Println("Players ------>>>>", service.players.List())
 	}
 
 	return nil
@@ -121,6 +125,19 @@ func (service *Service) MatchPlayer(player *Player) (*Match, error) {
 	players := service.players.List()
 	for _, p := range players {
 		if p.UserID != player.UserID && p.Waiting {
+			err := p.Conn.WriteJSON("ok")
+			if err != nil {
+				if strings.Contains(err.Error(), "use of closed network connection") {
+					err := service.players.Delete(p.UserID)
+					if err != nil {
+						return nil, ErrMatchmaking.Wrap(err)
+					}
+					continue
+				} else {
+					return nil, ErrMatchmaking.Wrap(err)
+				}
+			}
+
 			pl := p
 			other = &pl
 			break
@@ -150,12 +167,44 @@ func (service *Service) MatchPlayer(player *Player) (*Match, error) {
 	}
 
 	if err := match.Player1.Conn.ReadJSON(&reqPlayer1); err != nil {
+		if strings.Contains(err.Error(), "close 1001") {
+			resp.Message = "you left"
+			if err = match.Player2.Conn.WriteJSON(resp); err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+			err = service.players.Delete(match.Player1.UserID)
+			if err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+			err = service.players.Delete(match.Player2.UserID)
+			if err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+			return nil, nil
+		}
 		return nil, ErrMatchmaking.Wrap(err)
 	}
 
 	if err := match.Player2.Conn.ReadJSON(&reqPlayer2); err != nil {
+		if strings.Contains(err.Error(), "close 1001") {
+			resp.Message = "you left"
+			if err = match.Player1.Conn.WriteJSON(resp); err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+			err = service.players.Delete(match.Player1.UserID)
+			if err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+			err = service.players.Delete(match.Player2.UserID)
+			if err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+			return nil, nil
+		}
 		return nil, ErrMatchmaking.Wrap(err)
 	}
+
+	fmt.Println("Players ------>>>>", service.players.List())
 
 	if reqPlayer1.Action == queue.ActionConfirm && reqPlayer2.Action == queue.ActionConfirm {
 		player.Waiting = false
@@ -170,15 +219,22 @@ func (service *Service) MatchPlayer(player *Player) (*Match, error) {
 		}
 	}
 
-	resp.Message = "you are still in search"
-	if reqPlayer1.Action == queue.ActionReject {
+	resp.Message = "you left"
+	if reqPlayer1.Action == queue.ActionReject || reqPlayer2.Action == queue.ActionReject {
 		if err := match.Player1.Conn.WriteJSON(resp); err != nil {
 			return nil, ErrMatchmaking.Wrap(err)
 		}
-	}
 
-	if reqPlayer2.Action == queue.ActionReject {
 		if err := match.Player2.Conn.WriteJSON(resp); err != nil {
+			return nil, ErrMatchmaking.Wrap(err)
+		}
+
+		err := service.players.Delete(match.Player1.UserID)
+		if err != nil {
+			return nil, ErrMatchmaking.Wrap(err)
+		}
+		err = service.players.Delete(match.Player2.UserID)
+		if err != nil {
 			return nil, ErrMatchmaking.Wrap(err)
 		}
 	}
