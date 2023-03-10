@@ -41,6 +41,8 @@ type DB interface {
 	UpdateCurrentPriceLot(ctx context.Context, id uuid.UUID, currentPrice big.Int) error
 	// UpdateEndTimeLot updates end time of lot in the database.
 	UpdateEndTimeLot(ctx context.Context, id uuid.UUID, endTime time.Time) error
+	// Delete deletes lot in the database.
+	Delete(ctx context.Context, cardID uuid.UUID) error
 }
 
 // Lot describes lot entity.

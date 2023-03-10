@@ -120,6 +120,12 @@ func (service *Service) ListActiveLots(ctx context.Context, cursor pagination.Cu
 	return lotsPage, ErrMarketplace.Wrap(err)
 }
 
+// ListExpiredLots returns all expired lots form the database.
+func (service *Service) ListExpiredLots(ctx context.Context) ([]Lot, error) {
+	lots, err := service.marketplace.ListExpiredLot(ctx)
+	return lots, ErrMarketplace.Wrap(err)
+}
+
 // ListActiveLotsWithFilters returns active lots from DB, taking the necessary filters.
 func (service *Service) ListActiveLotsWithFilters(ctx context.Context, filters []cards.Filters, cursor pagination.Cursor) (Page, error) {
 	var lotsPage Page
@@ -283,4 +289,9 @@ func (service *Service) UpdateCurrentPriceLot(ctx context.Context, id uuid.UUID,
 // UpdateEndTimeLot updates end time of lot.
 func (service *Service) UpdateEndTimeLot(ctx context.Context, id uuid.UUID, endTime time.Time) error {
 	return ErrMarketplace.Wrap(service.marketplace.UpdateEndTimeLot(ctx, id, endTime))
+}
+
+// Delete deletes lot in the database.
+func (service *Service) Delete(ctx context.Context, cardID uuid.UUID) error {
+	return ErrMarketplace.Wrap(service.marketplace.Delete(ctx, cardID))
 }

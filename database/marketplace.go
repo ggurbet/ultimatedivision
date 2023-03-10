@@ -389,3 +389,20 @@ func (marketplaceDB *marketplaceDB) UpdateEndTimeLot(ctx context.Context, id uui
 
 	return ErrMarketplace.Wrap(err)
 }
+
+// Delete deletes lot in the database.
+func (marketplaceDB *marketplaceDB) Delete(ctx context.Context, cardID uuid.UUID) error {
+	query := "DELETE FROM lots WHERE card_id = $1"
+
+	result, err := marketplaceDB.conn.ExecContext(ctx, query, cardID)
+	if err != nil {
+		return ErrMarketplace.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return marketplace.ErrNoLot.New("")
+	}
+
+	return ErrMarketplace.Wrap(err)
+}

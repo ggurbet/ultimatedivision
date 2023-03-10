@@ -597,7 +597,7 @@ func (cardsDB *cardsDB) UpdateStatus(ctx context.Context, id uuid.UUID, status c
 	return ErrCard.Wrap(err)
 }
 
-// UpdateStatus updates type of card in the database.
+// UpdateType updates type of card in the database.
 func (cardsDB *cardsDB) UpdateType(ctx context.Context, id uuid.UUID, typeCard cards.Type) error {
 	result, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET type=$1 WHERE id=$2", typeCard, id)
 	if err != nil {

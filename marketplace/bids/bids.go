@@ -43,6 +43,11 @@ type Bid struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
+// Config defines configuration for bids.
+type Config struct {
+	ExpiredLotRenewalInterval time.Duration `json:"expiredLotRenewalInterval"`
+}
+
 // Compare compares two bids.
 func (b Bid) Compare(bidToCompare Bid) bool {
 	return b.ID == bidToCompare.ID && b.LotID == bidToCompare.LotID && b.UserID == bidToCompare.UserID &&

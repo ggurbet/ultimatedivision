@@ -43,7 +43,7 @@ type DB interface {
 	GetSquadCards(ctx context.Context, id uuid.UUID) ([]Card, error)
 	// UpdateStatus updates status card in the database.
 	UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error
-	// UpdateStatus updates type of card in the database.
+	// UpdateType updates type of card in the database.
 	UpdateType(ctx context.Context, id uuid.UUID, typeCard Type) error
 	// UpdateUserID updates user id card in the database.
 	UpdateUserID(ctx context.Context, id, userID uuid.UUID) error
