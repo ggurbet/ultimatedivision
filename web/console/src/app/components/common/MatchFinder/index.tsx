@@ -139,9 +139,9 @@ const MatchFinder: React.FC = () => {
                 dispatch(startSearchingMatch(false));
 
 
-                /** implements redirect to match page after DELAY time.  */
+                /** implements redirect to game page after DELAY time.  */
                 setTimeout(() => {
-                    history.push(RouteConfig.Match.path);
+                    history.push(RouteConfig.FootballGame.path);
                 }, DELAY);
             }
         };
