@@ -21,6 +21,10 @@
         background: #6facff;
     }
 
+    &__marketplace {
+        background: linear-gradient(180deg, #765989 0%, #444792 97.4%);
+    }
+
     &.scroll-unset {
         overflow-y: auto;
     }

@@ -33,23 +33,31 @@
     &__previous,
     &__previous-not-active {
         margin-right: auto;
+        color: #c3dcbb;
+        cursor: not-allowed;
+    }
+
+    &__next,
+    &__previous {
+        color: var(--highlight-color);
+        cursor: pointer;
+
+        svg path {
+            stroke: var(--highlight-color);
+        }
+    }
+
+    &__previous-not-active,
+    &__next-not-active {
+
+        svg path {
+            stroke: #c3dcbb;
+        }
     }
 
     &__next,
     &__next-not-active {
         margin-left: auto;
-    }
-
-    &__previous,
-    &__next {
-        color: #f5ff63;
-        cursor: pointer;
-    }
-
-    &__previous-not-active,
-    &__next-not-active {
-        color: #c3dcbb;
-        cursor: not-allowed;
     }
 
     &__pages {
@@ -76,8 +84,8 @@
         }
 
         &__item-active {
-            border: 1px solid #f5ff63;
-            color: #f5ff63;
+            border: 1px solid var(--highlight-color);
+            color: var(--highlight-color);
             border-radius: 50%;
         }
 

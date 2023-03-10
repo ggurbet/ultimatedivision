@@ -44,7 +44,7 @@
 
             &__active {
                 text-decoration: none;
-                color: #000;
+                color: var(--text-color);
 
                 &:hover {
                     text-decoration: none;
@@ -53,7 +53,7 @@
 
             .active {
                 text-decoration: none;
-                color: #f5ff63;
+                color: var(--highlight-color);
 
                 &:hover {
                     text-decoration: none;
@@ -89,6 +89,10 @@
             justify-content: space-between;
             align-items: center;
 
+            svg rect {
+                fill: var(--highlight-color);
+            }
+
             &__logo {
                 width: 130px;
                 text-decoration: none;
@@ -103,7 +107,7 @@
                 color: white;
 
                 &__first-part {
-                    color: #f5ff63;
+                    color: var(--highlight-color);
                 }
             }
 

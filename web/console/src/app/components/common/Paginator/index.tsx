@@ -6,10 +6,7 @@ import { useDispatch } from 'react-redux';
 
 import { PaginatorBlockPages } from '@components/common/Paginator/PaginatorBlockPages';
 
-import next from '@static/img/UltimateDivisionPaginator/next.svg';
-import notActiveNext from '@static/img/UltimateDivisionPaginator/not_active_next.svg';
-import notActivePrevious from '@static/img/UltimateDivisionPaginator/not_active_previous.svg';
-import previous from '@static/img/UltimateDivisionPaginator/previous.svg';
+import { ArrowNextIcon, ArrowPrevIcon } from '@/app/static/img/UltimateDivisionPaginator/arrows';
 
 import './index.scss';
 
@@ -193,11 +190,7 @@ export const Paginator: React.FC<{
             <div className="ultimatedivision-paginator__wrapper">
                 {isFirstPageSelected ?
                     <a className="ultimatedivision-paginator__previous-not-active">
-                        <img
-                            className="ultimatedivision-paginator__previous-not-active__arrow"
-                            src={notActivePrevious}
-                            alt="Previous page"
-                        />
+                        <ArrowPrevIcon/>
                         <p className="ultimatedivision-paginator__previous-not-active__title">
                             Previous page
                         </p>
@@ -207,11 +200,7 @@ export const Paginator: React.FC<{
                         className="ultimatedivision-paginator__previous"
                         onClick={() => onPageChange('previous page')}
                     >
-                        <img
-                            className="ultimatedivision-paginator__previous__arrow"
-                            src={previous}
-                            alt="Previous page"
-                        />
+                        <ArrowPrevIcon/>
                         <p className="ultimatedivision-paginator__previous__title">
                             Previous page
                         </p>
@@ -249,11 +238,7 @@ export const Paginator: React.FC<{
                         <p className="ultimatedivision-paginator__next__title">
                             Next page
                         </p>
-                        <img
-                            className="ultimatedivision-paginator__next__arrow"
-                            src={notActiveNext}
-                            alt="Next page"
-                        />
+                        <ArrowNextIcon/>
                     </a>
                     :
                     <a
@@ -263,11 +248,7 @@ export const Paginator: React.FC<{
                         <p className="ultimatedivision-paginator__next__title">
                             Next page
                         </p>
-                        <img
-                            className="ultimatedivision-paginator__next__arrow"
-                            src={next}
-                            alt="Next page"
-                        />
+                        <ArrowNextIcon/>
                     </a>
                 }
             </div>

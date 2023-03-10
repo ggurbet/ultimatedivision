@@ -24,7 +24,7 @@
         }
 
         &-value {
-            color: #f5ff63;
+            color: $defaultHighlightColor;
         }
     }
 
@@ -174,7 +174,7 @@
                 font-size: 12px;
                 line-height: 15px;
                 letter-spacing: 0.12em;
-                color: #f5ff63;
+                color: $defaultHighlightColor;
             }
         }
 

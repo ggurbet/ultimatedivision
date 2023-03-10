@@ -7,9 +7,9 @@ import { Context } from '@/app/types/filters';
 
 import { setScrollAble } from '@/app/internal/setScrollAble';
 
-import search from '@static/img/FilterField/search.svg';
+import { SearchIcon } from '@/app/static/img/FilterField/search';
+import { ArrowBackIcon } from '@/app/static/img/FilterField/arrowBack';
 import filterIcon from '@static/img/FieldPage/filter-icon.svg';
-import arrowLeftIcon from '@static/img/FilterField/arrow-left.svg'; ;
 
 import './index.scss';
 
@@ -36,7 +36,7 @@ export const FilterField: React.FC = ({ children }) => {
             <section className="filter-field">
                 <div className="filter-field__filters">
                     <div className="filter-field__list__item filter-field__list__item__search filter-field__list__item__mobile-search">
-                        <img src={search} alt="Filter Icon" className="filter-field__list__item__picture" />
+                        <SearchIcon/>
                         Search
                     </div>
 
@@ -51,7 +51,7 @@ export const FilterField: React.FC = ({ children }) => {
                             <div className="filter-field__mobile__top-side">
                                 <span onClick={() => closeCardsFilter()}
                                     className="filter-field__mobile__top-side__arrow-left">
-                                    <img src={arrowLeftIcon} alt="arrow-left" />
+                                    <ArrowBackIcon/>
                                 </span>
                                 <h2 className="filter-field__mobile__top-side__title">
                                     Filter
@@ -64,7 +64,7 @@ export const FilterField: React.FC = ({ children }) => {
                     </div> :
                     <ul className="filter-field__list">
                         <li className="filter-field__list__item filter-field__list__item__search">
-                            <img src={search} alt="Filter Icon" className="filter-field__list__item__picture" />
+                            <SearchIcon/>
                             Search
                         </li>
                         {children}

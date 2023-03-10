@@ -22,14 +22,14 @@ export const FilterFieldStatsArea: React.FC<FilterFieldStatsAreaProps> = ({
     </span>
     <input
         value={minValue}
-        placeholder="Min Rating"
+        placeholder="Min"
         className="filter-item__dropdown-active__stats__area"
         type="text"
         onChange={changeMinValue}
     />
     <input
         value={maxValue}
-        placeholder="Max Rating"
+        placeholder="Max"
         className="filter-item__dropdown-active__stats__area"
         type="text"
         onChange={changeMaxValue}

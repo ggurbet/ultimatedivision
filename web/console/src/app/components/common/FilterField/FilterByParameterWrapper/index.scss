@@ -8,16 +8,17 @@
         display: flex;
         flex-direction: row;
         justify-content: center;
+        align-items: center;
         list-style: none;
         cursor: pointer;
     }
 
     &__title {
-        margin-right: 14px;
+        margin-right: 16px;
         transition: background-color 0.3s;
         text-transform: uppercase;
         text-align: center;
-        color: black;
+        color: var(--filter-text-color);
         font-family: "Orbitron", sans-serif;
         font-weight: 700;
         font-size: 16px;
@@ -27,9 +28,19 @@
     }
 
     &__picture {
-        margin-left: 5px;
-        vertical-align: middle;
+        width: 12px;
         transition: transform 0.5s;
+
+        svg path {
+            stroke: var(--use-filter-color);
+        }
+
+        &__visible {
+
+            svg path {
+                stroke: var(--highlight-color);
+            }
+        }
     }
 
     &__dropdown-active {
@@ -41,7 +52,7 @@
         height: auto;
         margin: 10px 0;
         padding: 22px;
-        border: 2px solid #f5ff63;
+        border: 2px solid var(--highlight-color);
         border-radius: 21px;
         box-shadow: 0 10px 14px rgba(0, 23, 58, 0.14);
         background: rgba(255, 255, 255, 0.19);
@@ -49,12 +60,18 @@
 
         &__wrapper {
             width: 160px;
+
+            &--price {
+                display: flex;
+                justify-content: space-between;
+            }
         }
 
         &__price {
-            width: 47%;
+            width: 46%;
+            padding-bottom: 6px;
             border: none;
-            border-bottom: 2px solid #f5ff63;
+            border-bottom: 2px solid var(--highlight-color);
             font-family: "Urbanist", sans-serif;
             font-style: normal;
             font-weight: 500;
@@ -63,8 +80,12 @@
             letter-spacing: 0.12em;
             text-transform: lowercase;
             text-shadow: 0 4px 22px rgba(25, 54, 133, 0.25);
-            color: rgba(38, 55, 63, 0.52);
+            color: var(--input-text-color);
             background: transparent;
+
+            &::placeholder {
+                color: var(--input-text-color);
+            }
 
             &:focus {
                 outline: none;
@@ -78,7 +99,7 @@
             font-size: 14px;
             line-height: 17px;
             letter-spacing: 0.12em;
-            color: #26373f;
+            color: var(--filter-text-color);
             text-shadow: 0 4px 22px rgba(25, 54, 133, 0.25);
             text-transform: capitalize;
         }
@@ -92,11 +113,11 @@
             height: 30px;
 
             & input:checked + .filter-item__dropdown-active__slider {
-                background-color: #f5ff63;
+                background-color: var(--highlight-color);
             }
 
             & input:focus + .filter-item__dropdown-active__slider {
-                background-color: #f5ff63;
+                background-color: var(--highlight-color);
             }
 
             & input:checked + .filter-item__dropdown-active__slider:before {
@@ -151,7 +172,7 @@
             flex-direction: row;
             justify-content: center;
             align-items: center;
-            background: #f5ff63;
+            background: var(--highlight-color);
             box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
             border-radius: 5px;
             font-family: "Orbitron", sans-serif;
@@ -178,7 +199,7 @@
                 justify-content: center;
                 align-items: center;
                 gap: 10px;
-                background: #f5ff63;
+                background: var(--highlight-color);
                 box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
                 border-radius: 5px;
                 font-family: "Orbitron", sans-serif;
@@ -215,9 +236,9 @@
                 line-height: 18px;
                 text-align: center;
                 letter-spacing: 0.12em;
-                color: #26373f;
+                color: var(--filter-text-color);
                 background: transparent;
-                background-image: url("@static/img/FilterField/clear.svg");
+                background-image: var(--clear);
                 background-repeat: no-repeat;
                 background-size: contain;
                 cursor: pointer;
@@ -232,8 +253,9 @@
             &__area {
                 width: 45%;
                 margin: 6px 0 0 5px;
+                padding-bottom: 6px;
                 border: none;
-                border-bottom: 2px solid #f5ff63;
+                border-bottom: 2px solid var(--highlight-color);
                 font-style: normal;
                 font-family: "Urbanist", sans-serif;
                 font-weight: 500;
@@ -241,8 +263,12 @@
                 line-height: 17px;
                 letter-spacing: 0.12em;
                 text-transform: lowercase;
-                color: rgba(38, 55, 63, 0.52);
+                color: var(--input-text-color);
                 background: transparent;
+
+                &::placeholder {
+                    color: var(--input-text-color);
+                }
 
                 &:focus {
                     outline: none;
@@ -258,7 +284,7 @@
                 font-size: 14px;
                 line-height: 17px;
                 letter-spacing: 0.12em;
-                color: #26373f;
+                color: var(--filter-text-color);
                 text-shadow: 0 4px 22px rgba(25, 54, 133, 0.25);
             }
         }
@@ -343,7 +369,7 @@
             padding: 20px 18px;
             width: 100%;
             margin-bottom: 16px;
-            border: 2px solid #f5ff63;
+            border: 2px solid var(--highlight-color);
             border-radius: 12px;
             box-shadow: 0 6px 14px rgba(0, 23, 58, 0.14);
             backdrop-filter: blur(22px);

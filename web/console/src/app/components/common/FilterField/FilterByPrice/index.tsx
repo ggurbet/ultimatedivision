@@ -68,7 +68,7 @@ export const FilterByPrice: React.FC = () => {
             isVisible={isVisible}
             title="Price"
         >
-            <div className="filter-item__dropdown-active__wrapper">
+            <div className="filter-item__dropdown-active__wrapper filter-item__dropdown-active__wrapper--price">
                 <input
                     placeholder="Min"
                     className="filter-item__dropdown-active__price"

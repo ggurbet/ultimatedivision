@@ -57,7 +57,7 @@ export class ComponentRoutes {
 /** Route config implementation */
 export class RouteConfig {
     public static FootballGame: ComponentRoutes = new ComponentRoutes('/game', FootballGame, true);
-    public static MarketPlace: ComponentRoutes = new ComponentRoutes('/marketplace', MarketPlace, true);
+    public static MarketPlace: ComponentRoutes = new ComponentRoutes('/marketplace', MarketPlace, true, 'page__marketplace');
     public static Lot: ComponentRoutes = new ComponentRoutes('/lot/:id', Lot, true);
     public static Card: ComponentRoutes = new ComponentRoutes('/card/:id', Card, false);
     public static Division: ComponentRoutes = new ComponentRoutes(

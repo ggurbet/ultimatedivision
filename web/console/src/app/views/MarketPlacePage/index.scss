@@ -4,15 +4,34 @@
 @import "@/index.scss";
 
 .marketplace {
-    background-color: $mainBackground;
     padding: 15px 0;
     position: relative;
+}
 
-    &__title {
-        color: white;
-        margin: 70px 0 50px 40px;
-        font-size: 48px;
-        font-weight: 100;
-        position: relative;
+@media (max-width: 1300px) {
+
+    .marketplace {
+        padding: 0 100px 40px;
+    }
+}
+
+@media (max-width: $desktopBreakPoint) {
+
+    .marketplace {
+        padding: 0 50px 40px;
+    }
+}
+
+@media (max-width: $tabletBreakPoint) {
+
+    .marketplace {
+        padding: 0 32px 30px;
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .marketplace {
+        padding: 0 16px 20px;
     }
 }

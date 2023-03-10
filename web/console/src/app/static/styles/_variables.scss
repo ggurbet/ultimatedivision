@@ -29,3 +29,27 @@ $matchFinderTimerBackground: #e9e9ff;
 $matchFinderTextColor: #33335a;
 $matchFinderMainLinearGradientColor: #5cff79;
 $matchFinderSecondLinearGradientColor: #3ccf56;
+
+/* filter, active elements */
+$defaultHighlightColor: #f5ff63;
+$marketplaceHighlightColor: #cbfb00;
+
+:root {
+    --highlight-color: #f5ff63;
+    --text-color: black;
+    --filter-text-color: #26373f;
+    --input-text-color: rgba(38, 55, 63, 0.52);
+    --filter-field-mobile-bg: #9fc2fb;
+    --use-filter-color: #131415;
+    --clear: url("@static/img/FilterField/clear.svg");
+}
+
+.page__marketplace {
+    --highlight-color: #cbfb00;
+    --text-color: white;
+    --filter-text-color: white;
+    --input-text-color: white;
+    --filter-field-mobile-bg: linear-gradient(180deg, #765989 0%, #444792 56.49%);
+    --use-filter-color: white;
+    --clear: url("@static/img/FilterField/marketplace_clear.svg");
+}

@@ -42,7 +42,6 @@ const MarketPlace: React.FC = () => {
 
     return (
         <section className="marketplace">
-            <h1 className="marketplace__title">MARKETPLACE</h1>
             <FilterField>
                 <FilterByVersion
                     cardsQueryParameters={lotsQueryParameters}

@@ -28,6 +28,7 @@ const Navbar: React.FC = () => {
     const navbarItems: Array<{ name: string; path: string }> = [
         { name: 'HOME', path: RouteConfig.Home.path },
         { name: 'STORE', path: RouteConfig.Store.path },
+        { name: 'MARKETPLACE', path: RouteConfig.MarketPlace.path },
         { name: 'CARDS', path: RouteConfig.Cards.path },
         { name: 'FIELD', path: RouteConfig.Field.path },
         { name: 'DIVISIONS', path: RouteConfig.Division.path },
