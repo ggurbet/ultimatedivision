@@ -213,6 +213,7 @@ func (service *Service) Generate(ctx context.Context, userID uuid.UUID, percenta
 		Handling:         generateSkill(goalkeeping),
 		Sweeping:         generateSkill(goalkeeping),
 		Throwing:         generateSkill(goalkeeping),
+		IsMinted:         NotMinted,
 	}
 
 	return card, nil
@@ -441,6 +442,11 @@ func (service *Service) GetCardsFromSquadCards(ctx context.Context, id uuid.UUID
 // UpdateStatus updates status of card in database.
 func (service *Service) UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error {
 	return ErrCards.Wrap(service.cards.UpdateStatus(ctx, id, status))
+}
+
+// UpdateMintedStatus updates minted status of card in database.
+func (service *Service) UpdateMintedStatus(ctx context.Context, id uuid.UUID, status int) error {
+	return ErrCards.Wrap(service.cards.UpdateMintedStatus(ctx, id, status))
 }
 
 // UpdateType updates type of card in the database.

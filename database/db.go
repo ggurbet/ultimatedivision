@@ -163,7 +163,8 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             diving            INTEGER                   NOT NULL,
             handling          INTEGER                   NOT NULL,
             sweeping          INTEGER                   NOT NULL,
-            throwing          INTEGER                   NOT NULL
+            throwing          INTEGER                   NOT NULL,
+            is_minted         INTEGER                   NOT NULL
         );
         CREATE TABLE IF NOT EXISTS avatars (
             card_id          BYTEA   PRIMARY KEY REFERENCES cards(id) ON DELETE CASCADE NOT NULL,

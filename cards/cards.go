@@ -43,6 +43,8 @@ type DB interface {
 	GetSquadCards(ctx context.Context, id uuid.UUID) ([]Card, error)
 	// UpdateStatus updates status card in the database.
 	UpdateStatus(ctx context.Context, id uuid.UUID, status Status) error
+	// UpdateMintedStatus updates minted status of card in database.
+	UpdateMintedStatus(ctx context.Context, id uuid.UUID, status int) error
 	// UpdateType updates type of card in the database.
 	UpdateType(ctx context.Context, id uuid.UUID, typeCard Type) error
 	// UpdateUserID updates user id card in the database.
@@ -112,6 +114,7 @@ type Card struct {
 	Handling         int          `json:"handling"`
 	Sweeping         int          `json:"sweeping"`
 	Throwing         int          `json:"throwing"`
+	IsMinted         int          `json:"isMinted"`
 }
 
 // Quality defines the list of possible card qualities.
@@ -159,6 +162,10 @@ const (
 	StatusActive Status = 0
 	// StatusSale indicates that the card is sold and can't used by the team.
 	StatusSale Status = 1
+	// NotMinted indicates that the card is not minted yet.
+	NotMinted int = 0
+	// Minted indicates that the card already minted.
+	Minted int = 1
 )
 
 // Type defines the list of possible card types.

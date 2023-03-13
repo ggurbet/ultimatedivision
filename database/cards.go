@@ -38,7 +38,7 @@ const (
 		aggression, vision, awareness, crosses, physique, acceleration, running_speed, reaction_speed, agility, stamina, strength, jumping, 
 		balance, technique, dribbling, ball_control, weak_foot, skill_moves, finesse, curve, volleys, short_passing, long_passing, forward_pass, 
 		offense, finishing_ability, shot_power, accuracy, distance, penalty, free_kicks, corners, heading_accuracy, defence, offside_trap, 
-		sliding, tackles, ball_focus, interceptions, vigilance, goalkeeping, reflexes, diving, handling, sweeping, throwing`
+		sliding, tackles, ball_focus, interceptions, vigilance, goalkeeping, reflexes, diving, handling, sweeping, throwing, is_minted`
 )
 
 // Create adds card in the data base.
@@ -49,7 +49,7 @@ func (cardsDB *cardsDB) Create(ctx context.Context, card cards.Card) error {
 		VALUES 
 			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25,
 			$26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49,
-			$50, $51, $52, $53, $54, $55, $56, $57, $58, $59)`
+			$50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $60)`
 
 	_, err := cardsDB.conn.ExecContext(ctx, query,
 		card.ID, card.PlayerName, card.Quality, card.Height, card.Weight,
@@ -59,7 +59,7 @@ func (cardsDB *cardsDB) Create(ctx context.Context, card cards.Card) error {
 		card.Finesse, card.Curve, card.Volleys, card.ShortPassing, card.LongPassing, card.ForwardPass, card.Offence, card.FinishingAbility,
 		card.ShotPower, card.Accuracy, card.Distance, card.Penalty, card.FreeKicks, card.Corners, card.HeadingAccuracy, card.Defence,
 		card.OffsideTrap, card.Sliding, card.Tackles, card.BallFocus, card.Interceptions, card.Vigilance, card.Goalkeeping, card.Reflexes,
-		card.Diving, card.Handling, card.Sweeping, card.Throwing,
+		card.Diving, card.Handling, card.Sweeping, card.Throwing, card.IsMinted,
 	)
 
 	return ErrCard.Wrap(err)
@@ -81,7 +81,7 @@ func (cardsDB *cardsDB) Get(ctx context.Context, id uuid.UUID) (cards.Card, erro
 		&card.BallControl, &card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing, &card.LongPassing,
 		&card.ForwardPass, &card.Offence, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance, &card.Penalty, &card.FreeKicks,
 		&card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles, &card.BallFocus, &card.Interceptions,
-		&card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing,
+		&card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing, &card.IsMinted,
 	)
 	if errors.Is(err, sql.ErrNoRows) {
 		return card, cards.ErrNoCard.Wrap(err)
@@ -106,7 +106,7 @@ func (cardsDB *cardsDB) GetByPlayerName(ctx context.Context, playerName string) 
 		&card.BallControl, &card.WeakFoot, &card.SkillMoves, &card.Finesse, &card.Curve, &card.Volleys, &card.ShortPassing, &card.LongPassing,
 		&card.ForwardPass, &card.Offence, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance, &card.Penalty, &card.FreeKicks,
 		&card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles, &card.BallFocus, &card.Interceptions,
-		&card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing,
+		&card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing, &card.IsMinted,
 	)
 	if errors.Is(err, sql.ErrNoRows) {
 		return card, cards.ErrNoCard.Wrap(err)
@@ -146,7 +146,7 @@ func (cardsDB *cardsDB) List(ctx context.Context, cursor pagination.Cursor) (car
 			&card.LongPassing, &card.ForwardPass, &card.Offence, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance,
 			&card.Penalty, &card.FreeKicks, &card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles,
 			&card.BallFocus, &card.Interceptions, &card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping,
-			&card.Throwing,
+			&card.Throwing, &card.IsMinted,
 		); err != nil {
 			return cardsListPage, ErrCard.Wrap(err)
 		}
@@ -199,7 +199,7 @@ func (cardsDB *cardsDB) ListByUserID(ctx context.Context, id uuid.UUID, cursor p
 			&card.LongPassing, &card.ForwardPass, &card.Offence, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance,
 			&card.Penalty, &card.FreeKicks, &card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles,
 			&card.BallFocus, &card.Interceptions, &card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping,
-			&card.Throwing,
+			&card.Throwing, &card.IsMinted,
 		); err != nil {
 			return userCardsPage, ErrCard.Wrap(err)
 		}
@@ -242,7 +242,7 @@ func (cardsDB *cardsDB) ListByTypeUnordered(ctx context.Context) ([]cards.Card, 
 			&card.LongPassing, &card.ForwardPass, &card.Offence, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance,
 			&card.Penalty, &card.FreeKicks, &card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles,
 			&card.BallFocus, &card.Interceptions, &card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping,
-			&card.Throwing,
+			&card.Throwing, &card.IsMinted,
 		); err != nil {
 			return nil, ErrCard.Wrap(err)
 		}
@@ -265,7 +265,7 @@ func (cardsDB *cardsDB) ListWithFilters(ctx context.Context, filters []cards.Fil
             cards.user_id, tactics, positioning, composure, aggression, vision, awareness, crosses, physique, acceleration, running_speed, reaction_speed, agility,
             stamina, strength, jumping, balance, technique, dribbling, ball_control, weak_foot, skill_moves, finesse, curve, volleys, short_passing, long_passing,
             forward_pass, offense, finishing_ability, shot_power, accuracy, distance, penalty, free_kicks, corners, heading_accuracy, defence, offside_trap, sliding,
-            tackles, ball_focus, interceptions, vigilance, goalkeeping, reflexes, diving, handling, sweeping, throwing
+            tackles, ball_focus, interceptions, vigilance, goalkeeping, reflexes, diving, handling, sweeping, throwing, is_minted
         FROM
             cards 
         %s
@@ -295,6 +295,7 @@ func (cardsDB *cardsDB) ListWithFilters(ctx context.Context, filters []cards.Fil
 			&card.ForwardPass, &card.Offence, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance, &card.Penalty,
 			&card.FreeKicks, &card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles, &card.BallFocus,
 			&card.Interceptions, &card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing,
+			&card.IsMinted,
 		); err != nil {
 			return cardsListPage, ErrCard.Wrap(err)
 		}
@@ -381,6 +382,7 @@ func (cardsDB *cardsDB) ListByUserIDAndPlayerName(ctx context.Context, userID uu
 			&card.ForwardPass, &card.Offence, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance, &card.Penalty,
 			&card.FreeKicks, &card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles, &card.BallFocus,
 			&card.Interceptions, &card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing,
+			&card.IsMinted,
 		); err != nil {
 			return cardsListPage, ErrCard.Wrap(err)
 		}
@@ -597,6 +599,21 @@ func (cardsDB *cardsDB) UpdateStatus(ctx context.Context, id uuid.UUID, status c
 	return ErrCard.Wrap(err)
 }
 
+// UpdateMintedStatus updates status card in the database.
+func (cardsDB *cardsDB) UpdateMintedStatus(ctx context.Context, id uuid.UUID, status int) error {
+	result, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET is_minted=$1 WHERE id=$2", status, id)
+	if err != nil {
+		return ErrCard.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return cards.ErrNoCard.New("")
+	}
+
+	return ErrCard.Wrap(err)
+}
+
 // UpdateType updates type of card in the database.
 func (cardsDB *cardsDB) UpdateType(ctx context.Context, id uuid.UUID, typeCard cards.Type) error {
 	result, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET type=$1 WHERE id=$2", typeCard, id)
@@ -677,6 +694,7 @@ func (cardsDB *cardsDB) GetSquadCards(ctx context.Context, id uuid.UUID) ([]card
 			&card.ForwardPass, &card.Offence, &card.FinishingAbility, &card.ShotPower, &card.Accuracy, &card.Distance, &card.Penalty,
 			&card.FreeKicks, &card.Corners, &card.HeadingAccuracy, &card.Defence, &card.OffsideTrap, &card.Sliding, &card.Tackles, &card.BallFocus,
 			&card.Interceptions, &card.Vigilance, &card.Goalkeeping, &card.Reflexes, &card.Diving, &card.Handling, &card.Sweeping, &card.Throwing,
+			&card.IsMinted,
 		); err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				return cardsFromSquad, cards.ErrNoCard.Wrap(err)

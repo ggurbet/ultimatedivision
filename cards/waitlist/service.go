@@ -359,6 +359,11 @@ func (service *Service) RunCasperCheckMintEvent(ctx context.Context) (err error)
 		if err = service.cards.UpdateUserID(ctx, nft.CardID, user.ID); err != nil {
 			return ChoreError.Wrap(err)
 		}
+
+		if err = service.cards.UpdateMintedStatus(ctx, nft.CardID, cards.Minted); err != nil {
+			return ChoreError.Wrap(err)
+		}
+
 	}
 
 	return ChoreError.Wrap(err)

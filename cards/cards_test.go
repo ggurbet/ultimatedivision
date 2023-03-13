@@ -110,6 +110,7 @@ func TestCards(t *testing.T) {
 		Handling:         47,
 		Sweeping:         48,
 		Throwing:         49,
+		IsMinted:         0,
 	}
 
 	card2 := cards.Card{
@@ -172,6 +173,7 @@ func TestCards(t *testing.T) {
 		Handling:         47,
 		Sweeping:         48,
 		Throwing:         49,
+		IsMinted:         0,
 	}
 
 	division1 := divisions.Division{
@@ -378,6 +380,24 @@ func TestCards(t *testing.T) {
 			compareCards(t, card2, allCards.Cards[0])
 		})
 
+		t.Run("update mint status sql no rows", func(t *testing.T) {
+			err := repositoryCards.UpdateMintedStatus(ctx, uuid.New(), cards.Minted)
+			require.Error(t, err)
+			require.Equal(t, cards.ErrNoCard.Has(err), true)
+		})
+
+		t.Run("update mint status", func(t *testing.T) {
+			card1.IsMinted = cards.Minted
+			err := repositoryCards.UpdateMintedStatus(ctx, card1.ID, cards.Minted)
+			require.NoError(t, err)
+
+			allCards, err := repositoryCards.List(ctx, cursor1)
+			require.NoError(t, err)
+			require.Equal(t, len(allCards.Cards), 2)
+			compareCards(t, card1, allCards.Cards[1])
+			compareCards(t, card2, allCards.Cards[0])
+		})
+
 		t.Run("UpdateType", func(t *testing.T) {
 			card1.Type = cards.TypeOrdered
 			err := repositoryCards.UpdateType(ctx, card1.ID, card1.Type)
@@ -442,57 +462,58 @@ func TestCards(t *testing.T) {
 	})
 }
 
-func compareCards(t *testing.T, card1, card2 cards.Card) {
-	assert.Equal(t, card1.ID, card2.ID)
-	assert.Equal(t, card1.PlayerName, card2.PlayerName)
-	assert.Equal(t, card1.Quality, card2.Quality)
-	assert.Equal(t, card1.Height, card2.Height)
-	assert.Equal(t, card1.Weight, card2.Weight)
-	assert.Equal(t, card1.DominantFoot, card2.DominantFoot)
-	assert.Equal(t, card1.IsTattoo, card2.IsTattoo)
-	assert.Equal(t, card1.Status, card2.Status)
-	assert.Equal(t, card1.UserID, card2.UserID)
-	assert.Equal(t, card1.Positioning, card2.Positioning)
-	assert.Equal(t, card1.Composure, card2.Composure)
-	assert.Equal(t, card1.Aggression, card2.Aggression)
-	assert.Equal(t, card1.Vision, card2.Vision)
-	assert.Equal(t, card1.Awareness, card2.Awareness)
-	assert.Equal(t, card1.Crosses, card2.Crosses)
-	assert.Equal(t, card1.Acceleration, card2.Acceleration)
-	assert.Equal(t, card1.RunningSpeed, card2.RunningSpeed)
-	assert.Equal(t, card1.ReactionSpeed, card2.ReactionSpeed)
-	assert.Equal(t, card1.Agility, card2.Agility)
-	assert.Equal(t, card1.Stamina, card2.Stamina)
-	assert.Equal(t, card1.Strength, card2.Strength)
-	assert.Equal(t, card1.Jumping, card2.Jumping)
-	assert.Equal(t, card1.Balance, card2.Balance)
-	assert.Equal(t, card1.Dribbling, card2.Dribbling)
-	assert.Equal(t, card1.BallControl, card2.BallControl)
-	assert.Equal(t, card1.WeakFoot, card2.WeakFoot)
-	assert.Equal(t, card1.SkillMoves, card2.SkillMoves)
-	assert.Equal(t, card1.Finesse, card2.Finesse)
-	assert.Equal(t, card1.Curve, card2.Curve)
-	assert.Equal(t, card1.Volleys, card2.Volleys)
-	assert.Equal(t, card1.ShortPassing, card2.ShortPassing)
-	assert.Equal(t, card1.LongPassing, card2.LongPassing)
-	assert.Equal(t, card1.ForwardPass, card2.ForwardPass)
-	assert.Equal(t, card1.FinishingAbility, card2.FinishingAbility)
-	assert.Equal(t, card1.ShotPower, card2.ShotPower)
-	assert.Equal(t, card1.Accuracy, card2.Accuracy)
-	assert.Equal(t, card1.Distance, card2.Distance)
-	assert.Equal(t, card1.Penalty, card2.Penalty)
-	assert.Equal(t, card1.FreeKicks, card2.FreeKicks)
-	assert.Equal(t, card1.Corners, card2.Corners)
-	assert.Equal(t, card1.HeadingAccuracy, card2.HeadingAccuracy)
-	assert.Equal(t, card1.OffsideTrap, card2.OffsideTrap)
-	assert.Equal(t, card1.Sliding, card2.Sliding)
-	assert.Equal(t, card1.Tackles, card2.Tackles)
-	assert.Equal(t, card1.BallFocus, card2.BallFocus)
-	assert.Equal(t, card1.Interceptions, card2.Interceptions)
-	assert.Equal(t, card1.Vigilance, card2.Vigilance)
-	assert.Equal(t, card1.Reflexes, card2.Reflexes)
-	assert.Equal(t, card1.Diving, card2.Diving)
-	assert.Equal(t, card1.Handling, card2.Handling)
-	assert.Equal(t, card1.Sweeping, card2.Sweeping)
-	assert.Equal(t, card1.Throwing, card2.Throwing)
+func compareCards(t *testing.T, expected, actual cards.Card) {
+	assert.Equal(t, expected.ID, actual.ID)
+	assert.Equal(t, expected.PlayerName, actual.PlayerName)
+	assert.Equal(t, expected.Quality, actual.Quality)
+	assert.Equal(t, expected.Height, actual.Height)
+	assert.Equal(t, expected.Weight, actual.Weight)
+	assert.Equal(t, expected.DominantFoot, actual.DominantFoot)
+	assert.Equal(t, expected.IsTattoo, actual.IsTattoo)
+	assert.Equal(t, expected.Status, actual.Status)
+	assert.Equal(t, expected.UserID, actual.UserID)
+	assert.Equal(t, expected.Positioning, actual.Positioning)
+	assert.Equal(t, expected.Composure, actual.Composure)
+	assert.Equal(t, expected.Aggression, actual.Aggression)
+	assert.Equal(t, expected.Vision, actual.Vision)
+	assert.Equal(t, expected.Awareness, actual.Awareness)
+	assert.Equal(t, expected.Crosses, actual.Crosses)
+	assert.Equal(t, expected.Acceleration, actual.Acceleration)
+	assert.Equal(t, expected.RunningSpeed, actual.RunningSpeed)
+	assert.Equal(t, expected.ReactionSpeed, actual.ReactionSpeed)
+	assert.Equal(t, expected.Agility, actual.Agility)
+	assert.Equal(t, expected.Stamina, actual.Stamina)
+	assert.Equal(t, expected.Strength, actual.Strength)
+	assert.Equal(t, expected.Jumping, actual.Jumping)
+	assert.Equal(t, expected.Balance, actual.Balance)
+	assert.Equal(t, expected.Dribbling, actual.Dribbling)
+	assert.Equal(t, expected.BallControl, actual.BallControl)
+	assert.Equal(t, expected.WeakFoot, actual.WeakFoot)
+	assert.Equal(t, expected.SkillMoves, actual.SkillMoves)
+	assert.Equal(t, expected.Finesse, actual.Finesse)
+	assert.Equal(t, expected.Curve, actual.Curve)
+	assert.Equal(t, expected.Volleys, actual.Volleys)
+	assert.Equal(t, expected.ShortPassing, actual.ShortPassing)
+	assert.Equal(t, expected.LongPassing, actual.LongPassing)
+	assert.Equal(t, expected.ForwardPass, actual.ForwardPass)
+	assert.Equal(t, expected.FinishingAbility, actual.FinishingAbility)
+	assert.Equal(t, expected.ShotPower, actual.ShotPower)
+	assert.Equal(t, expected.Accuracy, actual.Accuracy)
+	assert.Equal(t, expected.Distance, actual.Distance)
+	assert.Equal(t, expected.Penalty, actual.Penalty)
+	assert.Equal(t, expected.FreeKicks, actual.FreeKicks)
+	assert.Equal(t, expected.Corners, actual.Corners)
+	assert.Equal(t, expected.HeadingAccuracy, actual.HeadingAccuracy)
+	assert.Equal(t, expected.OffsideTrap, actual.OffsideTrap)
+	assert.Equal(t, expected.Sliding, actual.Sliding)
+	assert.Equal(t, expected.Tackles, actual.Tackles)
+	assert.Equal(t, expected.BallFocus, actual.BallFocus)
+	assert.Equal(t, expected.Interceptions, actual.Interceptions)
+	assert.Equal(t, expected.Vigilance, actual.Vigilance)
+	assert.Equal(t, expected.Reflexes, actual.Reflexes)
+	assert.Equal(t, expected.Diving, actual.Diving)
+	assert.Equal(t, expected.Handling, actual.Handling)
+	assert.Equal(t, expected.Sweeping, actual.Sweeping)
+	assert.Equal(t, expected.Throwing, actual.Throwing)
+	assert.Equal(t, expected.IsMinted, actual.IsMinted)
 }
