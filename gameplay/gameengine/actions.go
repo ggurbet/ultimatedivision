@@ -4,11 +4,11 @@
 package gameengine
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 
 	"ultimatedivision/cards"
+	"ultimatedivision/cards/avatars"
+	"ultimatedivision/clubs"
 )
 
 // Action defines list of possible player action in the field.
@@ -41,10 +41,10 @@ const (
 	ActionFeints Action = "feints"
 )
 
-// GameConfig contains config values related to game.
-type GameConfig struct {
-	LeftSide  `json:"leftSide"`
-	RightSide `json:"rightSide"`
+// Config contains config values related to game.
+type Config struct {
+	LeftSide  LeftSide  `json:"leftSide"`
+	RightSide RightSide `json:"rightSide"`
 }
 
 // LeftSide contains config values of the left side team positions.
@@ -74,34 +74,27 @@ type Positions struct {
 
 // CardAvailableAction defines in which position card could be placed and which action it could do there.
 type CardAvailableAction struct {
-	CardID        uuid.UUID `json:"cardId"`
 	Action        Action    `json:"action"`
-	FieldPosition int       `json:"fieldPosition"`
+	CardID        uuid.UUID `json:"cardId"`
+	FieldPosition []int     `json:"fieldPosition"`
+}
+
+// CardWithPosition defines card with position in the field.
+type CardWithPosition struct {
+	cards.Card     `json:"card"`
+	avatars.Avatar `json:"avatar"`
+	FieldPosition  int `json:"fieldPosition"`
 }
 
 // MatchRepresentation defines user1 and user2 cards with positions,
 // ball position at the moment and available actions for user cards.
 type MatchRepresentation struct {
-	User1CardsWithPosition []int                 `json:"user1CardsWithPosition"`
-	User2CardsWithPosition []int                 `json:"user2CardsWithPosition"`
+	User1CardsWithPosition []CardWithPosition    `json:"user1CardsWithPosition"`
+	User2CardsWithPosition []CardWithPosition    `json:"user2CardsWithPosition"`
 	BallPosition           int                   `json:"ballPosition"`
-	Actions                []MakeAction          `json:"actions"`
 	CardAvailableAction    []CardAvailableAction `json:"cardAvailableAction"`
-}
-
-// CardWithPosition defines card with position in the field.
-type CardWithPosition struct {
-	cards.Card    `json:"card"`
-	FieldPosition int `json:"fieldPosition"`
-}
-
-// MakeAction defines fields that describes football action.
-type MakeAction struct {
-	CardsLayout       []CardWithPosition `json:"cardsLayout"`
-	BallPosition      int                `json:"ballPosition"`
-	PlayerID          uuid.UUID          `json:"playerId"`
-	Action            Action             `json:"action"`
-	ReceiverPlayerID  uuid.UUID          `json:"receiverPlayerId"`
-	OpponentPlayerIDs []uuid.UUID        `json:"opponentPlayerIds"`
-	ActionTime        time.Time          `json:"actionTime"`
+	User1ClubInformation   clubs.Club            `json:"user1ClubInformation"`
+	User2ClubInformation   clubs.Club            `json:"user2ClubInformation"`
+	User1SquadInformation  clubs.Squad           `json:"user1SquadInformation"`
+	User2SquadInformation  clubs.Squad           `json:"user2SquadInformation"`
 }

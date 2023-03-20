@@ -24,6 +24,7 @@ import (
 	"ultimatedivision/console/consoleserver"
 	"ultimatedivision/console/emails"
 	"ultimatedivision/divisions"
+	"ultimatedivision/gameplay/gameengine"
 	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/gameplay/matchmaking"
 	"ultimatedivision/gameplay/queue"
@@ -188,6 +189,10 @@ type Config struct {
 	Velas struct {
 		velas.Config
 	} `json:"velas"`
+
+	GameEngine struct {
+		gameengine.Config
+	} `json:"gameEngine"`
 }
 
 // Peer is the representation of a ultimatedivision.
@@ -318,6 +323,11 @@ type Peer struct {
 		Service *matchmaking.Service
 	}
 
+	// GameEngine web server with web UI.
+	GameEngine struct {
+		Service *gameengine.Service
+	}
+
 	// Console web server with web UI.
 	Console struct {
 		Listener     net.Listener
@@ -375,10 +385,6 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 
 	{ // connections setup.
 		peer.Connections.Service = connections.NewService(peer.Database.Connections())
-	}
-
-	{ // matchmaking setup.
-		peer.Matchmaking.Service = matchmaking.NewService(peer.Database.Players(), peer.Connections.Service)
 	}
 
 	{ // admins setup.
@@ -575,6 +581,14 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.WaitList.Service,
 		)
 
+	}
+
+	{ // game engine setup.
+		peer.GameEngine.Service = gameengine.NewService(peer.Clubs.Service, peer.Avatars.Service, peer.Cards.Service, config.GameEngine.Config)
+	}
+
+	{ // matchmaking setup.
+		peer.Matchmaking.Service = matchmaking.NewService(peer.Database.Players(), peer.Connections.Service, peer.GameEngine.Service)
 	}
 
 	{ // admin setup.

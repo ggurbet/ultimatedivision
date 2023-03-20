@@ -4,6 +4,7 @@
 package matchmaking
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -13,6 +14,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/console/connections"
+	"ultimatedivision/gameplay/gameengine"
 	"ultimatedivision/gameplay/queue"
 )
 
@@ -25,18 +27,20 @@ var ErrMatchmaking = errs.Class("matchmaking service error")
 type Service struct {
 	players     DB
 	connections *connections.Service
+	gameEngine  *gameengine.Service
 }
 
 // NewService is a constructor for matchmaking service.
-func NewService(players DB, connections *connections.Service) *Service {
+func NewService(players DB, connections *connections.Service, gameEngine *gameengine.Service) *Service {
 	return &Service{
 		players:     players,
 		connections: connections,
+		gameEngine:  gameEngine,
 	}
 }
 
 // Create creates a player by user.
-func (service *Service) Create(userID uuid.UUID) error {
+func (service *Service) Create(ctx context.Context, userID uuid.UUID) error {
 	type request struct {
 		Action  queue.Action `json:"action"`
 		SquadID uuid.UUID    `json:"squadId"`
@@ -82,7 +86,7 @@ func (service *Service) Create(userID uuid.UUID) error {
 			return ErrMatchmaking.Wrap(err)
 		}
 
-		match, err := service.MatchPlayer(&player)
+		match, err := service.MatchPlayer(ctx, &player)
 		if err != nil {
 			return ErrMatchmaking.Wrap(err)
 		}
@@ -111,7 +115,7 @@ func (service *Service) Delete(id uuid.UUID) error {
 }
 
 // MatchPlayer finds two players and connect they to gameplay.
-func (service *Service) MatchPlayer(player *Player) (*Match, error) {
+func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match, error) {
 	var other *Player
 
 	type request struct {
@@ -209,7 +213,13 @@ func (service *Service) MatchPlayer(player *Player) (*Match, error) {
 	if reqPlayer1.Action == queue.ActionConfirm && reqPlayer2.Action == queue.ActionConfirm {
 		player.Waiting = false
 		other.Waiting = false
-		resp.Message = match
+
+		startGameInformation, err := service.gameEngine.GameInformation(ctx, match.Player1.SquadID, match.Player2.SquadID)
+		if err != nil {
+			return nil, ErrMatchmaking.Wrap(err)
+		}
+
+		resp.Message = startGameInformation
 
 		if err := match.Player1.Conn.WriteJSON(resp); err != nil {
 			return nil, ErrMatchmaking.Wrap(err)

@@ -57,7 +57,7 @@ func (controller *Matchmaking) Create(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err = controller.matchmaking.Create(claims.UserID); err != nil {
+	if err = controller.matchmaking.Create(ctx, claims.UserID); err != nil {
 		controller.log.Error(fmt.Sprintf("could not create player for user %x", claims.UserID), ErrMatchmaking.Wrap(err))
 		controller.serveError(w, http.StatusInternalServerError, ErrMatchmaking.Wrap(err))
 		return
