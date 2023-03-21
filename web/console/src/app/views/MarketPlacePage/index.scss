@@ -4,34 +4,64 @@
 @import "@/index.scss";
 
 .marketplace {
-    padding: 15px 0;
     position: relative;
+    padding: 15px 0;
+
+    .filter-field {
+        margin: 30px auto 60px;
+    }
 }
 
-@media (max-width: 1300px) {
+@media (min-width: 1441px) {
+
+    .marketplace {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 1300px;
+    }
+}
+
+@media (max-width: 1440px) {
+
+    .marketplace {
+        padding: 0 150px 40px;
+    }
+}
+
+@media (max-width: 1400px) {
 
     .marketplace {
         padding: 0 100px 40px;
     }
 }
 
-@media (max-width: $desktopBreakPoint) {
+@media (max-width: $desktopBreakPoint + 200px) {
 
     .marketplace {
         padding: 0 50px 40px;
     }
 }
 
-@media (max-width: $tabletBreakPoint) {
+@media (max-width: $tabletBreakPoint + 100px) {
 
     .marketplace {
+        width: 100%;
         padding: 0 32px 30px;
+
+        .filter-field {
+            margin: 15px auto 50px;
+        }
     }
 }
 
-@media (max-width: $phoneBreakPoint) {
+@media (max-width: $phoneBreakPoint + 100px) {
 
     .marketplace {
         padding: 0 16px 20px;
+
+        .filter-field {
+            margin: 15px auto 40px;
+        }
     }
 }

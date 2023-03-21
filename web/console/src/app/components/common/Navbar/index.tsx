@@ -24,6 +24,9 @@ const Navbar: React.FC = () => {
     const navbarListClassName = isDropdownActive ? 'ultimatedivision-navbar__list-active' : '';
     const navbarWrapperClassName = isDropdownActive ? 'ultimatedivision-navbar--active' : '';
 
+    const header = document.querySelector('.ultimatedivision-navbar');
+
+    const headerStoreOpeningClassname= 'ultimatedivision-navbar__store-opening';
     /** TODO: DIVISIONS will be replaced with id parameter */
     const navbarItems: Array<{ name: string; path: string }> = [
         { name: 'HOME', path: RouteConfig.Home.path },
@@ -50,6 +53,7 @@ const Navbar: React.FC = () => {
 
     useEffect(() => {
         location.pathname === '/home' ? setIsHomePath(true) : setIsHomePath(false);
+        location.pathname !== '/store' && header?.classList.contains(headerStoreOpeningClassname) && header?.classList.remove(headerStoreOpeningClassname);
     }, [location]);
 
     return (

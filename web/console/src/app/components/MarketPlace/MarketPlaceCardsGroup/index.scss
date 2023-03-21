@@ -12,9 +12,9 @@
         min-height: 65vh;
         padding: 20px;
         display: grid;
-        grid-template-columns: repeat((6, 1fr));
-        column-gap: 20px;
-        row-gap: 20px;
+        grid-template-columns: repeat((5, 1fr));
+        column-gap: 75px;
+        row-gap: 52px;
     }
 }
 
@@ -23,41 +23,42 @@
     .marketplace-cards {
 
         &__wrapper {
-            grid-template-columns: repeat((5, 1fr));
-            column-gap: 5px;
+            grid-template-columns: repeat((4, 1fr));
+            column-gap: 40px;
             padding: 0;
         }
     }
 }
 
-@media (max-width: $desktopBreakPoint) {
+@media (max-width: $desktopBreakPoint + 150px) {
 
     .marketplace-cards {
 
         &__wrapper {
-            grid-template-columns: repeat((4, 1fr));
-            column-gap: 0;
+            column-gap: 35px;
         }
     }
 }
 
-@media (max-width: $tabletBreakPoint) {
+@media (max-width: $tabletBreakPoint + 200px) {
 
     .marketplace-cards {
 
         &__wrapper {
             grid-template-columns: repeat((3, 1fr));
+            column-gap: 30px;
         }
     }
 }
 
-@media (max-width: $phoneBreakPoint) {
+@media (max-width: $phoneBreakPoint + 120px) {
 
     .marketplace-cards {
         margin-top: 30px;
 
         &__wrapper {
             grid-template-columns: repeat((2, 1fr));
+            column-gap: 20px;
         }
     }
 }

@@ -78,7 +78,6 @@
             overflow: hidden;
             max-height: 100vh;
             min-height: 100vh;
-            background: $pageBackground;
         }
 
         &__dropdown {
@@ -126,6 +125,7 @@
                 line-height: 23px;
                 letter-spacing: 0.06em;
                 text-transform: uppercase;
+                color: var(--text-color);
             }
 
             &--active {
@@ -143,7 +143,6 @@
                 height: 100vh;
                 top: 100px;
                 list-style: none;
-                background: $pageBackground;
 
                 .ultimatedivision-navbar__list__item {
                     margin: 0 32px;
@@ -159,12 +158,12 @@
 
                     &__active {
                         text-decoration: none;
-                        color: $navbarSecondaryColor;
+                        color: var(--text-color);
                     }
 
                     .active {
                         text-decoration: none;
-                        color: $navbarHighlightColor;
+                        color: var(--highlight-color);
                     }
                 }
             }

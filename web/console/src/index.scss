@@ -15,10 +15,21 @@
         background-repeat: no-repeat;
         height: 100vh;
         overflow: hidden;
+
+        .ultimatedivision-navbar--active {
+            background: var(--filter-field-mobile-bg);
+        }
     }
 
     &__home {
         background: #6facff;
+    }
+
+    &__cards,
+    &__marketplace {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     &__marketplace {
