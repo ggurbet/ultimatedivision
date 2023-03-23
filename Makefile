@@ -1,7 +1,7 @@
 # Variables
 LATEST_COMMIT := $$(git rev-parse HEAD)
 VERSION ?= latest
-HOST_FOR_DOCKER_IMAGE ?= dcloud.hicrystal.com
+HOST_FOR_DOCKER_IMAGE ?= ghcr.io/boostylabs
 ENVIRONMENT ?=
 
 help: ## Show this help
