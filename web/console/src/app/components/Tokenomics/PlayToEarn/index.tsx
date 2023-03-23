@@ -1,8 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import './index.scss';
-
 const PlayToEarn: React.FC = () =>
     <div className="play-to-earn">
         <h1 className="play-to-earn__title">Play to Earn</h1>

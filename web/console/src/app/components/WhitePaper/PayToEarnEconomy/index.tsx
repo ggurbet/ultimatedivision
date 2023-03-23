@@ -1,8 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import './index.scss';
-
 const PayToEarnEconomy = () =>
     <div className="pay-to-earn-economy">
         <h1 className="pay-to-earn-economy__title">Play to Earn and Economy</h1>

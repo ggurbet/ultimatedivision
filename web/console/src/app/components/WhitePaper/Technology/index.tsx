@@ -1,8 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import './index.scss';
-
 const Technology = () =>
     <div className="technology">
         <h1 className="technology__title">Technology</h1>

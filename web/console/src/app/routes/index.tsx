@@ -72,20 +72,20 @@ export class RouteConfig {
     public static Cards: ComponentRoutes = new ComponentRoutes('/cards', UserCards, true, 'page__cards');
     public static Match: ComponentRoutes = new ComponentRoutes('/match', Match, true);
     public static PlayerProfile: ComponentRoutes = new ComponentRoutes('/player-profile', PlayerProfile, true);
-    public static Whitepaper: ComponentRoutes = new ComponentRoutes('/whitepaper', WhitePaper, false);
-    public static Tokenomics: ComponentRoutes = new ComponentRoutes('/tokenomics', Tokenomics, false);
-    public static Summary: ComponentRoutes = new ComponentRoutes('summary', Summary, true);
-    public static GameMechanics: ComponentRoutes = new ComponentRoutes('game-mechanics', GameMechanics, true);
+    public static Whitepaper: ComponentRoutes = new ComponentRoutes('/whitepaper', WhitePaper, false, 'page__whitepaper');
+    public static Tokenomics: ComponentRoutes = new ComponentRoutes('/tokenomics', Tokenomics, false, 'page__whitepaper');
+    public static Summary: ComponentRoutes = new ComponentRoutes('summary', Summary, true, 'page__whitepaper');
+    public static GameMechanics: ComponentRoutes = new ComponentRoutes('game-mechanics', GameMechanics, true, 'page__whitepaper');
     public static PayToEarnEconomy: ComponentRoutes = new ComponentRoutes(
         'pay-to-earn-and-economy',
         PayToEarnEconomy,
-        true
+        true, 'page__whitepaper'
     );
-    public static Technology: ComponentRoutes = new ComponentRoutes('technology', Technology, true);
-    public static Spending: ComponentRoutes = new ComponentRoutes('udt-spending', Spending, true);
-    public static PayToEarn: ComponentRoutes = new ComponentRoutes('pay-to-earn', PlayToEarn, true);
-    public static Staking: ComponentRoutes = new ComponentRoutes('staking', Staking, true);
-    public static Fund: ComponentRoutes = new ComponentRoutes('ud-dao-fund', Fund, true);
+    public static Technology: ComponentRoutes = new ComponentRoutes('technology', Technology, true, 'page__whitepaper');
+    public static Spending: ComponentRoutes = new ComponentRoutes('udt-spending', Spending, true, 'page__whitepaper');
+    public static PayToEarn: ComponentRoutes = new ComponentRoutes('pay-to-earn', PlayToEarn, true, 'page__whitepaper');
+    public static Staking: ComponentRoutes = new ComponentRoutes('staking', Staking, true, 'page__whitepaper');
+    public static Fund: ComponentRoutes = new ComponentRoutes('ud-dao-fund', Fund, true, 'page__whitepaper');
 
     public static routes: ComponentRoutes[] = [
         RouteConfig.Home,

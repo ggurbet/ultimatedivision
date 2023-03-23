@@ -1,8 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import './index.scss';
-
 const Fund: React.FC = () =>
     <div className="ud-fund">
         <h1 className="ud-fund__title">UD Fund</h1>

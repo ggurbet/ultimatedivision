@@ -3,8 +3,6 @@
 
 import { Doughnut } from 'react-chartjs-2';
 
-import './index.scss';
-
 const Spending: React.FC = () => {
     const dataDoughnutStats = [
         {

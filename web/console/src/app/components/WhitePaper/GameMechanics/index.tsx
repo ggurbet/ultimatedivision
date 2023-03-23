@@ -1,8 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import './index.scss';
-
 const GameMechanics = () =>
     <div className="game-mechanics">
         <h1 className="game-mechanics__title">Game Mechanics</h1>

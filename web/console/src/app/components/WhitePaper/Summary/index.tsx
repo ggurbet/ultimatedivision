@@ -1,8 +1,6 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
-import './index.scss';
-
 const Summary = () =>
     <div className="summary">
         <h1 className="summary__title">Summary</h1>

@@ -12,6 +12,11 @@ export class DropdownStyle {
     get triangleRotate() {
         return this.vilibility ? 'rotate(-180deg)' : 'rotate(-360deg)';
     }
+
+    /** triangle style */
+    get squareTriangleRotate() {
+        return this.vilibility ? 'rotate(-270deg)' : 'rotate(-360deg)';
+    }
     /** list height */
     get listHeight() {
         return this.vilibility ? 'unset' : '0';

@@ -7,7 +7,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { RouteConfig } from '@/app/routes';
 import { DropdownStyle } from '@/app/internal/dropdownStyle';
 
-import triangle from '@static/img/FieldPage/triangle.svg';
+import triangle from '@static/img/WhitePaper/triangle.svg';
+import UltimateDivisionLogo from '@static/img/WhitePaper/ultimateLogo.svg';
 
 import './index.scss';
 
@@ -35,16 +36,20 @@ export const AboutMenu = () => {
 
     return shouldBeShowed ?
         <div className="about-menu">
+
+            <div className="about-menu__logo">
+                <img src={UltimateDivisionLogo} alt="ultimate-division logo" />
+            </div>
             <span className="about-menu__title">Information</span>
             <div
                 className="about-menu__whitepaper"
                 onClick={() => changeWhitePaperVisibility((prev) => !prev)}
             >
-                <h2>Gameplay</h2>
+                <h2 className="about-menu__list-title">Gameplay</h2>
                 <img
                     className="about-menu__whitepaper-image"
                     src={triangle}
-                    style={{ transform: whitePaperStyle.triangleRotate }}
+                    style={{ transform: whitePaperStyle.squareTriangleRotate }}
                     alt="triangle img"
                 />
             </div>
@@ -65,11 +70,11 @@ export const AboutMenu = () => {
                 className="about-menu__tokenomics"
                 onClick={() => changeTokenomicsVisibility((prev) => !prev)}
             >
-                <h2>Community</h2>
+                <h2 className="about-menu__list-title">Community</h2>
                 <img
                     className="about-menu__whitepaper-image"
                     src={triangle}
-                    style={{ transform: tokenomicsStyle.triangleRotate }}
+                    style={{ transform: tokenomicsStyle.squareTriangleRotate }}
                     alt="triangle img"
                 />
             </div>

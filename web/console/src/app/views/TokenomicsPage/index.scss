@@ -3,13 +3,50 @@
 .tokenomics {
     width: 100%;
     display: flex;
-    color: white;
+    font-family: "Orbitron", sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
 
     &__wrapper {
-        width: 75%;
+        width: 70%;
         min-height: 100vh;
-        margin-left: 25%;
-        background-color: $mainBackground;
+        margin-left: 30%;
+        background-color: #8db9ff;
         padding: 100px;
+    }
+
+    .ud-fund,
+    .play-to-earn,
+    .spending,
+    .staking {
+
+        &__title {
+            margin-bottom: 43px;
+            font-size: 34px;
+            line-height: 43px;
+        }
+
+        &__description {
+            margin-bottom: 43px;
+            font-size: 17px;
+            line-height: 30px;
+        }
+    }
+
+    .pay-to-earn-economy,
+    .spending {
+
+        &__title {
+            margin-bottom: 24px;
+        }
+
+        &__subtitle {
+            margin-bottom: 20px;
+            font-size: 32px;
+            line-height: 43px;
+        }
     }
 }

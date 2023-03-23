@@ -3,13 +3,51 @@
 .whitepaper {
     width: 100%;
     display: flex;
+    font-family: "Orbitron", sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: white;
 
     &__wrapper {
-        width: 75%;
-        min-height: 100vh;
-        margin-left: 25%;
-        background-color: $mainBackground;
-        padding: 100px;
+        width: 70%;
+        min-height: calc(100vh - 98px);
+        margin-left: 30%;
+        background-color: #8db9ff;
+        padding: 100px 100px 0;
+    }
+
+    .summary,
+    .game-mechanics,
+    .pay-to-earn-economy,
+    .technology {
+
+        &__title {
+            margin-bottom: 43px;
+            font-size: 34px;
+            line-height: 43px;
+        }
+
+        &__description {
+            margin-bottom: 43px;
+            font-size: 17px;
+            line-height: 30px;
+        }
+    }
+
+    .game-mechanics,
+    .technology,
+    .pay-to-earn-economy {
+
+        &__title {
+            margin-bottom: 24px;
+        }
+
+        &__subtitle {
+            margin-bottom: 20px;
+            font-size: 32px;
+            line-height: 43px;
+        }
     }
 }
