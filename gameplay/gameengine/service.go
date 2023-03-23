@@ -5,6 +5,7 @@ package gameengine
 
 import (
 	"context"
+	"encoding/json"
 	"sort"
 
 	"github.com/google/uuid"
@@ -13,6 +14,7 @@ import (
 	"ultimatedivision/cards"
 	"ultimatedivision/cards/avatars"
 	"ultimatedivision/clubs"
+	"ultimatedivision/gameplay/matches"
 )
 
 // ErrGameEngine indicates that there was an error in the service.
@@ -22,18 +24,22 @@ var ErrGameEngine = errs.Class("game engine service error")
 //
 // architecture: Service
 type Service struct {
+	games   DB
 	clubs   *clubs.Service
 	avatars *avatars.Service
 	cards   *cards.Service
+	matches *matches.Service
 	config  Config
 }
 
 // NewService is a constructor for game engine service.
-func NewService(clubs *clubs.Service, avatars *avatars.Service, cards *cards.Service, config Config) *Service {
+func NewService(games DB, clubs *clubs.Service, avatars *avatars.Service, cards *cards.Service, matches *matches.Service, config Config) *Service {
 	return &Service{
+		games:   games,
 		clubs:   clubs,
 		avatars: avatars,
 		cards:   cards,
+		matches: matches,
 		config:  config,
 	}
 }
@@ -115,6 +121,72 @@ func contains(s []int, e int) bool {
 	return false
 }
 
+func removeIntersections(moves, playerPositions []int) (movesWithoutIntersections []int) {
+	for _, v := range moves {
+		if !contains(playerPositions, v) {
+			movesWithoutIntersections = append(movesWithoutIntersections, v)
+		}
+	}
+	return movesWithoutIntersections
+}
+
+// Move update card moves and get possible moves cells.
+func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardIDWithPosition) ([]int, error) {
+	gameInfoJSON, err := service.games.Get(ctx, matchID)
+	if err != nil {
+		return []int{}, ErrGameEngine.Wrap(err)
+	}
+
+	var game Game
+	game.MatchID = matchID
+
+	err = json.Unmarshal([]byte(gameInfoJSON), &game.GameInfo)
+	if err != nil {
+		return []int{}, ErrGameEngine.Wrap(err)
+	}
+
+	var moves []int
+	var allPositionsInUse []int
+
+	allPositionsInUse = append(allPositionsInUse, card.Position)
+
+	for _, cardWithPosition := range game.GameInfo {
+		allPositionsInUse = append(allPositionsInUse, cardWithPosition.Position)
+	}
+
+	// check whether the position we want to go to is occupied.
+	if contains(allPositionsInUse, card.Position) {
+		return moves, ErrGameEngine.New("Can not move to position, already in use")
+	}
+
+	// check, Update and get all possible moves.
+	for i, cardData := range game.GameInfo {
+		if cardData.CardID == card.CardID {
+			game.GameInfo[i].Position = card.Position
+
+			newGameInfoJSON, err := json.Marshal(game.GameInfo)
+			if err != nil {
+				return moves, ErrGameEngine.Wrap(err)
+			}
+
+			err = service.games.Update(ctx, matchID, string(newGameInfoJSON))
+			if err != nil {
+				return moves, ErrGameEngine.Wrap(err)
+			}
+
+			moves, err = service.GetCardMoves(card.Position)
+			if err != nil {
+				return moves, ErrGameEngine.Wrap(err)
+			}
+		}
+	}
+
+	// remove already occupied positions.
+	moves = removeIntersections(moves, allPositionsInUse)
+
+	return moves, nil
+}
+
 // GameInformation creates a player by user.
 func (service *Service) GameInformation(ctx context.Context, player1SquadID, player2SquadID uuid.UUID) (MatchRepresentation, error) {
 	var cardsWithPositionPlayer1 []CardWithPosition
@@ -151,6 +223,8 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		return MatchRepresentation{}, ErrGameEngine.Wrap(err)
 	}
 
+	var matchInfo []CardIDWithPosition
+
 	for _, sqCard := range squadCardsPlayer1 {
 		avatar, err := service.avatars.Get(ctx, sqCard.Card.ID)
 		if err != nil {
@@ -162,6 +236,13 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 			Avatar:        avatar,
 			FieldPosition: service.squadPositionToFieldPositionLeftSide(sqCard.Position),
 		}
+
+		cardInfo := CardIDWithPosition{
+			CardID:   sqCard.Card.ID,
+			Position: cardWithPositionPlayer.FieldPosition,
+		}
+
+		matchInfo = append(matchInfo, cardInfo)
 
 		fieldPosition, err := service.GetCardMoves(cardWithPositionPlayer.FieldPosition)
 		if err != nil {
@@ -201,8 +282,30 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 			FieldPosition: fieldPosition,
 		}
 
+		cardInfo := CardIDWithPosition{
+			CardID:   sqCard.Card.ID,
+			Position: cardWithPositionPlayer.FieldPosition,
+		}
+
+		matchInfo = append(matchInfo, cardInfo)
+
 		cardsWithPositionPlayer2 = append(cardsWithPositionPlayer2, cardWithPositionPlayer)
 		cardsAvailableAction = append(cardsAvailableAction, cardAvailableAction)
+	}
+
+	matchID, err := service.matches.Create(ctx, player1SquadID, player2SquadID, clubPlayer1.OwnerID, clubPlayer2.OwnerID, 1)
+	if err != nil {
+		return MatchRepresentation{}, ErrGameEngine.Wrap(err)
+	}
+
+	gameInfo, err := json.Marshal(matchInfo)
+	if err != nil {
+		return MatchRepresentation{}, ErrGameEngine.Wrap(err)
+	}
+
+	err = service.games.Create(ctx, matchID, string(gameInfo))
+	if err != nil {
+		return MatchRepresentation{}, ErrGameEngine.Wrap(err)
 	}
 
 	return MatchRepresentation{

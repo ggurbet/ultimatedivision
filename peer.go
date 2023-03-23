@@ -57,6 +57,9 @@ type DB interface {
 	// Cards provides access to cards db.
 	Cards() cards.DB
 
+	// Games provides access to gameengine db.
+	Games() gameengine.DB
+
 	// Avatars provides access to avatars db.
 	Avatars() avatars.DB
 
@@ -584,7 +587,14 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 	}
 
 	{ // game engine setup.
-		peer.GameEngine.Service = gameengine.NewService(peer.Clubs.Service, peer.Avatars.Service, peer.Cards.Service, config.GameEngine.Config)
+		peer.GameEngine.Service = gameengine.NewService(
+			peer.Database.Games(),
+			peer.Clubs.Service,
+			peer.Avatars.Service,
+			peer.Cards.Service,
+			peer.Matches.Service,
+			config.GameEngine.Config,
+		)
 	}
 
 	{ // matchmaking setup.

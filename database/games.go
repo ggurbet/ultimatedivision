@@ -11,32 +11,32 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
-	"ultimatedivision/gameplay/games"
+	"ultimatedivision/gameplay/gameengine"
 )
 
 // ensures that gameDB implements game.DB.
-var _ games.DB = (*gamesDB)(nil)
+var _ gameengine.DB = (*gameengineDB)(nil)
 
 // ErrGames indicates that there was an error in the database.
 var ErrGames = errs.Class("games repository error")
 
-// gamesDB provide access to games DB.
+// gameengineDB provide access to games DB.
 //
 // architecture: Database
-type gamesDB struct {
+type gameengineDB struct {
 	conn *sql.DB
 }
 
 // Create creates game in db.
-func (gamesDB *gamesDB) Create(ctx context.Context, game games.Game) error {
-	tx, err := gamesDB.conn.BeginTx(ctx, nil)
+func (gameengineDB *gameengineDB) Create(ctx context.Context, matchID uuid.UUID, gameInformationInJSON string) error {
+	tx, err := gameengineDB.conn.BeginTx(ctx, nil)
 	if err != nil {
 		return ErrGames.Wrap(err)
 	}
 	query := `INSERT INTO games(match_id, game_info)
               VALUES($1,$2)`
 
-	_, err = gamesDB.conn.ExecContext(ctx, query, game.MatchID, game.GameInfo)
+	_, err = gameengineDB.conn.ExecContext(ctx, query, matchID, gameInformationInJSON)
 
 	if err != nil {
 		err = tx.Rollback()
@@ -54,70 +54,55 @@ func (gamesDB *gamesDB) Create(ctx context.Context, game games.Game) error {
 	return ErrGames.Wrap(err)
 }
 
-// List returns all games.
-func (gamesDB *gamesDB) List(ctx context.Context) ([]games.Game, error) {
-	query := `SELECT match_id, game_info
-              FROM games`
-
-	rows, err := gamesDB.conn.QueryContext(ctx, query)
-	if err != nil {
-		return nil, ErrGames.Wrap(err)
-	}
-
-	defer func() {
-		err = errs.Combine(err, rows.Close())
-	}()
-
-	var allGames []games.Game
-
-	for rows.Next() {
-		var game games.Game
-
-		err = rows.Scan(&game.MatchID, &game.GameInfo)
-		if err != nil {
-			return nil, ErrGames.Wrap(err)
-		}
-
-		allGames = append(allGames, game)
-	}
-
-	return allGames, nil
-}
-
-// Get returns game by match id.
-func (gamesDB *gamesDB) Get(ctx context.Context, matchID uuid.UUID) (games.Game, error) {
-	query := `SELECT match_id, game_info
+// Get returns game information in JSON by match id.
+func (gameengineDB *gameengineDB) Get(ctx context.Context, matchID uuid.UUID) (string, error) {
+	query := `SELECT game_info
               FROM games
               WHERE match_id = $1`
 
-	row := gamesDB.conn.QueryRowContext(ctx, query, matchID)
+	row := gameengineDB.conn.QueryRowContext(ctx, query, matchID)
 
-	var game games.Game
+	var gameDataInJSON string
 
-	err := row.Scan(&game.MatchID, &game.GameInfo)
+	err := row.Scan(&gameDataInJSON)
 	if err != nil {
 		if errors.Is(sql.ErrNoRows, err) {
-			return game, games.ErrNoGames.Wrap(err)
+			return gameDataInJSON, gameengine.ErrNoGames.Wrap(err)
 		}
 
-		return game, ErrGames.Wrap(err)
+		return gameDataInJSON, ErrGames.Wrap(err)
 	}
 
-	return game, nil
+	return gameDataInJSON, nil
 }
 
-// Delete deletes game by match id from db.
-func (gamesDB *gamesDB) Delete(ctx context.Context, matchID uuid.UUID) error {
+// Update updates game info in the database by match id.
+func (gameengineDB *gameengineDB) Update(ctx context.Context, matchID uuid.UUID, gameInformationInJSON string) error {
+	result, err := gameengineDB.conn.ExecContext(ctx, "UPDATE games SET game_info=$1 WHERE match_id=$2", gameInformationInJSON, matchID)
+	if err != nil {
+		return ErrGames.Wrap(err)
+	}
+
+	rowNum, err := result.RowsAffected()
+	if rowNum == 0 {
+		return gameengine.ErrNoGames.New("")
+	}
+
+	return ErrGames.Wrap(err)
+}
+
+// Delete deletes game information in JSON.
+func (gameengineDB *gameengineDB) Delete(ctx context.Context, matchID uuid.UUID) error {
 	query := `DELETE FROM games
               WHERE match_id = $1`
 
-	result, err := gamesDB.conn.ExecContext(ctx, query, matchID)
+	result, err := gameengineDB.conn.ExecContext(ctx, query, matchID)
 	if err != nil {
 		return ErrGames.Wrap(err)
 	}
 	rowNum, err := result.RowsAffected()
 	if rowNum == 0 {
-		return games.ErrNoGames.New("invalid query")
+		return gameengine.ErrNoGames.New("invalid query")
 	}
 
 	return ErrGames.Wrap(err)
