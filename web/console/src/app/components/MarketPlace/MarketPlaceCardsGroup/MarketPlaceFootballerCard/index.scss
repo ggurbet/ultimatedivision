@@ -11,6 +11,9 @@
     box-shadow: white;
     background: rgba(255, 255, 255, 0.1);
     cursor: pointer;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
 
     &__button {
         width: 84px;
@@ -86,28 +89,6 @@
 
     &__price {
         color: #fff;
-    }
-}
-
-@media (max-width: 1440px) {
-
-    .marketplace-playerCard {
-        margin: 60px 10px 0;
-    }
-}
-
-@media (max-width: $desktopBreakPoint) {
-
-    .marketplace-playerCard {
-        margin: 0;
-        margin-top: 60px;
-    }
-}
-
-@media (max-width: $tabletBreakPoint) {
-
-    .marketplace-playerCard {
-        margin: 0 auto;
     }
 }
 

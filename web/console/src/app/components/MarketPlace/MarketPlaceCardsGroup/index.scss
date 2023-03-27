@@ -7,6 +7,7 @@
     position: relative;
     display: flex;
     justify-content: center;
+    padding-top: 12px;
 
     &__wrapper {
         min-height: 65vh;
@@ -58,6 +59,29 @@
 
         &__wrapper {
             grid-template-columns: repeat((2, 1fr));
+            column-gap: 70px;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint + 120px) {
+
+    .marketplace-cards {
+        margin-top: 30px;
+
+        &__wrapper {
+            grid-template-columns: repeat((2, 1fr));
+            column-gap: 70px;
+            row-gap: 30px;
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint - 100px) {
+
+    .marketplace-cards {
+
+        &__wrapper {
             column-gap: 20px;
         }
     }

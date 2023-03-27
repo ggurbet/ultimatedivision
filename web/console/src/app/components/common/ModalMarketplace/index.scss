@@ -1,0 +1,558 @@
+//Copyright (C) 2021 Creditor Corp. Group.
+//See LICENSE for copying information.
+@import "@/index.scss";
+
+.marketplace-modal {
+    z-index: 10;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Orbitron", sans-serif;
+    background: rgba(0, 0, 0, 0.6);
+
+    &__wrapper {
+        position: absolute;
+        width: 1174px;
+        height: 634px;
+        top: 50%;
+        left: 50%;
+        padding: 43px 80px;
+        transform: translate(-50%, -50%);
+        border-radius: 40px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        background: linear-gradient(180deg, #765989 0%, #444792 97.4%);
+    }
+
+    &__title {
+        margin-bottom: 31px;
+        font-style: normal;
+        font-weight: 900;
+        font-size: 33.425px;
+        line-height: 42px;
+        text-align: center;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+    &__content {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__lot {
+        width: 652px;
+        height: 332px;
+        padding: 71px 40px;
+        border: 2px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
+        border-radius: 37px;
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    &__bid {
+        margin-bottom: 38px;
+
+        &__label {
+            bottom: -27px;
+            right: 86px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        &__input {
+            width: 239px;
+            height: 64px;
+            padding: 15px 10px 15px 15px;
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            font-size: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.2);
+
+            &::placeholder {
+                font-style: normal;
+                font-weight: 900;
+                font-size: 20px;
+                line-height: 25px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: rgba(255, 255, 255, 0.5);
+            }
+        }
+    }
+
+    &__card {
+        width: 298px;
+    }
+
+    &__close-button {
+        position: absolute;
+        padding: 0;
+        right: 37px;
+        top: 37px;
+        border: none;
+        outline: none;
+        background: none;
+        cursor: pointer;
+    }
+
+    &__button {
+        width: 197px;
+        height: 64px;
+        border: 3px solid #fff;
+        border-radius: 10px;
+        font-style: normal;
+        font-weight: 900;
+        font-size: 20px;
+        line-height: 25px;
+        text-align: center;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        box-shadow: 0 12px 22px rgba(8, 36, 80, 0.22);
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+
+        &__buy-now {
+            position: relative;
+        }
+    }
+
+    &__timer,
+    &__timer__mobile {
+        width: 297px;
+        height: 64px;
+        border-radius: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        font-style: normal;
+        font-weight: 700;
+        font-size: 36.4809px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #cbfb00;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    &__timer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &__mobile {
+            display: none;
+        }
+    }
+
+    &__buy-now__label {
+        position: absolute;
+        right: 50%;
+        transform: translateX(50%);
+        bottom: -50px;
+        color: white;
+
+        & span {
+            display: block;
+            color: #cbfb00;
+        }
+
+        &__mobile {
+            display: none;
+        }
+    }
+
+    &__buy-now,
+    &__bid {
+        width: 100%;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+
+        &__label {
+            position: absolute;
+            font-style: normal;
+            font-weight: 900;
+            font-size: 14px;
+            line-height: 18px;
+            text-align: center;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+    }
+}
+
+@media (max-width: 1300px) {
+
+    .marketplace-modal {
+
+        &__wrapper {
+            width: 950px;
+            height: 530px;
+            padding: 36px 60px;
+        }
+
+        &__card {
+            width: 230px;
+        }
+
+        &__lot {
+            width: 552px;
+            height: 272px;
+            padding: 35px 25px;
+        }
+
+        &__buy-now {
+
+            &__label {
+                font-size: 13px;
+            }
+        }
+
+        &__title {
+            margin-bottom: 27px;
+            font-size: 27px;
+            line-height: 35px;
+            letter-spacing: 0.11em;
+        }
+
+        &__button {
+            width: 165px;
+            height: 55px;
+            font-size: 16px;
+            line-height: 25px;
+            letter-spacing: 0.11em;
+        }
+
+        &__timer {
+            width: 250px;
+            height: 55px;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            font-size: 32px;
+        }
+
+        &__bid {
+            margin-bottom: 32px;
+
+            &__label {
+                right: 70px;
+                bottom: -24px;
+                font-size: 13px;
+            }
+
+            &__input {
+                width: 210px;
+                height: 55px;
+                font-size: 17px;
+
+                &::placeholder {
+                    font-size: 17px;
+                    line-height: 22px;
+                    letter-spacing: 0.11em;
+                }
+            }
+        }
+
+        &__close-button {
+            right: 30px;
+            top: 30px;
+
+            img {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+}
+
+@media (max-width: $desktopBreakPoint) {
+
+    .marketplace-modal {
+
+        &__wrapper {
+            width: 700px;
+            height: 400px;
+            padding: 20px 40px;
+        }
+
+        &__card {
+            width: 180px;
+        }
+
+        &__lot {
+            width: 410px;
+            height: 210px;
+            padding: 25px 15px;
+        }
+
+        &__buy-now {
+
+            &__label {
+                bottom: -37px;
+                font-size: 10px;
+                line-height: 13px;
+            }
+        }
+
+        &__title {
+            margin-bottom: 20px;
+            font-size: 22px;
+            line-height: 32px;
+            letter-spacing: 0.1em;
+        }
+
+        &__button {
+            width: 125px;
+            height: 50px;
+            font-size: 14px;
+            line-height: 25px;
+            letter-spacing: 0.1em;
+        }
+
+        &__timer {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            width: 210px;
+            height: 50px;
+            font-size: 26px;
+        }
+
+        &__bid {
+            margin-bottom: 24px;
+
+            &__label {
+                font-size: 10px;
+                right: 50px;
+                bottom: -21px;
+            }
+
+            &__input {
+                width: 180px;
+                height: 50px;
+                font-size: 14px;
+
+                &::placeholder {
+                    font-size: 14px;
+                    line-height: 20px;
+                    letter-spacing: 0.1em;
+                }
+            }
+        }
+
+        &__close-button {
+            right: 25px;
+            top: 25px;
+
+            img {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+}
+
+@media (max-width: $tabletBreakPoint) {
+
+    .marketplace-modal {
+
+        &__wrapper {
+            width: 100vw;
+            height: 100vh;
+            padding: 60px 30px;
+            border-radius: 0;
+        }
+
+        &__content {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        &__card {
+            width: 270px;
+            margin-bottom: 40px;
+        }
+
+        &__lot {
+            width: 450px;
+            height: 185px;
+            padding: 25px 20px;
+        }
+
+        &__title {
+            margin-bottom: 27px;
+            font-size: 28px;
+        }
+
+        &__button {
+            width: 130px;
+            height: 45px;
+            letter-spacing: 0.12em;
+            line-height: 15px;
+            font-size: 12.7px;
+            border-radius: 6.5px;
+        }
+
+        &__timer {
+            width: 210px;
+            height: 45px;
+            padding: 6px 8px;
+            border-radius: 6.5px;
+            font-weight: 700;
+            line-height: 30px;
+            font-size: 26px;
+        }
+
+        &__bid {
+            margin-bottom: 24px;
+
+            &__label {
+                right: 50px;
+                bottom: -21px;
+                font-size: 10px;
+            }
+
+            &__input {
+                width: 150px;
+                height: 45px;
+                padding: 12px 9px;
+                letter-spacing: 0.07em;
+                font-size: 12px;
+                border-radius: 6.5px;
+
+                &::placeholder {
+                    font-size: 12px;
+                    line-height: 16px;
+                    letter-spacing: 0.07em;
+                }
+            }
+        }
+
+        &__close-button {
+            right: 20px;
+            top: 20px;
+
+            img {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint) {
+
+    .marketplace-modal {
+
+        &__wrapper {
+            padding: 46px 26px;
+        }
+
+        &__card {
+            width: 218px;
+            margin-bottom: 35px;
+        }
+
+        &__lot {
+            width: 420px;
+            height: 200px;
+            padding: 20px 16px;
+        }
+
+        &__title {
+            margin-bottom: 27px;
+            line-height: 32px;
+            letter-spacing: 0.12em;
+            text-align: center;
+            font-size: 25.7883px;
+        }
+
+        &__button {
+            width: 125px;
+            height: 40px;
+        }
+
+        &__timer {
+            display: none;
+
+            &__mobile {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 191px;
+                height: 40px;
+                padding: 0;
+                margin: 0 auto;
+                font-size: 23.5px;
+            }
+        }
+
+        &__bid {
+            margin-bottom: 24px;
+
+            &__input {
+                width: 138px;
+                height: 41px;
+                padding: 12px 9px;
+            }
+        }
+
+        &__buy-now {
+            align-items: center;
+
+            .marketplace-modal__button {
+                margin-bottom: 16.5px;
+            }
+
+            &__label {
+                display: none;
+
+                &__mobile {
+                    display: block;
+                    width: 50%;
+                    height: 27px;
+                    font-size: 12px;
+                    line-height: 13px;
+                    letter-spacing: 0.12em;
+                    font-style: normal;
+                    font-weight: 700;
+                    text-align: center;
+                    text-transform: uppercase;
+                    color: white;
+
+                    & span {
+                        display: block;
+                        color: #cbfb00;
+                    }
+                }
+            }
+        }
+
+        &__close-button {
+            right: 15px;
+            top: 15px;
+
+            img {
+                width: 12.67px;
+                height: 12.67px;
+            }
+        }
+    }
+}
+
+@media (max-width: $phoneBreakPoint - 150px) {
+
+    .marketplace-modal {
+
+        &__lot {
+            width: 100%;
+        }
+    }
+}

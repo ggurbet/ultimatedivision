@@ -7,12 +7,13 @@ import { Lot } from '@/marketplace';
 
 import './index.scss';
 
-export const MarketPlaceCardsGroup: React.FC<{ lots: Lot[] }> = ({ lots }) =>
+export const MarketPlaceCardsGroup: React.FC<{ lots: Lot[]; handleShowModal: (lot: Lot) => void }> = ({ lots, handleShowModal }) =>
     <div className="marketplace-cards">
         <div className="marketplace-cards__wrapper">
             {lots.map((lot: Lot, index: number) =>
-                <MarketPlaceFootballerCard lot={lot} key={index} />
+                <MarketPlaceFootballerCard lot={lot} key={index} handleShowModal={handleShowModal} />
             )}
         </div>
     </div>;
+
 

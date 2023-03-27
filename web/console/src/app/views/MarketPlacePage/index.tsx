@@ -2,6 +2,7 @@
 // See LICENSE for copying information.
 
 import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
 
 import { FilterField } from '@components/common/FilterField';
 import { FilterByPrice } from '@components/common/FilterField/FilterByPrice';
@@ -10,6 +11,7 @@ import { FilterByStatus } from '@components/common/FilterField/FilterByStatus';
 import { FilterByVersion } from '@components/common/FilterField/FilterByVersion';
 import { Paginator } from '@components/common/Paginator';
 import { MarketPlaceCardsGroup } from '@components/MarketPlace/MarketPlaceCardsGroup';
+import { ModalMarketPlace } from '@/app/components/common/ModalMarketplace';
 
 import { RootState } from '@/app/store';
 import {
@@ -25,9 +27,17 @@ import './index.scss';
 const DEFAULT_VALUE = 1;
 const MarketPlace: React.FC = () => {
     const dispatch = useDispatch();
+
     const { lots, page } = useSelector(
         (state: RootState) => state.marketplaceReducer.marketplacePage
     );
+    const [currentLot, setCurrentLot] = useState<Lot>();
+    const [showModal, setShowModal] = useState<boolean>(false);
+
+    const handleShowModal = (lot: Lot) => {
+        setShowModal(true);
+        setCurrentLot(lot);
+    };
 
     /** TODO: delete this after setting real data. */
     const MOCK_CARD = new Card({
@@ -129,26 +139,29 @@ const MarketPlace: React.FC = () => {
     };
 
     return (
-        <section className="marketplace">
-            <FilterField>
-                <FilterByVersion
-                    cardsQueryParameters={lotsQueryParameters}
-                    submitSearch={submitSearch}
+        <>
+            {showModal && currentLot && <ModalMarketPlace lot={currentLot} setShowModal={setShowModal} />}
+            <section className="marketplace" >
+                <FilterField>
+                    <FilterByVersion
+                        cardsQueryParameters={lotsQueryParameters}
+                        submitSearch={submitSearch}
+                    />
+                    <FilterByStats
+                        cardsQueryParameters={lotsQueryParameters}
+                        submitSearch={submitSearch}
+                    />
+                    <FilterByPrice />
+                    <FilterByStatus />
+                </FilterField>
+                <MarketPlaceCardsGroup lots={MOCK_LOTS} handleShowModal={handleShowModal} />
+                <Paginator
+                    getCardsOnPage={listOfLots}
+                    itemsCount={page.totalCount}
+                    selectedPage={page.currentPage}
                 />
-                <FilterByStats
-                    cardsQueryParameters={lotsQueryParameters}
-                    submitSearch={submitSearch}
-                />
-                <FilterByPrice />
-                <FilterByStatus />
-            </FilterField>
-            <MarketPlaceCardsGroup lots={MOCK_LOTS} />
-            <Paginator
-                getCardsOnPage={listOfLots}
-                itemsCount={page.totalCount}
-                selectedPage={page.currentPage}
-            />
-        </section>
+            </section >
+        </>
     );
 };
 
