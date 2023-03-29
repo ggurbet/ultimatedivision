@@ -227,6 +227,57 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 		if err := match.Player2.Conn.WriteJSON(resp); err != nil {
 			return nil, ErrMatchmaking.Wrap(err)
 		}
+
+		type gameRequest struct {
+			Action      gameengine.Action `json:"action"`
+			CardID      uuid.UUID         `json:"CardId"`
+			NewPosition int               `json:"newPosition"`
+		}
+
+		for i := 1; i <= startGameInformation.Rounds; i++ {
+
+			var req gameRequest
+
+			if err := match.Player1.Conn.ReadJSON(&req); err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+
+			cardAvailableAction, err := service.gameEngine.Move(ctx, startGameInformation.MatchID, gameengine.CardIDWithPosition{
+				CardID:   req.CardID,
+				Position: req.NewPosition,
+			})
+			if err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+
+			if err := match.Player1.Conn.WriteJSON(cardAvailableAction); err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+
+			if err := match.Player2.Conn.ReadJSON(&req); err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+
+			cardAvailableAction, err = service.gameEngine.Move(ctx, startGameInformation.MatchID, gameengine.CardIDWithPosition{
+				CardID:   req.CardID,
+				Position: req.NewPosition,
+			})
+			if err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+
+			if err := match.Player2.Conn.WriteJSON(cardAvailableAction); err != nil {
+				return nil, ErrMatchmaking.Wrap(err)
+			}
+		}
+
+		if err := match.Player1.Conn.WriteJSON("finish game"); err != nil {
+			return nil, ErrMatchmaking.Wrap(err)
+		}
+
+		if err := match.Player2.Conn.WriteJSON("finish game"); err != nil {
+			return nil, ErrMatchmaking.Wrap(err)
+		}
 	}
 
 	resp.Message = "you left"

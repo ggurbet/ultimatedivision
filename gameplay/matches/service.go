@@ -245,6 +245,24 @@ func (service *Service) Create(ctx context.Context, squad1ID uuid.UUID, squad2ID
 	return newMatch.ID, ErrMatches.Wrap(err)
 }
 
+// CreateMatchID creates new match and gets ID.
+func (service *Service) CreateMatchID(ctx context.Context, squad1ID uuid.UUID, squad2ID uuid.UUID, user1ID, user2ID uuid.UUID, seasonID int) (uuid.UUID, error) {
+	newMatch := Match{
+		ID:       uuid.New(),
+		User1ID:  user1ID,
+		Squad1ID: squad1ID,
+		User2ID:  user2ID,
+		Squad2ID: squad2ID,
+		SeasonID: seasonID,
+	}
+
+	if err := service.matches.Create(ctx, newMatch); err != nil {
+		return uuid.Nil, ErrMatches.Wrap(err)
+	}
+
+	return newMatch.ID, nil
+}
+
 // Get returns match by id.
 func (service *Service) Get(ctx context.Context, matchID uuid.UUID) (Match, error) {
 	match, err := service.matches.Get(ctx, matchID)

@@ -131,10 +131,12 @@ func removeIntersections(moves, playerPositions []int) (movesWithoutIntersection
 }
 
 // Move update card moves and get possible moves cells.
-func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardIDWithPosition) ([]int, error) {
+func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardIDWithPosition) (CardAvailableAction, error) {
+	var cardAvailableAction CardAvailableAction
+
 	gameInfoJSON, err := service.games.Get(ctx, matchID)
 	if err != nil {
-		return []int{}, ErrGameEngine.Wrap(err)
+		return CardAvailableAction{}, ErrGameEngine.Wrap(err)
 	}
 
 	var game Game
@@ -142,7 +144,7 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardID
 
 	err = json.Unmarshal([]byte(gameInfoJSON), &game.GameInfo)
 	if err != nil {
-		return []int{}, ErrGameEngine.Wrap(err)
+		return CardAvailableAction{}, ErrGameEngine.Wrap(err)
 	}
 
 	var moves []int
@@ -156,7 +158,7 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardID
 
 	// check whether the position we want to go to is occupied.
 	if contains(allPositionsInUse, card.Position) {
-		return moves, ErrGameEngine.New("Can not move to position, already in use")
+		return CardAvailableAction{}, ErrGameEngine.New("Can not move to position, already in use")
 	}
 
 	// check, Update and get all possible moves.
@@ -166,17 +168,17 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardID
 
 			newGameInfoJSON, err := json.Marshal(game.GameInfo)
 			if err != nil {
-				return moves, ErrGameEngine.Wrap(err)
+				return CardAvailableAction{}, ErrGameEngine.Wrap(err)
 			}
 
 			err = service.games.Update(ctx, matchID, string(newGameInfoJSON))
 			if err != nil {
-				return moves, ErrGameEngine.Wrap(err)
+				return CardAvailableAction{}, ErrGameEngine.Wrap(err)
 			}
 
 			moves, err = service.GetCardMoves(card.Position)
 			if err != nil {
-				return moves, ErrGameEngine.Wrap(err)
+				return CardAvailableAction{}, ErrGameEngine.Wrap(err)
 			}
 		}
 	}
@@ -184,7 +186,13 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardID
 	// remove already occupied positions.
 	moves = removeIntersections(moves, allPositionsInUse)
 
-	return moves, nil
+	cardAvailableAction = CardAvailableAction{
+		Action:        ActionMove,
+		CardID:        card.CardID,
+		FieldPosition: moves,
+	}
+
+	return cardAvailableAction, nil
 }
 
 // GameInformation creates a player by user.
@@ -293,7 +301,7 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		cardsAvailableAction = append(cardsAvailableAction, cardAvailableAction)
 	}
 
-	matchID, err := service.matches.Create(ctx, player1SquadID, player2SquadID, clubPlayer1.OwnerID, clubPlayer2.OwnerID, 1)
+	matchID, err := service.matches.CreateMatchID(ctx, player1SquadID, player2SquadID, clubPlayer1.OwnerID, clubPlayer2.OwnerID, 1)
 	if err != nil {
 		return MatchRepresentation{}, ErrGameEngine.Wrap(err)
 	}
@@ -309,6 +317,7 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 	}
 
 	return MatchRepresentation{
+		MatchID:                matchID,
 		User1CardsWithPosition: cardsWithPositionPlayer1,
 		User2CardsWithPosition: cardsWithPositionPlayer2,
 		BallPosition:           0,
@@ -317,6 +326,7 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		User2ClubInformation:   clubPlayer2,
 		User1SquadInformation:  squadPlayer1,
 		User2SquadInformation:  squadPlayer2,
+		Rounds:                 service.config.Rounds,
 	}, nil
 }
 

@@ -45,6 +45,7 @@ const (
 type Config struct {
 	LeftSide  LeftSide  `json:"leftSide"`
 	RightSide RightSide `json:"rightSide"`
+	Rounds    int       `json:"rounds"`
 }
 
 // LeftSide contains config values of the left side team positions.
@@ -89,6 +90,7 @@ type CardWithPosition struct {
 // MatchRepresentation defines user1 and user2 cards with positions,
 // ball position at the moment and available actions for user cards.
 type MatchRepresentation struct {
+	MatchID                uuid.UUID             `json:"matchId"`
 	User1CardsWithPosition []CardWithPosition    `json:"user1CardsWithPosition"`
 	User2CardsWithPosition []CardWithPosition    `json:"user2CardsWithPosition"`
 	BallPosition           int                   `json:"ballPosition"`
@@ -97,4 +99,5 @@ type MatchRepresentation struct {
 	User2ClubInformation   clubs.Club            `json:"user2ClubInformation"`
 	User1SquadInformation  clubs.Squad           `json:"user1SquadInformation"`
 	User2SquadInformation  clubs.Squad           `json:"user2SquadInformation"`
+	Rounds                 int                   `json:"rounds"`
 }
