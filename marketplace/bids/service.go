@@ -84,6 +84,9 @@ func (service *Service) Create(ctx context.Context, bid Bid) error {
 		return ErrBids.Wrap(err)
 	}
 
+	if err = service.marketplace.UpdateCurrentPriceLot(ctx, bid.LotID, bid.Amount); err != nil {
+		return ErrBids.Wrap(err)
+	}
 	return nil
 }
 
