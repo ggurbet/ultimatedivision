@@ -13,7 +13,7 @@ import { RouteConfig } from '@/app/routes';
 import { RootState } from '@/app/store';
 import { getMatchScore } from '@/app/store/actions/mathes';
 import { startSearchingMatch } from '@/app/store/actions/clubs';
-import { getCurrentWebSocketClient, sendAction, setMatchQueue } from '@/webSockets/service';
+import { getCurrentWebSocketClient, onCloseConnection, onOpenConnectionNoAction, sendAction, setMatchQueue } from '@/webSockets/service';
 import { ToastNotifications } from '@/notifications/service';
 
 import './index.scss';
@@ -127,8 +127,11 @@ const MatchFinder: React.FC = () => {
 
                 return;
 
-            case YOU_LEAVED_MESSAGE:
-                dispatch(startSearchingMatch(false));
+                case YOU_LEAVED_MESSAGE:
+                    setIsMatchFound(false);
+                    dispatch(startSearchingMatch(false));
+                    onCloseConnection();
+                    onOpenConnectionNoAction();
 
                 return;
             default:
