@@ -71,6 +71,36 @@ func (controller *Cards) Get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GetStatus is an endpoint that allows to view card status.
+func (controller *Cards) GetStatus(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	vars := mux.Vars(r)
+	w.Header().Set("Content-Type", "application/json")
+
+	id, err := uuid.Parse(vars["id"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrCards.Wrap(err))
+		return
+	}
+
+	cardStatus, err := controller.cards.GetStatus(ctx, id)
+	if err != nil {
+		controller.log.Error("could not get card status", ErrCards.Wrap(err))
+		switch {
+		case cards.ErrNoCard.Has(err):
+			controller.serveError(w, http.StatusNotFound, ErrCards.Wrap(err))
+		default:
+			controller.serveError(w, http.StatusInternalServerError, ErrCards.Wrap(err))
+		}
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(cardStatus); err != nil {
+		controller.log.Error("failed to write json response", ErrCards.Wrap(err))
+		return
+	}
+}
+
 // List is an endpoint that allows will view cards.
 func (controller *Cards) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()

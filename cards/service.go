@@ -319,6 +319,12 @@ func (service *Service) Get(ctx context.Context, cardID uuid.UUID) (Card, error)
 	return card, ErrCards.Wrap(err)
 }
 
+// GetStatus returns card status from DB.
+func (service *Service) GetStatus(ctx context.Context, cardID uuid.UUID) (int, error) {
+	card, err := service.cards.GetStatus(ctx, cardID)
+	return card, ErrCards.Wrap(err)
+}
+
 // GetByPlayerName returns card by player name from DB.
 func (service *Service) GetByPlayerName(ctx context.Context, playerName string) (Card, error) {
 	card, err := service.cards.GetByPlayerName(ctx, playerName)

@@ -322,6 +322,12 @@ func TestMarketplace(t *testing.T) {
 			compareLot(t, lot1, lotFromDB)
 		})
 
+		t.Run("get current price by card id", func(t *testing.T) {
+			currentPrice, err := repositoryMarketplace.GetCurrentPriceByCardID(ctx, lot1.CardID)
+			require.NoError(t, err)
+			require.Equal(t, lot1.CurrentPrice, currentPrice)
+		})
+
 		t.Run("update end time of lot sql no rows", func(t *testing.T) {
 			err := repositoryMarketplace.UpdateEndTimeLot(ctx, id, lot1.EndTime)
 			require.Error(t, err)

@@ -99,6 +99,28 @@ func (marketplaceDB *marketplaceDB) GetLotByID(ctx context.Context, id uuid.UUID
 	}
 }
 
+// GetCurrentPriceByCardID returns current price by card id from the data base.
+func (marketplaceDB *marketplaceDB) GetCurrentPriceByCardID(ctx context.Context, cardID uuid.UUID) (big.Int, error) {
+	var (
+		currentPrice    []byte
+		currentPriceInt big.Int
+	)
+
+	query := `SELECT current_price FROM lots WHERE card_id = $1`
+
+	err := marketplaceDB.conn.QueryRowContext(ctx, query, cardID).Scan(&currentPrice)
+	currentPriceInt.SetBytes(currentPrice)
+
+	switch {
+	case errors.Is(err, sql.ErrNoRows):
+		return currentPriceInt, marketplace.ErrNoLot.Wrap(err)
+	case err != nil:
+		return currentPriceInt, ErrMarketplace.Wrap(err)
+	default:
+		return currentPriceInt, nil
+	}
+}
+
 // ListActiveLots returns active lots from the data base.
 func (marketplaceDB *marketplaceDB) ListActiveLots(ctx context.Context, cursor pagination.Cursor) (marketplace.Page, error) {
 	var (

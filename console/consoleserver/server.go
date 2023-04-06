@@ -155,6 +155,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	cardsRouter.Use(server.withAuth)
 	cardsRouter.HandleFunc("", cardsController.List).Methods(http.MethodGet)
 	cardsRouter.HandleFunc("/{id}", cardsController.Get).Methods(http.MethodGet)
+	cardsRouter.HandleFunc("/status/{id}", cardsController.GetStatus).Methods(http.MethodGet)
 
 	clubsRouter := apiRouter.PathPrefix("/clubs").Subrouter()
 	clubsRouter.Use(server.withAuth)
@@ -182,6 +183,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	marketplaceRouterWithAuth := marketplaceRouter
 	marketplaceRouterWithAuth.Use(server.withAuth)
 	marketplaceRouterWithAuth.HandleFunc("/{id}", marketplaceController.GetLotByID).Methods(http.MethodGet)
+	marketplaceRouterWithAuth.HandleFunc("/price/{card_id}", marketplaceController.GetCurrentPriceByCardID).Methods(http.MethodGet)
 	marketplaceRouterWithAuth.HandleFunc("", marketplaceController.CreateLot).Methods(http.MethodPost)
 	marketplaceRouterWithAuth.HandleFunc("/bet", marketplaceController.PlaceBetLot).Methods(http.MethodPost)
 

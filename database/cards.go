@@ -90,6 +90,19 @@ func (cardsDB *cardsDB) Get(ctx context.Context, id uuid.UUID) (cards.Card, erro
 	return card, ErrCard.Wrap(err)
 }
 
+// GetStatus returns card status by id from the data base.
+func (cardsDB *cardsDB) GetStatus(ctx context.Context, id uuid.UUID) (int, error) {
+	var cardStatus int
+	query := `SELECT status FROM cards WHERE id = $1`
+
+	err := cardsDB.conn.QueryRowContext(ctx, query, id).Scan(cardStatus)
+	if errors.Is(err, sql.ErrNoRows) {
+		return cardStatus, cards.ErrNoCard.Wrap(err)
+	}
+
+	return cardStatus, ErrCard.Wrap(err)
+}
+
 // GetByPlayerName returns card by player name from DB.
 func (cardsDB *cardsDB) GetByPlayerName(ctx context.Context, playerName string) (cards.Card, error) {
 	card := cards.Card{}

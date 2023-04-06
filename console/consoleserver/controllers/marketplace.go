@@ -164,6 +164,36 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 	}
 }
 
+// GetCurrentPriceByCardID is an endpoint that returns price by card id.
+func (controller *Marketplace) GetCurrentPriceByCardID(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+	vars := mux.Vars(r)
+
+	cardID, err := uuid.Parse(vars["card_id"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+		return
+	}
+
+	cardPrice, err := controller.marketplace.GetCurrentPriceByCardID(ctx, cardID)
+	if err != nil {
+		controller.log.Error("could not get lot by id", ErrMarketplace.Wrap(err))
+		switch {
+		case marketplace.ErrNoLot.Has(err):
+			controller.serveError(w, http.StatusNotFound, ErrMarketplace.Wrap(err))
+		default:
+			controller.serveError(w, http.StatusInternalServerError, ErrMarketplace.Wrap(err))
+		}
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(cardPrice.Int64()); err != nil {
+		controller.log.Error("failed to write json response", ErrMarketplace.Wrap(err))
+		return
+	}
+}
+
 // CreateLot is an endpoint that creates lot.
 func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
