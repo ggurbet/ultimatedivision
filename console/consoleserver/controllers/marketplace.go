@@ -5,11 +5,12 @@ package controllers
 
 import (
 	"encoding/json"
-	"math/big"
+	"math"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/BoostyLabs/evmsignature"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/zeebo/errs"
@@ -104,7 +105,31 @@ func (controller *Marketplace) ListActiveLots(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	if err = json.NewEncoder(w).Encode(lotsPage); err != nil {
+	var lots []marketplace.Lot
+	for _, oneLot := range lotsPage.Lots {
+		lot := marketplace.Lot{
+			CardID:       oneLot.Card.ID,
+			Type:         oneLot.Type,
+			UserID:       oneLot.UserID,
+			ShopperID:    oneLot.ShopperID,
+			Status:       oneLot.Status,
+			StartPrice:   oneLot.StartPrice,
+			MaxPrice:     oneLot.MaxPrice,
+			CurrentPrice: *evmsignature.WeiBigToEthereumBig(&oneLot.CurrentPrice),
+			StartTime:    oneLot.StartTime,
+			EndTime:      oneLot.EndTime,
+			Period:       oneLot.Period,
+			Card:         oneLot.Card,
+		}
+		lots = append(lots, lot)
+	}
+
+	lotsListPage := marketplace.Page{
+		Lots: lots,
+		Page: lotsPage.Page,
+	}
+
+	if err = json.NewEncoder(w).Encode(lotsListPage); err != nil {
 		controller.log.Error("failed to write json response", ErrMarketplace.Wrap(err))
 		return
 	}
@@ -138,9 +163,9 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 		CardID       uuid.UUID          `json:"cardId"`
 		Type         marketplace.Type   `json:"type"`
 		Status       marketplace.Status `json:"status"`
-		StartPrice   big.Int            `json:"startPrice"`
-		MaxPrice     big.Int            `json:"maxPrice"`
-		CurrentPrice big.Int            `json:"currentPrice"`
+		StartPrice   float64            `json:"startPrice"`
+		MaxPrice     float64            `json:"maxPrice"`
+		CurrentPrice float64            `json:"currentPrice"`
 		StartTime    time.Time          `json:"startTime"`
 		EndTime      time.Time          `json:"endTime"`
 		Period       marketplace.Period `json:"period"`
@@ -149,9 +174,9 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 		CardID:       lot.Card.ID,
 		Type:         lot.Type,
 		Status:       lot.Status,
-		StartPrice:   lot.StartPrice,
-		MaxPrice:     lot.MaxPrice,
-		CurrentPrice: lot.CurrentPrice,
+		StartPrice:   roundFloat(evmsignature.WeiBigToEthereumFloat(&lot.StartPrice), 3),
+		MaxPrice:     roundFloat(evmsignature.WeiBigToEthereumFloat(&lot.MaxPrice), 3),
+		CurrentPrice: roundFloat(evmsignature.WeiBigToEthereumFloat(&lot.CurrentPrice), 3),
 		StartTime:    lot.StartTime,
 		EndTime:      lot.EndTime,
 		Period:       lot.Period,
@@ -213,8 +238,8 @@ func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request)
 
 	// TODO: remove after adding Casper contract.
 	// if _, err = controller.marketplace.GetNFTByCardID(ctx, createLot.CardID); err != nil {
-	//	controller.log.Error("there is no such NFT", ErrMarketplace.Wrap(err))
-	//	controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+	//  controller.log.Error("there is no such NFT", ErrMarketplace.Wrap(err))
+	//  controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
 	// } .
 
 	createLot.UserID = claims.UserID
@@ -272,4 +297,10 @@ func (controller *Marketplace) serveError(w http.ResponseWriter, status int, err
 	if err = json.NewEncoder(w).Encode(response); err != nil {
 		controller.log.Error("failed to write json error response", ErrMarketplace.Wrap(err))
 	}
+}
+
+// roundFloat floating-point rounding function.
+func roundFloat(val float64, precision uint) float64 {
+	ratio := math.Pow(10, float64(precision))
+	return math.Round(val*ratio) / ratio
 }
