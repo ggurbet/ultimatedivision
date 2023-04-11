@@ -50,42 +50,90 @@ const (
 )
 
 // GetCardMoves get all card possible moves.
-func (service *Service) GetCardMoves(cardPlace int) ([]int, error) {
-	top := []int{77, 70, 63, 56, 49, 42, 35, 28, 21, 14, 7, 0}
+func (service *Service) GetCardMoves(cardPlace int, isThreeSteps bool) ([]int, error) {
 	bottom := []int{6, 13, 20, 27, 34, 41, 48, 55, 62, 69, 76, 83}
+	bottom1 := []int{82, 75, 68, 61, 54, 47, 40, 33, 26, 19, 12, 5}
+	bottom2 := []int{81, 74, 67, 60, 53, 46, 39, 32, 25, 18, 11, 4}
+
+	top := []int{77, 70, 63, 56, 49, 42, 35, 28, 21, 14, 7, 0}
+	top1 := []int{71, 64, 57, 50, 43, 36, 29, 22, 15}
+	top2 := []int{72, 65, 58, 51, 44, 37, 30, 23, 16, 9, 2, 79}
+
 	exceptions := []int{1, 5, 78, 82}
 
 	if cardPlace < minPlace || cardPlace > maxPlace {
 		return []int{}, ErrGameEngine.New("player place can not be more 83 or les than 0, player place is %d", cardPlace)
 	}
+
 	var stepInWidth []int
-
-	switch {
-	case contains(top, cardPlace):
-		stepInWidth = append(stepInWidth, cardPlace, cardPlace+1, cardPlace+2)
-
-	case contains(bottom, cardPlace):
-		stepInWidth = append(stepInWidth, cardPlace-2, cardPlace-1, cardPlace)
-
-	case contains(exceptions, cardPlace):
-		stepInWidth = append(stepInWidth, cardPlace-1, cardPlace, cardPlace+1)
-
-	case cardPlace == 8:
-		stepInWidth = append(stepInWidth, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2)
-
-	case cardPlace == 12:
-		stepInWidth = append(stepInWidth, cardPlace-2, cardPlace-1, cardPlace, cardPlace+1)
-
-	default:
-		stepInWidth = append(stepInWidth, cardPlace-2, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2)
-	}
-
 	var moves []int
 
-	for _, w := range stepInWidth {
-		min := w - 14
-		max := w + 14
-		moves = append(moves, min, min+7, max-7, max, w)
+	if isThreeSteps == true {
+
+		switch {
+		case contains(top, cardPlace):
+			stepInWidth = append(stepInWidth, cardPlace, cardPlace+1, cardPlace+2, cardPlace+3)
+
+		case contains(top1, cardPlace):
+			stepInWidth = append(stepInWidth, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2)
+
+		case contains(top2, cardPlace):
+			stepInWidth = append(stepInWidth, cardPlace-2, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2, cardPlace+3)
+
+		case contains(bottom, cardPlace):
+			stepInWidth = append(stepInWidth, cardPlace-3, cardPlace-2, cardPlace-1, cardPlace)
+
+		case contains(bottom1, cardPlace):
+			stepInWidth = append(stepInWidth, cardPlace-3, cardPlace-2, cardPlace-1, cardPlace, cardPlace+1)
+
+		case contains(bottom2, cardPlace):
+			stepInWidth = append(stepInWidth, cardPlace-3, cardPlace-2, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2)
+
+		case contains(exceptions, cardPlace):
+			stepInWidth = append(stepInWidth, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2, cardPlace+3)
+
+		case cardPlace == 8:
+			stepInWidth = append(stepInWidth, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2, cardPlace+3)
+
+		case cardPlace == 12:
+			stepInWidth = append(stepInWidth, cardPlace-3, cardPlace-2, cardPlace-1, cardPlace, cardPlace+1)
+
+		}
+
+		for _, w := range stepInWidth {
+			min := w - 14
+			max := w + 14
+			min21 := w - 21
+			max21 := w + 21
+			moves = append(moves, min, min+7, max-7, max, w, min21, max21)
+		}
+
+	} else {
+		switch {
+		case contains(top, cardPlace):
+			stepInWidth = append(stepInWidth, cardPlace, cardPlace+1, cardPlace+2)
+
+		case contains(bottom, cardPlace):
+			stepInWidth = append(stepInWidth, cardPlace-2, cardPlace-1, cardPlace)
+
+		case contains(exceptions, cardPlace):
+			stepInWidth = append(stepInWidth, cardPlace-1, cardPlace, cardPlace+1)
+
+		case cardPlace == 8:
+			stepInWidth = append(stepInWidth, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2)
+
+		case cardPlace == 12:
+			stepInWidth = append(stepInWidth, cardPlace-2, cardPlace-1, cardPlace, cardPlace+1)
+
+		default:
+		}
+		stepInWidth = append(stepInWidth, cardPlace-2, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2)
+
+		for _, w := range stepInWidth {
+			min := w - 14
+			max := w + 14
+			moves = append(moves, min, min+7, max-7, max, w)
+		}
 	}
 
 	sort.Ints(moves)
@@ -175,8 +223,8 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardID
 			if err != nil {
 				return CardAvailableAction{}, ErrGameEngine.Wrap(err)
 			}
-
-			moves, err = service.GetCardMoves(card.Position)
+			isThreeSteps := true
+			moves, err = service.GetCardMoves(card.Position, isThreeSteps)
 			if err != nil {
 				return CardAvailableAction{}, ErrGameEngine.Wrap(err)
 			}
@@ -251,8 +299,8 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		}
 
 		matchInfo = append(matchInfo, cardInfo)
-
-		fieldPosition, err := service.GetCardMoves(cardWithPositionPlayer.FieldPosition)
+		isThreeSteps := true
+		fieldPosition, err := service.GetCardMoves(cardWithPositionPlayer.FieldPosition, isThreeSteps)
 		if err != nil {
 			return MatchRepresentation{}, ErrGameEngine.Wrap(err)
 		}
@@ -278,8 +326,8 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 			Avatar:        avatar,
 			FieldPosition: service.squadPositionToFieldPositionRightSide(sqCard.Position),
 		}
-
-		fieldPosition, err := service.GetCardMoves(cardWithPositionPlayer.FieldPosition)
+		isThreeSteps := true
+		fieldPosition, err := service.GetCardMoves(cardWithPositionPlayer.FieldPosition, isThreeSteps)
 		if err != nil {
 			return MatchRepresentation{}, ErrGameEngine.Wrap(err)
 		}
