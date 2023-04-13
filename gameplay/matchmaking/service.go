@@ -242,10 +242,11 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 				return nil, ErrMatchmaking.Wrap(err)
 			}
 
-			cardAvailableAction, err := service.gameEngine.Move(ctx, startGameInformation.MatchID, gameengine.CardIDWithPosition{
-				CardID:   req.CardID,
-				Position: req.NewPosition,
-			})
+			cardAvailableAction, err := service.gameEngine.GameLogicByAction(ctx, startGameInformation.MatchID,
+				gameengine.CardIDWithPosition{
+					CardID:   req.CardID,
+					Position: req.NewPosition,
+				}, req.Action)
 			if err != nil {
 				return nil, ErrMatchmaking.Wrap(err)
 			}
@@ -258,10 +259,10 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 				return nil, ErrMatchmaking.Wrap(err)
 			}
 
-			cardAvailableAction, err = service.gameEngine.Move(ctx, startGameInformation.MatchID, gameengine.CardIDWithPosition{
+			cardAvailableAction, err = service.gameEngine.GameLogicByAction(ctx, startGameInformation.MatchID, gameengine.CardIDWithPosition{
 				CardID:   req.CardID,
 				Position: req.NewPosition,
-			})
+			}, req.Action)
 			if err != nil {
 				return nil, ErrMatchmaking.Wrap(err)
 			}

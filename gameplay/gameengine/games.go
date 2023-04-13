@@ -35,6 +35,12 @@ type Game struct {
 
 // CardIDWithPosition defines card ID with possible moves cells for game.
 type CardIDWithPosition struct {
-	CardID   uuid.UUID `json:"cardID"`
+	CardID   uuid.UUID `json:"cardId"`
 	Position int       `json:"position"`
+}
+
+// CardIDsWithPositionWithBallPosition defines card ID with cells position and ball position.
+type CardIDsWithPositionWithBallPosition struct {
+	CardIDsWithPosition []CardIDWithPosition `json:"cardIdsWithPosition"`
+	BallPosition        int                  `json:"ballPosition"`
 }

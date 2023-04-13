@@ -179,7 +179,7 @@ func removeIntersections(moves, playerPositions []int) (movesWithoutIntersection
 }
 
 // Move update card moves and get possible moves cells.
-func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardIDWithPosition) (CardAvailableAction, error) {
+func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardIDWithPosition, isCardFast bool) (CardAvailableAction, error) {
 	var cardAvailableAction CardAvailableAction
 
 	gameInfoJSON, err := service.games.Get(ctx, matchID)
@@ -223,8 +223,8 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardID
 			if err != nil {
 				return CardAvailableAction{}, ErrGameEngine.Wrap(err)
 			}
-			isThreeSteps := true
-			moves, err = service.GetCardMoves(card.Position, isThreeSteps)
+
+			moves, err = service.GetCardMoves(card.Position, isCardFast)
 			if err != nil {
 				return CardAvailableAction{}, ErrGameEngine.Wrap(err)
 			}
@@ -248,6 +248,7 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 	var cardsWithPositionPlayer1 []CardWithPosition
 	var cardsWithPositionPlayer2 []CardWithPosition
 	var cardsAvailableAction []CardAvailableAction
+	var ballPosition int
 
 	squadCardsPlayer1, err := service.clubs.ListCards(ctx, player1SquadID)
 	if err != nil {
@@ -282,6 +283,15 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 	var matchInfo []CardIDWithPosition
 
 	for _, sqCard := range squadCardsPlayer1 {
+		fieldPosition := service.squadPositionToFieldPositionLeftSide(sqCard.Position)
+
+		if ballPosition < fieldPosition {
+			ballPosition = fieldPosition
+		}
+
+	}
+
+	for _, sqCard := range squadCardsPlayer1 {
 		avatar, err := service.avatars.Get(ctx, sqCard.Card.ID)
 		if err != nil {
 			return MatchRepresentation{}, ErrGameEngine.Wrap(err)
@@ -299,8 +309,13 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		}
 
 		matchInfo = append(matchInfo, cardInfo)
-		isThreeSteps := true
-		fieldPosition, err := service.GetCardMoves(cardWithPositionPlayer.FieldPosition, isThreeSteps)
+
+		isCardFast := false
+		if sqCard.Card.RunningSpeed > 80 && cardInfo.Position == ballPosition || sqCard.Card.RunningSpeed > 70 {
+			isCardFast = true
+		}
+
+		fieldPosition, err := service.GetCardMoves(cardWithPositionPlayer.FieldPosition, isCardFast)
 		if err != nil {
 			return MatchRepresentation{}, ErrGameEngine.Wrap(err)
 		}
@@ -326,8 +341,13 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 			Avatar:        avatar,
 			FieldPosition: service.squadPositionToFieldPositionRightSide(sqCard.Position),
 		}
-		isThreeSteps := true
-		fieldPosition, err := service.GetCardMoves(cardWithPositionPlayer.FieldPosition, isThreeSteps)
+
+		isCardFast := false
+		if sqCard.Card.RunningSpeed > 70 {
+			isCardFast = true
+		}
+
+		fieldPosition, err := service.GetCardMoves(cardWithPositionPlayer.FieldPosition, isCardFast)
 		if err != nil {
 			return MatchRepresentation{}, ErrGameEngine.Wrap(err)
 		}
@@ -354,7 +374,12 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		return MatchRepresentation{}, ErrGameEngine.Wrap(err)
 	}
 
-	gameInfo, err := json.Marshal(matchInfo)
+	cardIDsWithPositionWithBallPosition := CardIDsWithPositionWithBallPosition{
+		CardIDsWithPosition: matchInfo,
+		BallPosition:        ballPosition,
+	}
+
+	gameInfo, err := json.Marshal(cardIDsWithPositionWithBallPosition)
 	if err != nil {
 		return MatchRepresentation{}, ErrGameEngine.Wrap(err)
 	}
@@ -368,7 +393,7 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		MatchID:                matchID,
 		User1CardsWithPosition: cardsWithPositionPlayer1,
 		User2CardsWithPosition: cardsWithPositionPlayer2,
-		BallPosition:           0,
+		BallPosition:           ballPosition,
 		CardAvailableAction:    cardsAvailableAction,
 		User1ClubInformation:   clubPlayer1,
 		User2ClubInformation:   clubPlayer2,
@@ -376,6 +401,55 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		User2SquadInformation:  squadPlayer2,
 		Rounds:                 service.config.Rounds,
 	}, nil
+}
+
+// GameLogicByAction returns game logic by action.
+func (service *Service) GameLogicByAction(ctx context.Context, matchID uuid.UUID, cardIDWithPosition CardIDWithPosition, action Action) (CardAvailableAction, error) {
+	hasBall, err := service.ifCardHasBall(ctx, matchID, cardIDWithPosition.CardID)
+	if err != nil {
+		return CardAvailableAction{}, ErrGameEngine.Wrap(err)
+	}
+
+	card, err := service.cards.Get(ctx, cardIDWithPosition.CardID)
+	if err != nil {
+		return CardAvailableAction{}, ErrGameEngine.Wrap(err)
+	}
+
+	switch action {
+	case ActionMove:
+		isCardFast := false
+		if hasBall && card.RunningSpeed > 80 || !hasBall && card.RunningSpeed > 70 {
+			isCardFast = true
+		}
+		return service.Move(ctx, matchID, cardIDWithPosition, isCardFast)
+	case ActionPass:
+
+	}
+
+	return CardAvailableAction{}, nil
+}
+
+func (service *Service) ifCardHasBall(ctx context.Context, matchID uuid.UUID, cardID uuid.UUID) (bool, error) {
+	var cardIDsWithPositionWithBallPosition CardIDsWithPositionWithBallPosition
+
+	gameInfo, err := service.games.Get(ctx, matchID)
+	if err != nil {
+		return false, ErrGameEngine.Wrap(err)
+	}
+
+	err = json.Unmarshal([]byte(gameInfo), &cardIDsWithPositionWithBallPosition)
+	if err != nil {
+		return false, ErrGameEngine.Wrap(err)
+	}
+
+	for _, position := range cardIDsWithPositionWithBallPosition.CardIDsWithPosition {
+		if cardID == position.CardID {
+			if position.Position == cardIDsWithPositionWithBallPosition.BallPosition {
+				return true, nil
+			}
+		}
+	}
+	return false, nil
 }
 
 func (service *Service) squadPositionToFieldPositionLeftSide(squadPosition clubs.Position) int {
