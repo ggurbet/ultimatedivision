@@ -189,6 +189,36 @@ func (controller *Marketplace) GetLotByID(w http.ResponseWriter, r *http.Request
 	}
 }
 
+// IsExpired is an endpoint that returns lot end time by id.
+func (controller *Marketplace) IsExpired(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+	vars := mux.Vars(r)
+
+	id, err := uuid.Parse(vars["id"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+		return
+	}
+
+	isExpired, err := controller.marketplace.GetLotEndTimeByID(ctx, id)
+	if err != nil {
+		controller.log.Error("could not get lot end time by id", ErrMarketplace.Wrap(err))
+		switch {
+		case marketplace.ErrNoLot.Has(err):
+			controller.serveError(w, http.StatusNotFound, ErrMarketplace.Wrap(err))
+		default:
+			controller.serveError(w, http.StatusInternalServerError, ErrMarketplace.Wrap(err))
+		}
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(isExpired); err != nil {
+		controller.log.Error("failed to write json response", ErrMarketplace.Wrap(err))
+		return
+	}
+}
+
 // GetCurrentPriceByCardID is an endpoint that returns price by card id.
 func (controller *Marketplace) GetCurrentPriceByCardID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

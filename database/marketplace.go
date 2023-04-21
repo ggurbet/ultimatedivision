@@ -99,6 +99,24 @@ func (marketplaceDB *marketplaceDB) GetLotByID(ctx context.Context, id uuid.UUID
 	}
 }
 
+// GetLotEndTimeByID returns lot end time by id from data base.
+func (marketplaceDB *marketplaceDB) GetLotEndTimeByID(ctx context.Context, id uuid.UUID) (time.Time, error) {
+	var endTime time.Time
+
+	query := `SELECT end_time FROM lots WHERE card_id = $1`
+
+	err := marketplaceDB.conn.QueryRowContext(ctx, query, id).Scan(&endTime)
+
+	switch {
+	case errors.Is(err, sql.ErrNoRows):
+		return endTime, marketplace.ErrNoLot.Wrap(err)
+	case err != nil:
+		return endTime, ErrMarketplace.Wrap(err)
+	default:
+		return endTime, nil
+	}
+}
+
 // GetCurrentPriceByCardID returns current price by card id from the data base.
 func (marketplaceDB *marketplaceDB) GetCurrentPriceByCardID(ctx context.Context, cardID uuid.UUID) (big.Int, error) {
 	var (

@@ -229,6 +229,12 @@ func TestMarketplace(t *testing.T) {
 			compareLot(t, lot1, lotFromDB)
 		})
 
+		t.Run("get lot end time", func(t *testing.T) {
+			endTime, err := repositoryMarketplace.GetLotEndTimeByID(ctx, lot1.CardID)
+			require.NoError(t, err)
+			assert.WithinDuration(t, lot1.EndTime, endTime, 1*time.Second)
+		})
+
 		t.Run("list active", func(t *testing.T) {
 			err := repositoryUsers.Create(ctx, user2)
 			require.NoError(t, err)

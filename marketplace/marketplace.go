@@ -27,6 +27,8 @@ type DB interface {
 	CreateLot(ctx context.Context, lot Lot) error
 	// GetLotByID returns lot by id from the data base.
 	GetLotByID(ctx context.Context, id uuid.UUID) (Lot, error)
+	// GetLotEndTimeByID returns lot end time by id from data base.
+	GetLotEndTimeByID(ctx context.Context, id uuid.UUID) (time.Time, error)
 	// GetCurrentPriceByCardID returns current price by card id from the data base.
 	GetCurrentPriceByCardID(ctx context.Context, cardID uuid.UUID) (big.Int, error)
 	// ListActiveLots returns active lots from the data base.
