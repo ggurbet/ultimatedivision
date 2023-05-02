@@ -156,6 +156,60 @@ func (service *Service) GetCardPasses(teamPositions, availablePassCells []int) [
 	return availablePasses
 }
 
+// TeamsList returns teams lineups with positions.
+func (service *Service) TeamsList(ctx context.Context, matchID uuid.UUID, cardID uuid.UUID) ([]CardIDWithPosition, []CardIDWithPosition, error) {
+	var yourCards []CardIDWithPosition
+	var opponentCards []CardIDWithPosition
+
+	gameInfoJSON, err := service.games.Get(ctx, matchID)
+	if err != nil {
+		return yourCards, opponentCards, ErrGameEngine.Wrap(err)
+	}
+
+	var game Game
+	game.MatchID = matchID
+
+	err = json.Unmarshal([]byte(gameInfoJSON), &game.GameInfo)
+	if err != nil {
+		return yourCards, opponentCards, ErrGameEngine.Wrap(err)
+	}
+
+	var opponentTeam = Player1
+	for _, card := range game.GameInfo {
+		if card.CardID == cardID {
+			if card.Team == Player1 {
+				opponentTeam = Player2
+			}
+		}
+	}
+
+	for _, card := range game.GameInfo {
+		if card.Team == opponentTeam {
+			opponentCards = append(opponentCards, card)
+		} else {
+			yourCards = append(yourCards, card)
+		}
+	}
+
+	return yourCards, opponentCards, ErrGameEngine.Wrap(err)
+}
+
+// TeamListWithStats returns teams lineups with stats.
+func (service *Service) TeamListWithStats(ctx context.Context, allCards []CardIDWithPosition) ([]CardWithPosition, error) {
+	var cardsWithStatsAndPositions []CardWithPosition
+
+	for i, card := range allCards {
+		cardWIthStats, err := service.cards.Get(ctx, card.CardID)
+		if err != nil {
+			return cardsWithStatsAndPositions, ErrGameEngine.Wrap(err)
+		}
+		cardsWithStatsAndPositions[i].FieldPosition = card.Position
+		cardsWithStatsAndPositions[i].Card = cardWIthStats
+	}
+
+	return cardsWithStatsAndPositions, nil
+}
+
 // GivePass get info about pass and return final ball cell.
 func (service *Service) GivePass(passWay []int, passReceiverStats CardWithPosition, passGiverCard, passReceiverCard cards.Card, opponentsWithPosition []CardWithPosition) int {
 	for _, opponent := range opponentsWithPosition {
@@ -170,6 +224,38 @@ func (service *Service) GivePass(passWay []int, passReceiverStats CardWithPositi
 	}
 
 	return ballBounce(passReceiverStats.FieldPosition)
+}
+
+// PowerShot get result of the power shot.
+func (service *Service) PowerShot(passWay []int, passReceiverStats CardWithPosition, goalKeeper, powerShotProvider cards.Card, opponentsWithPosition []CardWithPosition) int {
+	var ballPosition int
+	for _, opponent := range opponentsWithPosition {
+		if contains(passWay, opponent.FieldPosition) {
+			if whoWon(opponent.Card.ReactionSpeed/2, powerShotProvider.ShortPassing) {
+				return ballBounce(passReceiverStats.FieldPosition)
+			}
+		}
+	}
+	if whoWon(powerShotProvider.Accuracy, 20) {
+		return service.GoalKick(1)
+	}
+	if whoWon(powerShotProvider.Accuracy/2, goalKeeper.Reflexes) {
+		return service.Goal(1)
+	}
+	return ballPosition
+}
+
+// GoalKick get all field cells possible to goal kick.
+func (service *Service) GoalKick(something int) int {
+
+	return 0
+
+}
+
+// Goal returns start position after goal.
+func (service *Service) Goal(something int) int {
+
+	return 0
 }
 
 // ballBounce calculates the position of the ball bounce.
@@ -414,6 +500,7 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		cardInfo := CardIDWithPosition{
 			CardID:   sqCard.Card.ID,
 			Position: cardWithPositionPlayer.FieldPosition,
+			Team:     Player1,
 		}
 
 		matchInfo = append(matchInfo, cardInfo)
@@ -481,6 +568,7 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		cardInfo := CardIDWithPosition{
 			CardID:   sqCard.Card.ID,
 			Position: cardWithPositionPlayer.FieldPosition,
+			Team:     Player2,
 		}
 
 		matchInfo = append(matchInfo, cardInfo)

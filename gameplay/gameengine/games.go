@@ -27,6 +27,13 @@ type DB interface {
 	Delete(ctx context.Context, gameID uuid.UUID) error
 }
 
+const (
+	// Player1 describes the first player.
+	Player1 = "player1"
+	// Player2 describes the second player.
+	Player2 = "player2"
+)
+
 // Game defines game data.
 type Game struct {
 	MatchID  uuid.UUID
@@ -37,6 +44,7 @@ type Game struct {
 type CardIDWithPosition struct {
 	CardID   uuid.UUID `json:"cardId"`
 	Position int       `json:"position"`
+	Team     string    `json:"team"`
 }
 
 // CardIDsWithPositionWithBallPosition defines card ID with cells position and ball position.
