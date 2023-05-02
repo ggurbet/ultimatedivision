@@ -175,7 +175,7 @@ func (service *Service) TeamsList(ctx context.Context, matchID uuid.UUID, cardID
 	}
 
 	var opponentTeam = Player1
-	for _, card := range game.GameInfo {
+	for _, card := range game.GameInfo.CardIDsWithPosition {
 		if card.CardID == cardID {
 			if card.Team == Player1 {
 				opponentTeam = Player2
@@ -183,7 +183,7 @@ func (service *Service) TeamsList(ctx context.Context, matchID uuid.UUID, cardID
 		}
 	}
 
-	for _, card := range game.GameInfo {
+	for _, card := range game.GameInfo.CardIDsWithPosition {
 		if card.Team == opponentTeam {
 			opponentCards = append(opponentCards, card)
 		} else {
@@ -363,12 +363,10 @@ func removeIntersections(moves, playerPositions []int) (movesWithoutIntersection
 }
 
 // Move update card moves and get possible moves cells.
-func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardIDWithPosition, isCardFast bool) (CardAvailableAction, error) {
-	var cardAvailableAction CardAvailableAction
-
+func (service *Service) Move(ctx context.Context, matchID uuid.UUID, cardIDWithPosition CardIDWithPosition, newPositions []int, finalPosition int, hasBall bool) (ActionResult, error) {
 	gameInfoJSON, err := service.games.Get(ctx, matchID)
 	if err != nil {
-		return CardAvailableAction{}, ErrGameEngine.Wrap(err)
+		return ActionResult{}, ErrGameEngine.Wrap(err)
 	}
 
 	var game Game
@@ -376,55 +374,87 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, card CardID
 
 	err = json.Unmarshal([]byte(gameInfoJSON), &game.GameInfo)
 	if err != nil {
-		return CardAvailableAction{}, ErrGameEngine.Wrap(err)
+		return ActionResult{}, ErrGameEngine.Wrap(err)
+	}
+
+	if hasBall {
+		checkBall, err := service.ifCardHasBall(ctx, matchID, cardIDWithPosition.CardID)
+		if err != nil {
+			return ActionResult{}, ErrGameEngine.Wrap(err)
+		}
+		if !checkBall {
+			return ActionResult{}, nil
+		}
 	}
 
 	var moves []int
 	var allPositionsInUse []int
 
-	allPositionsInUse = append(allPositionsInUse, card.Position)
+	allPositionsInUse = append(allPositionsInUse, finalPosition)
 
-	for _, cardWithPosition := range game.GameInfo {
+	for _, cardWithPosition := range game.GameInfo.CardIDsWithPosition {
 		allPositionsInUse = append(allPositionsInUse, cardWithPosition.Position)
 	}
 
 	// check whether the position we want to go to is occupied.
-	if contains(allPositionsInUse, card.Position) {
-		return CardAvailableAction{}, ErrGameEngine.New("Can not move to position, already in use")
+	if contains(allPositionsInUse, finalPosition) {
+		return ActionResult{}, ErrGameEngine.New("Can not move to position, already in use")
 	}
 
 	// check, Update and get all possible moves.
-	for i, cardData := range game.GameInfo {
-		if cardData.CardID == card.CardID {
-			game.GameInfo[i].Position = card.Position
+	for i, cardData := range game.GameInfo.CardIDsWithPosition {
+		if cardData.CardID == cardIDWithPosition.CardID {
+			if cardData.Position != cardIDWithPosition.Position {
+				return ActionResult{}, err
+			}
+
+			game.GameInfo.CardIDsWithPosition[i].Position = finalPosition
 
 			newGameInfoJSON, err := json.Marshal(game.GameInfo)
 			if err != nil {
-				return CardAvailableAction{}, ErrGameEngine.Wrap(err)
+				return ActionResult{}, ErrGameEngine.Wrap(err)
 			}
 
 			err = service.games.Update(ctx, matchID, string(newGameInfoJSON))
 			if err != nil {
-				return CardAvailableAction{}, ErrGameEngine.Wrap(err)
+				return ActionResult{}, ErrGameEngine.Wrap(err)
 			}
-
-			moves, err = service.GetCardMoves(card.Position, isCardFast)
-			if err != nil {
-				return CardAvailableAction{}, ErrGameEngine.Wrap(err)
-			}
+			break
 		}
+	}
+
+	card, err := service.cards.Get(ctx, cardIDWithPosition.CardID)
+	if err != nil {
+		return ActionResult{}, ErrGameEngine.Wrap(err)
+	}
+
+	isCardFast := false
+	if hasBall && card.RunningSpeed > 80 || !hasBall && card.RunningSpeed > 70 {
+		isCardFast = true
+	}
+
+	moves, err = service.GetCardMoves(finalPosition, isCardFast)
+	if err != nil {
+		return ActionResult{}, ErrGameEngine.Wrap(err)
 	}
 
 	// remove already occupied positions.
 	moves = removeIntersections(moves, allPositionsInUse)
 
-	cardAvailableAction = CardAvailableAction{
-		Action:        ActionMove,
-		CardID:        card.CardID,
-		FieldPosition: moves,
+	actionResult := ActionResult{
+		CardIDWithPosition: CardIDWithPosition{
+			CardID:   cardIDWithPosition.CardID,
+			Position: finalPosition,
+		},
+		BallPosition: game.GameInfo.BallPosition,
+		CardAvailableAction: CardAvailableAction{
+			Action:        ActionMove,
+			CardID:        cardIDWithPosition.CardID,
+			FieldPosition: moves,
+		},
 	}
 
-	return cardAvailableAction, nil
+	return actionResult, nil
 }
 
 // GameInformation creates a player by user.
@@ -624,29 +654,16 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 }
 
 // GameLogicByAction returns game logic by action.
-func (service *Service) GameLogicByAction(ctx context.Context, matchID uuid.UUID, cardIDWithPosition CardIDWithPosition, action Action) (CardAvailableAction, error) {
-	hasBall, err := service.ifCardHasBall(ctx, matchID, cardIDWithPosition.CardID)
-	if err != nil {
-		return CardAvailableAction{}, ErrGameEngine.Wrap(err)
-	}
-
-	card, err := service.cards.Get(ctx, cardIDWithPosition.CardID)
-	if err != nil {
-		return CardAvailableAction{}, ErrGameEngine.Wrap(err)
-	}
-
+func (service *Service) GameLogicByAction(ctx context.Context, matchID uuid.UUID, cardIDWithPosition CardIDWithPosition, action Action,
+	newPositions []int, finalPosition int, hasBall bool) (ActionResult, error) {
 	switch action {
 	case ActionMove:
-		isCardFast := false
-		if hasBall && card.RunningSpeed > 80 || !hasBall && card.RunningSpeed > 70 {
-			isCardFast = true
-		}
-		return service.Move(ctx, matchID, cardIDWithPosition, isCardFast)
+		return service.Move(ctx, matchID, cardIDWithPosition, newPositions, finalPosition, hasBall)
 	case ActionPass:
 
 	}
 
-	return CardAvailableAction{}, nil
+	return ActionResult{}, nil
 }
 
 func (service *Service) ifCardHasBall(ctx context.Context, matchID uuid.UUID, cardID uuid.UUID) (bool, error) {

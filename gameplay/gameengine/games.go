@@ -37,12 +37,12 @@ const (
 // Game defines game data.
 type Game struct {
 	MatchID  uuid.UUID
-	GameInfo []CardIDWithPosition
+	GameInfo CardIDsWithPositionWithBallPosition
 }
 
 // CardIDWithPosition defines card ID with possible moves cells for game.
 type CardIDWithPosition struct {
-	CardID   uuid.UUID `json:"cardId"`
+	CardID   uuid.UUID `json:"cardID"`
 	Position int       `json:"position"`
 	Team     string    `json:"team"`
 }

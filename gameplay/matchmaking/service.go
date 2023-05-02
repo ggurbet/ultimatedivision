@@ -229,13 +229,15 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 		}
 
 		type gameRequest struct {
-			Action      gameengine.Action `json:"action"`
-			CardID      uuid.UUID         `json:"CardId"`
-			NewPosition int               `json:"newPosition"`
+			Action        gameengine.Action `json:"action"`
+			CardID        uuid.UUID         `json:"CardId"`
+			Position      int               `json:"position"`
+			HasBall       bool              `json:"hasBall"`
+			NewPositions  []int             `json:"newPositions"`
+			FinalPosition int               `json:"finalPosition"`
 		}
 
 		for i := 1; i <= startGameInformation.Rounds; i++ {
-
 			var req gameRequest
 
 			if err := match.Player1.Conn.ReadJSON(&req); err != nil {
@@ -245,8 +247,8 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 			cardAvailableAction, err := service.gameEngine.GameLogicByAction(ctx, startGameInformation.MatchID,
 				gameengine.CardIDWithPosition{
 					CardID:   req.CardID,
-					Position: req.NewPosition,
-				}, req.Action)
+					Position: req.Position,
+				}, req.Action, req.NewPositions, req.FinalPosition, req.HasBall)
 			if err != nil {
 				return nil, ErrMatchmaking.Wrap(err)
 			}
@@ -261,8 +263,8 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 
 			cardAvailableAction, err = service.gameEngine.GameLogicByAction(ctx, startGameInformation.MatchID, gameengine.CardIDWithPosition{
 				CardID:   req.CardID,
-				Position: req.NewPosition,
-			}, req.Action)
+				Position: req.Position,
+			}, req.Action, req.NewPositions, req.FinalPosition, req.HasBall)
 			if err != nil {
 				return nil, ErrMatchmaking.Wrap(err)
 			}

@@ -101,3 +101,10 @@ type MatchRepresentation struct {
 	User2SquadInformation  clubs.Squad           `json:"user2SquadInformation"`
 	Rounds                 int                   `json:"rounds"`
 }
+
+// ActionResult defines result of action.
+type ActionResult struct {
+	CardIDWithPosition
+	BallPosition int
+	CardAvailableAction
+}

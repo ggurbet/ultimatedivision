@@ -37,10 +37,12 @@ func TestMatches(t *testing.T) {
 
 	testGame := gameengine.Game{
 		MatchID: matchID,
-		GameInfo: []gameengine.CardIDWithPosition{
-			card1,
-			card2,
-			card3,
+		GameInfo: gameengine.CardIDsWithPositionWithBallPosition{
+			CardIDsWithPosition: []gameengine.CardIDWithPosition{
+				card1,
+				card2,
+				card3,
+			},
 		},
 	}
 
@@ -184,13 +186,15 @@ func TestMatches(t *testing.T) {
 		t.Run("Update", func(t *testing.T) {
 			testGameNew := gameengine.Game{
 				MatchID: matchID,
-				GameInfo: []gameengine.CardIDWithPosition{
-					{
-						CardID:   card1.CardID,
-						Position: 10,
+				GameInfo: gameengine.CardIDsWithPositionWithBallPosition{
+					CardIDsWithPosition: []gameengine.CardIDWithPosition{
+						{
+							CardID:   card1.CardID,
+							Position: 10,
+						},
+						card2,
+						card3,
 					},
-					card2,
-					card3,
 				},
 			}
 
@@ -230,8 +234,8 @@ func TestMatches(t *testing.T) {
 
 func compareGame(t *testing.T, expectedGame, actualGame gameengine.Game) {
 	assert.Equal(t, expectedGame.MatchID, actualGame.MatchID)
-	for i, card := range actualGame.GameInfo {
-		assert.Equal(t, expectedGame.GameInfo[i].CardID, card.CardID)
-		assert.Equal(t, expectedGame.GameInfo[i].Position, card.Position)
+	for i, card := range actualGame.GameInfo.CardIDsWithPosition {
+		assert.Equal(t, expectedGame.GameInfo.CardIDsWithPosition[i].CardID, card.CardID)
+		assert.Equal(t, expectedGame.GameInfo.CardIDsWithPosition[i].Position, card.Position)
 	}
 }
