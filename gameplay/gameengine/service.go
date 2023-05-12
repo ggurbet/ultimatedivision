@@ -73,8 +73,7 @@ func (service *Service) GetCardMoves(cardPlace int, isThreeSteps bool) ([]int, e
 	var stepInWidth []int
 	var moves []int
 
-	if isThreeSteps == true {
-
+	if isThreeSteps {
 		switch {
 		case contains(topLine, cardPlace):
 			stepInWidth = append(stepInWidth, cardPlace, cardPlace+1, cardPlace+2, cardPlace+3)
@@ -114,22 +113,17 @@ func (service *Service) GetCardMoves(cardPlace int, isThreeSteps bool) ([]int, e
 		switch {
 		case contains(topLine, cardPlace):
 			stepInWidth = append(stepInWidth, cardPlace, cardPlace+1, cardPlace+2)
-
 		case contains(bottomLine, cardPlace):
 			stepInWidth = append(stepInWidth, cardPlace-2, cardPlace-1, cardPlace)
-
 		case contains(exceptions, cardPlace):
 			stepInWidth = append(stepInWidth, cardPlace-1, cardPlace, cardPlace+1)
-
 		case cardPlace == 8:
 			stepInWidth = append(stepInWidth, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2)
-
 		case cardPlace == 12:
 			stepInWidth = append(stepInWidth, cardPlace-2, cardPlace-1, cardPlace, cardPlace+1)
-
 		default:
+			stepInWidth = append(stepInWidth, cardPlace-2, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2)
 		}
-		stepInWidth = append(stepInWidth, cardPlace-2, cardPlace-1, cardPlace, cardPlace+1, cardPlace+2)
 
 		for _, w := range stepInWidth {
 			min := w - 14
@@ -583,7 +577,7 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		if sqCard.Card.RunningSpeed > 70 {
 			isCardFast = true
 		}
-		cardWithPositionPlayer.FieldPosition = 9
+
 		fieldPosition, err := service.GetCardMoves(cardWithPositionPlayer.FieldPosition, isCardFast)
 		if err != nil {
 			return MatchRepresentation{}, ErrGameEngine.Wrap(err)
