@@ -357,20 +357,7 @@ func removeIntersections(moves, playerPositions []int) (movesWithoutIntersection
 }
 
 // Move update card moves and get possible moves cells.
-func (service *Service) Move(ctx context.Context, matchID uuid.UUID, cardIDWithPosition CardIDWithPosition, newPositions []int, finalPosition int, hasBall bool) (ActionResult, error) {
-	gameInfoJSON, err := service.games.Get(ctx, matchID)
-	if err != nil {
-		return ActionResult{}, ErrGameEngine.Wrap(err)
-	}
-
-	var game Game
-	game.MatchID = matchID
-
-	err = json.Unmarshal([]byte(gameInfoJSON), &game.GameInfo)
-	if err != nil {
-		return ActionResult{}, ErrGameEngine.Wrap(err)
-	}
-
+func (service *Service) Move(ctx context.Context, matchID uuid.UUID, cardIDWithPosition CardIDWithPosition, newPositions []int, finalPosition int, hasBall bool, youTeamPositions, opponentTeamPositions []CardIDWithPosition) (ActionResult, error) {
 	if hasBall {
 		checkBall, err := service.ifCardHasBall(ctx, matchID, cardIDWithPosition.CardID)
 		if err != nil {
@@ -381,12 +368,26 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, cardIDWithP
 		}
 	}
 
+	gameInfoJSON, err := service.games.Get(ctx, matchID)
+	if err != nil {
+		return ActionResult{}, ErrGameEngine.Wrap(err)
+	}
+
+	var game Game
+	var ballPosition int
+	game.MatchID = matchID
+
+	err = json.Unmarshal([]byte(gameInfoJSON), &game.GameInfo)
+	if err != nil {
+		return ActionResult{}, ErrGameEngine.Wrap(err)
+	}
+
 	var moves []int
 	var allPositionsInUse []int
 
 	allPositionsInUse = append(allPositionsInUse, finalPosition)
 
-	for _, cardWithPosition := range game.GameInfo.CardIDsWithPosition {
+	for _, cardWithPosition := range youTeamPositions {
 		allPositionsInUse = append(allPositionsInUse, cardWithPosition.Position)
 	}
 
@@ -394,6 +395,54 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, cardIDWithP
 	if contains(allPositionsInUse, finalPosition) {
 		return ActionResult{}, ErrGameEngine.New("Can not move to position, already in use")
 	}
+
+	card, err := service.cards.Get(ctx, cardIDWithPosition.CardID)
+	if err != nil {
+		return ActionResult{}, ErrGameEngine.Wrap(err)
+	}
+
+	isCardFast := false
+	if hasBall && card.RunningSpeed > 80 || !hasBall && card.RunningSpeed > 70 {
+		isCardFast = true
+	}
+
+	if isCardFast && len(newPositions) != 3 {
+		return ActionResult{}, nil
+	}
+
+	if !isCardFast && len(newPositions) != 2 {
+		return ActionResult{}, nil
+	}
+
+	if hasBall {
+		for _, newPosition := range newPositions {
+			for _, opponentPosition := range opponentTeamPositions {
+				if newPosition == opponentPosition.Position {
+					cardOpponent, err := service.cards.Get(ctx, opponentPosition.CardID)
+					if err != nil {
+						return ActionResult{}, ErrGameEngine.Wrap(err)
+					}
+
+					if !whoWon(card.Dribbling, cardOpponent.BallFocus) {
+						ballPosition = cardOpponent.Positioning
+						if cardIDWithPosition.Position > cardOpponent.Positioning {
+							finalPosition = cardOpponent.Positioning - 1
+						} else {
+							finalPosition = cardOpponent.Positioning + 1
+						}
+					}
+				}
+			}
+		}
+	}
+
+	moves, err = service.GetCardMoves(finalPosition, isCardFast)
+	if err != nil {
+		return ActionResult{}, ErrGameEngine.Wrap(err)
+	}
+
+	// remove already occupied positions.
+	moves = removeIntersections(moves, allPositionsInUse)
 
 	// check, Update and get all possible moves.
 	for i, cardData := range game.GameInfo.CardIDsWithPosition {
@@ -403,6 +452,7 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, cardIDWithP
 			}
 
 			game.GameInfo.CardIDsWithPosition[i].Position = finalPosition
+			game.GameInfo.BallPosition = ballPosition
 
 			newGameInfoJSON, err := json.Marshal(game.GameInfo)
 			if err != nil {
@@ -416,24 +466,6 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, cardIDWithP
 			break
 		}
 	}
-
-	card, err := service.cards.Get(ctx, cardIDWithPosition.CardID)
-	if err != nil {
-		return ActionResult{}, ErrGameEngine.Wrap(err)
-	}
-
-	isCardFast := false
-	if hasBall && card.RunningSpeed > 80 || !hasBall && card.RunningSpeed > 70 {
-		isCardFast = true
-	}
-
-	moves, err = service.GetCardMoves(finalPosition, isCardFast)
-	if err != nil {
-		return ActionResult{}, ErrGameEngine.Wrap(err)
-	}
-
-	// remove already occupied positions.
-	moves = removeIntersections(moves, allPositionsInUse)
 
 	actionResult := ActionResult{
 		CardIDWithPosition: CardIDWithPosition{
@@ -658,9 +690,10 @@ func (service *Service) GameLogicByAction(ctx context.Context, matchID uuid.UUID
 	if err != nil {
 		return ActionResult{}, ErrGameEngine.Wrap(err)
 	}
+
 	switch action {
 	case ActionMove:
-		return service.Move(ctx, matchID, cardIDWithPosition, newPositions, finalPosition, hasBall)
+		return service.Move(ctx, matchID, cardIDWithPosition, newPositions, finalPosition, hasBall, youTeam, oppenentTeam)
 	case ActionPass:
 		var result ActionResult
 		var passReceiverStats CardWithPosition

@@ -237,6 +237,7 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 			FinalPosition int               `json:"finalPosition"`
 		}
 
+		startGameInformation.Rounds = 7
 		for i := 1; i <= startGameInformation.Rounds; i++ {
 			var req gameRequest
 
