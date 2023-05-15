@@ -205,19 +205,44 @@ func (service *Service) TeamListWithStats(ctx context.Context, allCards []CardID
 }
 
 // GivePass get info about pass and return final ball cell.
-func (service *Service) GivePass(passWay []int, passReceiverStats CardWithPosition, passGiverCard cards.Card, opponentsWithPosition []CardWithPosition) int {
+func (service *Service) GivePass(ctx context.Context, passWay []int, cardIDWithPosition CardIDWithPosition, finalPosition int, youTeam []CardIDWithPosition, opponentsWithPosition []CardWithPosition) (ActionResult, error) {
+	var result ActionResult
+	var passReceiverStats CardWithPosition
+	for _, teammate := range youTeam {
+		if teammate.Position == finalPosition {
+			passReceiverStats.CardID = teammate.CardID
+			passReceiverStats.FieldPosition = teammate.Position
+		}
+	}
+
+	passReceiver, err := service.cards.Get(ctx, passReceiverStats.CardID)
+	if err != nil {
+		return ActionResult{}, ErrGameEngine.Wrap(err)
+	}
+	passReceiverStats.Card = passReceiver
+
+	passGiver, err := service.cards.Get(ctx, cardIDWithPosition.CardID)
+	if err != nil {
+		return ActionResult{}, ErrGameEngine.Wrap(err)
+	}
+	result.CardIDWithPosition = cardIDWithPosition
+
 	for _, opponent := range opponentsWithPosition {
 		if contains(passWay, opponent.FieldPosition) {
-			if opponent.Card.Interceptions > passGiverCard.ShortPassing {
-				return opponent.FieldPosition
+			if whoWon(opponent.Card.Interceptions, passGiver.ShortPassing) {
+				result.BallPosition = opponent.FieldPosition
+				return result, nil
 			}
 		}
 	}
 	if whoWon(passReceiverStats.Card.BallControl, 10) {
-		return passReceiverStats.FieldPosition
+		result.BallPosition = passReceiverStats.FieldPosition
+		return result, nil
 	}
 
-	return ballBounce(passReceiverStats.FieldPosition)
+	result.BallPosition = ballBounce(passReceiverStats.FieldPosition)
+
+	return result, nil
 }
 
 // PowerShot get result of the power shot.
@@ -682,41 +707,20 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 // GameLogicByAction returns game logic by action.
 func (service *Service) GameLogicByAction(ctx context.Context, matchID uuid.UUID, cardIDWithPosition CardIDWithPosition, action Action,
 	newPositions []int, finalPosition int, hasBall bool) (ActionResult, error) {
-	youTeam, oppenentTeam, err := service.TeamsList(ctx, matchID, cardIDWithPosition.CardID)
+	youTeam, opponentTeam, err := service.TeamsList(ctx, matchID, cardIDWithPosition.CardID)
 	if err != nil {
 		return ActionResult{}, ErrGameEngine.Wrap(err)
 	}
-	oppenentTeamStats, err := service.TeamListWithStats(ctx, oppenentTeam)
+	opponentTeamStats, err := service.TeamListWithStats(ctx, opponentTeam)
 	if err != nil {
 		return ActionResult{}, ErrGameEngine.Wrap(err)
 	}
 
 	switch action {
 	case ActionMove:
-		return service.Move(ctx, matchID, cardIDWithPosition, newPositions, finalPosition, hasBall, youTeam, oppenentTeam)
+		return service.Move(ctx, matchID, cardIDWithPosition, newPositions, finalPosition, hasBall, youTeam, opponentTeam)
 	case ActionPass:
-		var result ActionResult
-		var passReceiverStats CardWithPosition
-		for _, teammate := range youTeam {
-			if teammate.Position == finalPosition {
-				passReceiverStats.CardID = teammate.CardID
-				passReceiverStats.FieldPosition = teammate.Position
-			}
-		}
-
-		passReceiver, err := service.cards.Get(ctx, passReceiverStats.CardID)
-		if err != nil {
-			return ActionResult{}, ErrGameEngine.Wrap(err)
-		}
-		passReceiverStats.Card = passReceiver
-		passGiver, err := service.cards.Get(ctx, cardIDWithPosition.CardID)
-		if err != nil {
-			return ActionResult{}, ErrGameEngine.Wrap(err)
-		}
-		result.CardIDWithPosition = cardIDWithPosition
-		result.BallPosition = service.GivePass(newPositions, passReceiverStats, passGiver, oppenentTeamStats)
-
-		return result, nil
+		return service.GivePass(ctx, newPositions, cardIDWithPosition, finalPosition, youTeam, opponentTeamStats)
 	}
 
 	return ActionResult{}, nil
