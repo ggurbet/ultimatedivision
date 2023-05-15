@@ -7,8 +7,7 @@ const DEFAULT_VALUE = 0;
 
 /** Defines Marketplace lot entity. */
 export class Lot {
-    public id: string = '';
-    public itemId: string = '';
+    public cardId: string = '';
     public type: string = '';
     public userId: string = '';
     public shopperId: string = '';

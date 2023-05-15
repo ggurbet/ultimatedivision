@@ -5,7 +5,8 @@
 export class CreatedLot {
     /** default created lot initital values */
     constructor(
-        public itemId: string,
+        public cardId: string,
+        public type: 'card',
         public startPrice: number,
         public maxPrice: number,
         public period: number,

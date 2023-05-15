@@ -23,10 +23,8 @@ export const UserCard: React.FC<{
     const DEFAULT_INDEX = -1;
     const dispatch = useDispatch();
     const [sellButtonVisibility, setVisibility] = useState(false);
+
     const isVisible = sellButtonVisibility && position === sellingCardIndex;
-    useEffect(() => {
-        position !== sellingCardIndex && setVisibility(false);
-    }, [sellingCardIndex]);
 
     const handleControls = (e: React.MouseEvent<HTMLInputElement>, position: number) => {
         e.preventDefault();
@@ -39,11 +37,15 @@ export const UserCard: React.FC<{
         e.nativeEvent.stopImmediatePropagation();
         /** TODO: create interface for adding selling parameters */
         /* eslint-disable */
-        dispatch(createLot(new CreatedLot(card.id, 200, 200, 1)));
+        dispatch(createLot(new CreatedLot(card.id,'card', 200, 200, 1)));
         /* eslint-enable */
         setIndex(DEFAULT_INDEX);
         setVisibility(false);
     };
+
+    useEffect(() => {
+        position !== sellingCardIndex && setVisibility(false);
+    }, [sellingCardIndex]);
 
     return (
         <div

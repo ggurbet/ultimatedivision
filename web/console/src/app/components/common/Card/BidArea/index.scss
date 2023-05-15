@@ -156,20 +156,32 @@
 }
 
 .card__sell-btn {
-    width: 248px;
-    height: 33px;
-    display: none;
+    width: 230px;
+    height: 48px;
+    margin-right: 10px;
+    padding: 14px 22px;
+    gap: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    outline: none;
     border: none;
-    background: radial-gradient(254.55% 254.55% at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%), linear-gradient(180deg, #5cff79 0%, #3ccf56 100%);
-    cursor: not-allowed;
+    border-radius: 10px;
+    box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
+    background: #f5ff63;
+    cursor: pointer;
 
     &__text {
-        font-style: normal;
-        font-weight: bold;
         text-align: center;
-        font-size: 16px;
-        line-height: 16px;
-        color: #181829;
+        font-style: normal;
+        text-transform: uppercase;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        font-size: 14px;
+        line-height: 18px;
+        letter-spacing: 0.12em;
+        color: #26373f;
     }
 }
 

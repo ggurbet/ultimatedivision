@@ -103,6 +103,6 @@ export const onOpenConnectionNoAction = () => {
 
 /** Closes connection */
 export const onCloseConnection = () => {
-    webSocketService.close()
+    webSocketService.close();
 };
 

@@ -7,6 +7,8 @@ import silverShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/silv
 import woodShadow from '@static/img/MarketPlacePage/marketPlaceCardsGroup/woodShadow.svg';
 
 const DEFAULT_VALUE = 0;
+const IS_MINTED_VALUE = 1;
+
 /** class for our getters to get label and value while mapping */
 export class CardField {
     /** label and value for mapping */
@@ -208,6 +210,7 @@ export class Card {
     handling: number = DEFAULT_VALUE;
     sweeping: number = DEFAULT_VALUE;
     throwing: number = DEFAULT_VALUE;
+    isMinted: number = DEFAULT_VALUE | IS_MINTED_VALUE;
 
     /** Card fields */
     constructor(card?: ICard) {

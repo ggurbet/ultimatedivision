@@ -6,7 +6,7 @@ import { Dispatch } from 'redux';
 import { MarketplaceClient } from '@/api/marketplace';
 import { CreatedLot } from '@/app/types/marketplace';
 import { Card, CardsQueryParametersField } from '@/card';
-import { MarketPlacePage } from '@/marketplace';
+import { Lot, MarketPlacePage } from '@/marketplace';
 import { Marketplaces } from '@/marketplace/service';
 
 export const GET_SELLING_CARDS = ' GET_SELLING_CARDS';
@@ -16,9 +16,9 @@ const getLots = (marketplacePage: MarketPlacePage) => ({
     type: GET_SELLING_CARDS,
     marketplacePage,
 });
-const marketplaceCard = (card: Card) => ({
+const marketplaceCard = (lot: Lot) => ({
     type: MARKETPLACE_CARD,
-    card,
+    lot,
 });
 
 const marketplaceClient = new MarketplaceClient();
@@ -49,5 +49,5 @@ export const createLot = (lot: CreatedLot) => async function(dispatch: Dispatch)
 export const openMarketplaceCard = (id: string) => async function(dispatch: Dispatch) {
     const lot = await marketplaces.getLotById(id);
 
-    dispatch(marketplaceCard(lot.card));
+    dispatch(marketplaceCard(lot));
 };

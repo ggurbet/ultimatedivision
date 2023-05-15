@@ -1,6 +1,7 @@
 @import "@/index.scss";
 
-.card {
+.card,
+.lot {
     z-index: 2;
     position: relative;
     width: 100%;
@@ -41,6 +42,36 @@
                 height: 34px;
                 margin-right: 14px;
             }
+        }
+    }
+
+    &__sell-btn {
+        width: 230px;
+        height: 48px;
+        margin-right: 10px;
+        padding: 14px 22px;
+        gap: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        outline: none;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 12px 22px rgba(0, 23, 58, 0.22);
+        background: #f5ff63;
+        cursor: pointer;
+
+        &__text {
+            text-align: center;
+            font-style: normal;
+            text-transform: uppercase;
+            font-family: "Orbitron", sans-serif;
+            font-weight: 900;
+            font-size: 14px;
+            line-height: 18px;
+            letter-spacing: 0.12em;
+            color: #26373f;
         }
     }
 
@@ -208,7 +239,8 @@
 
 @media screen and (max-width: 1200px) {
 
-    .card {
+    .card,
+    .lot {
         width: 100%;
         padding: 40px 50px 80px;
 
@@ -258,7 +290,8 @@
 
 @media screen and (max-width: $desktopBreakPoint) {
 
-    .card {
+    .card,
+    .lot {
         width: 100%;
 
         &__back {
@@ -331,7 +364,8 @@
 
 @media screen and (max-width: $tabletBreakPoint) {
 
-    .card {
+    .card,
+    .lot {
         width: 100%;
         padding: 21px 48px 0;
 
@@ -420,7 +454,8 @@
 
 @media screen and (max-width: $phoneBreakPoint) {
 
-    .card {
+    .card,
+    .lot {
         padding: 21px 16px 0;
 
         &__back {

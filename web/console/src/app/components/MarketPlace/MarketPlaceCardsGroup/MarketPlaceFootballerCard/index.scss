@@ -6,14 +6,18 @@
     position: relative;
     height: max-content;
     padding: 15px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
     border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 30px;
     box-shadow: white;
     background: rgba(255, 255, 255, 0.1);
     cursor: pointer;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
+
+    &--no-display {
+        display: none;
+    }
 
     &__button {
         width: 84px;
@@ -30,6 +34,7 @@
         letter-spacing: 0.12em;
         color: #fff;
         background: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
     }
 
     &__image {
@@ -112,15 +117,15 @@
         }
 
         &__text {
-            font-size: 5.7px;
             line-height: 7px;
+            font-size: 5.7px;
         }
 
         &__button {
             width: 59.86px;
             padding: 7px;
-            font-size: 6.41372px;
             line-height: 8px;
+            font-size: 6.41372px;
         }
 
         &__timer {

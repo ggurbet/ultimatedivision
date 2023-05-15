@@ -6,8 +6,8 @@ import { Route, Switch, useLocation } from 'react-router-dom';
 
 const MarketPlace = lazy(() => import('@/app/views/MarketPlacePage'));
 const UserCards = lazy(() => import('@/app/views/UserCards'));
-const Card = lazy(() => import('@/app/views/CardPage'));
-const Lot = lazy(() => import('@/app/views/LotPage'));
+const Card = lazy(() => import('@/app/views/CardAndLotPage/CardPage'));
+const Lot = lazy(() => import('@/app/views/CardAndLotPage/LotPage'));
 const Field = lazy(() => import('@/app/views/FieldPage'));
 const WhitePaper = lazy(() => import('@/app/views/WhitePaperPage'));
 const Tokenomics = lazy(() => import('@/app/views/TokenomicsPage'));

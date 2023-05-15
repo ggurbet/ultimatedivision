@@ -127,11 +127,11 @@ const MatchFinder: React.FC = () => {
 
                 return;
 
-                case YOU_LEAVED_MESSAGE:
-                    setIsMatchFound(false);
-                    dispatch(startSearchingMatch(false));
-                    onCloseConnection();
-                    onOpenConnectionNoAction();
+            case YOU_LEAVED_MESSAGE:
+                setIsMatchFound(false);
+                dispatch(startSearchingMatch(false));
+                onCloseConnection();
+                onOpenConnectionNoAction();
 
                 return;
             default:
