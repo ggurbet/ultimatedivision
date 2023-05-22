@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"math/big"
 	"net/http"
 	"strconv"
@@ -320,51 +321,51 @@ func (service *Service) GetNodeEvents(ctx context.Context) (MintData, error) {
 func (service *Service) RunCasperCheckMintEvent(ctx context.Context) (err error) {
 	event, err := service.GetNodeEvents(ctx)
 	if err != nil {
-		return err
+		log.Println(err)
 	}
 
 	if event.WalletAddress == "" {
 		nftWaitList, err := service.GetByTokenID(ctx, event.TokenID)
 		if err != nil {
-			return ChoreError.Wrap(err)
+			log.Println(err)
 		}
 
 		toAddress := common.HexToAddress(nftWaitList.CasperWalletHash)
 		nft := nfts.NFT{
 			CardID:        nftWaitList.CardID,
 			Chain:         evmsignature.ChainEthereum,
-			TokenID:       event.TokenID,
+			TokenID:       nftWaitList.TokenID,
 			WalletAddress: toAddress,
 		}
 
 		if err = service.nfts.Create(ctx, nft); err != nil {
-			return ChoreError.Wrap(err)
+			log.Println(err)
 		}
 
 		user, err := service.users.GetByCasperHash(ctx, nftWaitList.CasperWalletHash)
 		if err != nil {
 			if err = service.nfts.Delete(ctx, nft.CardID); err != nil {
-				return ChoreError.Wrap(err)
+				log.Println(err)
 			}
 
 			if err = service.cards.UpdateUserID(ctx, nft.CardID, uuid.Nil); err != nil {
-				return ChoreError.Wrap(err)
+				log.Println(err)
 			}
 		}
 
 		if err = service.nfts.Update(ctx, nft); err != nil {
-			return ChoreError.Wrap(err)
+			log.Println(err)
 		}
 
 		if err = service.cards.UpdateUserID(ctx, nft.CardID, user.ID); err != nil {
-			return ChoreError.Wrap(err)
+			log.Println(err)
 		}
 
 		if err = service.cards.UpdateMintedStatus(ctx, nft.CardID, cards.Minted); err != nil {
-			return ChoreError.Wrap(err)
+			log.Println(err)
 		}
 
 	}
 
-	return ChoreError.Wrap(err)
+	return nil
 }

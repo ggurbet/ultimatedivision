@@ -159,14 +159,14 @@ func TestNFTs(t *testing.T) {
 
 	nft1 := nfts.NFT{
 		CardID:        card1.ID,
-		TokenID:       1,
+		TokenID:       uuid.New(),
 		Chain:         evmsignature.ChainEthereum,
 		WalletAddress: common.HexToAddress("0x96216849c49358b10257cb55b28ea603c874b05e"),
 	}
 
 	nft2 := nfts.NFT{
 		CardID:        card2.ID,
-		TokenID:       2,
+		TokenID:       uuid.New(),
 		Chain:         evmsignature.ChainPolygon,
 		WalletAddress: common.HexToAddress("0x96216849c49358B10254cb55b28eA603c874b05E"),
 	}
@@ -205,6 +205,12 @@ func TestNFTs(t *testing.T) {
 			require.NoError(t, err)
 
 			compareNFTsSlice(t, []nfts.NFT{nftGet}, []nfts.NFT{nft1})
+		})
+
+		t.Run("Get NFT by id", func(t *testing.T) {
+			tokenID, err := repositoryNFTs.GetNFTTokenIDbyCardID(ctx, nft1.CardID)
+			require.NoError(t, err)
+			require.Equal(t, nft1.TokenID, tokenID)
 		})
 
 		t.Run("List", func(t *testing.T) {

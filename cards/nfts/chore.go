@@ -5,6 +5,7 @@ package nfts
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/BoostyLabs/evmsignature"
 	"github.com/BoostyLabs/thelooper"
@@ -51,9 +52,14 @@ func (chore *Chore) RunNFTSynchronization(ctx context.Context) (err error) {
 		}
 
 		for _, nft := range nfts {
+			tokenID, err := strconv.ParseInt(nft.TokenID.String(), 10, 64)
+			if err != nil {
+				return ChoreError.Wrap(err)
+			}
+
 			data := evmsignature.Data{
 				AddressContractMethod: chore.config.NFTContract.OwnerOfSelector,
-				TokenID:               nft.TokenID,
+				TokenID:               tokenID,
 			}
 
 			dataHex := evmsignature.NewDataHex(data)

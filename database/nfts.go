@@ -38,7 +38,7 @@ func (nftsDB *nftsDB) Create(ctx context.Context, nft nfts.NFT) error {
 }
 
 // Get returns nft by token id and chain from database.
-func (nftsDB *nftsDB) Get(ctx context.Context, tokenID int64, chain evmsignature.Chain) (nfts.NFT, error) {
+func (nftsDB *nftsDB) Get(ctx context.Context, tokenID uuid.UUID, chain evmsignature.Chain) (nfts.NFT, error) {
 	query := `
 		SELECT 
 			card_id, token_id, chain, wallet_address 
@@ -77,6 +77,27 @@ func (nftsDB *nftsDB) GetNFTByCardID(ctx context.Context, id uuid.UUID) (nfts.NF
 	}
 
 	return nft, ErrNFTs.Wrap(err)
+}
+
+// GetNFTTokenIDbyCardID returns nft token id by card id from database.
+func (nftsDB *nftsDB) GetNFTTokenIDbyCardID(ctx context.Context, id uuid.UUID) (uuid.UUID, error) {
+	query := `
+		SELECT 
+			token_id
+		FROM 
+			nfts
+		WHERE 
+			card_id = $1`
+
+	var tokenID uuid.UUID
+	row := nftsDB.conn.QueryRowContext(ctx, query, id)
+
+	err := row.Scan(&tokenID)
+	if errors.Is(err, sql.ErrNoRows) {
+		return tokenID, nfts.ErrNoNFT.Wrap(err)
+	}
+
+	return tokenID, ErrNFTs.Wrap(err)
 }
 
 // List returns nfts from database.

@@ -72,6 +72,7 @@ func (cardsDB *cardsDB) Get(ctx context.Context, id uuid.UUID) (cards.Card, erro
 		`SELECT * FROM  
             cards
         WHERE 
+              
             id = $1`
 
 	err := cardsDB.conn.QueryRowContext(ctx, query, id).Scan(
