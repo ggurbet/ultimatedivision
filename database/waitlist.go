@@ -37,8 +37,8 @@ func (waitlistDB *waitlistDB) Create(ctx context.Context, item waitlist.Item) er
 	return ErrWaitlist.Wrap(err)
 }
 
-// GetByTokenID returns item of wait list by token id.
-func (waitlistDB *waitlistDB) GetByTokenID(ctx context.Context, tokenNumber int64) (waitlist.Item, error) {
+// GetByTokenNumber returns item of wait list by token number.
+func (waitlistDB *waitlistDB) GetByTokenNumber(ctx context.Context, tokenNumber int64) (waitlist.Item, error) {
 	var value []byte
 	query := `SELECT *
 	          FROM waitlist
@@ -47,6 +47,24 @@ func (waitlistDB *waitlistDB) GetByTokenID(ctx context.Context, tokenNumber int6
 	var item waitlist.Item
 
 	err := waitlistDB.conn.QueryRowContext(ctx, query, tokenNumber).Scan(&item.TokenID, &item.TokenNumber, &item.CardID, &item.Wallet, &item.CasperWallet, &item.CasperWalletHash, &value, &item.Password, &item.WalletType)
+	if errors.Is(err, sql.ErrNoRows) {
+		return item, waitlist.ErrNoItem.Wrap(err)
+	}
+	item.Value.SetBytes(value)
+
+	return item, ErrWaitlist.Wrap(err)
+}
+
+// GetByTokenID returns item of wait list by token id.
+func (waitlistDB *waitlistDB) GetByTokenID(ctx context.Context, tokenID uuid.UUID) (waitlist.Item, error) {
+	var value []byte
+	query := `SELECT *
+	          FROM waitlist
+	          WHERE token_id = $1`
+
+	var item waitlist.Item
+
+	err := waitlistDB.conn.QueryRowContext(ctx, query, tokenID).Scan(&item.TokenID, &item.TokenNumber, &item.CardID, &item.Wallet, &item.CasperWallet, &item.CasperWalletHash, &value, &item.Password, &item.WalletType)
 	if errors.Is(err, sql.ErrNoRows) {
 		return item, waitlist.ErrNoItem.Wrap(err)
 	}

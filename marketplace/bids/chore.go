@@ -60,7 +60,6 @@ func (chore *Chore) Run(ctx context.Context) error {
 	err := chore.loop.Run(ctx, func(ctx context.Context) error {
 		expiredLots, err := chore.marketplace.ListExpiredLots(ctx)
 		if err != nil {
-			chore.log.Error("could not get expired lots from db", ChoreError.Wrap(err))
 			return nil
 		}
 

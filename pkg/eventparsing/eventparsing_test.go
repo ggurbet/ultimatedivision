@@ -6,6 +6,7 @@ package eventparsing_test
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
 	"ultimatedivision/pkg/eventparsing"
@@ -23,10 +24,22 @@ func TestEventParsing(t *testing.T) {
 	expectedAmount := 10520065
 	expectedUserWalletAddress := "daa2b596e0a496b04933e241e0567f2bcbecc829aa57d88cab096c28fd07dee2"
 
+	tokenEventData := eventparsing.EventData{
+		Bytes: "0300000001014a0d0720000000ab2a7124e519694282d8f98a637153b9295dc93671d4630f518641286b6a3a8a2400000033653130393335302d626662322d343262642d613931352d386331336161363061623966",
+	}
+
+	tokenID, _ := uuid.Parse("3e109350-bfb2-42bd-a915-8c13aa60ab9f")
+
 	t.Run("GetEventType", func(t *testing.T) {
 		actualEventType, err := eventData.GetEventType()
 		require.NoError(t, err)
 		require.Equal(t, expectedEventTyte, actualEventType)
+	})
+
+	t.Run("GetTokenID", func(t *testing.T) {
+		GetTokenID, err := eventData.GetTokenID(tokenEventData)
+		require.NoError(t, err)
+		require.Equal(t, tokenID, GetTokenID)
 	})
 
 	t.Run("GetTokenContractAddress", func(t *testing.T) {

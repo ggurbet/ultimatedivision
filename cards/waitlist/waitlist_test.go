@@ -215,7 +215,14 @@ func TestWaitList(t *testing.T) {
 		})
 
 		t.Run("GetByTokenID", func(t *testing.T) {
-			nftDB, err := repositoryWaitList.GetByTokenID(ctx, 1)
+			nftDB, err := repositoryWaitList.GetByTokenID(ctx, tokenID1)
+			require.NoError(t, err)
+
+			compareNFTs(t, nftDB, item1)
+		})
+
+		t.Run("GetByTokenNumber", func(t *testing.T) {
+			nftDB, err := repositoryWaitList.GetByTokenNumber(ctx, 1)
 			require.NoError(t, err)
 
 			compareNFTs(t, nftDB, item1)

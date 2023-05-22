@@ -7,6 +7,8 @@ import (
 	"encoding/hex"
 	"math/big"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 // LengthSelector defines list of all possible length selectors.
@@ -17,6 +19,10 @@ const (
 	LengthSelectorString LengthSelector = 8
 	// LengthSelectorAddress defines that length of address selector is 64.
 	LengthSelectorAddress LengthSelector = 64
+	// SelectorTokenIDStart defines that tokenID selector starts from 90.
+	SelectorTokenIDStart LengthSelector = 90
+	// LengthSelectorTokenID defines that length of tokenID selector is 80.
+	LengthSelectorTokenID LengthSelector = 80
 	// LengthSelectorU256 defines that length of uint256 selector is 2.
 	LengthSelectorU256 LengthSelector = 2
 	// LengthSelectorTag defines that length of tag selector is 2.
@@ -83,6 +89,27 @@ func (e *EventData) GetEventType() (int, error) {
 // GetTokenContractAddress returns token contract address from event data.
 func (e *EventData) GetTokenContractAddress() string {
 	return e.getNextParam(0, LengthSelectorAddress.Int())
+
+}
+
+// GetTokenID returns token id from event data.
+func (e *EventData) GetTokenID(eventData EventData) (uuid.UUID, error) {
+	param := eventData.Bytes[SelectorTokenIDStart.Int() : SelectorTokenIDStart.Int()+LengthSelectorTokenID.Int()]
+
+	var tokenID uuid.UUID
+
+	tokenNameBytes, err := hex.DecodeString(param)
+	if err != nil {
+		return tokenID, err
+	}
+
+	tokenNameString := strings.ReplaceAll(string(tokenNameBytes), "$\u0000\u0000\u0000", "")
+	tokenID, err = uuid.Parse(tokenNameString)
+	if err != nil {
+		return tokenID, err
+	}
+
+	return tokenID, nil
 }
 
 // GetChainName returns chain name from event data.

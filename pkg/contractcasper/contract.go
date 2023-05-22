@@ -36,7 +36,6 @@ type (
 	Success struct {
 		Effect Effect `json:"effect"`
 	}
-
 	// Effect describes.
 	Effect struct {
 		Transforms []Transform `json:"transforms"`
@@ -51,6 +50,37 @@ type (
 	Map struct {
 		Key   string `json:"key"`
 		Value string `json:"value"`
+	}
+)
+
+type (
+	// EventWithBytes describes event with bytes structure in casper network.
+	EventWithBytes struct {
+		DeployProcessed DeployProcessed2 `json:"DeployProcessed"`
+	}
+	// DeployProcessed2 describes all about deploy.
+	DeployProcessed2 struct {
+		DeployHash       string           `json:"deploy_hash"`
+		Account          string           `json:"account"`
+		BlockHash        string           `json:"block_hash"`
+		ExecutionResult2 ExecutionResult2 `json:"execution_result"`
+	}
+	// ExecutionResult2 describes result.
+	ExecutionResult2 struct {
+		Success2 Success2 `json:"Success"`
+	}
+	// Success2 describes success result.
+	Success2 struct {
+		Effect2 Effect2 `json:"effect"`
+	}
+	// Effect2 describes.
+	Effect2 struct {
+		Transforms2 []Transform2 `json:"transforms"`
+	}
+	// Transform2 describes transform data.
+	Transform2 struct {
+		Key       string      `json:"key"`
+		Transform interface{} `json:"transform"`
 	}
 )
 

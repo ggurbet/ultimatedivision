@@ -26,8 +26,10 @@ var ErrNoItem = errs.Class("item for wait list does not exist")
 type DB interface {
 	// Create creates nft for wait list in the database.
 	Create(ctx context.Context, item Item) error
+	// GetByTokenNumber returns nft for wait list by token number.
+	GetByTokenNumber(ctx context.Context, tokenNumber int64) (Item, error)
 	// GetByTokenID returns nft for wait list by token id.
-	GetByTokenID(ctx context.Context, TokenSequence int64) (Item, error)
+	GetByTokenID(ctx context.Context, tokenID uuid.UUID) (Item, error)
 	// GetByCardID returns nft for wait list by card id.
 	GetByCardID(ctx context.Context, cardID uuid.UUID) (Item, error)
 	// GetLastTokenID returns id of last inserted token.
@@ -130,8 +132,9 @@ type NFTCreateCasperContract struct {
 
 // MintData describes the meaning of the Mint data from node.
 type MintData struct {
-	TokenID       int64  `json:"tokenId"`
-	WalletAddress string `json:"walletAddress"`
+	TokenID       uuid.UUID `json:"tokenId"`
+	TokenNumber   int64     `json:"tokenNumber"`
+	WalletAddress string    `json:"walletAddress"`
 }
 
 // EventType Type defines list of possible event type for our connector.
