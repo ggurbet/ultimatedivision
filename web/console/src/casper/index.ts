@@ -8,6 +8,8 @@ import { CLPublicKey, CLValueBuilder, DeployUtil, RuntimeArgs } from 'casper-js-
 import { CasperNetworkClient } from '@/api/casper';
 import { CasperMatchTransaction } from '@/matches';
 import { ToastNotifications } from '@/notifications/service';
+import { MarketplaceClient } from '@/api/marketplace';
+import { MarketCreateLotTransaction } from '@/marketplace';
 
 enum CasperRuntimeArgs {
     SIGNATURE = 'signature',
@@ -62,6 +64,7 @@ const PAYMENT_AMOUNT = 50000000000;
 const GAS_PRICE = 1;
 
 const TOKEN_PAYMENT_AMOUNT = 6000000000;
+const LOT_PAYMENT_AMOUNT = 40000000000;
 
 /** CasperTransactionService describes casper transaction entity. */
 class CasperTransactionService {
@@ -69,6 +72,7 @@ class CasperTransactionService {
     private readonly gasPrice: number = GAS_PRICE;
     private readonly ttl: number = TTL;
     private readonly client: CasperNetworkClient = new CasperNetworkClient();
+    private readonly marketPlaceClient: MarketplaceClient = new MarketplaceClient();
     public walletAddress: string = '';
 
     /** default CasperTransactionService implementation */
@@ -161,6 +165,82 @@ class CasperTransactionService {
             const signature = await this.contractSign('claim', runtimeArgs, TOKEN_PAYMENT_AMOUNT, transaction.casperTokenContract.address);
 
             await this.client.claim(rpcNodeAddress, JSON.stringify(signature), this.walletAddress);
+        }
+        catch (error: any) {
+            ToastNotifications.casperError(`${error.error}`);
+        }
+    }
+
+    /** Creates a lot */
+    async createLot(transaction: MarketCreateLotTransaction): Promise<void> {
+        try {
+            const runtimeArgs = RuntimeArgs.fromMap({
+                'nft_contract_hash': CLValueBuilder.string(transaction.contractHash),
+                'token_id': CLValueBuilder.string(transaction.tokenId),
+                'min_bid_price': CLValueBuilder.u256(transaction.minBidPrice),
+                'redemption_price': CLValueBuilder.u256(transaction.redemptionPrice),
+                'auction_duration': CLValueBuilder.u256(transaction.auctionDuration),
+
+            });
+
+            const isConnected = window.casperlabsHelper.isConnected();
+
+            if (!isConnected) {
+                await window.casperlabsHelper.requestConnection();
+            }
+
+            const signature = await this.contractSign('create_listing', runtimeArgs, LOT_PAYMENT_AMOUNT, transaction.address);
+
+            await this.client.claim(transaction.rpcNodeAddress, JSON.stringify(signature), this.walletAddress);
+        }
+        catch (error: any) {
+            ToastNotifications.casperError(`${error.error}`);
+        }
+    }
+
+    /** Accepts offer */
+    async acceptOffer(transaction: any): Promise<void> {
+        try {
+            const runtimeArgs = RuntimeArgs.fromMap({
+                'nft_contract_hash': CLValueBuilder.string('hash-4ff1e5e37b8720e8049bfff88676d8e27c1037c02e1172a1006c6d2a535607da'),
+                'token_id': CLValueBuilder.string('746c85ba-583c-4c45-9af7-dce858c4e121'),
+                'erc20_contract': CLValueBuilder.byteArray(transaction.ercContract),
+            });
+
+            const isConnected = window.casperlabsHelper.isConnected();
+
+            if (!isConnected) {
+                await window.casperlabsHelper.requestConnection();
+            }
+
+            const signature = await this.contractSign('accept_offer', runtimeArgs, LOT_PAYMENT_AMOUNT, transaction.address);
+
+            await this.client.claim(transaction.rpcNodeAddress, JSON.stringify(signature), this.walletAddress);
+        }
+        catch (error: any) {
+            ToastNotifications.casperError(`${error.error}`);
+        }
+    }
+
+    /** Accepts offer */
+    async makeOffer(transaction: any): Promise<void> {
+        try {
+            const runtimeArgs = RuntimeArgs.fromMap({
+                'nft_contract_hash': CLValueBuilder.string('hash-4ff1e5e37b8720e8049bfff88676d8e27c1037c02e1172a1006c6d2a535607da'),
+                'token_id': CLValueBuilder.string('746c85ba-583c-4c45-9af7-dce858c4e121'),
+                'erc20_contract': CLValueBuilder.byteArray(transaction.erc20Contract),
+                'offer_price': CLValueBuilder.byteArray(transaction.ercContract),
+            });
+
+            const isConnected = window.casperlabsHelper.isConnected();
+
+            if (!isConnected) {
+                await window.casperlabsHelper.requestConnection();
+            }
+
+            const signature = await this.contractSign('accept_offer', runtimeArgs, LOT_PAYMENT_AMOUNT, transaction.address);
+
+            await this.client.claim(transaction.rpcNodeAddress, JSON.stringify(signature), this.walletAddress);
         }
         catch (error: any) {
             ToastNotifications.casperError(`${error.error}`);

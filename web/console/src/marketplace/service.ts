@@ -51,4 +51,9 @@ export class Marketplaces {
     public async endTime(lotId: string): Promise<boolean> {
         return await this.marketplace.endTime(lotId);
     };
+
+    /** returns lot data */
+    public async lotData(cardId: string): Promise<any> {
+        return await this.marketplace.lotData(cardId);
+    };
 };

@@ -11,6 +11,7 @@ import { walletTypes } from '.';
 import { ethers } from 'ethers';
 import { ToastNotifications } from '@/notifications/service';
 import { SeasonRewardTransaction } from '@/divisions';
+import { MarketCreateLotTransaction } from '@/marketplace';
 
 /**
  * Exposes all wallet service related logic.
@@ -127,6 +128,36 @@ class WalletService {
             break;
         case walletTypes.METAMASK_WALLET_TYPE:
             WalletService.metamaskMintSeasonToken();
+            break;
+        default:
+            break;
+        }
+    };
+
+    /** Mints season token with casper wallet. */
+    private casperCreateLot(transaction: MarketCreateLotTransaction) {
+        const casperTransactionService = new CasperTransactionService(this.user.casperWallet);
+
+        casperTransactionService.createLot(transaction);
+    };
+
+    /** Mints season token with metamask wallet. */
+    private static metamaskCreateLot() { };
+
+    /** Mints season token with velas wallet. */
+    private static velasCreateLot() { };
+
+    /** Creates lot. */
+    public createLot(transaction: MarketCreateLotTransaction) {
+        switch (this.user.walletType) {
+        case walletTypes.VELAS_WALLET_TYPE:
+            WalletService.velasCreateLot();
+            break;
+        case walletTypes.CASPER_WALLET_TYPE:
+            this.casperCreateLot(transaction);
+            break;
+        case walletTypes.METAMASK_WALLET_TYPE:
+            WalletService.metamaskCreateLot();
             break;
         default:
             break;

@@ -96,4 +96,18 @@ export class MarketplaceClient extends APIClient {
 
         return lotEndTime;
     };
+
+    /** marketplace lot data for casper */
+    public async lotData(cardId: string): Promise<any> {
+        const path = `${this.ROOT_PATH}/lot-data/${cardId}`;
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        };
+
+        const lotData = await response.json();
+
+        return lotData;
+    };
 };
