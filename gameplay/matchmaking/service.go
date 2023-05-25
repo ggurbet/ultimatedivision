@@ -7,14 +7,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math/big"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/console/connections"
 	"ultimatedivision/gameplay/gameengine"
+	"ultimatedivision/gameplay/matches"
 	"ultimatedivision/gameplay/queue"
 )
 
@@ -28,14 +31,16 @@ type Service struct {
 	players     DB
 	connections *connections.Service
 	gameEngine  *gameengine.Service
+	queue       *queue.Chore
 }
 
 // NewService is a constructor for matchmaking service.
-func NewService(players DB, connections *connections.Service, gameEngine *gameengine.Service) *Service {
+func NewService(players DB, connections *connections.Service, gameEngine *gameengine.Service, queue *queue.Chore) *Service {
 	return &Service{
 		players:     players,
 		connections: connections,
 		gameEngine:  gameEngine,
+		queue:       queue,
 	}
 }
 
@@ -214,6 +219,17 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 		player.Waiting = false
 		other.Waiting = false
 
+		resp := queue.Response{
+			Status:  http.StatusOK,
+			Message: "players found",
+		}
+		if err := match.Player1.Conn.WriteJSON(resp); err != nil {
+			return nil, ErrMatchmaking.Wrap(err)
+		}
+		if err := match.Player2.Conn.WriteJSON(resp); err != nil {
+			return nil, ErrMatchmaking.Wrap(err)
+		}
+
 		startGameInformation, err := service.gameEngine.GameInformation(ctx, match.Player1.SquadID, match.Player2.SquadID)
 		if err != nil {
 			return nil, ErrMatchmaking.Wrap(err)
@@ -275,13 +291,52 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 			}
 		}
 
-		if err := match.Player1.Conn.WriteJSON("finish game"); err != nil {
-			return nil, ErrMatchmaking.Wrap(err)
+		time.Sleep(time.Second * 10)
+
+		var value = new(big.Int)
+		value.SetString(service.queue.Config.DrawValue, 10)
+
+		firstClient := queue.Client{
+			UserID:     match.Player1.UserID,
+			Connection: match.Player1.Conn,
+			SquadID:    match.Player1.SquadID,
+			IsPlaying:  true,
+			CreatedAt:  time.Time{},
 		}
 
-		if err := match.Player2.Conn.WriteJSON("finish game"); err != nil {
-			return nil, ErrMatchmaking.Wrap(err)
+		secondClient := queue.Client{
+			UserID:     match.Player2.UserID,
+			Connection: match.Player2.Conn,
+			SquadID:    match.Player2.SquadID,
+			IsPlaying:  true,
+			CreatedAt:  time.Time{},
 		}
+
+		winResult := queue.WinResult{
+			Client:     firstClient,
+			GameResult: matches.GameResult{},
+			Value:      value,
+		}
+
+		matchResultPlayer1 := matches.MatchResult{
+			UserID:        match.Player1.UserID,
+			QuantityGoals: 0,
+			Goalscorers:   nil,
+		}
+		matchResultPlayer2 := matches.MatchResult{
+			UserID:        match.Player2.UserID,
+			QuantityGoals: 0,
+			Goalscorers:   nil,
+		}
+		winResult.GameResult.MatchResults = append(winResult.GameResult.MatchResults, matchResultPlayer1, matchResultPlayer2)
+
+		go service.queue.FinishWithWinResult(ctx, winResult)
+
+		winResult.Client = secondClient
+
+		go service.queue.FinishWithWinResult(ctx, winResult)
+
+		return match, nil
 	}
 
 	resp.Message = "you left"

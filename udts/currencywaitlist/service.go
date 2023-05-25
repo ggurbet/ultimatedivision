@@ -111,10 +111,11 @@ func (service *Service) CasperCreate(ctx context.Context, userID uuid.UUID, valu
 				return transaction, ErrCurrencyWaitlist.Wrap(err)
 			}
 		}
-	}
-
-	if err = service.Update(ctx, item); err != nil {
-		return transaction, ErrCurrencyWaitlist.Wrap(err)
+	} else {
+		item.Nonce = nonce + 1
+		if err = service.Update(ctx, item); err != nil {
+			return transaction, ErrCurrencyWaitlist.Wrap(err)
+		}
 	}
 
 	for range time.NewTicker(time.Millisecond * service.config.IntervalSignatureCheck).C {

@@ -91,7 +91,7 @@ func (currencywaitlistDB *currencywaitlistDB) GetNonce(ctx context.Context) (int
 // GetNonceByWallet returns number of nonce by wallet from database.
 func (currencywaitlistDB *currencywaitlistDB) GetNonceByWallet(ctx context.Context, wallet string) (int64, error) {
 	var nonce int64
-	query := `SELECT coalesce(MAX(DISTINCT nonce),0) FROM currency_waitlist WHERE casper_wallet_address = $1`
+	query := `SELECT nonce FROM currency_waitlist WHERE casper_wallet_address = $1`
 
 	err := currencywaitlistDB.conn.QueryRowContext(ctx, query, wallet).Scan(&nonce)
 	if errors.Is(err, sql.ErrNoRows) {
@@ -162,10 +162,10 @@ func (currencywaitlistDB *currencywaitlistDB) ListWithoutSignature(ctx context.C
 // Update updates item by wallet address and nonce in the database.
 func (currencywaitlistDB *currencywaitlistDB) Update(ctx context.Context, item currencywaitlist.Item) error {
 	query := `UPDATE currency_waitlist
-	          SET value = $1, signature = $2
-	          WHERE wallet_address = $3 and nonce = $4`
+	          SET value = $1, signature = $2, nonce = $3
+	          WHERE casper_wallet_address = $4`
 
-	result, err := currencywaitlistDB.conn.ExecContext(ctx, query, item.Value.Bytes(), item.Signature, item.WalletAddress, item.Nonce)
+	result, err := currencywaitlistDB.conn.ExecContext(ctx, query, item.Value.Bytes(), item.Signature, item.Nonce, item.CasperWalletAddress)
 	if err != nil {
 		return ErrCurrencyWaitlist.Wrap(err)
 	}
@@ -175,7 +175,7 @@ func (currencywaitlistDB *currencywaitlistDB) Update(ctx context.Context, item c
 		return currencywaitlist.ErrNoItem.New("item does not exist")
 	}
 
-	return ErrCurrencyWaitlist.Wrap(err)
+	return nil
 }
 
 // UpdateNonceByWallet updates item by wallet address and nonce in the database.

@@ -32,7 +32,6 @@ func NewContractCasper(log logger.Logger, currencyWaitlist *currencywaitlist.Ser
 
 // Claim sends transaction to claim method.
 func (contract *ContractCasper) Claim(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
 	var req contractcasper.ClaimRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -44,20 +43,6 @@ func (contract *ContractCasper) Claim(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		contract.serveError(w, http.StatusInternalServerError, ErrContractCasper.Wrap(err))
 		return
-	}
-
-	if req.CasperWalletAddress != "" {
-		nonce, err := contract.currencyWaitlist.GetNonce(ctx)
-		if err != nil {
-			contract.log.Error("could not get nonce number from currencyWaitlist", ErrContractCasper.Wrap(err))
-			return
-		}
-
-		err = contract.currencyWaitlist.UpdateNonceByWallet(ctx, nonce, req.CasperWalletAddress)
-		if err != nil {
-			contract.log.Error("could update nonce number in currencyWaitlist", ErrContractCasper.Wrap(err))
-			return
-		}
 	}
 
 	if err := json.NewEncoder(w).Encode(resp); err != nil {

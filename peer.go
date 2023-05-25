@@ -598,7 +598,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 	}
 
 	{ // matchmaking setup.
-		peer.Matchmaking.Service = matchmaking.NewService(peer.Database.Players(), peer.Connections.Service, peer.GameEngine.Service)
+		peer.Matchmaking.Service = matchmaking.NewService(peer.Database.Players(), peer.Connections.Service, peer.GameEngine.Service, peer.Queue.PlaceChore)
 	}
 
 	{ // admin setup.

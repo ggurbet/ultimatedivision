@@ -303,8 +303,7 @@ func (db *database) CreateSchema(ctx context.Context) (err error) {
             wallet_type           VARCHAR NOT NULL,
             value                 BYTEA   NOT NULL,
             nonce                 INTEGER NOT NULL,
-            signature             VARCHAR NOT NULL,
-            PRIMARY KEY(wallet_address, nonce)
+            signature             VARCHAR NOT NULL
         );
         CREATE TABLE IF NOT EXISTS udts(
             user_id BYTEA   PRIMARY KEY REFERENCES users(id) NOT NULL,
