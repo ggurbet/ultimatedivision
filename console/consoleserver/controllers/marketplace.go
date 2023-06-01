@@ -16,6 +16,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
+	"ultimatedivision/cards/nfts"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/pkg/auth"
@@ -304,6 +305,28 @@ func (controller *Marketplace) GetLotData(w http.ResponseWriter, r *http.Request
 	}
 
 	if err = json.NewEncoder(w).Encode(lotData); err != nil {
+		controller.log.Error("failed to write json response", ErrMarketplace.Wrap(err))
+		return
+	}
+}
+
+// GetApproveData is an endpoint that return approve data by card id.
+func (controller *Marketplace) GetApproveData(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+	queryParams := r.URL.Query()
+
+	var approveData nfts.TokenIDWithApproveData
+
+	cardID := queryParams.Get("card_id")
+
+	approveData, err := controller.marketplace.GetApproveByCardID(ctx, cardID)
+	if err != nil {
+		controller.log.Error("there is no such NFT data", ErrMarketplace.Wrap(err))
+		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+	}
+
+	if err = json.NewEncoder(w).Encode(approveData); err != nil {
 		controller.log.Error("failed to write json response", ErrMarketplace.Wrap(err))
 		return
 	}
