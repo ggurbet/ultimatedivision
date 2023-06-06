@@ -447,10 +447,15 @@ func (chore *Chore) FinishWithWinResult(c context.Context, winResult WinResult) 
 
 		switch request.WalletType {
 		case users.WalletTypeCasper:
-			nonce, err := chore.currencywaitlist.GetNonceByWallet(ctx, user.CasperWallet)
-			if err != nil {
-				chore.log.Error("could not get nonce number from currencywaitlist", ChoreError.Wrap(err))
-				return
+			var nonce int64
+			nonce, err = chore.currencywaitlist.GetNonceByWallet(ctx, user.CasperWallet)
+			if err != nil && !currencywaitlist.ErrNoItem.Has(err) {
+				if currencywaitlist.ErrNoItem.Has(err) {
+					nonce = 0
+				} else {
+					chore.log.Error("could not get nonce number from currencywaitlist", ChoreError.Wrap(err))
+					return
+				}
 			}
 
 			if winResult.GameResult.CasperTransaction, err = chore.currencywaitlist.CasperCreate(ctx, user.ID, *winResult.Value, nonce); err != nil {
