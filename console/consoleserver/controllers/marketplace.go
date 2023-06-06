@@ -16,7 +16,6 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
-	"ultimatedivision/cards/nfts"
 	"ultimatedivision/internal/logger"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/pkg/auth"
@@ -314,10 +313,8 @@ func (controller *Marketplace) GetLotData(w http.ResponseWriter, r *http.Request
 func (controller *Marketplace) GetApproveData(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
+
 	queryParams := r.URL.Query()
-
-	var approveData nfts.TokenIDWithApproveData
-
 	cardID := queryParams.Get("card_id")
 
 	approveData, err := controller.marketplace.GetApproveByCardID(ctx, cardID)
