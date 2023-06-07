@@ -96,27 +96,27 @@ type Casper interface {
 	GetBlockNumberByHash(hash string) (int, error)
 }
 
-// ClaimRequest describes values to initiate inbound claim transaction.
-type ClaimRequest struct {
-	Deploy              string
-	RPCNodeAddress      string
-	CasperWalletAddress string
-	CasperWalletHash    string
-}
-
 // StringNetworkAddress describes an address for some network.
 type StringNetworkAddress struct {
 	NetworkName string
 	Address     string
 }
 
-// ClaimInResponse describes claim in tx hash.
-type ClaimInResponse struct {
+// SendTxRequest describes values to initiate transaction.
+type SendTxRequest struct {
+	Deploy              string
+	RPCNodeAddress      string
+	CasperWalletAddress string
+	CasperWalletHash    string
+}
+
+// SendTxResponse describes tx hash.
+type SendTxResponse struct {
 	Txhash string
 }
 
-// Claim initiates inbound claim transaction.
-func Claim(ctx context.Context, req ClaimRequest) (ClaimInResponse, error) {
+// SendTx initiates transaction.
+func SendTx(ctx context.Context, req SendTxRequest) (SendTxResponse, error) {
 	request := struct {
 		Deploy struct {
 			Hash      sdk.Hash                  `json:"hash"`
@@ -132,12 +132,12 @@ func Claim(ctx context.Context, req ClaimRequest) (ClaimInResponse, error) {
 
 	err := json.Unmarshal([]byte(req.Deploy), &request)
 	if err != nil {
-		return ClaimInResponse{}, ErrContract.Wrap(err)
+		return SendTxResponse{}, ErrContract.Wrap(err)
 	}
 
 	pubKeyData, err := hex.DecodeString(request.Deploy.Approvals[0].Signer[2:])
 	if err != nil {
-		return ClaimInResponse{}, ErrContract.Wrap(err)
+		return SendTxResponse{}, ErrContract.Wrap(err)
 	}
 
 	signer := keypair.PublicKey{
@@ -147,7 +147,7 @@ func Claim(ctx context.Context, req ClaimRequest) (ClaimInResponse, error) {
 
 	signatureData, err := hex.DecodeString(request.Deploy.Approvals[0].Signature[2:])
 	if err != nil {
-		return ClaimInResponse{}, ErrContract.Wrap(err)
+		return SendTxResponse{}, ErrContract.Wrap(err)
 	}
 
 	signature := keypair.Signature{
@@ -171,10 +171,10 @@ func Claim(ctx context.Context, req ClaimRequest) (ClaimInResponse, error) {
 	casperClient := sdk.NewRpcClient(req.RPCNodeAddress)
 	deployResp, err := casperClient.PutDeploy(deploy)
 	if err != nil {
-		return ClaimInResponse{}, ErrContract.Wrap(err)
+		return SendTxResponse{}, ErrContract.Wrap(err)
 	}
 
-	resp := ClaimInResponse{
+	resp := SendTxResponse{
 		Txhash: deployResp.Hash,
 	}
 

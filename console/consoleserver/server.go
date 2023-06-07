@@ -129,7 +129,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	casperRouter.HandleFunc("/nonce", authController.PublicKey).Methods(http.MethodGet)
 	casperRouter.HandleFunc("/login", authController.CasperLogin).Methods(http.MethodPost)
 
-	apiRouter.HandleFunc("/casper/claim", contractCasperController.Claim).Methods(http.MethodPost)
+	apiRouter.HandleFunc("/casper/send-tx", contractCasperController.SendTx).Methods(http.MethodPost)
 
 	apiRouter.Handle("/connection", server.withAuth(http.HandlerFunc(connectionController.Connect))).Methods(http.MethodGet)
 

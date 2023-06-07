@@ -30,16 +30,16 @@ func NewContractCasper(log logger.Logger, currencyWaitlist *currencywaitlist.Ser
 	}
 }
 
-// Claim sends transaction to claim method.
-func (contract *ContractCasper) Claim(w http.ResponseWriter, r *http.Request) {
-	var req contractcasper.ClaimRequest
+// SendTx sends casper transaction.
+func (contract *ContractCasper) SendTx(w http.ResponseWriter, r *http.Request) {
+	var req contractcasper.SendTxRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		contract.serveError(w, http.StatusBadRequest, ErrContractCasper.Wrap(err))
 		return
 	}
 
-	resp, err := contractcasper.Claim(r.Context(), req)
+	resp, err := contractcasper.SendTx(r.Context(), req)
 	if err != nil {
 		contract.serveError(w, http.StatusInternalServerError, ErrContractCasper.Wrap(err))
 		return
