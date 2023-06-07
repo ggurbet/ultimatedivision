@@ -110,15 +110,15 @@ func (service *Service) GetProfile(ctx context.Context, userID uuid.UUID) (*Prof
 	}
 
 	return &ProfileWithWallet{
-		ID:             user.ID,
-		Email:          user.Email,
-		NickName:       user.NickName,
-		CreatedAt:      user.CreatedAt,
-		LastLogin:      user.LastLogin,
-		Wallet:         user.Wallet,
-		CasperWallet:   user.CasperWallet,
-		CasperWalletID: user.CasperWalletHash,
-		WalletType:     user.WalletType,
+		ID:                  user.ID,
+		Email:               user.Email,
+		NickName:            user.NickName,
+		CreatedAt:           user.CreatedAt,
+		LastLogin:           user.LastLogin,
+		Wallet:              user.Wallet,
+		CasperWalletAddress: user.CasperWallet,
+		CasperWalletHash:    user.CasperWalletHash,
+		WalletType:          user.WalletType,
 	}, nil
 }
 

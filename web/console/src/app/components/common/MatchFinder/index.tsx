@@ -63,6 +63,8 @@ const MatchFinder: React.FC = () => {
     const YOU_CONFIRM_PLAY_MESSAGE: string = 'do you confirm play?';
     /** Variable describes that user have leaved from searching game. */
     const YOU_LEAVED_MESSAGE: string = 'you left';
+    /** Variable describes that user have leaved from searching game. */
+    const PLAYERS_FOUND: string = 'players found';
 
     /** Sends confirm action. */
     const confirmMatch = () => {
@@ -130,22 +132,25 @@ const MatchFinder: React.FC = () => {
             case YOU_LEAVED_MESSAGE:
                 setIsMatchFound(false);
                 dispatch(startSearchingMatch(false));
+
                 onCloseConnection();
                 onOpenConnectionNoAction();
 
                 return;
-            default:
+
+            case PLAYERS_FOUND:
                 setIsMatchFound(false);
                 ToastNotifications.gameFinished();
 
-                dispatch(getMatchScore(event.message));
                 dispatch(startSearchingMatch(false));
-
 
                 /** implements redirect to game page after DELAY time.  */
                 setTimeout(() => {
                     history.push(RouteConfig.FootballGame.path);
                 }, DELAY);
+                break;
+            default:
+                /** no actions */
             }
         };
     }
