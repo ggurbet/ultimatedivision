@@ -4,9 +4,13 @@
 package contract
 
 import (
+	"bytes"
 	"context"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
 
 	"github.com/casper-ecosystem/casper-golang-sdk/keypair"
 	"github.com/casper-ecosystem/casper-golang-sdk/sdk"
@@ -86,6 +90,8 @@ type (
 
 // Casper exposes access to the casper sdk methods.
 type Casper interface {
+	// PutDeploy deploys a contract or sends a transaction and returns deployment hash.
+	PutDeploy(deploy sdk.Deploy) (string, error)
 	// GetBlockNumberByHash returns block number by deploy hash.
 	GetBlockNumberByHash(hash string) (int, error)
 }
@@ -173,4 +179,90 @@ func Claim(ctx context.Context, req ClaimRequest) (ClaimInResponse, error) {
 	}
 
 	return resp, nil
+}
+
+// rpcClient is a implementation of connector_service.Casper.
+type rpcClient struct {
+	client *sdk.RpcClient
+
+	rpcNodeAddress string
+}
+
+// GetBlockNumberByHash returns block number by deploy hash.
+func (r *rpcClient) GetBlockNumberByHash(hash string) (int, error) {
+	blockResp, err := r.client.GetBlockByHash(hash)
+	return blockResp.Header.Height, err
+}
+
+// JSONPutDeployRes describes result of put_deploy tx.
+type JSONPutDeployRes struct {
+	Hash string `json:"deploy_hash"`
+}
+
+// PutDeploy deploys a contract or sends a transaction and returns deployment hash.
+func (r *rpcClient) PutDeploy(deploy sdk.Deploy) (string, error) {
+	resp, err := r.rpcCall("account_put_deploy", map[string]interface{}{
+		"deploy": deploy,
+	})
+	if err != nil {
+		return "", err
+	}
+
+	var result JSONPutDeployRes
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return "", fmt.Errorf("failed to put deploy: %w", err)
+	}
+
+	return result.Hash, err
+}
+
+func (r *rpcClient) rpcCall(method string, params interface{}) (_ sdk.RpcResponse, err error) {
+	var rpcResponse sdk.RpcResponse
+
+	body, err := json.Marshal(sdk.RpcRequest{
+		Version: "2.0",
+		Method:  method,
+		Params:  params,
+	})
+	if err != nil {
+		return sdk.RpcResponse{}, ErrContract.Wrap(err)
+	}
+
+	resp, err := http.Post(r.rpcNodeAddress, "application/json", bytes.NewReader(body))
+	if err != nil {
+		return sdk.RpcResponse{}, fmt.Errorf("failed to make request: %v", err)
+	}
+
+	defer func() {
+		err = errs.Combine(err, resp.Body.Close())
+	}()
+
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return sdk.RpcResponse{}, fmt.Errorf("failed to get response body: %v", err)
+	}
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
+		return sdk.RpcResponse{}, fmt.Errorf("request failed, status code - %d, response - %s", resp.StatusCode, string(b))
+	}
+
+	err = json.Unmarshal(b, &rpcResponse)
+	if err != nil {
+		return sdk.RpcResponse{}, fmt.Errorf("failed to parse response body: %v", err)
+	}
+
+	if rpcResponse.Error != nil {
+		return rpcResponse, fmt.Errorf("rpc call failed, code - %d, message - %s", rpcResponse.Error.Code, rpcResponse.Error.Message)
+	}
+
+	return rpcResponse, nil
+}
+
+// New is constructor for rpcClient.
+func New(rpcNodeAddress string) Casper {
+	client := sdk.NewRpcClient(rpcNodeAddress)
+	return &rpcClient{
+		client:         client,
+		rpcNodeAddress: rpcNodeAddress,
+	}
 }

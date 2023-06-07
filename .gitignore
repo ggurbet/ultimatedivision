@@ -21,3 +21,4 @@ output
 
 # secrets
 /deploy/configs/
+/internal/contract/casper/owner.pem
