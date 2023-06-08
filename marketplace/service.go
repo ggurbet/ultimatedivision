@@ -136,7 +136,7 @@ func (service *Service) GetNFTDataByCardID(ctx context.Context, cardID uuid.UUID
 	lotData.TokenID = tokenID
 	lotData.Address = service.config.MarketContractAddress
 	lotData.AddressNodeServer = service.config.RPCNodeAddress
-	lotData.ContractHash = fmt.Sprintf("%s%s", service.config.CreateListingPrefix, service.config.NFTContractAddress)
+	lotData.ContractHash = fmt.Sprintf("%s%s", service.config.NFTContractPrefix, service.config.NFTContractAddress)
 
 	return lotData, ErrMarketplace.Wrap(err)
 }
@@ -179,7 +179,7 @@ func (service *Service) GetMakeOfferByCardID(ctx context.Context, cardID uuid.UU
 		TokenID:           tokenID,
 		Address:           service.config.MarketContractAddress,
 		AddressNodeServer: service.config.RPCNodeAddress,
-		ContractHash:      service.config.NFTContractAddress,
+		ContractHash:      fmt.Sprintf("%s%s", service.config.NFTContractPrefix, service.config.NFTContractAddress),
 		TokenContractHash: service.config.TokenContractAddress,
 	}, ErrMarketplace.Wrap(err)
 }

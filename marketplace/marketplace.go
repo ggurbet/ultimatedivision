@@ -110,7 +110,7 @@ type Config struct {
 
 	MarketContractPackageAddress string `json:"marketContractPackageAddress"`
 	NFTApprovePrefix             string `json:"nftApprovePrefix"`
-	CreateListingPrefix          string `json:"createListingPrefix"`
+	NFTContractPrefix            string `json:"nftContractPrefix"`
 
 	TokenAmountForApproving int64 `json:"tokenAmountForApproving"`
 }
