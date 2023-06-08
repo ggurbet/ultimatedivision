@@ -94,6 +94,30 @@ func (controller *Bids) Bet(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GetMakeOfferData is an endpoint that return make offer data by lot id.
+func (controller *Bids) GetMakeOfferData(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+	vars := mux.Vars(r)
+
+	cardID, err := uuid.Parse(vars["card_id"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+		return
+	}
+
+	lotData, err := controller.bids.GetMakeOfferData(ctx, cardID)
+	if err != nil {
+		controller.log.Error("there is no such NFT data", ErrMarketplace.Wrap(err))
+		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+	}
+
+	if err = json.NewEncoder(w).Encode(lotData); err != nil {
+		controller.log.Error("failed to write json response", ErrMarketplace.Wrap(err))
+		return
+	}
+}
+
 // ListByLotID is an endpoint that returns bids by lot id.
 func (controller *Bids) ListByLotID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

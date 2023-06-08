@@ -12,6 +12,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
+	"ultimatedivision/cards/nfts"
 	"ultimatedivision/marketplace"
 	"ultimatedivision/users"
 )
@@ -88,6 +89,16 @@ func (service *Service) Create(ctx context.Context, bid Bid) error {
 		return ErrBids.Wrap(err)
 	}
 	return nil
+}
+
+// GetMakeOfferData returns make offer data by card id from DB.
+func (service *Service) GetMakeOfferData(ctx context.Context, cardID uuid.UUID) (nfts.MakeOffer, error) {
+	tokenIDWithContractAddress, err := service.marketplace.GetMakeOfferByCardID(ctx, cardID)
+	if err != nil {
+		return nfts.MakeOffer{}, ErrBids.Wrap(err)
+	}
+
+	return tokenIDWithContractAddress, ErrBids.Wrap(err)
 }
 
 // GetCurrentBidByLotID returns current bid by lot id from the database.

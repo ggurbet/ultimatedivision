@@ -5,6 +5,7 @@ package marketplace
 
 import (
 	"context"
+	"fmt"
 	"math/big"
 	"strconv"
 	"strings"
@@ -133,9 +134,9 @@ func (service *Service) GetNFTDataByCardID(ctx context.Context, cardID uuid.UUID
 		return lotData, ErrMarketplace.Wrap(err)
 	}
 	lotData.TokenID = tokenID
-	lotData.Address = service.config.MarketplaceNFTContract.Address
+	lotData.Address = service.config.MarketContractAddress
 	lotData.AddressNodeServer = service.config.RPCNodeAddress
-	lotData.ContractHash = service.config.ContractHash
+	lotData.ContractHash = fmt.Sprintf("%s%s", service.config.CreateListingPrefix, service.config.NFTContractAddress)
 
 	return lotData, ErrMarketplace.Wrap(err)
 }
@@ -159,12 +160,28 @@ func (service *Service) GetApproveByCardID(ctx context.Context, cardID string) (
 
 	approveData.AddressNodeServer = service.config.RPCNodeAddress
 	approveData.NFTContractAddress = service.config.NFTContractAddress
-	approveData.TokenRewardContractAddress = service.config.TokenRewardContractAddress
-	approveData.Amount = service.config.Amount
-	approveData.NFTContractPackageAddress = service.config.NFTContractPackageAddress
-	approveData.TokenContractPackageAddress = service.config.TokenContractPackageAddress
+	approveData.TokenRewardContractAddress = service.config.TokenContractAddress
+	approveData.Amount = service.config.TokenAmountForApproving
+	approveData.ApproveNFTSpender = fmt.Sprintf("%s%s", service.config.NFTApprovePrefix, service.config.MarketContractPackageAddress)
+	approveData.ApproveTokensSpender = service.config.MarketContractPackageAddress
 
 	return approveData, ErrMarketplace.Wrap(err)
+}
+
+// GetMakeOfferByCardID returns make offer data by card id from DB.
+func (service *Service) GetMakeOfferByCardID(ctx context.Context, cardID uuid.UUID) (nfts.MakeOffer, error) {
+	tokenID, err := service.nfts.GetNFTTokenIDbyCardID(ctx, cardID)
+	if err != nil {
+		return nfts.MakeOffer{}, ErrMarketplace.Wrap(err)
+	}
+
+	return nfts.MakeOffer{
+		TokenID:           tokenID,
+		Address:           service.config.MarketContractAddress,
+		AddressNodeServer: service.config.RPCNodeAddress,
+		ContractHash:      service.config.NFTContractAddress,
+		TokenContractHash: service.config.TokenContractAddress,
+	}, ErrMarketplace.Wrap(err)
 }
 
 // ListActiveLots returns active lots from DB.

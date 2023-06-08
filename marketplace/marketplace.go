@@ -99,18 +99,20 @@ const (
 
 // Config defines configuration for marketplace.
 type Config struct {
-	LotRenewalInterval     time.Duration `json:"lotRenewalInterval"`
-	pagination.Cursor      `json:"cursor"`
-	MarketplaceNFTContract struct {
-		Address string `json:"address"`
-	} `json:"marketplaceNFTContract"`
-	RPCNodeAddress              string `json:"rpcNodeAddress"`
-	ContractHash                string `json:"contractHash"`
-	NFTContractAddress          string `json:"nftContractAddress"`
-	TokenRewardContractAddress  string `json:"tokenRewardContractAddress"`
-	Amount                      int64  `json:"amount"`
-	NFTContractPackageAddress   string `json:"nftContractPackageAddress"`
-	TokenContractPackageAddress string `json:"tokenContractPackageAddress"`
+	LotRenewalInterval time.Duration `json:"lotRenewalInterval"`
+	pagination.Cursor  `json:"cursor"`
+
+	RPCNodeAddress string `json:"rpcNodeAddress"`
+
+	NFTContractAddress    string `json:"nftContractAddress"`
+	MarketContractAddress string `json:"marketContractAddress"`
+	TokenContractAddress  string `json:"tokenContractAddress"`
+
+	MarketContractPackageAddress string `json:"marketContractPackageAddress"`
+	NFTApprovePrefix             string `json:"nftApprovePrefix"`
+	CreateListingPrefix          string `json:"createListingPrefix"`
+
+	TokenAmountForApproving int64 `json:"tokenAmountForApproving"`
 }
 
 // CreateLot entity that contains the values required to create the lot.

@@ -193,6 +193,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 
 	bidsRouter := apiRouter.PathPrefix("/bids").Subrouter()
 	bidsRouter.Use(server.withAuth)
+	bidsRouter.HandleFunc("/offer/{card_id}", bidsController.GetMakeOfferData).Methods(http.MethodGet)
 	bidsRouter.HandleFunc("", bidsController.Bet).Methods(http.MethodPost)
 	bidsRouter.HandleFunc("/{lotId}", bidsController.ListByLotID).Methods(http.MethodGet)
 
