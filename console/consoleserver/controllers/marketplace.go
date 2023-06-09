@@ -121,6 +121,9 @@ func (controller *Marketplace) ListActiveLots(w http.ResponseWriter, r *http.Req
 			Period:       oneLot.Period,
 			Card:         oneLot.Card,
 		}
+		if lot.CurrentPrice.String() == "0" {
+			lot.CurrentPrice = lot.StartPrice
+		}
 		lots = append(lots, lot)
 	}
 
