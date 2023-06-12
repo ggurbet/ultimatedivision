@@ -300,10 +300,10 @@ func (controller *Marketplace) IsMinted(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	var isMinted int
-
-	if isMinted = controller.marketplace.IsMinted(ctx, cardID); err != nil {
+	isMinted, err := controller.marketplace.IsMinted(ctx, cardID)
+	if err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+		return
 	}
 
 	if err = json.NewEncoder(w).Encode(isMinted); err != nil {

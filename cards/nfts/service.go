@@ -124,7 +124,7 @@ func (service *Service) GetNFTByCardID(ctx context.Context, cardID uuid.UUID) (N
 }
 
 // IsMinted returns 1 if minted or 0 if not minted.
-func (service *Service) IsMinted(ctx context.Context, id uuid.UUID) int {
+func (service *Service) IsMinted(ctx context.Context, id uuid.UUID) (int, error) {
 	return service.nfts.IsMinted(ctx, id)
 }
 

@@ -25,7 +25,7 @@ type DB interface {
 	// Get returns nft by token id and chain from database.
 	Get(ctx context.Context, tokenID uuid.UUID, chain evmsignature.Chain) (NFT, error)
 	// IsMinted returns nft status by cardID from the database.
-	IsMinted(ctx context.Context, cardID uuid.UUID) int
+	IsMinted(ctx context.Context, cardID uuid.UUID) (int, error)
 	// GetNFTByCardID returns nft by card id from database.
 	GetNFTByCardID(ctx context.Context, cardID uuid.UUID) (NFT, error)
 	// GetNFTTokenIDbyCardID returns nft token id by card id from database.
