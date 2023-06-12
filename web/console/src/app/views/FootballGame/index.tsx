@@ -47,5 +47,4 @@ const FootballGame: React.FC = () => {
 
     return <Unity unityContent={unityContext} className="unity-container" />;
 };
-
 export default FootballGame;

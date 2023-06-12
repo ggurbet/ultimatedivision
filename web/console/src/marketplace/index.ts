@@ -4,9 +4,6 @@
 import { Card } from '@/card';
 
 const DEFAULT_VALUE = 0;
-const DEFAULT_MIN_PRICE = 3000;
-const DEFAULT_DURATION = 1;
-const DEFAULT_REDEMPTION_PRRICE = 30000;
 
 /** Defines Marketplace lot entity. */
 export class Lot {
@@ -41,20 +38,5 @@ export class MarketPlacePage {
             pageCount: number;
             totalCount: number;
         }
-    ) { }
-};
-
-
-/** Class defines Marketplace response */
-export class MarketCreateLotTransaction {
-    /** Includes lots and page field */
-    constructor(
-        public address: string = '',
-        public rpcNodeAddress: string = '',
-        public tokenId: string = '',
-        public contractHash: string = '',
-        public minBidPrice: number = DEFAULT_MIN_PRICE,
-        public auctionDuration: number = DEFAULT_DURATION,
-        public redemptionPrice: number = DEFAULT_REDEMPTION_PRRICE,
     ) { }
 };

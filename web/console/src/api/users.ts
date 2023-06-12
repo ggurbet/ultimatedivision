@@ -45,8 +45,8 @@ export class UsersClient extends APIClient {
         const user = await response.json();
 
         return new User(
-            user.casperWalletID,
-            user.casperWallet,
+            user.casperWalletHash,
+            user.casperWalletAddress,
             user.email,
             user.id,
             user.lastLogin,

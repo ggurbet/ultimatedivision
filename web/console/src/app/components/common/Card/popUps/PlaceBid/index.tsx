@@ -1,6 +1,14 @@
 // Copyright (C) 2021 Creditor Corp. Group.
 // See LICENSE for copying information.
 
+import { useSelector } from 'react-redux';
+
+import { MarketplaceClient } from '@/api/marketplace';
+import { RootState } from '@/app/store';
+import { BidsMakeOfferTransaction } from '@/casper/types';
+import { Marketplaces } from '@/marketplace/service';
+import WalletService from '@/wallet/service';
+
 import closePopup from '@static/img/FootballerCardPage/close-popup.svg';
 
 import './index.scss';
@@ -13,8 +21,31 @@ type PlaceBidTypes = {
 };
 
 export const PlaceBid: React.FC<PlaceBidTypes> = ({ setIsOpenPlaceBidPopup, setCardBid, setCurrentCardBid, cardBid }) => {
+    const user = useSelector((state: RootState) => state.usersReducer.user);
+    const { lot } = useSelector((state: RootState) => state.marketplaceReducer);
+
+    const marketplaceClient = new MarketplaceClient();
+    const marketplaceService = new Marketplaces(marketplaceClient);
+
     /** Sets current bid to state and close popup. */
-    const handlePlaceCurrentBid = () => {
+    const handlePlaceCurrentBid = async() => {
+        await marketplaceService.placeBid(lot.cardId, cardBid);
+
+        const makeOfferData = await marketplaceService.offer(lot.cardId);
+
+        const walletService = new WalletService(user);
+
+        const marketplaceMakeOfferTransaction = new BidsMakeOfferTransaction(
+            makeOfferData.address,
+            makeOfferData.rpcNodeAddress,
+            makeOfferData.tokenId,
+            makeOfferData.contractHash,
+            makeOfferData.tokenContractHash,
+            cardBid
+        );
+
+        await walletService.makeOffer(marketplaceMakeOfferTransaction);
+
         setCurrentCardBid(cardBid);
         setIsOpenPlaceBidPopup(false);
     };

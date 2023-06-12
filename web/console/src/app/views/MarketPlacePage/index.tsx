@@ -2,7 +2,7 @@
 // See LICENSE for copying information.
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { FilterField } from '@components/common/FilterField';
 import { FilterByPrice } from '@components/common/FilterField/FilterByPrice';
@@ -21,6 +21,8 @@ import {
 } from '@/app/store/actions/marketplace';
 import { CardsQueryParametersField } from '@/card';
 import { Lot } from '@/marketplace';
+import { setCurrentUser } from '@/app/store/actions/users';
+import { ToastNotifications } from '@/notifications/service';
 
 import './index.scss';
 
@@ -50,6 +52,19 @@ const MarketPlace: React.FC = () => {
         createLotsQueryParameters(queryParameters);
         await dispatch(listOfLots(DEFAULT_PAGE_INDEX));
     };
+
+    /** sets user info */
+    async function setUser() {
+        try {
+            await dispatch(setCurrentUser());
+        } catch (error: any) {
+            ToastNotifications.couldNotGetUser();
+        }
+    }
+
+    useEffect(() => {
+        setUser();
+    }, []);
 
     return (
         <>

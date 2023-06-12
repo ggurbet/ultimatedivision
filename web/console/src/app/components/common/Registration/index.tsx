@@ -26,7 +26,7 @@ import { VelasClient } from '@/api/velas';
 import { VelasService } from '@/velas/service';
 import { CasperNetworkClient } from '@/api/casper';
 import { CasperNetworkService } from '@/casper/service';
-import { ACCOUNT_HASH_PREFIX } from '@/casper';
+import { ACCOUNT_HASH_PREFIX } from '@/casper/types';
 
 import representLogo from '@static/img/login/represent-logo.gif';
 import metamask from '@static/img/login/metamask-icon.svg';

@@ -12,6 +12,7 @@ import { BidArea } from '@/app/components/common/Card/BidArea';
 import { FootballerCardIllustrationsRadar } from '@/app/components/common/Card/CardIllustrationsRadar';
 import { PlayerCard } from '@/app/components/common/PlayerCard';
 import { ToastNotifications } from '@/notifications/service';
+import { setCurrentUser } from '@/app/store/actions/users';
 
 import CardPageBackground from '@static/img/FootballerCardPage/background.png';
 import backButton from '@static/img/FootballerCardPage/back-button.png';
@@ -33,8 +34,18 @@ const Lot: React.FC = () => {
         };
     };
 
+    /** sets user info */
+    async function setUser() {
+        try {
+            await dispatch(setCurrentUser());
+        } catch (error: any) {
+            ToastNotifications.couldNotGetUser();
+        }
+    }
+
     useEffect(() => {
         openLot();
+        setUser();
     }, []);
 
     return (

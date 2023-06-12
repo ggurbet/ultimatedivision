@@ -3,10 +3,17 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import { Lot } from '@/marketplace';
+import { RootState } from '@/app/store';
+import { MarketplaceClient } from '@/api/marketplace';
+import { Marketplaces } from '@/marketplace/service';
+import WalletService from '@/wallet/service';
+import { ToastNotifications } from '@/notifications/service';
 
 import { PlayerCard } from '@components/common/PlayerCard';
 import { MarketplaceTimer } from '@components/MarketPlace/MarketplaceTimer';
-import { Lot } from '@/marketplace';
 
 import './index.scss';
 
@@ -14,14 +21,26 @@ const ONE_COIN = 1;
 
 export const MarketPlaceFootballerCard: React.FC<{ lot: Lot; handleShowModal: (lot: Lot) => void; place?: string }> =
     ({ lot, handleShowModal }) => {
-        /** TODO: add function entity */
-        const buyNowButton = () => { };
-        const bidButton = () => { };
-
         const [isEndTime, setIsEndTime] = useState(false);
 
-        return <div className="marketplace-playerCard"
-            onClick={() => bidButton()}>
+        const user = useSelector((state: RootState) => state.usersReducer.user);
+
+        const marketplaceClient = new MarketplaceClient();
+        const marketplaceService = new Marketplaces(marketplaceClient);
+
+        /** buys a nft */
+        const buyNowButton = async() => {
+            try {
+                const walletService = new WalletService(user);
+                const offerData = await marketplaceService.offer(lot.cardId);
+
+                await walletService.buyListing(offerData);
+            } catch (e) {
+                ToastNotifications.somethingWentsWrong();
+            }
+        };
+
+        return <div className="marketplace-playerCard">
             <Link
                 className="marketplace-playerCard__link"
                 to={`/lot/${lot.cardId}`}

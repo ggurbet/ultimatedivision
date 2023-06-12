@@ -14,6 +14,8 @@ import { setCurrentUser } from '@/app/store/actions/users';
 import WalletService from '@/wallet/service';
 import { walletTypes } from '@/wallet';
 import { ToastNotifications } from '@/notifications/service';
+import { CasperNetworkClient } from '@/api/casper';
+import { CasperNetworkService } from '@/casper/service';
 
 import coin from '@static/img/match/money.svg';
 
@@ -43,6 +45,9 @@ export const MatchScore: React.FC = () => {
 
     /** Variable describes that it needs alllow to add address or forbid add adress. */
     const CONFIRM_ADD_WALLET: string = 'do you allow us to take your address?';
+
+    const casperClient = new CasperNetworkClient();
+    const casperService = new CasperNetworkService(casperClient);
 
     /** sets user info */
     async function setUser() {
@@ -123,6 +128,13 @@ export const MatchScore: React.FC = () => {
         mintingTokens.get(user.walletType)();
     };
 
+    const approve = async() => {
+        const approveData = await casperService.approve();
+
+        const walletService = new WalletService(user);
+        await walletService.approveTokenReward(approveData);
+    };
+
     if (webSocketClient) {
         webSocketClient.ws.onmessage = async({ data }: MessageEvent) => {
             const messageEvent = JSON.parse(data);
@@ -165,6 +177,14 @@ export const MatchScore: React.FC = () => {
                     >
                         <span className="match__score__board__coins__btn-text">
                             GET
+                        </span>
+                    </button>
+                    <button
+                        className="match__score__board__coins__btn"
+                        onClick={() => approve()}
+                    >
+                        <span className="match__score__board__coins__btn-text">
+                            approve
                         </span>
                     </button>
                 </div>

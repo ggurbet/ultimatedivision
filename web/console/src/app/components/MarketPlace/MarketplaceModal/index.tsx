@@ -2,12 +2,17 @@
 // See LICENSE for copying information.
 
 import { Dispatch, SetStateAction, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { MarketplaceClient } from '@/api/marketplace';
 import { Marketplaces } from '@/marketplace/service';
+import { BidsMakeOfferTransaction } from '@/casper/types';
 import { Lot } from '@/marketplace';
 import { PlayerCard } from '@components/common/PlayerCard';
 import { MarketplaceTimer } from '@components/MarketPlace/MarketplaceTimer';
+import { ToastNotifications } from '@/notifications/service';
+import WalletService from '@/wallet/service';
+import { RootState } from '@/app/store';
 
 import CloseModal from '@/app/static/img/MarketPlacePage/marketplaceModal/close.svg';
 
@@ -19,11 +24,15 @@ export const MarketPlaceModal: React.FC<{ lot: Lot; setShowModal: Dispatch<SetSt
     ({ lot, setShowModal }) => {
         const [cardBid, setCardBid] = useState<number>(lot.currentPrice);
         const [currentBid, setCurrentBid] = useState<number>(lot.currentPrice);
+
         const [isEndTime, setIsEndTime] = useState(false);
+
+        const user = useSelector((state: RootState) => state.usersReducer.user);
 
         const marketplaceClient = new MarketplaceClient();
         const marketplaceService = new Marketplaces(marketplaceClient);
 
+        /** handle changes in card bid */
         const onChangeCardBid = (e: React.ChangeEvent<HTMLInputElement>) => {
             Number(e.target.value) > lot.maxPrice ?
                 setCardBid(lot.maxPrice)
@@ -31,13 +40,43 @@ export const MarketPlaceModal: React.FC<{ lot: Lot; setShowModal: Dispatch<SetSt
                 setCardBid(Number(e.target.value));
         };
 
-        const bidButton = () => {
-            marketplaceService.placeBid(lot.cardId, cardBid);
-            setCurrentBid(cardBid);
+        /** makes users bid offer price */
+        const bidButton = async() => {
+            try {
+                await marketplaceService.placeBid(lot.cardId, cardBid);
+
+                const makeOfferData = await marketplaceService.offer(lot.cardId);
+
+                const walletService = new WalletService(user);
+
+                const marketplaceMakeOfferTransaction = new BidsMakeOfferTransaction(
+                    makeOfferData.address,
+                    makeOfferData.rpcNodeAddress,
+                    makeOfferData.tokenId,
+                    makeOfferData.contractHash,
+                    makeOfferData.tokenContractHash,
+                    cardBid
+                );
+
+                await walletService.makeOffer(marketplaceMakeOfferTransaction);
+
+                setCurrentBid(cardBid);
+            } catch (e) {
+                ToastNotifications.somethingWentsWrong();
+            }
         };
 
-        /** TODO: add function entity */
-        const buyNowButton = () => { };
+        /** buys a nft */
+        const buyNowButton = async() => {
+            try {
+                const walletService = new WalletService(user);
+                const offerData = await marketplaceService.offer(lot.cardId);
+
+                await walletService.buyListing(offerData);
+            } catch (e) {
+                ToastNotifications.somethingWentsWrong();
+            }
+        };
 
         return <div className="marketplace-modal">
             <div className="marketplace-modal__wrapper">
@@ -53,7 +92,8 @@ export const MarketPlaceModal: React.FC<{ lot: Lot; setShowModal: Dispatch<SetSt
                         <div className="marketplace-modal__bid">
                             <input className="marketplace-modal__bid__input"
                                 placeholder="place a bid|"
-                                type="number" max={lot.maxPrice}
+                                type="number"
+                                max={lot.maxPrice}
                                 onChange={onChangeCardBid}
                                 value={cardBid}
                             />
