@@ -188,6 +188,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	marketplaceRouterWithAuth.HandleFunc("/lot-data/{card_id}", marketplaceController.GetLotData).Methods(http.MethodGet)
 	marketplaceRouterWithAuth.HandleFunc("", marketplaceController.CreateLot).Methods(http.MethodPost)
 	marketplaceRouterWithAuth.HandleFunc("/bet", marketplaceController.PlaceBetLot).Methods(http.MethodPost)
+	marketplaceRouterWithAuth.HandleFunc("/is-minted/{card_id}", marketplaceController.IsMinted).Methods(http.MethodGet)
 
 	apiRouter.HandleFunc("/casper-approve", marketplaceController.GetApproveData).Methods(http.MethodGet)
 

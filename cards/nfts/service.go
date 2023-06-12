@@ -123,6 +123,11 @@ func (service *Service) GetNFTByCardID(ctx context.Context, cardID uuid.UUID) (N
 	return nft, ErrNFTs.Wrap(err)
 }
 
+// IsMinted returns 1 if minted or 0 if not minted.
+func (service *Service) IsMinted(ctx context.Context, id uuid.UUID) int {
+	return service.nfts.IsMinted(ctx, id)
+}
+
 // GetNFTTokenIDbyCardID returns nft token id by card id from database.
 func (service *Service) GetNFTTokenIDbyCardID(ctx context.Context, cardID uuid.UUID) (uuid.UUID, error) {
 	tokenID, err := service.nfts.GetNFTTokenIDbyCardID(ctx, cardID)

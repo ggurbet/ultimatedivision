@@ -131,6 +131,11 @@ func (service *Service) GetNFTByCardID(ctx context.Context, id uuid.UUID) (nfts.
 	return nft, ErrMarketplace.Wrap(err)
 }
 
+// IsMinted returns 1 if minted or 0 if not minted.
+func (service *Service) IsMinted(ctx context.Context, id uuid.UUID) int {
+	return service.nfts.IsMinted(ctx, id)
+}
+
 // GetNFTDataByCardID returns nft data by card id from DB.
 func (service *Service) GetNFTDataByCardID(ctx context.Context, cardID uuid.UUID) (nfts.TokenIDWithContractAddress, error) {
 	var lotData nfts.TokenIDWithContractAddress

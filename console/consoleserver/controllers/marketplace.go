@@ -288,6 +288,30 @@ func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request)
 	}
 }
 
+// IsMinted is an endpoint that returns 1 if minted or 0 if not minted.
+func (controller *Marketplace) IsMinted(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := r.Context()
+	vars := mux.Vars(r)
+
+	cardID, err := uuid.Parse(vars["card_id"])
+	if err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+		return
+	}
+
+	var isMinted int
+
+	if isMinted = controller.marketplace.IsMinted(ctx, cardID); err != nil {
+		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+	}
+
+	if err = json.NewEncoder(w).Encode(isMinted); err != nil {
+		controller.log.Error("failed to write json response", ErrMarketplace.Wrap(err))
+		return
+	}
+}
+
 // GetLotData is an endpoint that return data by lot id.
 func (controller *Marketplace) GetLotData(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
