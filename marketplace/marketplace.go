@@ -113,6 +113,9 @@ type Config struct {
 	NFTContractPrefix            string `json:"nftContractPrefix"`
 
 	TokenAmountForApproving int64 `json:"tokenAmountForApproving"`
+
+	ContractOwnerPrivateKey string `json:"contractOwnerPrivateKey"`
+	ContractOwnerPublicKey  string `json:"contractOwnerPublicKey"`
 }
 
 // CreateLot entity that contains the values required to create the lot.

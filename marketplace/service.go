@@ -119,6 +119,12 @@ func (service *Service) GetCurrentPriceByCardID(ctx context.Context, cardID uuid
 	return currentPrice, ErrMarketplace.Wrap(err)
 }
 
+// GetNFTTokenIDbyCardID returns nft token id by card id from database.
+func (service *Service) GetNFTTokenIDbyCardID(ctx context.Context, cardID uuid.UUID) (uuid.UUID, error) {
+	tokenID, err := service.nfts.GetNFTTokenIDbyCardID(ctx, cardID)
+	return tokenID, ErrMarketplace.Wrap(err)
+}
+
 // GetNFTByCardID returns nft by card id from DB.
 func (service *Service) GetNFTByCardID(ctx context.Context, id uuid.UUID) (nfts.NFT, error) {
 	nft, err := service.nfts.GetNFTByCardID(ctx, id)

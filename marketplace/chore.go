@@ -5,11 +5,16 @@ package marketplace
 
 import (
 	"context"
+	"encoding/hex"
+	"fmt"
 
 	"github.com/BoostyLabs/thelooper"
+	casper_ed25519 "github.com/casper-ecosystem/casper-golang-sdk/keypair/ed25519"
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/cards"
+	"ultimatedivision/internal/contract/casper"
+	contract "ultimatedivision/pkg/contractcasper"
 )
 
 var (
@@ -28,8 +33,8 @@ type Chore struct {
 // NewChore instantiates Chore.
 func NewChore(config Config, marketplace *Service) *Chore {
 	return &Chore{
-		marketplace: marketplace,
 		Loop:        thelooper.NewLoop(config.LotRenewalInterval),
+		marketplace: marketplace,
 	}
 }
 
@@ -43,6 +48,43 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 
 		// TODO: the transaction may be required for all operations.
 		for _, lot := range lots {
+			tokenID, err := chore.marketplace.GetNFTTokenIDbyCardID(ctx, lot.CardID)
+			if err != nil {
+				return ChoreError.Wrap(err)
+			}
+
+			privateAccountKey := chore.marketplace.config.ContractOwnerPrivateKey
+			privateAccountKeyBytes, err := hex.DecodeString(privateAccountKey)
+			if err != nil {
+				return ChoreError.Wrap(err)
+			}
+
+			publicAccountKey := chore.marketplace.config.ContractOwnerPublicKey
+			publicAccountKeyBytes, err := hex.DecodeString(publicAccountKey)
+			if err != nil {
+				return ChoreError.Wrap(err)
+			}
+
+			pair := casper_ed25519.ParseKeyPair(publicAccountKeyBytes, privateAccountKeyBytes)
+
+			casperClient := contract.New(chore.marketplace.config.RPCNodeAddress)
+			transfer := casper.NewTransfer(casperClient, func(b []byte) ([]byte, error) {
+				casperSignature := pair.Sign(b)
+				return casperSignature.SignatureData, nil
+			})
+
+			_, err = transfer.FinalListing(ctx, casper.FinalListingRequest{
+				PublicKey:          pair.PublicKey(),
+				ChainName:          "casper-test",
+				StandardPayment:    10000000000,
+				MarketContractHash: chore.marketplace.config.MarketContractAddress,
+				NFTContractHash:    fmt.Sprintf("%s%s", chore.marketplace.config.NFTContractPrefix, chore.marketplace.config.NFTContractAddress),
+				TokenID:            tokenID.String(),
+			})
+			if err != nil {
+				return ChoreError.Wrap(err)
+			}
+
 			if lot.CurrentPrice.BitLen() != 0 {
 				// TODO: unhold old user's money.
 
@@ -62,7 +104,7 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 				continue
 			}
 
-			err := chore.marketplace.UpdateStatusLot(ctx, lot.CardID, StatusExpired)
+			err = chore.marketplace.UpdateStatusLot(ctx, lot.CardID, StatusExpired)
 			if err != nil {
 				return ChoreError.Wrap(err)
 			}
