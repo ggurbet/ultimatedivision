@@ -242,8 +242,9 @@ func (auth *Auth) Register(w http.ResponseWriter, r *http.Request) {
 ## Casper
 App uses casper blockchain:
 * __contracts__: 
-* https://testnet.cspr.live/contract/4ff1e5e37b8720e8049bfff88676d8e27c1037c02e1172a1006c6d2a535607da
-* https://testnet.cspr.live/contract/5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0
+* https://testnet.cspr.live/contract/05560ca94e73f35c5b9b8a0f8b66e56238169e60ae421fb7b71c7ac3c6c744e2 - nft
+* https://testnet.cspr.live/contract/feed638f60f5a2840656d86e0e51dc62c092e79d980ba8dc281387dbb8f80c42 - marketplace
+* https://testnet.cspr.live/account/0100d93cdb8eef6e772d96bde2248bf05fe95b45578086b02e733827ab574460c2 - erc20 tokens
 
 * __register__: To register a new user, you need to install Casper Signer on the browser (right now it's only possible on localhost).
 ![img.png](img.png)
@@ -257,12 +258,14 @@ open loot box and get your cards
 click keep all and go to cards menu
 ![img_4.png](img_4.png)
 select the card you want to mint
-![img_5.png](img_5.png)
+![img_15.png](img_15.png)
 and press mint
-![img_6.png](img_6.png)
+![img_12.png](img_12.png)
 Casper signer will open and after that press the sign
-![img_7.png](img_7.png)
+![img_12.png](img_12.png)
 your card is minted!
+If you want your card add to marketplace you must approve it
+![img_16.png](img_16.png)
 * * __token__:In the app, the user can win the tokens and get it by Casper(you have to run the Currency signer):
 For this you need to have a football team on they field
 ![img_8.png](img_8.png)
@@ -273,4 +276,20 @@ your command will be wait to another player, when he appears, you will be asked 
 ![img_10.png](img_10.png)
 
 press "Accept" and the game will start, after the game is over you will receive the result, if it is a win, you can collect your reward tokens.
-![img_11.png](img_11.png)
+![img_17.png](img_17.png)
+![img_18.png](img_18.png)
+And after you must approve these tokens for use it in marketplace
+![img_19.png](img_19.png)
+* * __Marketplace__:In the app, the user can sell NFT by Casper:
+    For this you need to have minted and approved nft card and press sell it  
+![img_20.png](img_20.png)
+![img_21.png](img_21.png)
+![img_22.png](img_22.png)
+and press sign
+
+Your card on marketplace!
+![img_23.png](img_23.png)
+
+After this, another player can bid or buy now
+![img_24.png](img_24.png)
+

@@ -278,7 +278,7 @@
         }
         },
         "waitlist": {
-            "waitListRenewalInterval": 2000000000,
+            "waitListRenewalInterval": 5000000000,
             "waitListCheckSignature": 500,
             "nftContract" : {
                 "address": "0x1b03b691601fF334f5fC473e251be0bDA7a05b27",
@@ -297,7 +297,7 @@
                 "chainId": 4
             },
             "nftCreateCasperContract": {
-                "address": "4ff1e5e37b8720e8049bfff88676d8e27c1037c02e1172a1006c6d2a535607da",
+                "address": "05560ca94e73f35c5b9b8a0f8b66e56238169e60ae421fb7b71c7ac3c6c744e2",
                 "mintWithSignatureSelector": "0xb6b49a9a",
                 "mintWithSignatureAndValueSelector": "0xb4d4b0f1",
                 "chainId": 4
@@ -311,7 +311,9 @@
             },
             "bucket": "nft",
             "urlToAvatar": "https://link.us1.storjshare.io/raw/jxpirica7qglasqsgnadsiipveua/nft/%d.png",
-            "rpcNodeAddress": "http://136.243.187.84:7777/rpc"
+            "rpcNodeAddress": "http://116.202.169.210:7777/rpc",
+            "eventNodeAddress": "http://116.202.169.210:9999/events/main",
+            "bridgeInEventHash": "uref-6e65751723fa86e196a75764df41bcbb84e56de4148db1db56b08e4c11cdb49c-000"
         },
         "nfts": {
             "description": "Ultimate Division Founder Cards are powerful in-game items that can be used as footballers to play football games. Founder card holders are a part of an elite club, they get in-game perks and more play-to-earn rewards. Find out more at https://ultimatedivision.com/",
@@ -321,7 +323,11 @@
                 "address": "0x1b03b691601fF334f5fC473e251be0bDA7a05b27",
                 "ownerOfSelector": "0x6352211e"
             },
-            "addressNodeServer": "http://91.225.167.148:8545"
+            "addressNodeServer": "http://116.202.169.210:7777/rpc",
+            "eventNodeAddress": "http://116.202.169.210:9999/events/main"
+        },
+        "bids": {
+            "expiredLotRenewalInterval": 5000000000
         },
         "lootBoxes": {
             "lootBoxes": {
@@ -348,25 +354,42 @@
             "cursor": {
                 "limit": 10,
                 "page": 1
-            }
+            },
+            "rpcNodeAddress": "http://116.202.169.210:7777/rpc",
+            "nftContractAddress": "05560ca94e73f35c5b9b8a0f8b66e56238169e60ae421fb7b71c7ac3c6c744e2",
+            "marketContractAddress": "feed638f60f5a2840656d86e0e51dc62c092e79d980ba8dc281387dbb8f80c42",
+            "tokenContractAddress": "5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0",
+            "marketContractPackageAddress": "701ed1a382367a6016f3b389f75177030fd583c5b8838b4c04e92da6b4a11928",
+            "nftApprovePrefix": "contract-package-wasm",
+            "createListingPrefix": "contract-",
+            "tokenAmountForApproving": 10000,
+            "contractOwnerPrivateKey": "4f0ffa6c3925d02127a9e9213c7c21215dbc288e0ee61770e6adf7752324c282",
+            "contractOwnerPublicKey": "ad794c8f3da55845a5422506b4bd01ed1ae4e57378a82216d25d7351854b563d"
         },
         "queue": {
             "placeRenewalInterval": 5000000000,
             "winValue": "10000000000000000000",
-            "drawValue": "5000000000000000000",
+            "drawValue": "50000000000000000000000",
             "udtContract": {
                 "address": "0x7b7E8E64e5E9EA9Cb3E314A49f5585b5dd7aaF83"
             },
             "casperTokenContract": {
                 "address": "5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0"
             },
-            "rpcNodeAddress": "http://136.243.187.84:7777/rpc"
+            "rpcNodeAddress": "http://116.202.169.210:7777/rpc"
         },
         "divisions": {
             "passingPercent": 10
         },
-        "seasons": {      
-            "seasonTime": 1008000000000000
+        "seasons": {
+            "seasonTime": 1008000000000000,
+            "casperTokenContract": {
+                "address": "5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0"
+            },
+            "rpcNodeAddress": "http://116.202.169.210:7777/rpc"
+        },
+        "bids": {
+            "expiredLotRenewalInterval": 5000000000
         },
         "matches": {
             "periods": {
@@ -430,9 +453,9 @@
                 "limit": 10,
                 "page": 1
             },
-        "numberOfPointsForWin" : 3,
-        "numberOfPointsForDraw" : 1,
-        "numberOfPointsForLosing" : 0
+            "numberOfPointsForWin" : 3,
+            "numberOfPointsForDraw" : 1,
+            "numberOfPointsForLosing" : 0
         },
         "managers": {
             "renewalTime": 5000000000
@@ -442,12 +465,7 @@
             "udtContract": {
                 "address": "0x7b7E8E64e5E9EA9Cb3E314A49f5585b5dd7aaF83",
                 "addressMethod": "0x38926b6d"
-            },
-            "casperTokenContract": {
-                  "casperTokenContract": "5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0",
-                  "addressMethod": "0x38926b6d"
             }
-
         },
         "store": {
             "storeRenewalInterval": 5000000000,
@@ -463,8 +481,40 @@
             "redirectUri": "http://localhost:8088/auth-velas",
             "accountProviderHost": "account.testnet.velas.com",
             "networkApiHost": "https://api.testnet.velas.com",
-            "transactionsSponsorApiHost": "http://localhost:8088",
-"transactionsSponsorPubKey": "3WZuAbAnD8eNpmPaUjeS7ZP6aBFmNeeHA3xv9XcLszvq1o4dQU8evRCMfmD6ei1gz6y6ZCayfmiYZXL7sezTsbLN"
+            "transactionsSponsorApiHost": "https://api-sponsor.testnet.velas.com",
+            "transactionsSponsorPubKey": "EgJX7GpswpA8z3qRNuzNTgKKjPmw1UMfh5xQjFeVBqAK"
+        },
+        "gameEngine":{
+            "leftSide": {
+                "positions": {
+                    "goalkeeper": 80,
+                    "leftBack": 76,
+                    "centerBackLeft": 74,
+                    "centerBackRight": 72,
+                    "rightBack": 70,
+                    "leftMid": 62,
+                    "centerMidLeft": 60,
+                    "centerMidRight": 58,
+                    "rightMid": 56,
+                    "forwardLeft": 53,
+                    "forwardRight": 51
+                }
+            },
+            "rightSide": {
+                "positions": {
+                    "goalkeeper": 3,
+                    "leftBack": 13,
+                    "centerBackLeft": 11,
+                    "centerBackRight": 9,
+                    "rightBack": 7,
+                    "leftMid": 27,
+                    "centerMidLeft": 25,
+                    "centerMidRight": 23,
+                    "rightMid" : 21,
+                    "forwardLeft": 39,
+                    "forwardRight": 37
+                }
+            }
         }
     }
 }
