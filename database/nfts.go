@@ -60,18 +60,18 @@ func (nftsDB *nftsDB) Get(ctx context.Context, tokenID uuid.UUID, chain evmsigna
 
 // IsMinted returns nft status by cardID from the database.
 func (nftsDB *nftsDB) IsMinted(ctx context.Context, cardID uuid.UUID) (int, error) {
-	var nftStatus int
+	var tokenID uuid.UUID
 	query := `SELECT token_id FROM nfts WHERE card_id = $1`
 
-	err := nftsDB.conn.QueryRowContext(ctx, query, cardID).Scan(nftStatus)
+	err := nftsDB.conn.QueryRowContext(ctx, query, cardID).Scan(&tokenID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return 0, nfts.ErrNoNFT.Wrap(err)
+			return 0, nil
 		}
 		return 0, nfts.ErrNFTs.Wrap(err)
 	}
 
-	return 0, nil
+	return 1, nil
 }
 
 // GetNFTByCardID returns nft by card id from database.
