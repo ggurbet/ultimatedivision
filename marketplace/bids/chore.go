@@ -70,18 +70,17 @@ func (chore *Chore) Run(ctx context.Context) error {
 					chore.log.Error(fmt.Sprintf("could not get current bid by lot id equal %v from db", lot.CardID), ChoreError.Wrap(err))
 					return nil
 				}
-
-				// TODO: transaction required.
-				if err = chore.marketplace.Delete(ctx, lot.CardID); err != nil {
-					chore.log.Error(fmt.Sprintf("could not delete lot by card id equal %v in db", lot.CardID), ChoreError.Wrap(err))
-					return nil
-				}
-				if err = chore.cards.UpdateStatus(ctx, lot.CardID, cards.StatusActive); err != nil {
-					chore.log.Error(fmt.Sprintf("could not update card status by card id equal %v in db", lot.CardID), ChoreError.Wrap(err))
-					return nil
-				}
-
 				continue
+			}
+
+			// TODO: transaction required.
+			if err = chore.marketplace.Delete(ctx, lot.CardID); err != nil {
+				chore.log.Error(fmt.Sprintf("could not delete lot by card id equal %v in db", lot.CardID), ChoreError.Wrap(err))
+				return nil
+			}
+			if err = chore.cards.UpdateStatus(ctx, lot.CardID, cards.StatusActive); err != nil {
+				chore.log.Error(fmt.Sprintf("could not update card status by card id equal %v in db", lot.CardID), ChoreError.Wrap(err))
+				return nil
 			}
 
 			user, err := chore.users.Get(ctx, currentBid.UserID)
