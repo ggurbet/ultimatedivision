@@ -17,6 +17,7 @@ import (
 	"ultimatedivision/cards/avatars"
 	"ultimatedivision/clubs"
 	"ultimatedivision/gameplay/matches"
+	"ultimatedivision/seasons"
 )
 
 // ErrGameEngine indicates that there was an error in the service.
@@ -36,11 +37,12 @@ type Service struct {
 	avatars *avatars.Service
 	cards   *cards.Service
 	matches *matches.Service
+	seasons *seasons.Service
 	config  Config
 }
 
 // NewService is a constructor for game engine service.
-func NewService(games DB, clubs *clubs.Service, avatars *avatars.Service, cards *cards.Service, matches *matches.Service, config Config) *Service {
+func NewService(games DB, clubs *clubs.Service, avatars *avatars.Service, cards *cards.Service, matches *matches.Service, config Config, seasons *seasons.Service) *Service {
 	return &Service{
 		games:   games,
 		clubs:   clubs,
@@ -48,6 +50,7 @@ func NewService(games DB, clubs *clubs.Service, avatars *avatars.Service, cards 
 		cards:   cards,
 		matches: matches,
 		config:  config,
+		seasons: seasons,
 	}
 }
 
@@ -670,7 +673,12 @@ func (service *Service) GameInformation(ctx context.Context, player1SquadID, pla
 		cardsWithPositionPlayer2 = append(cardsWithPositionPlayer2, cardWithPositionPlayer)
 	}
 
-	matchID, err := service.matches.CreateMatchID(ctx, player1SquadID, player2SquadID, clubPlayer1.OwnerID, clubPlayer2.OwnerID, 1)
+	seasonID, err := service.seasons.GetSeasonByDivisionID(ctx, clubPlayer1.DivisionID)
+	if err != nil {
+		return MatchRepresentation{}, ErrGameEngine.Wrap(err)
+	}
+
+	matchID, err := service.matches.CreateMatchID(ctx, player1SquadID, player2SquadID, clubPlayer1.OwnerID, clubPlayer2.OwnerID, seasonID.ID)
 	if err != nil {
 		return MatchRepresentation{}, ErrGameEngine.Wrap(err)
 	}

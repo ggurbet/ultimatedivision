@@ -594,11 +594,12 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Cards.Service,
 			peer.Matches.Service,
 			config.GameEngine.Config,
+			peer.Seasons.Service,
 		)
 	}
 
 	{ // matchmaking setup.
-		peer.Matchmaking.Service = matchmaking.NewService(peer.Database.Players(), peer.Connections.Service, peer.GameEngine.Service, peer.Queue.PlaceChore)
+		peer.Matchmaking.Service = matchmaking.NewService(peer.Database.Players(), peer.Connections.Service, peer.GameEngine.Service, peer.Queue.PlaceChore, peer.Matches.Service)
 	}
 
 	{ // admin setup.

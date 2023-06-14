@@ -119,6 +119,21 @@ func (service *Service) Play(ctx context.Context, match Match, squadCards1 []clu
 	return ErrMatches.Wrap(err)
 }
 
+// AddGoals added goals to match result.
+func (service *Service) AddGoals(ctx context.Context, match Match, matchGoals []MatchGoals) error {
+	err := service.matches.AddGoals(ctx, matchGoals)
+	if err != nil {
+		return ErrMatches.Wrap(err)
+	}
+
+	err = service.RankMatch(ctx, match, matchGoals)
+	if err != nil {
+		return ErrMatches.Wrap(err)
+	}
+
+	return nil
+}
+
 // choseGoalscorer returns id of cards which scored goal.
 func chooseGoalscorer(squadCards []clubs.SquadCard, goalByPosition map[clubs.Position]int) uuid.UUID {
 	rand.Seed(time.Now().UTC().UnixNano())
