@@ -17,11 +17,15 @@ import WalletService from '@/wallet/service';
 import { Sell } from '@/app/components/common/Card/popUps/Sell';
 import { CasperNetworkClient } from '@/api/casper';
 import { CasperNetworkService } from '@/casper/service';
+import { MarketplaceClient } from '@/api/marketplace';
+import { Marketplaces } from '@/marketplace/service';
 
 import CardPageBackground from '@static/img/FootballerCardPage/background.png';
 import backButton from '@static/img/FootballerCardPage/back-button.png';
 
 import '../index.scss';
+
+const DEFAULT_IS_MINTED = 0;
 
 const Card: React.FC = () => {
     const dispatch = useDispatch();
@@ -35,6 +39,9 @@ const Card: React.FC = () => {
 
     const casperClient = new CasperNetworkClient();
     const casperService = new CasperNetworkService(casperClient);
+
+    const marketplaceClientClient = new MarketplaceClient();
+    const marketplaceService = new Marketplaces(marketplaceClientClient);
 
     /** Handle opening of a selles pop-up. */
     const handleOpenSellPopup = () => {
@@ -82,9 +89,16 @@ const Card: React.FC = () => {
         }
     };
 
+    /** gets is minted card */
+    const getIsMintedCard = async() => {
+        const isMintedCard = await marketplaceService.getIsMinted(id);
+        isMintedCard === DEFAULT_IS_MINTED ? setIsMinted(false) : setIsMinted(true);
+    };
+
     useEffect(() => {
         setUser();
         openCard();
+        getIsMintedCard();
     }, []);
 
     return (
@@ -107,18 +121,19 @@ const Card: React.FC = () => {
                                     <span className="card__mint-info__nft-title">NFT:</span>
                                     <div className="card__mint-info__nft__content">
                                         <span className="card__mint-info__nft-value">
-                                            {isMinted ? 'minted to Polygon' : 'not minted'}
+                                            {isMinted ? 'minted' : 'not minted'}
                                         </span>
                                         {!isMinted &&
                                             <>
                                                 <button className="card__mint" onClick={mint}>
                                                     Mint now
                                                 </button>
-                                                <button className="card__mint" onClick={approve}>
-                                                    Approve
-                                                </button>
+
                                             </>
                                         }
+                                        <button className="card__mint" onClick={approve}>
+                                            Approve
+                                        </button>
                                     </div>
                                 </div>
                                 <div className="card__mint-info__club">

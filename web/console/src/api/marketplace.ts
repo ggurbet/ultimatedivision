@@ -129,4 +129,19 @@ export class MarketplaceClient extends APIClient {
             offerData.contractHash,
             offerData.tokenContractHash);
     };
+
+
+    /** get is card minted */
+    public async getIsCardMinted(cardId: string): Promise<number> {
+        const path = `${this.ROOT_PATH}/is-minted/${cardId}`;
+        const response = await this.http.get(path);
+
+        if (!response.ok) {
+            await this.handleError(response);
+        };
+
+        const isMinted = await response.json();
+
+        return isMinted;
+    };
 };

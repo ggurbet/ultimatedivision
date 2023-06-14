@@ -62,4 +62,8 @@ export class Marketplaces {
     public async offer(cardId: string): Promise<OfferTransaction> {
         return await this.marketplace.offer(cardId);
     };
+    /** returns make offer data */
+    public async getIsMinted(cardId: string): Promise<number> {
+        return await this.marketplace.getIsCardMinted(cardId);
+    };
 };
