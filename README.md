@@ -244,7 +244,7 @@ App uses casper blockchain:
 * __contracts__: 
 * https://testnet.cspr.live/contract/05560ca94e73f35c5b9b8a0f8b66e56238169e60ae421fb7b71c7ac3c6c744e2 - nft
 * https://testnet.cspr.live/contract/feed638f60f5a2840656d86e0e51dc62c092e79d980ba8dc281387dbb8f80c42 - marketplace
-* https://testnet.cspr.live/account/0100d93cdb8eef6e772d96bde2248bf05fe95b45578086b02e733827ab574460c2 - erc20 tokens
+* https://testnet.cspr.live/contract/5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0 - erc20 tokens
 
 * __register__: To register a new user, you need to install Casper Signer on the browser (right now it's only possible on localhost).
 ![img.png](img.png)

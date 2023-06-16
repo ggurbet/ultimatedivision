@@ -237,16 +237,27 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 			return nil, ErrMatchmaking.Wrap(err)
 		}
 
-		startGameInformation.UserSide = 1
-		resp.Message = startGameInformation
+		type response struct {
+			Status          int         `json:"status"`
+			Message         interface{} `json:"message"`
+			GameInformation interface{} `json:"gameInformation"`
+		}
 
-		if err := match.Player1.Conn.WriteJSON(resp); err != nil {
+		startGameResponse := response{
+			Status:  http.StatusOK,
+			Message: "football information",
+		}
+
+		startGameInformation.UserSide = 1
+		startGameResponse.GameInformation = startGameInformation
+
+		if err := match.Player1.Conn.WriteJSON(startGameResponse); err != nil {
 			return nil, ErrMatchmaking.Wrap(err)
 		}
 
 		startGameInformation.UserSide = 2
-		resp.Message = startGameInformation
-		if err := match.Player2.Conn.WriteJSON(resp); err != nil {
+		startGameResponse.GameInformation = startGameInformation
+		if err := match.Player2.Conn.WriteJSON(startGameResponse); err != nil {
 			return nil, ErrMatchmaking.Wrap(err)
 		}
 
