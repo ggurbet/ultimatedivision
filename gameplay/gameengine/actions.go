@@ -105,6 +105,7 @@ type MatchRepresentation struct {
 
 // ActionResult defines result of action.
 type ActionResult struct {
+	Message interface{} `json:"message"`
 	CardIDWithPosition
 	BallPosition int
 	CardAvailableAction
