@@ -14,6 +14,7 @@ import (
 
 	"ultimatedivision/cards"
 	"ultimatedivision/internal/contract/casper"
+	"ultimatedivision/internal/logger"
 	contract "ultimatedivision/pkg/contractcasper"
 )
 
@@ -26,13 +27,15 @@ var (
 //
 // architecture: Chore
 type Chore struct {
+	log         logger.Logger
 	Loop        *thelooper.Loop
 	marketplace *Service
 }
 
 // NewChore instantiates Chore.
-func NewChore(config Config, marketplace *Service) *Chore {
+func NewChore(log logger.Logger, config Config, marketplace *Service) *Chore {
 	return &Chore{
+		log:         log,
 		Loop:        thelooper.NewLoop(config.LotRenewalInterval),
 		marketplace: marketplace,
 	}
@@ -43,26 +46,26 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 	return chore.Loop.Run(ctx, func(ctx context.Context) error {
 		lots, err := chore.marketplace.ListExpiredLot(ctx)
 		if err != nil {
-			return ChoreError.Wrap(err)
+			chore.log.Error("could not get list of the expired lot", ChoreError.Wrap(err))
 		}
 
 		// TODO: the transaction may be required for all operations.
 		for _, lot := range lots {
 			tokenID, err := chore.marketplace.GetNFTTokenIDbyCardID(ctx, lot.CardID)
 			if err != nil {
-				return ChoreError.Wrap(err)
+				chore.log.Error(fmt.Sprintf("could not get nft token id by card id equal %v from db", lot.CardID), ChoreError.Wrap(err))
 			}
 
 			privateAccountKey := chore.marketplace.config.ContractOwnerPrivateKey
 			privateAccountKeyBytes, err := hex.DecodeString(privateAccountKey)
 			if err != nil {
-				return ChoreError.Wrap(err)
+				chore.log.Error("could not decode privateAccountKey in bytes", ChoreError.Wrap(err))
 			}
 
 			publicAccountKey := chore.marketplace.config.ContractOwnerPublicKey
 			publicAccountKeyBytes, err := hex.DecodeString(publicAccountKey)
 			if err != nil {
-				return ChoreError.Wrap(err)
+				chore.log.Error("could not decode publicAccountKey in bytes", ChoreError.Wrap(err))
 			}
 
 			pair := casper_ed25519.ParseKeyPair(publicAccountKeyBytes, privateAccountKeyBytes)
@@ -82,7 +85,7 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 				TokenID:            tokenID.String(),
 			})
 			if err != nil {
-				return ChoreError.Wrap(err)
+				chore.log.Error("could not connect with smart contract final listing method", ChoreError.Wrap(err))
 			}
 
 			if lot.CurrentPrice.BitLen() != 0 {
@@ -99,23 +102,21 @@ func (chore *Chore) Run(ctx context.Context) (err error) {
 
 				err := chore.marketplace.WinLot(ctx, winLot)
 				if err != nil {
-					return ChoreError.Wrap(err)
+					chore.log.Error("could not changes owner of the item in marketplace", ChoreError.Wrap(err))
 				}
 				continue
 			}
 
 			err = chore.marketplace.UpdateStatusLot(ctx, lot.CardID, StatusExpired)
 			if err != nil {
-				return ChoreError.Wrap(err)
+				chore.log.Error("could not update status of the lot to the StatusExpired", ChoreError.Wrap(err))
 			}
 
 			if lot.Type == TypeCard {
 				if err := chore.marketplace.cards.UpdateStatus(ctx, lot.CardID, cards.StatusActive); err != nil {
-					return ErrMarketplace.Wrap(err)
+					chore.log.Error("could not update status of the lot to the StatusActive", ChoreError.Wrap(err))
 				}
 			}
-			// TODO: check other items.
-
 		}
 		return ChoreError.Wrap(err)
 	})

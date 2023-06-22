@@ -440,6 +440,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 
 		peer.WaitList.WaitListChore = waitlist.NewChore(
+			peer.Log,
 			config.WaitList.Config,
 			peer.WaitList.Service,
 			peer.NFTs.Service,
@@ -477,6 +478,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 		)
 
 		peer.Marketplace.ExpirationLotChore = marketplace.NewChore(
+			logger,
 			config.Marketplace.Config,
 			peer.Marketplace.Service,
 		)
@@ -570,6 +572,8 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			peer.Database.Bids(),
 			peer.Marketplace.Service,
 			peer.Cards.Service,
+			peer.Clubs.Service,
+			peer.NFTs.Service,
 			peer.Users.Service,
 		)
 
@@ -577,6 +581,7 @@ func New(logger logger.Logger, config Config, db DB) (peer *Peer, err error) {
 			logger,
 			config.Bids.Config,
 			peer.Bids.Service,
+			peer.Clubs.Service,
 			peer.Marketplace.Service,
 			peer.Users.Service,
 			peer.Cards.Service,
@@ -687,6 +692,9 @@ func (peer *Peer) Run(ctx context.Context) error {
 	})
 	group.Go(func() error {
 		return ignoreCancel(peer.Bids.BidsChore.Run(ctx))
+	})
+	group.Go(func() error {
+		return ignoreCancel(peer.WaitList.WaitListChore.RunCasperCheckMintEvent(ctx))
 	})
 
 	// TODO: uncomment when the Ethereum node is running

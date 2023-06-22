@@ -644,8 +644,8 @@ func (cardsDB *cardsDB) UpdateType(ctx context.Context, id uuid.UUID, typeCard c
 }
 
 // UpdateUserID updates user id card in the database.
-func (cardsDB *cardsDB) UpdateUserID(ctx context.Context, id, userID uuid.UUID) error {
-	result, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET user_id=$1 WHERE id=$2", userID, id)
+func (cardsDB *cardsDB) UpdateUserID(ctx context.Context, cardID, userID uuid.UUID) error {
+	result, err := cardsDB.conn.ExecContext(ctx, "UPDATE cards SET user_id=$1 WHERE id=$2", userID, cardID)
 	if err != nil {
 		return ErrCard.Wrap(err)
 	}

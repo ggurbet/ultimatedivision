@@ -41,6 +41,8 @@ type DB interface {
 	Get(ctx context.Context, clubID uuid.UUID) (Club, error)
 	// GetSquadByClubID returns squad by club id.
 	GetSquadByClubID(ctx context.Context, clubID uuid.UUID) (Squad, error)
+	// GetSquadIDByCardID returns squad by card id.
+	GetSquadIDByCardID(ctx context.Context, cardID uuid.UUID) (uuid.UUID, error)
 	// GetSquad returns squad.
 	GetSquad(ctx context.Context, squadID uuid.UUID) (Squad, error)
 	// GetFormation returns formation of the squad.
@@ -53,6 +55,8 @@ type DB interface {
 	AddSquadCard(ctx context.Context, squadCards SquadCard) error
 	// DeleteSquadCard deletes card from squad.
 	DeleteSquadCard(ctx context.Context, squadID, cardID uuid.UUID) error
+	// DeleteByCardID deletes card from squad by card id.
+	DeleteByCardID(ctx context.Context, cardID uuid.UUID) error
 	// UpdateTacticCaptain updates tactic and capitan in the squad.
 	UpdateTacticCaptain(ctx context.Context, squad Squad) error
 	// UpdateStatuses update statuses of users clubs.

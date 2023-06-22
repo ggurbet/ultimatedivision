@@ -94,7 +94,7 @@ func NewServer(config Config, log logger.Logger, listener net.Listener, cards *c
 	clubsController := controllers.NewClubs(log, clubs)
 	lootBoxesController := controllers.NewLootBoxes(log, lootBoxes)
 	marketplaceController := controllers.NewMarketplace(log, marketplace)
-	bidsController := controllers.NewBids(log, bids)
+	bidsController := controllers.NewBids(log, bids, marketplace)
 	// TODO: now use a new service - matchmaking for the game
 	// queueController := controllers.NewQueue(log, queue, connections).
 	seasonsController := controllers.NewSeasons(log, seasons)

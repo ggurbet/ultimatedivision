@@ -152,6 +152,11 @@ func (service *Service) Delete(ctx context.Context, squadID, cardID uuid.UUID) e
 	return ErrClubs.Wrap(service.clubs.DeleteSquadCard(ctx, squadID, cardID))
 }
 
+// DeleteByCardID deletes card from squad by card id.
+func (service *Service) DeleteByCardID(ctx context.Context, cardID uuid.UUID) error {
+	return ErrClubs.Wrap(service.clubs.DeleteByCardID(ctx, cardID))
+}
+
 // UpdateSquad updates tactic and captain of the squad.
 func (service *Service) UpdateSquad(ctx context.Context, squadID uuid.UUID, tactic Tactic, captainID uuid.UUID) error {
 	updatedSquad := Squad{
@@ -213,6 +218,12 @@ func (service *Service) UpdateCardPosition(ctx context.Context, squadID uuid.UUI
 func (service *Service) GetSquadByClubID(ctx context.Context, clubID uuid.UUID) (Squad, error) {
 	squad, err := service.clubs.GetSquadByClubID(ctx, clubID)
 	return squad, ErrClubs.Wrap(err)
+}
+
+// GetSquadIDByCardID returns squad id by card id.
+func (service *Service) GetSquadIDByCardID(ctx context.Context, cardID uuid.UUID) (uuid.UUID, error) {
+	squadID, err := service.clubs.GetSquadIDByCardID(ctx, cardID)
+	return squadID, ErrClubs.Wrap(err)
 }
 
 // GetSquad returns squad.

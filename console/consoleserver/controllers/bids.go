@@ -15,6 +15,7 @@ import (
 	"github.com/zeebo/errs"
 
 	"ultimatedivision/internal/logger"
+	"ultimatedivision/marketplace"
 	"ultimatedivision/marketplace/bids"
 	"ultimatedivision/pkg/auth"
 )
@@ -26,15 +27,17 @@ var (
 
 // Bids is a mvc controller that handles all bids related views.
 type Bids struct {
-	log  logger.Logger
-	bids *bids.Service
+	log         logger.Logger
+	bids        *bids.Service
+	marketplace *marketplace.Service
 }
 
 // NewBids is a constructor for bids controller.
-func NewBids(log logger.Logger, bids *bids.Service) *Bids {
+func NewBids(log logger.Logger, bids *bids.Service, marketplace *marketplace.Service) *Bids {
 	bidsController := &Bids{
-		log:  log,
-		bids: bids,
+		log:         log,
+		bids:        bids,
+		marketplace: marketplace,
 	}
 
 	return bidsController
@@ -83,6 +86,14 @@ func (controller *Bids) Bet(w http.ResponseWriter, r *http.Request) {
 		UserID: claims.UserID,
 		Amount: *amount,
 	}
+
+	if err := controller.marketplace.UpdateShopperIDLot(ctx, bid.LotID, bid.UserID); err != nil {
+		if errs.Is(err, bids.ErrSmallAmountOfBid) {
+			controller.serveError(w, http.StatusBadRequest, ErrUsers.Wrap(err))
+			return
+		}
+	}
+
 	if err = controller.bids.Create(ctx, bid); err != nil {
 		if errs.Is(err, bids.ErrSmallAmountOfBid) {
 			controller.serveError(w, http.StatusBadRequest, ErrUsers.Wrap(err))
@@ -100,13 +111,19 @@ func (controller *Bids) GetMakeOfferData(w http.ResponseWriter, r *http.Request)
 	ctx := r.Context()
 	vars := mux.Vars(r)
 
+	claims, err := auth.GetClaims(ctx)
+	if err != nil {
+		controller.serveError(w, http.StatusUnauthorized, ErrUsers.Wrap(err))
+		return
+	}
+
 	cardID, err := uuid.Parse(vars["card_id"])
 	if err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
 		return
 	}
 
-	lotData, err := controller.bids.GetMakeOfferData(ctx, cardID)
+	lotData, err := controller.bids.GetMakeOfferData(ctx, cardID, claims.UserID)
 	if err != nil {
 		controller.log.Error("there is no such NFT data", ErrMarketplace.Wrap(err))
 		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))

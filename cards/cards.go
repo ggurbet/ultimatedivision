@@ -50,7 +50,7 @@ type DB interface {
 	// UpdateType updates type of card in the database.
 	UpdateType(ctx context.Context, id uuid.UUID, typeCard Type) error
 	// UpdateUserID updates user id card in the database.
-	UpdateUserID(ctx context.Context, id, userID uuid.UUID) error
+	UpdateUserID(ctx context.Context, cardID, userID uuid.UUID) error
 	// Delete deletes card record in the data base.
 	Delete(ctx context.Context, id uuid.UUID) error
 }

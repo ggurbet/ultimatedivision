@@ -461,8 +461,8 @@ func (service *Service) UpdateType(ctx context.Context, id uuid.UUID, typeCard T
 }
 
 // UpdateUserID updates user's id for card in database.
-func (service *Service) UpdateUserID(ctx context.Context, id, userID uuid.UUID) error {
-	return ErrCards.Wrap(service.cards.UpdateUserID(ctx, id, userID))
+func (service *Service) UpdateUserID(ctx context.Context, cardID uuid.UUID, userID uuid.UUID) error {
+	return ErrCards.Wrap(service.cards.UpdateUserID(ctx, cardID, userID))
 }
 
 // Delete deletes card record in database.

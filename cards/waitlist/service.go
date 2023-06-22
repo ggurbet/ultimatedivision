@@ -277,7 +277,6 @@ func (service *Service) GetNodeEvents(ctx context.Context) (MintData, error) {
 		defer func() {
 			err = errs.Combine(err, resp.Body.Close())
 		}()
-		return MintData{}, ErrWaitlist.Wrap(err)
 	}
 
 	for {
@@ -381,10 +380,6 @@ func (service *Service) RunCasperCheckMintEvent(ctx context.Context) (err error)
 	user, err := service.users.GetByCasperHash(ctx, nftWaitList.CasperWalletHash)
 	if err != nil {
 		if err = service.nfts.Delete(ctx, nft.CardID); err != nil {
-			log.Println(err)
-		}
-
-		if err = service.cards.UpdateUserID(ctx, nft.CardID, uuid.Nil); err != nil {
 			log.Println(err)
 		}
 	}

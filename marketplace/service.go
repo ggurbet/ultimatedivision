@@ -65,7 +65,6 @@ func (service *Service) CreateLot(ctx context.Context, createLot CreateLot) erro
 		createLot.Type = TypeCard
 	}
 	// TODO: check other items.
-
 	if createLot.Type == "" {
 		return ErrMarketplace.New("not found item by id")
 	}
@@ -285,7 +284,7 @@ func (service *Service) PlaceBetLot(ctx context.Context, betLot BetLot) error {
 		return ErrMarketplace.New("the lot is already on sale")
 	}
 	if lot.Status == StatusExpired {
-		return ErrMarketplace.New("the lot is already on expired")
+		return ErrMarketplace.New("the lot is already expired")
 	}
 
 	if betLot.BetAmount.Cmp(&lot.StartPrice) == -1 || betLot.BetAmount.Cmp(&lot.CurrentPrice) == -1 || betLot.BetAmount.Cmp(&lot.CurrentPrice) == 0 {

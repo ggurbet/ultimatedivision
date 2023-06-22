@@ -256,7 +256,6 @@ func (controller *Marketplace) GetCurrentPriceByCardID(w http.ResponseWriter, r 
 func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := r.Context()
-
 	claims, err := auth.GetClaims(ctx)
 	if err != nil {
 		controller.serveError(w, http.StatusUnauthorized, ErrMarketplace.Wrap(err))
@@ -264,17 +263,16 @@ func (controller *Marketplace) CreateLot(w http.ResponseWriter, r *http.Request)
 	}
 
 	var createLot marketplace.CreateLot
-	if err = json.NewDecoder(r.Body).Decode(&createLot); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&createLot); err != nil {
 		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
 		return
 	}
 
 	// TODO: remove after adding Casper contract.
-	// if _, err = controller.marketplace.GetNFTByCardID(ctx, createLot.CardID); err != nil {
-	//  controller.log.Error("there is no such NFT", ErrMarketplace.Wrap(err))
-	//  controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
-	// } .
-
+	if _, err = controller.marketplace.GetNFTByCardID(ctx, createLot.CardID); err != nil {
+		controller.log.Error("there is no such NFT", ErrMarketplace.Wrap(err))
+		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+	}
 	createLot.UserID = claims.UserID
 
 	if err = createLot.ValidateCreateLot(); err != nil {
