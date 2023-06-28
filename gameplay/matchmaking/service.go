@@ -310,7 +310,7 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 					return nil, ErrMatchmaking.Wrap(err)
 				}
 
-				cardAvailableAction.Message = "football information"
+				cardAvailableAction.Message = "match action"
 				if err := match.Player1.Conn.WriteJSON(cardAvailableAction); err != nil {
 					return nil, ErrMatchmaking.Wrap(err)
 				}
@@ -327,7 +327,7 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 					return nil, ErrMatchmaking.Wrap(err)
 				}
 
-				cardAvailableAction.Message = "football information"
+				cardAvailableAction.Message = "match action"
 				if err := match.Player2.Conn.WriteJSON(cardAvailableAction); err != nil {
 					return nil, ErrMatchmaking.Wrap(err)
 				}
