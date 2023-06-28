@@ -44,7 +44,7 @@ export class Marketplaces {
     };
 
     /** places a bid */
-    public async placeBid(lotId: string, amount: number): Promise<void> {
+    public async placeBid(lotId: string, amount: number): Promise<OfferTransaction> {
         return await this.marketplace.placeBid(lotId, amount);
     };
 

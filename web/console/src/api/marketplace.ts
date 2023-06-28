@@ -75,13 +75,20 @@ export class MarketplaceClient extends APIClient {
     };
 
     /** places a bid */
-    public async placeBid(lotId: string, amount: number): Promise<void> {
+    public async placeBid(lotId: string, amount: number): Promise<OfferTransaction> {
         const path = '/api/v0/bids';
         const response = await this.http.post(path, JSON.stringify({ lotId, amount }));
 
         if (!response.ok) {
             await this.handleError(response);
         };
+        const offerData = await response.json();
+
+        return new OfferTransaction(offerData.address,
+            offerData.addressNodeServer,
+            offerData.tokenId,
+            offerData.contractHash,
+            offerData.tokenContractHash);
     };
 
     /** marketplace lot end time */

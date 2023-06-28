@@ -43,9 +43,7 @@ export const MarketPlaceModal: React.FC<{ lot: Lot; setShowModal: Dispatch<SetSt
         /** makes users bid offer price */
         const bidButton = async() => {
             try {
-                await marketplaceService.placeBid(lot.cardId, cardBid);
-
-                const makeOfferData = await marketplaceService.offer(lot.cardId);
+                const makeOfferData = await marketplaceService.placeBid(lot.cardId, cardBid);
 
                 const walletService = new WalletService(user);
 

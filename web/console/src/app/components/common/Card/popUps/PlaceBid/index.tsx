@@ -29,9 +29,7 @@ export const PlaceBid: React.FC<PlaceBidTypes> = ({ setIsOpenPlaceBidPopup, setC
 
     /** Sets current bid to state and close popup. */
     const handlePlaceCurrentBid = async() => {
-        await marketplaceService.placeBid(lot.cardId, cardBid);
-
-        const makeOfferData = await marketplaceService.offer(lot.cardId);
+        const makeOfferData = await marketplaceService.placeBid(lot.cardId, cardBid);
 
         const walletService = new WalletService(user);
 

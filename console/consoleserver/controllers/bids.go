@@ -103,6 +103,17 @@ func (controller *Bids) Bet(w http.ResponseWriter, r *http.Request) {
 		controller.serveError(w, http.StatusInternalServerError, ErrBids.Wrap(err))
 		return
 	}
+
+	lotData, err := controller.marketplace.GetMakeOfferByCardID(ctx, bid.LotID)
+	if err != nil {
+		controller.log.Error("there is no such NFT data", ErrMarketplace.Wrap(err))
+		controller.serveError(w, http.StatusBadRequest, ErrMarketplace.Wrap(err))
+	}
+
+	if err = json.NewEncoder(w).Encode(lotData); err != nil {
+		controller.log.Error("failed to write json response", ErrMarketplace.Wrap(err))
+		return
+	}
 }
 
 // GetMakeOfferData is an endpoint that return make offer data by lot id.
