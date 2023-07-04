@@ -36,9 +36,8 @@ const SELECTED_PAGE = 1;
 const DEFAULT_VALUE = 0;
 
 /** Mock lot. */
-const MOCK_LOT = {
-    id: '23056596-a25b-4580-a719-dd7ac13b79bb',
-    itemId: '27056596-a25b-4580-a719-dd7ac13b79cc',
+const MOCK_LOT: Lot = {
+    cardId: '23056596-a25b-4580-a719-dd7ac13b79bb',
     type: '',
     userId: '27056596-a25b-4580-a719-dd7ac13b79bb',
     shopperId: '27056596-a25b-8880-a719-dd7ac13b79bb',

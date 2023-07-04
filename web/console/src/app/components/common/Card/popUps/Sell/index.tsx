@@ -25,7 +25,7 @@ type SellTypes = {
 const DEFAULT_MIN_BID = 3;
 const DEFAULT_MAX_BID = 5;
 const MOCK_PERIOD = 3;
-const MOCK_PERIOD__TRANSACTION = 300000;
+const MOCK_PERIOD_TRANSACTION = 300000;
 
 export const Sell: React.FC<SellTypes> = ({ setIsOpenSellPopup }) => {
     const dispatch = useDispatch();
@@ -53,7 +53,7 @@ export const Sell: React.FC<SellTypes> = ({ setIsOpenSellPopup }) => {
                 transactionData.tokenId,
                 transactionData.contractHash,
                 convertedMinBidPrice,
-                MOCK_PERIOD__TRANSACTION,
+                MOCK_PERIOD_TRANSACTION,
                 convertedMaxBidPrice,
             );
 

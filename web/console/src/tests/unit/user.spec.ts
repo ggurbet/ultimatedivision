@@ -74,7 +74,7 @@ describe('Requests user.', () => {
     });
 
     it('Casper user', async () => {
-        await casperClient.register(MOCK_USER.casperWallet, MOCK_USER.casperWalletHash)
+        await casperClient.register(MOCK_USER.casperWalletAddress, MOCK_USER.casperWalletHash)
         const user = await usersClient.getUser();
 
         expect(user).toEqual(MOCK_USER);
@@ -102,4 +102,3 @@ describe('Requests user.', () => {
         });
     })
 });
-

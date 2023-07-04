@@ -47,7 +47,7 @@ class WalletService {
 
     /** Mints chosed card with casper */
     private async casperMint(id: string) {
-        const casperTransactionService = new CasperTransactionService(this.user.casperWallet);
+        const casperTransactionService = new CasperTransactionService(this.user.casperWalletAddress);
 
         await casperTransactionService.mint(id);
     };
@@ -79,7 +79,7 @@ class WalletService {
 
     /** Mints token with casper wallet. */
     private casperMintToken(messageEvent: any) {
-        const casperTransactionService = new CasperTransactionService(this.user.casperWallet);
+        const casperTransactionService = new CasperTransactionService(this.user.casperWalletAddress);
 
         casperTransactionService.mintUDT(messageEvent.message.casperTransaction, messageEvent.message.rpcNodeAddress);
     };
@@ -106,7 +106,7 @@ class WalletService {
 
     /** Mints season token with casper wallet. */
     private casperMintSeasonToken(seasonRewardTransaction: any) {
-        const casperTransactionService = new CasperTransactionService(this.user.casperWallet);
+        const casperTransactionService = new CasperTransactionService(this.user.casperWalletAddress);
 
         casperTransactionService.mintUDT(seasonRewardTransaction, seasonRewardTransaction.rpcNodeAddress);
     };
@@ -124,7 +124,7 @@ class WalletService {
 
     /** Approves minted card with casper wallet. */
     private casperApproveNftMint(transaction: CasperTransactionApprove) {
-        const casperTransactionService = new CasperTransactionService(this.user.casperWallet);
+        const casperTransactionService = new CasperTransactionService(this.user.casperWalletAddress);
 
         casperTransactionService.approveNftMinting(transaction);
     };
@@ -142,7 +142,7 @@ class WalletService {
 
     /** Approves token reward with casper wallet. */
     private casperApproveToken(transaction: CasperTransactionApprove) {
-        const casperTransactionService = new CasperTransactionService(this.user.casperWallet);
+        const casperTransactionService = new CasperTransactionService(this.user.casperWalletAddress);
 
         casperTransactionService.approveTokenRevard(transaction);
     };
@@ -160,7 +160,7 @@ class WalletService {
 
     /** Creates lot with casper wallet. */
     private casperCreateLot(transaction: MarketCreateLotTransaction) {
-        const casperTransactionService = new CasperTransactionService(this.user.casperWallet);
+        const casperTransactionService = new CasperTransactionService(this.user.casperWalletAddress);
 
         casperTransactionService.createLot(transaction);
     };
@@ -178,7 +178,7 @@ class WalletService {
 
     /** Makes offer with casper wallet. */
     private casperMakeOffer(transaction: BidsMakeOfferTransaction) {
-        const casperTransactionService = new CasperTransactionService(this.user.casperWallet);
+        const casperTransactionService = new CasperTransactionService(this.user.casperWalletAddress);
 
         casperTransactionService.makeOffer(transaction);
     };
@@ -196,7 +196,7 @@ class WalletService {
 
     /** Buys listing with casper wallet. */
     private casperBuyListing(transaction: OfferTransaction) {
-        const casperTransactionService = new CasperTransactionService(this.user.casperWallet);
+        const casperTransactionService = new CasperTransactionService(this.user.casperWalletAddress);
 
         casperTransactionService.buyListing(transaction);
     };
@@ -214,7 +214,7 @@ class WalletService {
 
     /** Accepts offer with casper wallet. */
     private casperAcceptOffer(transaction: OfferTransaction) {
-        const casperTransactionService = new CasperTransactionService(this.user.casperWallet);
+        const casperTransactionService = new CasperTransactionService(this.user.casperWalletAddress);
 
         casperTransactionService.acceptOffer(transaction);
     };
