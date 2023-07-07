@@ -172,7 +172,7 @@ const MatchFinder: React.FC = () => {
         return () => clearTimeout(autoCancelConfirmGame);
     }, [isMatchFound]);
 
-    return isSearchingMatch && <section className={isMatchFound ? 'match-finder__wrapper' : ''}>
+    return isSearchingMatch && <section className="match-finder__wrapper">
         <div className="match-finder">
             <h1 className="match-finder__title">
                 {isMatchFound ? 'YOUR MATCH WAS FOUND' : 'LOOKING FOR A MATCH'}
