@@ -194,14 +194,17 @@ func (service *Service) TeamsList(ctx context.Context, matchID uuid.UUID, cardID
 // TeamListWithStats returns teams lineups with stats.
 func (service *Service) TeamListWithStats(ctx context.Context, allCards []CardIDWithPosition) ([]CardWithPosition, error) {
 	var cardsWithStatsAndPositions []CardWithPosition
+	var cardWithStatsAndPositions CardWithPosition
 
-	for i, card := range allCards {
+	for _, card := range allCards {
 		cardWIthStats, err := service.cards.Get(ctx, card.CardID)
 		if err != nil {
 			return cardsWithStatsAndPositions, ErrGameEngine.Wrap(err)
 		}
-		cardsWithStatsAndPositions[i].FieldPosition = card.Position
-		cardsWithStatsAndPositions[i].Card = cardWIthStats
+
+		cardWithStatsAndPositions.Card = cardWIthStats
+		cardWithStatsAndPositions.FieldPosition = card.Position
+		cardsWithStatsAndPositions = append(cardsWithStatsAndPositions, cardWithStatsAndPositions)
 	}
 
 	return cardsWithStatsAndPositions, nil
@@ -413,7 +416,7 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, cardIDWithP
 	var moves []int
 	var allPositionsInUse []int
 
-	allPositionsInUse = append(allPositionsInUse, finalPosition)
+	// allPositionsInUse = append(allPositionsInUse, finalPosition).
 
 	for _, cardWithPosition := range youTeamPositions {
 		allPositionsInUse = append(allPositionsInUse, cardWithPosition.Position)
@@ -438,9 +441,9 @@ func (service *Service) Move(ctx context.Context, matchID uuid.UUID, cardIDWithP
 		return ActionResult{}, nil
 	}
 
-	if !isCardFast && len(newPositions) != 2 {
-		return ActionResult{}, nil
-	}
+	// if !isCardFast && len(newPositions) != 2 {
+	// 	return ActionResult{}, nil
+	// }.
 
 	if hasBall {
 		for _, newPosition := range newPositions {

@@ -282,16 +282,21 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 				return nil, ErrMatchmaking.Wrap(err)
 			}
 
-			type gameRequest struct {
-				Action        gameengine.Action `json:"action"`
-				CardID        uuid.UUID         `json:"CardId"`
-				Position      int               `json:"position"`
-				HasBall       bool              `json:"hasBall"`
-				NewPositions  []int             `json:"newPositions"`
-				FinalPosition int               `json:"finalPosition"`
+			type Match struct {
+				Action        string    `json:"action"`
+				CardID        uuid.UUID `json:"CardId"`
+				Position      int       `json:"position"`
+				HasBall       bool      `json:"hasBall"`
+				NewPositions  []int     `json:"newPositions"`
+				FinalPosition int       `json:"finalPosition"`
 			}
 
-			startGameInformation.Rounds = 14
+			type gameRequest struct {
+				Action string `json:"action"`
+				Match  string `json:"match"`
+			}
+
+			startGameInformation.Rounds = 4
 			var gameResults []matches.MatchGoals
 			for i := 1; i <= startGameInformation.Rounds; i++ {
 				var req gameRequest
@@ -300,17 +305,28 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 				if err := match.Player1.Conn.ReadJSON(&req); err != nil {
 					return nil, ErrMatchmaking.Wrap(err)
 				}
+				fmt.Println("req player 1:", req)
+
+				var matchData Match
+				err := json.Unmarshal([]byte(req.Match), &matchData)
+				if err != nil {
+					fmt.Println(err)
+				}
+
+				fmt.Println("matchData player 1:", matchData)
 
 				cardAvailableAction, err := service.gameEngine.GameLogicByAction(ctx, startGameInformation.MatchID,
 					gameengine.CardIDWithPosition{
-						CardID:   req.CardID,
-						Position: req.Position,
-					}, req.Action, req.NewPositions, req.FinalPosition, req.HasBall)
+						CardID:   matchData.CardID,
+						Position: matchData.Position,
+					}, gameengine.Action(matchData.Action), matchData.NewPositions, matchData.FinalPosition, matchData.HasBall)
 				if err != nil {
 					return nil, ErrMatchmaking.Wrap(err)
 				}
 
 				cardAvailableAction.Message = "match action"
+				cardAvailableAction.Team = "player 1"
+				fmt.Println("cardAvailableAction player 1:", cardAvailableAction)
 				if err := match.Player1.Conn.WriteJSON(cardAvailableAction); err != nil {
 					return nil, ErrMatchmaking.Wrap(err)
 				}
@@ -318,16 +334,25 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 				if err := match.Player2.Conn.ReadJSON(&req); err != nil {
 					return nil, ErrMatchmaking.Wrap(err)
 				}
+				fmt.Println("req player 2:", req)
+
+				err = json.Unmarshal([]byte(req.Match), &matchData)
+				if err != nil {
+					fmt.Println(err)
+				}
+				fmt.Println("matchData player 2:", matchData)
 
 				cardAvailableAction, err = service.gameEngine.GameLogicByAction(ctx, startGameInformation.MatchID, gameengine.CardIDWithPosition{
-					CardID:   req.CardID,
-					Position: req.Position,
-				}, req.Action, req.NewPositions, req.FinalPosition, req.HasBall)
+					CardID:   matchData.CardID,
+					Position: matchData.Position,
+				}, gameengine.Action(matchData.Action), matchData.NewPositions, matchData.FinalPosition, matchData.HasBall)
 				if err != nil {
 					return nil, ErrMatchmaking.Wrap(err)
 				}
 
 				cardAvailableAction.Message = "match action"
+				cardAvailableAction.Team = "player 2"
+				fmt.Println("cardAvailableAction player 2:", cardAvailableAction)
 				if err := match.Player2.Conn.WriteJSON(cardAvailableAction); err != nil {
 					return nil, ErrMatchmaking.Wrap(err)
 				}
