@@ -32,6 +32,11 @@ export class WebSocketService {
         this.wsConnectionClient.sendAction(action, squadId);
     };
 
+    /** Sends action from unity. */
+    public sendUnityAction(action: string, match: any): void {
+        this.wsConnectionClient.sendUnityAction(action, match);
+    };
+
     /** Sends action, i.e 'startSearch', 'finishSearch', on open webSocket connection. */
     public onOpenConnectionSendAction(action: string, squadId: string): void {
         this.wsConnectionClient.onOpenConnectionSendAction(action, squadId);
@@ -106,3 +111,7 @@ export const onCloseConnection = () => {
     webSocketService.close();
 };
 
+/** Sends action to confirm or reject match. */
+export const sendUnityAction = (action: string, match: any) => {
+    webSocketService.sendUnityAction(action, match);
+};

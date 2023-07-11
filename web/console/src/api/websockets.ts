@@ -31,6 +31,11 @@ export class WebSocketClient extends APIClient {
         this.ws.send(JSON.stringify({ action, squadId }));
     };
 
+    /** Sends action with info from unity */
+    public sendUnityAction(action: string, match: any) {
+        this.ws.send(JSON.stringify({ action, match }));
+    };
+
     /** Sends action that indicates that the client allows to add address of wallet. */
     public actionAllowAddress(WalletAddress: string, nonce: number) {
         const action: string = 'allowAddress';
