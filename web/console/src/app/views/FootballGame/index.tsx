@@ -68,9 +68,9 @@ const FootballGame: React.FC = () => {
         webSocketClient.ws.onmessage = ({ data }: MessageEvent) => {
             const event = JSON.parse(data);
 
-            if (event.message === MATCH_RESULT) {
+            if (event.message.question === MATCH_RESULT) {
                 dispatch(getMatchScore(event.message));
-                // history.push(RouteConfig.Match.path);
+                history.push(RouteConfig.Match.path);
             }
 
             switch (event.message) {
@@ -78,7 +78,7 @@ const FootballGame: React.FC = () => {
                 sendMessage(UNITY_GAME_OBJECT_NAME, START_UNITY_OBJECT_METHOD_NAME, JSON.stringify(event.gameInformation));
                 break;
             case GAME_INFO_MESSAGE:
-                sendMessage(UNITY_GAME_OBJECT_NAME, UNITY_OBJECT_METHOD_NAME, JSON.stringify(event.gameInformation));
+                sendMessage(UNITY_GAME_OBJECT_NAME, UNITY_OBJECT_METHOD_NAME, JSON.stringify(event));
                 break;
             default:
             }
