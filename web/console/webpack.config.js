@@ -16,7 +16,9 @@ const PRODUCTION_PLUGINS = [
         favicon: "./src/app/static/img/favicon.ico",
     }),
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+        ignoreOrder: true,
+    }),
     new StylelintPlugin({ fix: true }),
     new CompressionPlugin({
         filename: "[path][base].br",
