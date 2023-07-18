@@ -360,7 +360,9 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 					return nil, ErrMatchmaking.Wrap(err)
 				}
 
-				gameResults = append(gameResults, gameResult)
+				if gameResult != (matches.MatchGoals{}) {
+					gameResults = append(gameResults, gameResult)
+				}
 			}
 
 			matchInfo, err := service.matches.Get(ctx, startGameInformation.MatchID)
