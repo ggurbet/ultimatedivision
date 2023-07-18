@@ -299,7 +299,6 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 			startGameInformation.Rounds = 4
 			var gameResults []matches.MatchGoals
 			for i := 1; i <= startGameInformation.Rounds; i++ {
-
 				fmt.Println("Round:", i)
 
 				var req gameRequest
@@ -330,7 +329,12 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 				cardAvailableAction.Message = "match action"
 				cardAvailableAction.Team = "player 1"
 				fmt.Println("cardAvailableAction player 1:", cardAvailableAction)
+				// Send cardAvailableAction to 1 player.
 				if err := match.Player1.Conn.WriteJSON(cardAvailableAction); err != nil {
+					return nil, ErrMatchmaking.Wrap(err)
+				}
+				// Send cardAvailableAction to 2 player.
+				if err := match.Player2.Conn.WriteJSON(cardAvailableAction); err != nil {
 					return nil, ErrMatchmaking.Wrap(err)
 				}
 
@@ -356,7 +360,13 @@ func (service *Service) MatchPlayer(ctx context.Context, player *Player) (*Match
 				cardAvailableAction.Message = "match action"
 				cardAvailableAction.Team = "player 2"
 				fmt.Println("cardAvailableAction player 2:", cardAvailableAction)
+
+				// Send cardAvailableAction to 2 player.
 				if err := match.Player2.Conn.WriteJSON(cardAvailableAction); err != nil {
+					return nil, ErrMatchmaking.Wrap(err)
+				}
+				// Send cardAvailableAction to 1 player.
+				if err := match.Player1.Conn.WriteJSON(cardAvailableAction); err != nil {
 					return nil, ErrMatchmaking.Wrap(err)
 				}
 
