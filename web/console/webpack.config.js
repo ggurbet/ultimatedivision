@@ -6,7 +6,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const StylelintPlugin = require("stylelint-webpack-plugin");
 const zlib = require("zlib");
 const CompressionPlugin = require("compression-webpack-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const PRODUCTION_PLUGINS = [
@@ -64,39 +63,30 @@ const OPTIMISATION = {
         chunks: "all",
     },
     minimize: true,
-    minimizer: [
-        new UglifyJsPlugin({
-            test: /\.js(\?.*)?$/i,
-        }),
-        new CssMinimizerPlugin(),
-    ],
 };
 
-const IMAGE_COMPRESSION = [
-    {
-        loader: "image-webpack-loader",
-        options: {
-            mozjpeg: {
-                progressive: false,
-            },
-            optipng: {
-                enabled: true,
-            },
-            pngquant: {
-                quality: [0.8, 0.8],
-                speed: 2,
-            },
-        },
-    },
-];
+// const IMAGE_COMPRESSION = [
+//     {
+//         loader: "image-webpack-loader",
+//         options: {
+//             mozjpeg: {
+//                 progressive: false,
+//             },
+//             optipng: {
+//                 enabled: true,
+//             },
+//             pngquant: {
+//                 quality: [0.8, 0.8],
+//                 speed: 2,
+//             },
+//         },
+//     },
+// ];
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === "production";
 
     return {
-        experiments: {
-            asset: true,
-        },
         entry: "./src/index.tsx",
         target: "web",
         watch: !isProduction,
@@ -165,7 +155,7 @@ module.exports = (env, argv) => {
                     generator: {
                         filename: "images/[name][hash:5][ext]",
                     },
-                    use: isProduction ? IMAGE_COMPRESSION : [],
+                    // use: isProduction ? IMAGE_COMPRESSION : [],
                 },
                 {
                     test: /\.(gif)(\?.*$|$)/,

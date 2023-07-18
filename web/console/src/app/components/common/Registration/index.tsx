@@ -10,7 +10,7 @@ import KeyStorageHandler from '@/velas/keyStorageHandler';
 // @ts-ignore
 import StorageHandler from '@/velas/storageHandler';
 // @ts-ignore
-import { VAClient } from '@velas/account-client';
+// import { VAClient } from '@velas/account-client';
 import { JSEncrypt } from 'jsencrypt';
 import { CLPublicKey, Signer } from 'casper-js-sdk';
 
@@ -51,56 +51,56 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
 
     const [setLocalStorageItem, getLocalStorageItem] = useLocalStorage();
 
-    /** generates vaclient with the help of creds  */
-    const vaclientService = async() => {
-        try {
-            const creds = await velasService.vaclientCreds();
+    // /** generates vaclient with the help of creds  */
+    // const vaclientService = async() => {
+    //     try {
+    //         const creds = await velasService.vaclientCreds();
 
-            const vaclient = new VAClient({
-                mode: 'redirect',
-                clientID: creds.clientId,
-                redirectUri: creds.redirectUri,
-                StorageHandler,
-                KeyStorageHandler,
-                accountProviderHost: creds.accountProviderHost,
-                networkApiHost: creds.networkApiHost,
-                transactionsSponsorApiHost: creds.transactionsSponsorApiHost,
-                transactionsSponsorPubKey: creds.transactionsSponsorPubKey,
-            });
+    //         const vaclient = new VAClient({
+    //             mode: 'redirect',
+    //             clientID: creds.clientId,
+    //             redirectUri: creds.redirectUri,
+    //             StorageHandler,
+    //             KeyStorageHandler,
+    //             accountProviderHost: creds.accountProviderHost,
+    //             networkApiHost: creds.networkApiHost,
+    //             transactionsSponsorApiHost: creds.transactionsSponsorApiHost,
+    //             transactionsSponsorPubKey: creds.transactionsSponsorPubKey,
+    //         });
 
-            return vaclient;
-        } catch (error: any) {
-            ToastNotifications.notify(error.message);
-        }
+    //         return vaclient;
+    //     } catch (error: any) {
+    //         ToastNotifications.notify(error.message);
+    //     }
 
-        return null;
-    };
+    //     return null;
+    // };
 
-    const processAuthResult = (error: any, authResult: any) => {
-        if (authResult && authResult.access_token_payload) {
-            window.history.replaceState({}, document.title, window.location.pathname);
-        } else if (error) {
-            ToastNotifications.notify(error.message);
-        }
-    };
+    // const processAuthResult = (error: any, authResult: any) => {
+    //     if (authResult && authResult.access_token_payload) {
+    //         window.history.replaceState({}, document.title, window.location.pathname);
+    //     } else if (error) {
+    //         ToastNotifications.notify(error.message);
+    //     }
+    // };
 
-    const contentVelas = async() => {
-        try {
-            const csrfToken = await velasService.csrfToken();
+    // const contentVelas = async() => {
+    //     try {
+    //         const csrfToken = await velasService.csrfToken();
 
-            const vaclient = await vaclientService();
-            vaclient.authorize(
-                {
-                    csrfToken: csrfToken,
-                    scope: 'authorization',
-                    challenge: 'some_challenge_from_backend',
-                },
-                processAuthResult
-            );
-        } catch (error: any) {
-            ToastNotifications.notify(error.message);
-        }
-    };
+    //         const vaclient = await vaclientService();
+    //         vaclient.authorize(
+    //             {
+    //                 csrfToken: csrfToken,
+    //                 scope: 'authorization',
+    //                 challenge: 'some_challenge_from_backend',
+    //             },
+    //             processAuthResult
+    //         );
+    //     } catch (error: any) {
+    //         ToastNotifications.notify(error.message);
+    //     }
+    // };
 
     const loginMetamask = async() => {
         const address = await ethersService.getWallet();
@@ -219,14 +219,14 @@ export const RegistrationPopup: React.FC<{ closeRegistrationPopup: () => void }>
                                 />
                                 <p className="registration-pop-up__content__block__item__text">Connect metamask</p>
                             </div>
-                            <div onClick={contentVelas} className="registration-pop-up__content__block__item">
+                            {/* <div onClick={contentVelas} className="registration-pop-up__content__block__item">
                                 <img
                                     src={velas}
                                     alt="Velas logo"
                                     className="registration-pop-up__content__block__item__logo"
                                 />
                                 <p className="registration-pop-up__content__block__item__text">Connect velas account</p>
-                            </div>
+                            </div> */}
                             <div
                                 onClick={sendConnectionRequestCasper}
                                 className="registration-pop-up__content__block__item"

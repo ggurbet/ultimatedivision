@@ -201,8 +201,8 @@ func (auth *Auth) Register(w http.ResponseWriter, r *http.Request) {
 # web/console
 
 ## Initial web setup
-1. Install node. Current node version: [v14.18.1](https://nodejs.org/ja/blog/release/v14.18.1/).
-2. Install npm. Current npm version: [6.14.15](https://www.npmjs.com/package/npm/v/6.14.5).
+1. Install node. Current node version: [v18.16.1](https://nodejs.org/ja/blog/release/v18.16.1/).
+2. Install npm. Current npm version: [9.5.1](https://www.npmjs.com/package/npm/v/9.5.1).
 3. Run command `npm ci`. Uses to get and install dependencies only depend on [package-lock.json](./web/console/package-lock.json).
 
 ## Commands:
