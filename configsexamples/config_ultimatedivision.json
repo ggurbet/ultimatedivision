@@ -278,7 +278,7 @@
         }
         },
         "waitlist": {
-            "waitListRenewalInterval": 5000000000,
+            "waitListRenewalInterval": 500000000,
             "waitListCheckSignature": 500,
             "nftContract" : {
                 "address": "0x1b03b691601fF334f5fC473e251be0bDA7a05b27",
@@ -302,7 +302,7 @@
                 "mintWithSignatureAndValueSelector": "0xb4d4b0f1",
                 "chainId": 4
             },
-            "addressNodeServer": "http://91.225.167.148:8545",
+            "addressNodeServer": "http://65.21.205.159:8545",
             "fileStorage": {
                 "s3Gateway": "gateway.eu1.storjshare.io",
                 "accessKey": "jujhrmxznnohynbwlizgxk2vlc7q",
@@ -311,8 +311,8 @@
             },
             "bucket": "nft",
             "urlToAvatar": "https://link.us1.storjshare.io/raw/jxpirica7qglasqsgnadsiipveua/nft/%d.png",
-            "rpcNodeAddress": "http://116.202.169.210:7777/rpc",
-            "eventNodeAddress": "http://116.202.169.210:9999/events/main",
+            "rpcNodeAddress": "http://65.21.205.159:7777/rpc",
+            "eventNodeAddress": "http://65.21.205.159:9999/events/main",
             "bridgeInEventHash": "uref-6e65751723fa86e196a75764df41bcbb84e56de4148db1db56b08e4c11cdb49c-000"
         },
         "nfts": {
@@ -323,8 +323,8 @@
                 "address": "0x1b03b691601fF334f5fC473e251be0bDA7a05b27",
                 "ownerOfSelector": "0x6352211e"
             },
-            "addressNodeServer": "http://116.202.169.210:7777/rpc",
-            "eventNodeAddress": "http://116.202.169.210:9999/events/main"
+            "addressNodeServer": "http://65.21.205.159:8545",
+            "eventNodeAddress": "http://65.21.205.159:9999/events/main"
         },
         "bids": {
             "expiredLotRenewalInterval": 5000000000
@@ -355,13 +355,13 @@
                 "limit": 10,
                 "page": 1
             },
-            "rpcNodeAddress": "http://116.202.169.210:7777/rpc",
+            "rpcNodeAddress": "http://65.21.205.159:7777/rpc",
             "nftContractAddress": "05560ca94e73f35c5b9b8a0f8b66e56238169e60ae421fb7b71c7ac3c6c744e2",
             "marketContractAddress": "feed638f60f5a2840656d86e0e51dc62c092e79d980ba8dc281387dbb8f80c42",
             "tokenContractAddress": "5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0",
             "marketContractPackageAddress": "701ed1a382367a6016f3b389f75177030fd583c5b8838b4c04e92da6b4a11928",
             "nftApprovePrefix": "contract-package-wasm",
-            "createListingPrefix": "contract-",
+            "nftContractPrefix": "contract-",
             "tokenAmountForApproving": 10000,
             "contractOwnerPrivateKey": "4f0ffa6c3925d02127a9e9213c7c21215dbc288e0ee61770e6adf7752324c282",
             "contractOwnerPublicKey": "ad794c8f3da55845a5422506b4bd01ed1ae4e57378a82216d25d7351854b563d"
@@ -369,14 +369,14 @@
         "queue": {
             "placeRenewalInterval": 5000000000,
             "winValue": "10000000000000000000",
-            "drawValue": "50000000000000000000000",
+            "drawValue": "5000000000000000000",
             "udtContract": {
                 "address": "0x7b7E8E64e5E9EA9Cb3E314A49f5585b5dd7aaF83"
             },
             "casperTokenContract": {
                 "address": "5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0"
             },
-            "rpcNodeAddress": "http://116.202.169.210:7777/rpc"
+            "rpcNodeAddress": "http://65.21.205.159:7777/rpc"
         },
         "divisions": {
             "passingPercent": 10
@@ -386,7 +386,7 @@
             "casperTokenContract": {
                 "address": "5aed0843516b06e4cbf56b1085c4af37035f2c9c1f18d7b0ffd7bbe96f91a3e0"
             },
-            "rpcNodeAddress": "http://116.202.169.210:7777/rpc"
+            "rpcNodeAddress": "http://65.21.205.159:7777/rpc"
         },
         "bids": {
             "expiredLotRenewalInterval": 5000000000

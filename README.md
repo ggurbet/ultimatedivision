@@ -18,7 +18,7 @@ For isolated installation of databases and servers we need a Docker, version 20.
 ```
 docker run --name=db -e POSTGRES_PASSWORD=‘$YOUR_PASSWORD’ -p $YOUR_PORTS -d --rm postgres
 
-docker exec -it db createdb -U postgres ultimatedivision_test
+docker exec -it db createdb -U postgres ultimatedivisiondb_test
 ```
 
 ## Config
@@ -35,9 +35,8 @@ go run cmd/nftsigner/main.go setup
 
 **Run the main server.**
 
-From the web/console directory at the root of the project use this commands to build front end part of project:
-```
-npm i --force && npm run build
+From the web/console directory at the root of the project read topic Web/console Initial web setup
+
 ```
 
 You can run it with the command in root of the project:

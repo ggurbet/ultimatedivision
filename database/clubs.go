@@ -260,7 +260,7 @@ func (clubsDB *clubsDB) GetSquadByClubID(ctx context.Context, clubID uuid.UUID) 
 	return squad, nil
 }
 
-// 	GetSquadIDByCardID returns squad from database by card id.
+// GetSquadIDByCardID returns squad from database by card id.
 func (clubsDB *clubsDB) GetSquadIDByCardID(ctx context.Context, cardID uuid.UUID) (uuid.UUID, error) {
 	query := `SELECT id
 			  FROM squad_cards

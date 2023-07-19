@@ -117,6 +117,7 @@ func (service *Service) GetRewardByUserID(ctx context.Context, userID uuid.UUID)
 	if err != nil {
 		return RewardWithTransaction{}, ErrSeasons.Wrap(err)
 	}
+	nonce++
 
 	transaction, err := service.currencywaitlist.CasperCreate(ctx, userID, *value, nonce)
 	if err != nil {
