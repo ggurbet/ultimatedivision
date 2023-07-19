@@ -12,7 +12,6 @@ import (
 	"log"
 	"math/big"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -278,77 +277,48 @@ func (service *Service) GetNodeEvents(ctx context.Context) (MintData, error) {
 			err = errs.Combine(err, resp.Body.Close())
 		}()
 	}
-
 	for {
-		reader := bufio.NewReader(resp.Body)
-		rawBody, err := reader.ReadBytes('\n')
+		bufferSize := 32768
+
+		reader := bufio.NewReaderSize(resp.Body, bufferSize)
+
+		responseString, err := reader.ReadString('\n')
 		if err != nil {
-			return MintData{}, ErrWaitlist.Wrap(err)
+			fmt.Println("Error occurred:", err)
 		}
 
-		rawBody = []byte(strings.Replace(string(rawBody), "data:", "", 1))
-		var event contract.Event
-		var eventWithBytes contract.EventWithBytes
-		_ = json.Unmarshal(rawBody, &event)
-		_ = json.Unmarshal(rawBody, &eventWithBytes)
+		rawBody := []byte(strings.Replace(responseString, "data:", "", 1))
 
-		transforms := event.DeployProcessed.ExecutionResult.Success.Effect.Transforms
-		if len(transforms) == 0 {
-			continue
-		}
+		rawBodyString := string(rawBody)
+		var data map[string]contract.DeployProcessedNew
 
-		transformsWithBytes := eventWithBytes.DeployProcessed.ExecutionResult2.Success2.Effect2.Transforms2
-		if len(transformsWithBytes) == 0 {
-			continue
-		}
+		_ = json.Unmarshal([]byte(rawBodyString), &data)
 
 		var tokenID uuid.UUID
 
-		for _, transform2 := range transformsWithBytes {
-			transformMap, _ := transform2.Transform.(map[string]interface{})
+		deployProcessed := data["DeployProcessed"]
+		for _, transform := range deployProcessed.ExecutionResult.Success.Effect.Transforms {
+
+			transformMap, _ := transform.Transform.(map[string]interface{})
 
 			writeCLValue, _ := transformMap[WriteCLValueKey].(map[string]interface{})
-
 			bytes, _ := writeCLValue[BytesKey].(string)
+
 			if len(bytes) == 170 {
 				eventData := eventparsing.EventData{
 					Bytes: bytes,
 				}
-
 				tokenID, err = eventData.GetTokenID(eventData)
+				fmt.Println("tokenID:", tokenID)
 				if err != nil {
 					return MintData{}, ErrWaitlist.New("could not get token_id from event data")
 				}
 			}
-
 		}
 
-		var tokenNumber int64
-		var walletAddress string
+		if tokenID != uuid.Nil {
+			return MintData{TokenID: tokenID}, nil
 
-		for _, transform := range transforms {
-			for _, i2 := range transform.Transform[WriteCLValueKey][Parsed] {
-				switch i2.Key {
-				case "token_id":
-					tokenNumber, err = strconv.ParseInt(i2.Value, 10, 0)
-					if err != nil {
-						return MintData{}, ErrWaitlist.New("could not convert token_id from string to int64")
-					}
-				case "recipient":
-					walletAddress = strings.ReplaceAll(i2.Value, "Key::Account(", "")
-					walletAddress = strings.ReplaceAll(walletAddress, ")", "")
-				default:
-					continue
-				}
-			}
-		}
-
-		if tokenNumber != 0 && walletAddress != "" {
-			return MintData{
-				TokenID:       tokenID,
-				TokenNumber:   tokenNumber,
-				WalletAddress: walletAddress,
-			}, ErrWaitlist.Wrap(err)
 		}
 	}
 }

@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/casper-ecosystem/casper-golang-sdk/keypair"
 	"github.com/casper-ecosystem/casper-golang-sdk/sdk"
@@ -87,6 +88,27 @@ type (
 		Transform interface{} `json:"transform"`
 	}
 )
+
+// DeployProcessedNew describes transform data.
+type DeployProcessedNew struct {
+	DeployHash      string    `json:"deploy_hash"`
+	Account         string    `json:"account"`
+	Timestamp       time.Time `json:"timestamp"`
+	TTL             string    `json:"ttl"`
+	Dependencies    []string  `json:"dependencies"`
+	BlockHash       string    `json:"block_hash"`
+	ExecutionResult struct {
+		Success struct {
+			Effect struct {
+				Operations []string `json:"operations"`
+				Transforms []struct {
+					Key       string      `json:"key"`
+					Transform interface{} `json:"transform"`
+				} `json:"transforms"`
+			} `json:"effect"`
+		} `json:"Success"`
+	} `json:"execution_result"`
+}
 
 // Casper exposes access to the casper sdk methods.
 type Casper interface {
