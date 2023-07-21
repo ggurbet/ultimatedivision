@@ -399,12 +399,12 @@ func (service *Service) GetImage(ctx context.Context, cardID uuid.UUID) ([]byte,
 		return nil, ErrAvatar.New("invalid cardID in GetImage")
 	}
 
-	// Clean up the file path and join the validated components
+	// Clean up the file path and join the validated components.
 	cleanCardID := cardID.String()
 	fileName := cleanCardID + string(imageprocessing.TypeFilePNG)
 	avatarFilePath := filepath.Join(service.config.PathToOutputAvatarsLocal, fileName)
 
-	// Read the image file
+	// Read the image file.
 	image, error := os.ReadFile(avatarFilePath)
 	if error != nil {
 		return nil, ErrAvatar.Wrap(error)
