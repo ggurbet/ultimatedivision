@@ -1,6 +1,112 @@
 
 ## How to run?
 
+**Before starting the project, you should make certain preparations.
+Different operating systems require different steps:**
+
+##Linux:
+**Installing Golang (Go):**
+
+1. Open the terminal.
+
+2. Download the latest version of Golang from the official Golang website: https://golang.org/dl/
+
+3. Extract the downloaded archive. For example, if you downloaded the archive to your home directory:
+
+```
+tar -C /usr/local -xzf go<VERSION>.linux-amd64.tar.gz
+```
+
+4. Add the Go path to your profile file (e.g., .bashrc or .zshrc):
+
+```
+echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+```
+
+5. Apply the changes in the current terminal or restart the terminal.
+
+6. Verify the Golang installation:
+
+```
+go version
+```
+
+**Installing npm (Node.js Package Manager):**
+
+1. Open the terminal.
+
+2. Install Node.js along with npm from the official Node.js website by running the following commands:
+
+```
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+Verify the npm installation:
+
+```
+npm -v
+```
+
+## macOS:
+**Installing Golang (Go):**
+
+1. Download the latest version of Golang from the official Golang website: https://golang.org/dl/
+
+2. Open the downloaded disk image and drag the go.pkg file into the "Applications" folder.
+
+3. Open "Applications" and run go.pkg to start the installation process.
+
+4. After successful installation of Golang, verify its version in the terminal:
+
+```
+go version
+```
+
+**Installing npm (Node.js Package Manager):**
+
+1. Open the terminal.
+
+2. Install Node.js along with npm from the official Node.js website by running the following command:
+
+```
+brew install node
+```
+Verify the npm installation:
+
+```
+npm -v
+```
+
+## Windows:
+**Installing Golang (Go):**
+
+1. Download the latest version of Golang from the official Golang website: https://golang.org/dl/
+
+2. Run the Go installer and follow the instructions.
+
+3. After successful installation of Golang, open the Command Prompt or PowerShell.
+
+4. Verify the Golang installation:
+
+```
+go version
+```
+
+**Installing npm (Node.js Package Manager):**
+
+1. Download the Node.js installer from the official Node.js website: https://nodejs.org/
+
+2. Run the Node.js installer and follow the instructions.
+
+3. After successful installation, open the Command Prompt or PowerShell.
+
+4. Verify the npm installation:
+
+```
+npm -v
+```
+Now you should have Golang and npm installed on your respective operating systems, and you're ready to start!
+
 **Installing.**
 
 Golang is our backend language.
@@ -25,6 +131,11 @@ docker exec -it db createdb -U postgres ultimatedivisiondb_test
 
 The application depends on config values that are located in the config file. (examples of configs are in the folder - configsexamples)
 
+**For example for MacOS system you need to put config files in:**
+```
+/Users/<YOUR-USER>/Library/ApplicationSupport/Ultimatedivision/
+```
+
 in this place ![img_14.png](img_14.png) and in such similar places, please write the full path to your folder.
 
 ```
@@ -48,6 +159,7 @@ After this you can open console on localhost:8088 and admin panel on localhost:8
 
 **Mini servers.**
 
+To make shure that all services are running we need to start Currency signer with spesific command.
 In general, we use private mini-servers when we work with signing something with a private key to protect personal data from hackers.
 List of these servers:
 - Currency signer;
@@ -70,6 +182,8 @@ go run cmd/currencysigner/main.go run
 ```
 
 **NFT signer**
+
+To make shure that all services are running we need to start NFT signer with spesific command.
 
 The nft signer runs an infinite cycle with an interval of operation that monitors the records of waitlist in which there is no signature and if it finds them then generates a signature and sends a transaction to mint nft.
 ```
