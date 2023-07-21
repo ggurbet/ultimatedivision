@@ -395,6 +395,20 @@ func (service *Service) Get(ctx context.Context, cardID uuid.UUID) (Avatar, erro
 
 // GetImage returns avatar image.
 func (service *Service) GetImage(ctx context.Context, cardID uuid.UUID) ([]byte, error) {
-	image, err := os.ReadFile(filepath.Join(service.config.PathToOutputAvatarsLocal, cardID.String()+"."+string(imageprocessing.TypeFilePNG)))
-	return image, ErrAvatar.Wrap(err)
+	if cardID == uuid.Nil {
+		return nil, ErrAvatar.New("invalid cardID in GetImage")
+	}
+
+	// Clean up the file path and join the validated components
+	cleanCardID := cardID.String()
+	fileName := cleanCardID + string(imageprocessing.TypeFilePNG)
+	avatarFilePath := filepath.Join(service.config.PathToOutputAvatarsLocal, fileName)
+
+	// Read the image file
+	image, error := os.ReadFile(avatarFilePath)
+	if error != nil {
+		return nil, ErrAvatar.Wrap(error)
+	}
+
+	return image, nil
 }
