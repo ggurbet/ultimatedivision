@@ -70,6 +70,7 @@ func New(logger logger.Logger, config Config, cardsTotal int) (peer *Peer, err e
 	{ // avatars setup.
 		peer.Avatars.Service = avatars.NewService(
 			nil,
+			nil,
 			config.CardAvatars.AvatarConfig,
 		)
 	}

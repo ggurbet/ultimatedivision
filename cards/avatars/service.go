@@ -5,9 +5,11 @@ package avatars
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"image"
 	"os"
+	"path"
 	"path/filepath"
 	"strconv"
 
@@ -28,13 +30,15 @@ var ErrAvatar = errs.Class("avatar service error")
 // architecture: Service.
 type Service struct {
 	avatars DB
+	cards   cards.Service
 	config  Config
 }
 
 // NewService is a constructor for avatars service.
-func NewService(avatars DB, config Config) *Service {
+func NewService(avatars DB, cards *cards.Service, config Config) *Service {
 	return &Service{
 		config:  config,
+		cards:   *cards,
 		avatars: avatars,
 	}
 }
@@ -393,21 +397,31 @@ func (service *Service) Get(ctx context.Context, cardID uuid.UUID) (Avatar, erro
 	return avatar, ErrAvatar.Wrap(err)
 }
 
+// isValidCardID checks if the cardID contains only allowed characters.
+func (service *Service) isValidCardID(ctx context.Context, cardID uuid.UUID) (uuid.UUID, error) {
+	card, err := service.cards.Get(ctx, cardID)
+	if err != nil {
+		return uuid.UUID{}, ErrAvatar.Wrap(err)
+	}
+	return card.ID, nil
+}
+
 // GetImage returns avatar image.
 func (service *Service) GetImage(ctx context.Context, cardID uuid.UUID) ([]byte, error) {
-	if cardID == uuid.Nil {
-		return nil, ErrAvatar.New("invalid cardID in GetImage")
+	cardIDFromDB, err := service.isValidCardID(ctx, cardID)
+	if err != nil {
+		return nil, errors.New("invalid cardID in GetImage")
 	}
 
 	// Clean up the file path and join the validated components.
-	cleanCardID := cardID.String()
+	cleanCardID := cardIDFromDB.String()
 	fileName := cleanCardID + string(imageprocessing.TypeFilePNG)
-	avatarFilePath := filepath.Join(service.config.PathToOutputAvatarsLocal, fileName)
+	avatarFilePath := path.Join(service.config.PathToOutputAvatarsLocal, fileName)
 
 	// Read the image file.
-	image, error := os.ReadFile(avatarFilePath)
-	if error != nil {
-		return nil, ErrAvatar.Wrap(error)
+	image, err := os.ReadFile(strconv.Quote(avatarFilePath))
+	if err != nil {
+		return nil, ErrAvatar.Wrap(err)
 	}
 
 	return image, nil
