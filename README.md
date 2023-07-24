@@ -131,6 +131,14 @@ docker exec -it db createdb -U postgres ultimatedivisiondb_test
 
 The application depends on config values that are located in the config file. (examples of configs are in the folder - configsexamples)
 
+These actions will create a config file. 
+```
+go run cmd/ultimatedivision/main.go setup
+go run cmd/currencysigner/main.go setup
+go run cmd/nftsigner/main.go setup
+```
+Go to that config file and edit the necessary files.
+
 **For example for MacOS system you need to put config files in:**
 ```
 /Users/<YOUR-USER>/Library/ApplicationSupport/Ultimatedivision/
@@ -138,17 +146,11 @@ The application depends on config values that are located in the config file. (e
 
 in this place ![img_14.png](img_14.png) and in such similar places, please write the full path to your folder.
 
-```
-go run cmd/ultimatedivision/main.go setup
-go run cmd/currencysigner/main.go setup
-go run cmd/nftsigner/main.go setup
-```
+
 
 **Run the main server.**
 
 From the web/console directory at the root of the project read topic Web/console Initial web setup
-
-```
 
 You can run it with the command in root of the project:
 ```
